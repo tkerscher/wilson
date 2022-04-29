@@ -1,0 +1,12 @@
+syntax = "proto3";
+package p1on;
+
+import "properties.proto";
+
+//Virtual camera dictating the point of view rendered in 3D mode
+message Camera {
+    //position of camera
+    VectorProperty position = 1;
+    //target the camera looks at
+    VectorProperty target = 2;
+}

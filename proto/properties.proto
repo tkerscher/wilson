@@ -1,0 +1,36 @@
+syntax = "proto3";
+package p1on;
+
+import "color.proto";
+import "vector.proto";
+
+//Animatible scalar property
+message ScalarProperty {
+    oneof source {
+        //Constant value
+        double constValue = 1;
+        //Animation according to graph referenced by its id
+        uint32 graphId = 2;
+    }
+}
+
+//Animatible vector property
+message VectorProperty {
+    oneof source {
+        //Constant value
+        Vector constValue = 1;
+        //Animation according to path referenced by its id
+        uint32 pathId = 2;
+    }
+}
+
+//Animatible color property
+message ColorProperty {
+    oneof source {
+        //Constant color
+        Color constValue = 1;
+        //Animatible color according graph referenced by its id
+        //The scalar value from graph is translated according to a color map
+        uint32 graphId = 2;
+    }
+}

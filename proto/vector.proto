@@ -1,0 +1,12 @@
+syntax = "proto3";
+package p1on;
+
+//Simple Vector in 3D space
+message Vector {
+    //x coordinate
+    double x = 1;
+    //y coordinte
+    double y = 2;
+    //z coordinate
+    double z = 3;
+}

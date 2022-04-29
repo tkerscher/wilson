@@ -1,0 +1,10 @@
+syntax = "proto3";
+package p1on;
+
+//Virtual file containing a script
+message Script {
+    //Name of the script as shown in the explorer
+    string name = 1;
+    //Content of the script
+    string content = 2;
+}

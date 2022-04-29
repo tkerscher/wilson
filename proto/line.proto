@@ -1,0 +1,26 @@
+syntax = "proto3";
+package p1on;
+
+import "properties.proto";
+
+//Animated line in 3D space
+message Line {
+    //Name as shown in explorer
+    string name = 1;
+    //Additional text shown when selected
+    string description = 2;
+    //True, if visible in 3D viewer
+    bool isVisible = 3;
+
+    //start position
+    VectorProperty start = 4;
+    //end position
+    VectorProperty end = 5;
+
+    //Line diameter
+    ScalarProperty lineWidth = 6;
+    //Diameter of arrow head or cone. Zero if a simple line should be drawn.
+    ScalarProperty headSize = 7;
+    //Color
+    ColorProperty color = 8;
+}

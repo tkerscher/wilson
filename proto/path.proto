@@ -1,0 +1,26 @@
+syntax = "proto3";
+package p1on;
+
+import "interpolation.proto";
+import "vector.proto";
+
+//Path mapping time to a vector in 3D space
+message Path {
+    //Interpolation point
+    message Point {
+        //Time coordinate
+        double time = 1;
+        //Position of control point
+        Vector position = 2;
+    }
+
+    //Name as shown in explorer
+    string name = 1;
+    //Unique id used to reference this path
+    uint32 id = 2;
+
+    //interpolation points
+    repeated Point points = 3;
+    //interpolation method
+    Interpolation interpolation = 4;
+}
