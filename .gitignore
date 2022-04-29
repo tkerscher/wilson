@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#python related stuff
+.mypy_cache
+*.egg-info
+__pycache__
