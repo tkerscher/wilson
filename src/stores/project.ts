@@ -3,11 +3,12 @@ import { Graph } from "../model/graph"
 import { Label } from "../model/label"
 import { Line } from "../model/line"
 import { Path } from "../model/path"
+import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
 import { Tube } from "../model/tube"
 
 export const useProject = defineStore('project', {
-    state: () => ({
+    state: (): Project => ({
         //Init empty project. See model/project
         meta: {
             name: "New Project",
@@ -28,5 +29,16 @@ export const useProject = defineStore('project', {
         lines: <Line[]>[],
         tubes: <Tube[]>[],
         labels: <Label[]>[]
-    })
+    }),
+    actions: {
+        loadProject(file: File) {
+            file.arrayBuffer().then(buffer => {
+                const array = new Uint8Array(buffer)
+                const project = Project.decode(array)
+                this.$patch(project)
+                //Debug:
+                console.log(Project.toJSON(project))
+            })
+        }
+    }
 })

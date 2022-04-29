@@ -1,10 +1,19 @@
-<script setup lang="ts">
-import WIPDisclaimer from './components/WIPDisclaimer.vue'
-</script>
-
 <template>
-  <WIPDisclaimer />
+  <FileDropContainer :allowedFiles="/\.p1on/" @fileDrop="project.loadProject">
+    <WIPDisclaimer/>
+  </FileDropContainer>
 </template>
+
+<script setup lang="ts">
+import FileDropContainer from './components/FileDropContainer.vue'
+import WIPDisclaimer from './components/WIPDisclaimer.vue'
+import { useProject } from './stores/project'
+const project = useProject()
+
+function foo() {
+  alert('foo')
+}
+</script>
 
 <style>
 #app {
@@ -13,6 +22,11 @@ import WIPDisclaimer from './components/WIPDisclaimer.vue'
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 </style>
