@@ -5,6 +5,7 @@
             Currently, there is nothing to show! <br />
             Select a file to watch it.
         </p>
+        
     </div>
 </template>
 
