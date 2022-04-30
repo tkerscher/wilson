@@ -148,7 +148,7 @@ class SceneBuilder {
                 else {
                     //create animation based on graph
                     const animation = new Animation(graph.name, property, 1.0,
-                        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CONSTANT)
+                        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE)
                     const keyFrames = graph.points.map(p =>
                         ({ frame: p.time, value: p.value}))
                     animation.setKeys(keyFrames)
@@ -177,7 +177,7 @@ class SceneBuilder {
                 else {
                     //create animation based on the referenced path
                     const animation = new Animation(path.name, property, 1.0,
-                        Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CONSTANT)
+                        Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CYCLE)
                     const keyFrames = path.points.map(p => ({ frame: p.time,
                         value: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
                     animation.setKeys(keyFrames)
@@ -205,7 +205,7 @@ class SceneBuilder {
                 }
                 else {
                     const animation = new Animation(graph.name, property, 1.0,
-                        Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CONSTANT)
+                        Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE)
                     //We need to normalize the values for the colormap -> get min, max
                     const min = Math.min(...graph.points.map(p => p.value))
                     const max = Math.max(...graph.points.map(p => p.value))

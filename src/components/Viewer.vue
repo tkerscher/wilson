@@ -22,7 +22,7 @@ function loadProject() {
         scene.engine.runRenderLoop(() => {
             scene!.scene.render()
         })
-        scene.animation.play()
+        scene.animation.play(true)
     }
 }
 project.$subscribe((mutation, state) => loadProject())
