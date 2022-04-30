@@ -14,10 +14,14 @@ const project = useProject()
 var scene: SceneContainer|null = null
 var engine: Engine|null = null
 
-function loadProject(project: Project) {
+function loadProject() {
+    if (project.isEmpty) {
+        return
+    }
+
     if (canvas.value) {
-        console.log(project)
-        scene = createScene(project, canvas.value)
+        console.log(project.$state)
+        scene = createScene(project.$state, canvas.value)
         //console.log(scene)
         scene.engine.runRenderLoop(() => {
             scene!.scene.render()
@@ -25,7 +29,7 @@ function loadProject(project: Project) {
         scene.animation.play()
     }
 }
-project.$subscribe((mutation, state) => loadProject(state))
+project.$subscribe((mutation, state) => loadProject())
 
 function resizeCanvas() {
     canvas.value!.width = canvas.value!.clientWidth
@@ -36,6 +40,7 @@ const resizer = new ResizeObserver(resizeCanvas)
 
 onMounted(() => {
     resizeCanvas()
+    loadProject()
     resizer.observe(canvas.value!)
 })
 </script>

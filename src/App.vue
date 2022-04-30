@@ -1,10 +1,12 @@
 <template>
   <FileDropContainer :allowedFiles="/\.p1on/" @fileDrop="project.loadProject">
-    <Viewer />
+    <EmptyProjectDisclaimer v-if="project.isEmpty" />
+    <Viewer v-else />
   </FileDropContainer>
 </template>
 
 <script setup lang="ts">
+import EmptyProjectDisclaimer from './components/EmptyProjectDisclaimer.vue'
 import FileDropContainer from './components/FileDropContainer.vue'
 import Viewer from './components/Viewer.vue'
 import { useProject } from './stores/project'

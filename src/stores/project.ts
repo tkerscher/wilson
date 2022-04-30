@@ -30,6 +30,16 @@ export const useProject = defineStore('project', {
         tubes: <Tube[]>[],
         labels: <Label[]>[]
     }),
+    getters: {
+        isEmpty: (state): boolean => {
+            //Check if there is anything to draw
+            //array.some returns false on empty ones
+            return !state.spheres.some(s => s.isVisible) &&
+                   !state.lines.some(l => l.isVisible) &&
+                   !state.tubes.some(t => t.isVisible) &&
+                   !state.labels.some(l => l.isVisible);
+        }
+    },
     actions: {
         loadProject(file: File) {
             file.arrayBuffer().then(buffer => {
