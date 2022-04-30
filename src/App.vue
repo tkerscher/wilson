@@ -1,18 +1,14 @@
 <template>
   <FileDropContainer :allowedFiles="/\.p1on/" @fileDrop="project.loadProject">
-    <WIPDisclaimer/>
+    <Viewer />
   </FileDropContainer>
 </template>
 
 <script setup lang="ts">
 import FileDropContainer from './components/FileDropContainer.vue'
-import WIPDisclaimer from './components/WIPDisclaimer.vue'
+import Viewer from './components/Viewer.vue'
 import { useProject } from './stores/project'
 const project = useProject()
-
-function foo() {
-  alert('foo')
-}
 </script>
 
 <style>

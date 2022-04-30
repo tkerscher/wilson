@@ -7,6 +7,13 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.10.tgz#873b16db82a8909e0fbd7f115772f4b739f6ce78"
   integrity sha512-n2Q6i+fnJqzOaq2VkdXxy2TCPCWQZHiCo0XqmrCvDWcZQKRyZzYi4Z0yxlBuN0w+r2ZHmre+Q087DSrw3pbJDQ==
 
+"@babylonjs/core@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.4.0.tgz#84481462df73fab0cb34a1ba4947cf15f3349bf1"
+  integrity sha512-d3y7HE/5kMRnn2dBab26+kaEpYwlowf/mg1dy+MNufmSQCURaXxSUkalUSWs634XBJVe6K/NAbVszIT8RMXKVg==
+  dependencies:
+    tslib "^2.3.1"
+
 "@heroicons/vue@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@heroicons/vue/-/vue-1.0.6.tgz#d8b90734b436eb5a87f40cc300b64a0fb0031f7f"
@@ -520,6 +527,11 @@ ts-proto@^1.110.4:
     protobufjs "^6.8.8"
     ts-poet "^4.11.0"
     ts-proto-descriptors "1.6.0"
+
+tslib@^2.3.1:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
 typescript@^4.5.4:
   version "4.6.4"
