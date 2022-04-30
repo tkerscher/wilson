@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import "./style.css"
 import EmptyProjectDisclaimer from './components/EmptyProjectDisclaimer.vue'
 import FileDropContainer from './components/FileDropContainer.vue'
 import Viewer from './components/Viewer.vue'

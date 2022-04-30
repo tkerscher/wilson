@@ -1,0 +1,26 @@
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+.p-button {
+    background-color: #3497ff;
+    color: white;
+
+    border-radius: 5px;
+    border: 1px solid #5baaff;
+    padding: 2px 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    user-select: none;
+}
+.p-button:hover {
+    background-color: #5baaff;
+    cursor: pointer;
+}
+.p-button:active {
+    background-color: #2675ca;
+}
