@@ -3,16 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import { ArcRotateCamera, Color3, Engine, HemisphericLight, Material, MeshBuilder, Scene, SceneLoader, StandardMaterial, Vector3 } from '@babylonjs/core';
 import { onMounted, ref } from 'vue'
-import { Color } from '../model/color';
-import { Project } from '../model/project';
 import { createScene, SceneContainer } from '../sceneBuilder'
 import { useProject } from '../stores/project'
 const canvas = ref<HTMLCanvasElement|null>(null)
 const project = useProject()
 var scene: SceneContainer|null = null
-var engine: Engine|null = null
 
 function loadProject() {
     if (project.isEmpty) {
@@ -34,7 +30,7 @@ project.$subscribe((mutation, state) => loadProject())
 function resizeCanvas() {
     canvas.value!.width = canvas.value!.clientWidth
     canvas.value!.height = canvas.value!.clientHeight
-    engine?.resize()
+    scene?.engine?.resize()
 }
 const resizer = new ResizeObserver(resizeCanvas)
 
