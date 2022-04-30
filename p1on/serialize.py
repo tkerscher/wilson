@@ -87,9 +87,9 @@ def serializeProject(project: Project) -> str:
         out.meta.endTime = project.endTime
     else:
         ninf = float('-inf')
-        endGraph = max((g.points[0].time for g in out.graphs if len(g.points) > 0), default=ninf)
-        endPath = max((p.points[0].time for p in out.paths if len(p.points) > 0), default=ninf)
-        end = min(endGraph, endPath)
+        endGraph = max((g.points[-1].time for g in out.graphs if len(g.points) > 0), default=ninf)
+        endPath = max((p.points[-1].time for p in out.paths if len(p.points) > 0), default=ninf)
+        end = max(endGraph, endPath)
         if end == ninf:
             end = 0.0
         out.meta.endTime = end
