@@ -7,7 +7,6 @@ import { Project } from './model/project';
 import { ColorProperty, ScalarProperty, VectorProperty } from './model/properties';
 import { Sphere } from './model/sphere';
 import { Tube } from './model/tube';
-
 export interface SceneContainer {
     animation: AnimationGroup,
     engine: Engine,
@@ -23,6 +22,7 @@ class SceneBuilder {
     #engine: Engine
     #project: Project
     #scene: Scene
+    #nextId: number = 0
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
         this.#project = project
@@ -39,6 +39,8 @@ class SceneBuilder {
         //create camera
         this.#buildCamera(this.#project.camera)
         //create objects
+        //The order must be same as in Project!
+        //Otherwise the ids will be wrong
         this.#project.spheres.forEach(s => this.#buildSphere(s))
         this.#project.lines.forEach(l => this.#buildLine(l))
         this.#project.tubes.forEach(t => this.#buildTube(t))
@@ -93,6 +95,7 @@ class SceneBuilder {
         }
 
         var mesh = MeshBuilder.CreateSphere(sphere.name, undefined, this.#scene)
+        mesh.uniqueId = this.#nextId++
 
         const radius = this.#parseScalar(sphere.radius, "scalingDeterminant")
         if (typeof radius == 'number') {

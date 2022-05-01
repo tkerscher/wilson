@@ -7,6 +7,8 @@ import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
 import { Tube } from "../model/tube"
 
+export type ObjectMeta = Sphere | Line | Tube | Label;
+
 export const useProject = defineStore('project', {
     state: (): Project => ({
         //Init empty project. See model/project
@@ -49,6 +51,42 @@ export const useProject = defineStore('project', {
                 //Debug:
                 console.log(Project.toJSON(project))
             })
+        },
+        /**
+         * Returns the object meta by id
+         * @param id Index into flat array of project's object
+         * @returns The object's meta or null if not found
+         */
+        getMetaById(id: number): ObjectMeta | null {
+            //Is it a sphere?
+            if (id < this.$state.spheres.length) {
+                return this.$state.spheres[id]
+            }
+            else {
+                id -= this.$state.spheres.length;
+            }
+            //Is it a line?
+            if (id < this.$state.lines.length) {
+                return this.$state.lines[id]
+            }
+            else {
+                id -= this.$state.lines.length
+            }
+            //Is it a tube?
+            if (id < this.$state.tubes.length) {
+                return this.$state.tubes[id]
+            }
+            else {
+                id -= this.$state.tubes.length
+            }
+            //Is it a label?
+            if (id < this.$state.labels.length) {
+                return this.$state.labels[id]
+            }
+            else {
+                //run out of objects
+                return null
+            }
         }
     }
 })
