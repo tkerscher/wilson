@@ -29,7 +29,6 @@ function timelineDown(e: MouseEvent) {
     emits('scrubbingStart')
     
     const newRatio = e.offsetX / timeline.value!.clientWidth
-    console.log(e.offsetX)
     const newValue = newRatio * (props.maxValue - props.minValue) + props.minValue
     emits('update:modelValue', newValue)
 
