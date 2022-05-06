@@ -142,7 +142,7 @@ const emits = defineEmits<{
 }
 .forward-icon {
     mask-image: url(../assets/icons/forward-fast.svg);
-    -mask-image: url(../assets/icons/forward-fast.svg);
+    -webkit-mask-image: url(../assets/icons/forward-fast.svg);
 }
 .info-icon {
     mask-image: url(../assets/icons/circle-info.svg);
