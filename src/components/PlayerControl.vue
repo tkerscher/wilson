@@ -15,6 +15,11 @@
                  role="button" title="Toggle Repeat" @mouseup="player.toggleLooping"></div>
         </div>
         <div class="right-action-group">
+            <DialInput :min-value="0.01"
+                       :max-value="1000"
+                       prefix="x "
+                       style="width: 80px"
+                       v-model="player.speedRatio" />
             <div :class="['action-button', player.isFullscreen ? 'compress-icon' : 'expand-icon']"
                  role="button" title="Toggle Fullscreen" @mouseup="player.toggleFullscreen"></div>
         </div>
@@ -32,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import DialInput from './DialInput.vue'
 import Slider from './Slider.vue'
 import { usePlayer } from '../stores/player'
 const player = usePlayer()
