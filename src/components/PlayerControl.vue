@@ -5,7 +5,7 @@
             <div class="left-action-group">
                 <div :class="['action-button', player.isCameraLocked ? 'camera-fixed-icon' : 'camera-icon']"
                      role="button" title="Fix Camera" @mouseup="player.toggleCameraLocked"></div>
-                <div class="action-button info-icon" role="button" title="Show Project Info" @mouseup="emits('OpenInfoClicked')"></div>
+                <div class="action-button info-icon" role="button" title="Show Project Info" @mouseup="emits('openInfoClicked')"></div>
             </div>
             <div class="middle-action-group">
                 <div class="action-button rewind-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
@@ -22,7 +22,7 @@
                            style="width: 80px"
                            v-model="player.speedRatio" />
                 <div :class="['action-button', player.isFullscreen ? 'compress-icon' : 'expand-icon']"
-                     role="button" title="Toggle Fullscreen" @mouseup="player.toggleFullscreen"></div>
+                     role="button" title="Toggle Fullscreen" @mouseup="emits('toggleFullscreen')"></div>
             </div>
         </div>
         <div class="bottom-action-bar">
@@ -45,9 +45,10 @@ import { usePlayer } from '../stores/player'
 const player = usePlayer()
 
 const emits = defineEmits<{
-    (e: 'OpenInfoClicked'): void,
+    (e: 'openInfoClicked'): void,
     (e: 'scrubbingStart'): void,
     (e: 'scrubbingEnd'): void
+    (e: 'toggleFullscreen'): void
 }>()
 </script>
 
