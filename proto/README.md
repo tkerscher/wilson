@@ -23,7 +23,7 @@ There are three fundamental data types:
 
 |Type    | Description   |
 |--------|---------------|
-| Color  | RGB value containing red, green and blue as `floats` (0,1). Values outside the range are clamped. |
+| Color  | RGBA value containing red, green, blue and alpha as `floats` (0,1). Values outside the range are clamped. The alpha channel controls transparency where 0 means transparent and 1 completely opaque.  |
 | Vector | 3D vector consisting of a x, y and z component stored as `doubles`. Can either denote a point or direction in 3D space.|
 | Time   | Time is counted in nanoseconds from the start of the event and is stored as `double`. |
 
@@ -38,17 +38,14 @@ discrete points in time a value of its corresponding scalar type.
 | Graph | `double` | Function of time mapping to a scalar `T -> R`   |
 | Path  | `Vector` | Function of time mapping to a vector `T -> R^3` |
 
-The table can be used to create a continuous function governed by the specified
-interpolation mode.
-
-| Mode   | Description |
-|--------|-------------|
-| Step   | Holds the value of the most recent interpolation point. |
-| Linear | Linearly interpolates between the most recent and next interpolation point. |
-| Cubic  | Cubic interpolation between the most recent and next interpolation point. More smooth than `Linear`. |
-
 Each table also has a unique `id` stored as `uint32`, which can be used to
 reference it by other objects, as well as a human readable `name` string.
+
+### Color Map
+
+There is also a global `ColorMap` which is used to translate scalars used in
+`ColorProperties` into actual Colors. Similar to the table types it has a list
+of color stops mapping `double` to `Color`.
 
 ### Properties
 
@@ -57,21 +54,22 @@ const scalar or are calculated based on a table referenced by its `id`.
 
 There are three types of properties:
 
-| Property       | Scalar   | Table   |
-|----------------|----------|---------|
-| ScalarProperty | `double` | `Graph` | 
-| VectorProperty | `Vector` | `Path`  |
-| ColorProperty  | `Color`  | `Graph` |
+| Property       | Scalar               | Table   |
+|----------------|----------------------|---------|
+| ScalarProperty | `double`             | `Graph` | 
+| VectorProperty | `Vector`             | `Path`  |
+| ColorProperty  | `Color` or `double`  | `Graph` |
 
 The `ColorProperty` is somewhat special, as its scalar is not the same as the
-table's it's referencing. The conversion between the calculated `double` from
-the `Graph` and the expected `Color` is done using a color map.
+table's it's referencing. The conversion between the `double` given or
+calculated from the referenced `Graph` and the expected `Color` is done using
+the color map stored in the project root object.
 
-### Scripts
+<!-- ### Scripts
 
 Additionally, a project can contain script files which cannot be used for manipulating the animation
 while running but creating the data used during a animation. They are basically a named string, i.e.
-a string containing the code with a name, that is shown in the explorer.
+a string containing the code with a name, that is shown in the explorer. -->
 
 ## Objects
 
@@ -145,7 +143,7 @@ objects. Thus it contains arrays of the following types:
  - Data
     - `Graph`
     - `Path`
-    - `Script`
+    - `ColorMap`
  - Objects
     - `Sphere`
     - `Line`
