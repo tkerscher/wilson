@@ -24,7 +24,8 @@ export interface VectorProperty {
 export interface ColorProperty {
   source?:
     | { $case: "constValue"; constValue: Color }
-    | { $case: "graphId"; graphId: number };
+    | { $case: "graphId"; graphId: number }
+    | { $case: "scalarValue"; scalarValue: number };
 }
 
 function createBaseScalarProperty(): ScalarProperty {
@@ -222,6 +223,9 @@ export const ColorProperty = {
     if (message.source?.$case === "graphId") {
       writer.uint32(16).uint32(message.source.graphId);
     }
+    if (message.source?.$case === "scalarValue") {
+      writer.uint32(25).double(message.source.scalarValue);
+    }
     return writer;
   },
 
@@ -241,6 +245,12 @@ export const ColorProperty = {
         case 2:
           message.source = { $case: "graphId", graphId: reader.uint32() };
           break;
+        case 3:
+          message.source = {
+            $case: "scalarValue",
+            scalarValue: reader.double(),
+          };
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -255,6 +265,8 @@ export const ColorProperty = {
         ? { $case: "constValue", constValue: Color.fromJSON(object.constValue) }
         : isSet(object.graphId)
         ? { $case: "graphId", graphId: Number(object.graphId) }
+        : isSet(object.scalarValue)
+        ? { $case: "scalarValue", scalarValue: Number(object.scalarValue) }
         : undefined,
     };
   },
@@ -267,6 +279,8 @@ export const ColorProperty = {
         : undefined);
     message.source?.$case === "graphId" &&
       (obj.graphId = Math.round(message.source?.graphId));
+    message.source?.$case === "scalarValue" &&
+      (obj.scalarValue = message.source?.scalarValue);
     return obj;
   },
 
@@ -290,6 +304,16 @@ export const ColorProperty = {
       object.source?.graphId !== null
     ) {
       message.source = { $case: "graphId", graphId: object.source.graphId };
+    }
+    if (
+      object.source?.$case === "scalarValue" &&
+      object.source?.scalarValue !== undefined &&
+      object.source?.scalarValue !== null
+    ) {
+      message.source = {
+        $case: "scalarValue",
+        scalarValue: object.source.scalarValue,
+      };
     }
     return message;
   },

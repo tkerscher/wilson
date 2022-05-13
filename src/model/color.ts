@@ -12,10 +12,12 @@ export interface Color {
   g: number;
   /** Blue channel [0,1] */
   b: number;
+  /** Alpha channel [0,1] where 0 is transparent and 1 opaque */
+  a: number;
 }
 
 function createBaseColor(): Color {
-  return { r: 0, g: 0, b: 0 };
+  return { r: 0, g: 0, b: 0, a: 0 };
 }
 
 export const Color = {
@@ -28,6 +30,9 @@ export const Color = {
     }
     if (message.b !== 0) {
       writer.uint32(29).float(message.b);
+    }
+    if (message.a !== 0) {
+      writer.uint32(37).float(message.a);
     }
     return writer;
   },
@@ -48,6 +53,9 @@ export const Color = {
         case 3:
           message.b = reader.float();
           break;
+        case 4:
+          message.a = reader.float();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -61,6 +69,7 @@ export const Color = {
       r: isSet(object.r) ? Number(object.r) : 0,
       g: isSet(object.g) ? Number(object.g) : 0,
       b: isSet(object.b) ? Number(object.b) : 0,
+      a: isSet(object.a) ? Number(object.a) : 0,
     };
   },
 
@@ -69,6 +78,7 @@ export const Color = {
     message.r !== undefined && (obj.r = message.r);
     message.g !== undefined && (obj.g = message.g);
     message.b !== undefined && (obj.b = message.b);
+    message.a !== undefined && (obj.a = message.a);
     return obj;
   },
 
@@ -77,6 +87,7 @@ export const Color = {
     message.r = object.r ?? 0;
     message.g = object.g ?? 0;
     message.b = object.b ?? 0;
+    message.a = object.a ?? 0;
     return message;
   },
 };

@@ -4,6 +4,7 @@ import * as _m0 from "protobufjs/minimal";
 import { ProjectMeta } from "./meta";
 import { Graph } from "./graph";
 import { Path } from "./path";
+import { ColorMap } from "./colormap";
 import { Color } from "./color";
 import { Camera } from "./camera";
 import { Sphere } from "./sphere";
@@ -21,6 +22,12 @@ export interface Project {
   graphs: Graph[];
   /** list of paths */
   paths: Path[];
+  /**
+   * list of scripts
+   * repeated Script scripts = 4;
+   * global color map
+   */
+  colormap: ColorMap | undefined;
   /** Clear color, i.e. scene background */
   clearColor: Color | undefined;
   /** Overrides standard camera if provided */
@@ -40,6 +47,7 @@ function createBaseProject(): Project {
     meta: undefined,
     graphs: [],
     paths: [],
+    colormap: undefined,
     clearColor: undefined,
     camera: undefined,
     spheres: [],
@@ -62,6 +70,9 @@ export const Project = {
     }
     for (const v of message.paths) {
       Path.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.colormap !== undefined) {
+      ColorMap.encode(message.colormap, writer.uint32(42).fork()).ldelim();
     }
     if (message.clearColor !== undefined) {
       Color.encode(message.clearColor, writer.uint32(74).fork()).ldelim();
@@ -100,6 +111,9 @@ export const Project = {
         case 3:
           message.paths.push(Path.decode(reader, reader.uint32()));
           break;
+        case 5:
+          message.colormap = ColorMap.decode(reader, reader.uint32());
+          break;
         case 9:
           message.clearColor = Color.decode(reader, reader.uint32());
           break;
@@ -135,6 +149,9 @@ export const Project = {
       paths: Array.isArray(object?.paths)
         ? object.paths.map((e: any) => Path.fromJSON(e))
         : [],
+      colormap: isSet(object.colormap)
+        ? ColorMap.fromJSON(object.colormap)
+        : undefined,
       clearColor: isSet(object.clearColor)
         ? Color.fromJSON(object.clearColor)
         : undefined,
@@ -168,6 +185,10 @@ export const Project = {
     } else {
       obj.paths = [];
     }
+    message.colormap !== undefined &&
+      (obj.colormap = message.colormap
+        ? ColorMap.toJSON(message.colormap)
+        : undefined);
     message.clearColor !== undefined &&
       (obj.clearColor = message.clearColor
         ? Color.toJSON(message.clearColor)
@@ -207,6 +228,10 @@ export const Project = {
         : undefined;
     message.graphs = object.graphs?.map((e) => Graph.fromPartial(e)) || [];
     message.paths = object.paths?.map((e) => Path.fromPartial(e)) || [];
+    message.colormap =
+      object.colormap !== undefined && object.colormap !== null
+        ? ColorMap.fromPartial(object.colormap)
+        : undefined;
     message.clearColor =
       object.clearColor !== undefined && object.clearColor !== null
         ? Color.fromPartial(object.clearColor)
