@@ -1,6 +1,16 @@
-import { Animation, AnimationGroup, ArcRotateCamera, Color3, Color4, CubicEase, Engine, HemisphericLight, IEasingFunction, MeshBuilder, Nullable, Scene, StandardMaterial, UniversalCamera, Vector3 } from '@babylonjs/core'
+import {
+    Animation,
+    AnimationGroup,
+    Color3, Color4,
+    Engine,
+    HemisphericLight,
+    MeshBuilder,
+    Scene,
+    StandardMaterial,
+    UniversalCamera,
+    Vector3
+} from '@babylonjs/core'
 import { Camera } from './model/camera';
-import { Interpolation } from './model/interpolation';
 import { Label } from './model/label';
 import { Line } from './model/line';
 import { Project } from './model/project';
@@ -155,8 +165,6 @@ class SceneBuilder {
                     const keyFrames = graph.points.map(p =>
                         ({ frame: p.time, value: p.value}))
                     animation.setKeys(keyFrames)
-                    const easing = this.#parseInterpolation(graph.interpolation)
-                    animation.setEasingFunction(easing)
                     return animation
                 }
         }
@@ -184,8 +192,6 @@ class SceneBuilder {
                     const keyFrames = path.points.map(p => ({ frame: p.time,
                         value: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
                     animation.setKeys(keyFrames)
-                    const easing = this.#parseInterpolation(path.interpolation)
-                    animation.setEasingFunction(easing)
                     return animation
                 }
         }
@@ -215,8 +221,6 @@ class SceneBuilder {
                     const keyFrames = graph.points.map(p => 
                         ({ frame: p.time, value: this.#translateColor(p.value, min, max)}))
                     animation.setKeys(keyFrames)
-                    const easing = this.#parseInterpolation(graph.interpolation)
-                    animation.setEasingFunction(easing)
                     return animation
                 }
         }
@@ -228,26 +232,5 @@ class SceneBuilder {
      */
     #translateColor(value: number, min: number, max: number): Color3 {
         throw Error('Not Implemented') //TODO
-    }
-
-    #parseInterpolation(interpolation: Interpolation): Nullable<IEasingFunction> {
-        switch (interpolation) {
-            case Interpolation.STEP:
-                return new StepEasing()        
-            case Interpolation.LINEAR:
-                return null
-            case Interpolation.CUBIC:
-                return new CubicEase()
-            default:
-                //Unknown interpolation. Might happen if the protobuf files get
-                //updated. -> Return default mode: linear
-                return null
-        }
-    }
-}
-
-class StepEasing implements IEasingFunction {
-    ease(gradient: number): number {
-        return 0.0
     }
 }
