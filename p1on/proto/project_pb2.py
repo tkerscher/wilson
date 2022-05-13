@@ -16,19 +16,20 @@ import p1on.proto.color_pb2 as color__pb2
 import p1on.proto.meta_pb2 as meta__pb2
 import p1on.proto.graph_pb2 as graph__pb2
 import p1on.proto.path_pb2 as path__pb2
+import p1on.proto.colormap_pb2 as colormap__pb2
 import p1on.proto.label_pb2 as label__pb2
 import p1on.proto.line_pb2 as line__pb2
 import p1on.proto.sphere_pb2 as sphere__pb2
 import p1on.proto.tube_pb2 as tube__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rproject.proto\x12\x04p1on\x1a\x0c\x63\x61mera.proto\x1a\x0b\x63olor.proto\x1a\nmeta.proto\x1a\x0bgraph.proto\x1a\npath.proto\x1a\x0blabel.proto\x1a\nline.proto\x1a\x0csphere.proto\x1a\ntube.proto\"\x93\x02\n\x07Project\x12\x1f\n\x04meta\x18\x01 \x01(\x0b\x32\x11.p1on.ProjectMeta\x12\x1b\n\x06graphs\x18\x02 \x03(\x0b\x32\x0b.p1on.Graph\x12\x19\n\x05paths\x18\x03 \x03(\x0b\x32\n.p1on.Path\x12\x1f\n\nclearColor\x18\t \x01(\x0b\x32\x0b.p1on.Color\x12\x1c\n\x06\x63\x61mera\x18\n \x01(\x0b\x32\x0c.p1on.Camera\x12\x1d\n\x07spheres\x18\x10 \x03(\x0b\x32\x0c.p1on.Sphere\x12\x19\n\x05lines\x18\x11 \x03(\x0b\x32\n.p1on.Line\x12\x19\n\x05tubes\x18\x12 \x03(\x0b\x32\n.p1on.Tube\x12\x1b\n\x06labels\x18\x13 \x03(\x0b\x32\x0b.p1on.Labelb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rproject.proto\x12\x04p1on\x1a\x0c\x63\x61mera.proto\x1a\x0b\x63olor.proto\x1a\nmeta.proto\x1a\x0bgraph.proto\x1a\npath.proto\x1a\x0e\x63olormap.proto\x1a\x0blabel.proto\x1a\nline.proto\x1a\x0csphere.proto\x1a\ntube.proto\"\xb5\x02\n\x07Project\x12\x1f\n\x04meta\x18\x01 \x01(\x0b\x32\x11.p1on.ProjectMeta\x12\x1b\n\x06graphs\x18\x02 \x03(\x0b\x32\x0b.p1on.Graph\x12\x19\n\x05paths\x18\x03 \x03(\x0b\x32\n.p1on.Path\x12 \n\x08\x63olormap\x18\x05 \x01(\x0b\x32\x0e.p1on.ColorMap\x12\x1f\n\nclearColor\x18\t \x01(\x0b\x32\x0b.p1on.Color\x12\x1c\n\x06\x63\x61mera\x18\n \x01(\x0b\x32\x0c.p1on.Camera\x12\x1d\n\x07spheres\x18\x10 \x03(\x0b\x32\x0c.p1on.Sphere\x12\x19\n\x05lines\x18\x11 \x03(\x0b\x32\n.p1on.Line\x12\x19\n\x05tubes\x18\x12 \x03(\x0b\x32\n.p1on.Tube\x12\x1b\n\x06labels\x18\x13 \x03(\x0b\x32\x0b.p1on.Labelb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'project_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _PROJECT._serialized_start=139
-  _PROJECT._serialized_end=414
+  _PROJECT._serialized_start=155
+  _PROJECT._serialized_end=464
 # @@protoc_insertion_point(module_scope)

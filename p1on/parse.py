@@ -3,9 +3,9 @@ import numpy as np
 
 from p1on.objects import Label, Line, Sphere, Tube
 from p1on.data import (
+    ColorMap,
     ColorProperty,
     Graph,
-    Interpolation,
     ScalarProperty,
     Path, PathLike,
     VectorProperty )
@@ -50,6 +50,8 @@ def parseProjectFromString(data: str) -> Project:
         result.clearColor = (c.r, c.g, c.b)
     if project.HasField('camera'):
         result.camera = _parseCamera(project.camera, _paths)
+    if project.HasField('colormap'):
+        result.colormap = _parseColormap(project.colormap)
 
     #done
     return result
@@ -63,38 +65,31 @@ def parseProjectFromFile(path: str) -> Project:
 
 ################################## Data ########################################
 
-def _parseInterpolation(i: proto.Interpolation) -> Interpolation:
-    if i == proto.Interpolation.STEP:
-        return 'step'
-    elif i == proto.Interpolation.LINEAR:
-        return 'linear'
-    elif i == proto.Interpolation.CUBIC:
-        return 'cubic'
-    else:
-        #In order to be future proof, we have to expect seeing unknown properties
-        return 'linear' #default
-
 def _parseGraph(graph: proto.Graph) -> Tuple[int, Graph]:
     #meta
     name = graph.name
-    interpolation = _parseInterpolation(graph.interpolation)
     #data
     array = np.empty((len(graph.points),2), dtype=np.float64)
     for i, point in enumerate(graph.points):
         array[i] = point.time, point.value
     #done -> return id value tuple to allow constructing a dict
-    return (graph.id, Graph(array, name, interpolation))
+    return (graph.id, Graph(array, name))
 
 def _parsePath(path: proto.Path) -> Tuple[int, Path]:
     #meta
     name = path.name
-    interpolation = _parseInterpolation(path.interpolation)
     #data
-    array = np.array((len(path.points),4))
+    array = np.empty((len(path.points),4))
     for i, point in enumerate(path.points):
         array[i] = point.time, point.x, point.y, point.z
     #done -> return id value tuple to allow constructing a dict
-    return (path.id, Path(array, name, interpolation))
+    return (path.id, Path(array, name))
+
+def _parseColormap(colormap: proto.ColorMap) -> ColorMap:
+    cmap = np.empty((len(colormap.stops),5))
+    for i, stop in enumerate(colormap.stops):
+        cmap[i] = stop.value, stop.color.r, stop.color.g, stop.color.b, stop.color.a
+    return cmap
 
 def _parseCamera(camera: proto.Camera, pathDict: Dict[int, Path]) -> Camera:
     position = _parseVectorProperty(camera.position, pathDict, True)
@@ -162,6 +157,8 @@ def _parseColorProperty(
     elif p.HasField('constValue'):
         #construct color
         return (p.constValue.r, p.constValue.g, p.constValue.b)
+    elif p.HasField('scalarValue'):
+        return p.scalarValue
     elif optional:
         #not set and optional -> Return None
         return None

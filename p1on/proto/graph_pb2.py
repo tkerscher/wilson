@@ -11,18 +11,17 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import p1on.proto.interpolation_pb2 as interpolation__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0bgraph.proto\x12\x04p1on\x1a\x13interpolation.proto\"\x96\x01\n\x05Graph\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\r\x12!\n\x06points\x18\x03 \x03(\x0b\x32\x11.p1on.Graph.Point\x12*\n\rinterpolation\x18\x04 \x01(\x0e\x32\x13.p1on.Interpolation\x1a$\n\x05Point\x12\x0c\n\x04time\x18\x01 \x01(\x01\x12\r\n\x05value\x18\x02 \x01(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0bgraph.proto\x12\x04p1on\"j\n\x05Graph\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\r\x12!\n\x06points\x18\x03 \x03(\x0b\x32\x11.p1on.Graph.Point\x1a$\n\x05Point\x12\x0c\n\x04time\x18\x01 \x01(\x01\x12\r\n\x05value\x18\x02 \x01(\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'graph_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GRAPH._serialized_start=43
-  _GRAPH._serialized_end=193
-  _GRAPH_POINT._serialized_start=157
-  _GRAPH_POINT._serialized_end=193
+  _GRAPH._serialized_start=21
+  _GRAPH._serialized_end=127
+  _GRAPH_POINT._serialized_start=91
+  _GRAPH_POINT._serialized_end=127
 # @@protoc_insertion_point(module_scope)

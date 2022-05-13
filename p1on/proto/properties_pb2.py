@@ -15,7 +15,7 @@ import p1on.proto.color_pb2 as color__pb2
 import p1on.proto.vector_pb2 as vector__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10properties.proto\x12\x04p1on\x1a\x0b\x63olor.proto\x1a\x0cvector.proto\"C\n\x0eScalarProperty\x12\x14\n\nconstValue\x18\x01 \x01(\x01H\x00\x12\x11\n\x07graphId\x18\x02 \x01(\rH\x00\x42\x08\n\x06source\"P\n\x0eVectorProperty\x12\"\n\nconstValue\x18\x01 \x01(\x0b\x32\x0c.p1on.VectorH\x00\x12\x10\n\x06pathId\x18\x02 \x01(\rH\x00\x42\x08\n\x06source\"O\n\rColorProperty\x12!\n\nconstValue\x18\x01 \x01(\x0b\x32\x0b.p1on.ColorH\x00\x12\x11\n\x07graphId\x18\x02 \x01(\rH\x00\x42\x08\n\x06sourceb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10properties.proto\x12\x04p1on\x1a\x0b\x63olor.proto\x1a\x0cvector.proto\"C\n\x0eScalarProperty\x12\x14\n\nconstValue\x18\x01 \x01(\x01H\x00\x12\x11\n\x07graphId\x18\x02 \x01(\rH\x00\x42\x08\n\x06source\"P\n\x0eVectorProperty\x12\"\n\nconstValue\x18\x01 \x01(\x0b\x32\x0c.p1on.VectorH\x00\x12\x10\n\x06pathId\x18\x02 \x01(\rH\x00\x42\x08\n\x06source\"f\n\rColorProperty\x12!\n\nconstValue\x18\x01 \x01(\x0b\x32\x0b.p1on.ColorH\x00\x12\x11\n\x07graphId\x18\x02 \x01(\rH\x00\x12\x15\n\x0bscalarValue\x18\x03 \x01(\x01H\x00\x42\x08\n\x06sourceb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'properties_pb2', globals())
@@ -27,5 +27,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _VECTORPROPERTY._serialized_start=122
   _VECTORPROPERTY._serialized_end=202
   _COLORPROPERTY._serialized_start=204
-  _COLORPROPERTY._serialized_end=283
+  _COLORPROPERTY._serialized_end=306
 # @@protoc_insertion_point(module_scope)

@@ -11,19 +11,18 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import p1on.proto.interpolation_pb2 as interpolation__pb2
 import p1on.proto.vector_pb2 as vector__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\npath.proto\x12\x04p1on\x1a\x13interpolation.proto\x1a\x0cvector.proto\"\xa5\x01\n\x04Path\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\r\x12 \n\x06points\x18\x03 \x03(\x0b\x32\x10.p1on.Path.Point\x12*\n\rinterpolation\x18\x04 \x01(\x0e\x32\x13.p1on.Interpolation\x1a\x35\n\x05Point\x12\x0c\n\x04time\x18\x01 \x01(\x01\x12\x1e\n\x08position\x18\x02 \x01(\x0b\x32\x0c.p1on.Vectorb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\npath.proto\x12\x04p1on\x1a\x0cvector.proto\"y\n\x04Path\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\r\x12 \n\x06points\x18\x03 \x03(\x0b\x32\x10.p1on.Path.Point\x1a\x35\n\x05Point\x12\x0c\n\x04time\x18\x01 \x01(\x01\x12\x1e\n\x08position\x18\x02 \x01(\x0b\x32\x0c.p1on.Vectorb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'path_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _PATH._serialized_start=56
-  _PATH._serialized_end=221
-  _PATH_POINT._serialized_start=168
-  _PATH_POINT._serialized_end=221
+  _PATH._serialized_start=34
+  _PATH._serialized_end=155
+  _PATH_POINT._serialized_start=102
+  _PATH_POINT._serialized_end=155
 # @@protoc_insertion_point(module_scope)

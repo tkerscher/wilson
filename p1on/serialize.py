@@ -1,11 +1,12 @@
 import numpy as np
+import cmasher as cmr
 from typing import Any, Tuple
 
 from p1on.color import getColorByName
 from p1on.data import (
+    ColorMap,
     ColorProperty,
     Graph,
-    Interpolation,
     ScalarProperty,
     Path,
     VectorProperty )
@@ -34,6 +35,11 @@ def serializeProject(project: Project) -> str:
         out.clearColor.CopyFrom(_serializeColor(project.clearColor))
     if project.camera is not None:
         out.camera.CopyFrom(_serializeCamera(project.camera, project))
+    if project.colormap is not None:
+        out.colormap.CopyFrom(_serializeColormap(project.colormap))
+    else:
+        #If no color map specified use default: viridis
+        out.colormap.CopyFrom(_serializeColormap('viridis'))
 
     #We'll fill missing names with '[type] [i]' ,e.g. Sphere 1
     nextSphereId = 1
@@ -107,22 +113,11 @@ def saveProject(project: Project, path: str) -> None:
 
 ################################## Data ########################################
 
-def _serializeInterpolation(i: Interpolation) -> proto.Interpolation:
-    if i == 'step':
-        return proto.Interpolation.STEP
-    elif i == 'linear':
-        return proto.Interpolation.LINEAR
-    elif i == 'cubic':
-        return proto.Interpolation.CUBIC
-    else:
-        raise ValueError('Illegal Interpolation')
-
 def _serializeGraph(graph: Graph, id: int) -> proto.Graph:
     result = proto.Graph()
     #meta
     result.name = graph.name
     result.id = id
-    result.interpolation = _serializeInterpolation(graph.interpolation)
     #data - sorted by time
     a = np.array(graph.array, dtype=np.float64)
     a = a[a[:,0].argsort()]
@@ -139,7 +134,6 @@ def _serializePath(path: Path, id: int) -> proto.Path:
     #meta
     result.name = path.name
     result.id = id
-    result.interpolation = _serializeInterpolation(path.interpolation)
     #data - sorted by time
     a = np.array(path.array, dtype=np.float64)
     a = a[a[:,0].argsort()]
@@ -153,14 +147,47 @@ def _serializePath(path: Path, id: int) -> proto.Path:
 
 def _serializeColor(color: Tuple[Any, ...]) -> proto.Color:
     result = proto.Color()
-    if isinstance(color, tuple) and len(color) == 3:
+    if isinstance(color, tuple) and len(color) >= 3:
         result.r = float(color[0])
         result.g = float(color[1])
         result.b = float(color[2])
-    else:
-        raise ValueError('Invalid color tuple')
-    return result
+        #optional alpha channel
+        if len(color) == 3:
+            result.a = 1.0
+        elif len(color) == 4:
+            result.a = float(color[3])
+        
+        return result
 
+    #Could not serialize -> error
+    raise ValueError('Invalid color tuple')
+
+def _serializeColormap(colormap: ColorMap) -> proto.ColorMap:
+    result = proto.ColorMap()
+    if isinstance(colormap, str):
+        #look up color map
+        colors = cmr.take_cmap_colors(colormap, None)
+        n = len(colors)
+        for i, c in enumerate(colors):
+            stop = result.stops.add()
+            stop.value = i/n
+            stop.color.r, stop.color.g, stop.color.b = c
+            stop.color.a = 1.0
+    else:
+        cmaps = np.array(colormap, dtype=np.float64)
+        #check dimensions
+        if (len(cmaps.shape) != 2 or not (cmaps.shape[1] == 4 or cmaps.shape[1] == 5)):
+            raise ValueError('Invalid color map!')
+        cmaps = cmaps[cmaps[:,0].argsort()]
+        for c in cmaps:
+            stop = result.stops.add()
+            stop.value = c[0]
+            stop.color.r, stop.color.g, stop.color.b = c[1:4]
+            if (cmaps.shape[1] == 4):
+                stop.color.a = 1.0
+            else:
+                stop.color.a = c[4]
+    return result
 
 ################################ Properties ####################################
 
@@ -227,6 +254,9 @@ def _serializeColorProperty(
     if isinstance(color, str):
         #lookup color
         result.constValue.CopyFrom(_serializeColor(getColorByName(color)))
+    elif isinstance(color, float):
+        #scalar into cmap
+        result.scalarValue = color
     elif isinstance(color, tuple):
         result.constValue.CopyFrom(_serializeColor(color))
     elif isinstance(color, Graph):

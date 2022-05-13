@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Iterable, List, Optional
 
 from p1on.objects import Animatable
-from p1on.data import ColorLike, Graph, Path, VectorProperty
+from p1on.data import ColorLike, ColorMap, Graph, Path, VectorProperty
 
 class Camera:
     """A virtual camera representing the view of the animation
@@ -84,6 +84,9 @@ class Project:
     
     camera: Optional[Camera], default=None
         An optional animatable camera
+
+    colormap: Optional[Camera], default=None
+        Color map used to translate scalars into colors. If None, viridis is used.
     """
     def __init__(
         self,
@@ -100,7 +103,7 @@ class Project:
         animatables: Iterable[Animatable] = [],
         clearColor: ColorLike = 'white',
         camera: Optional[Camera] = None,
-
+        colormap: Optional[ColorMap] = None
     ):
         self.name = name
         self.author = author
@@ -114,6 +117,7 @@ class Project:
         self.animatables = animatables # type: ignore[assignment]
         self.clearColor = clearColor
         self.camera = camera
+        self.colormap = colormap
     
     @property
     def name(self) -> str:
@@ -261,3 +265,14 @@ class Project:
     @camera.deleter
     def camera(self) -> None:
         self._camera = None
+
+    @property
+    def colormap(self) -> Optional[ColorMap]:
+        """Color map used to translate scalars into colors."""
+        return self._colormap
+    @colormap.setter
+    def colormap(self, value: Optional[ColorMap]) -> None:
+        self._colormap = value
+    @colormap.deleter
+    def colormap(self) -> None:
+        self._colormap = None

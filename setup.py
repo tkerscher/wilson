@@ -12,7 +12,8 @@ setup(name='p1on',
     license='MIT',
     packages=['p1on'],
     install_requires=[
-        'numpy',
+        'cmasher',
+        'numpy>=1.20',
         'protobuf>=3.20.1'
     ],
     python_requires='>=3.8.*')

@@ -1,12 +1,7 @@
 from __future__ import annotations
 import numpy as np
 from numpy.typing import ArrayLike
-from typing import Literal, Tuple, Union
-
-Interpolation = Literal['step', 'linear', 'cubic']
-"""
-Interpolation method between control points.
-"""
+from typing import Tuple, Union
 
 class Graph:
     """2D function mapping time to a scalar value by interpolating between
@@ -19,19 +14,14 @@ class Graph:
     
     name: str, default=''
         Name of the graph
-    
-    interpolation: {'step', 'linear', 'cubic'}, default='linear'
-        Interpolation mode
     """
     def __init__(
         self,
         array: ArrayLike,
-        name:str = '',
-        interpolation:Interpolation = 'linear'
+        name:str = ''
     ):
         self.array = array
         self.name = name
-        self.interpolation = interpolation
     
     @property
     def array(self) -> ArrayLike:
@@ -51,21 +41,10 @@ class Graph:
     @name.setter
     def name(self, value: str) -> None:
         self._name = str(value)
-    
-    @property
-    def interpolation(self) -> Interpolation:
-        """The interpolation mode between control points."""
-        return self._interpolation
-    @interpolation.setter
-    def interpolation(self, value: Interpolation) -> None:
-        if (value not in {'step', 'linear', 'cubic'}):
-            raise ValueError('Unknown interpolation mode: ' + str(value))
-        self._interpolation = value
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Graph) \
             and other.name == self.name \
-            and other.interpolation == self.interpolation \
             and bool(np.equal(other.array, self.array).all())
 
 class Path:
@@ -79,19 +58,14 @@ class Path:
     
     name: str, default=''
         Name of the graph
-    
-    interpolation: {'step', 'linear', 'cubic'}, default='linear'
-        Interpolation mode
     """
     def __init__(
         self,
         array: ArrayLike,
-        name:str = '',
-        interpolation:Interpolation = 'linear'
+        name:str = ''
     ):
         self.array = array
         self.name = name
-        self.interpolation = interpolation
     
     @property
     def array(self) -> ArrayLike:
@@ -112,21 +86,20 @@ class Path:
     def name(self, value: str) -> None:
         self._name = str(value)
     
-    @property
-    def interpolation(self) -> Interpolation:
-        """The interpolation mode between control points."""
-        return self._interpolation
-    @interpolation.setter
-    def interpolation(self, value: Interpolation) -> None:
-        if (value not in {'step', 'linear', 'cubic'}):
-            raise ValueError('Unknown interpolation mode: ' + str(value))
-        self._interpolation = value
-    
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Path) \
             and other.name == self.name \
-            and other.interpolation == self.interpolation \
             and bool(np.equal(other.array, self.array).all())
+
+ColorMap = Union[ArrayLike, str]
+"""
+A color map used to translate scalar values into colors by interpolating between
+discrete color stops. It is basically a table whose rows contains stops
+consisting of a scalar value followed by a color either as a rgb 3 tuple or rgba
+4 tuple, i.e. an array of either shape (N,4) or (N,5).
+
+Alternatively, one can specify the name of a colormap provided by matplotlib.
+"""
 
 GraphLike = Union[ArrayLike, Graph]
 """
@@ -138,7 +111,7 @@ PathLike = Union[ArrayLike, Path]
 Data types that can be used like a path.
 """
 
-ColorLike = Union[Tuple[float, float, float], str]
+ColorLike = Union[Tuple[float, float, float], Tuple[float, float, float, float], str]
 """
 Color either specified as 3 tuple rgb or named color (see xkcd color)
 """
@@ -160,10 +133,11 @@ defaults to 'linear' but can be assigned as the second element in a tuple with
 the array.
 """
 
-ColorProperty = Union[GraphLike, ColorLike]
+ColorProperty = Union[ScalarProperty, ColorLike]
 """
 Color property can either be assigned a constant color either as a named color
-string (see xkcd colors), a normed rgb tuple, or a array like of the shape (N,2)
-similar to scalar property. The interpolated value is converted into a color
-using a color map.
+string (see xkcd colors), a normed rgb(a) tuple, a scalar value, or a array like
+of the shape (N,2) similar to scalar property. The constant scalar or the
+interpolated value from the GraphLike is converted into a color using the color
+map.
 """
