@@ -32,5 +32,7 @@ message ColorProperty {
         //Animatible color according graph referenced by its id
         //The scalar value from graph is translated according to a color map
         uint32 graphId = 2;
+        //A scalar translated by the color map into an actual color
+        double scalarValue = 3;
     }
 }

@@ -8,6 +8,7 @@ import "meta.proto";
 import "graph.proto";
 import "path.proto";
 //import "script.proto";
+import "colormap.proto";
 
 import "label.proto";
 import "line.proto";
@@ -27,6 +28,8 @@ message Project {
     repeated Path paths = 3;
     //list of scripts
     //repeated Script scripts = 4;
+    //global color map
+    ColorMap colormap = 5;
 
     //-----------------------Scene-------------------------
     
