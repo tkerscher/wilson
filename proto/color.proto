@@ -9,4 +9,6 @@ message Color {
     float g = 2;
     //Blue channel [0,1]
     float b = 3;
+    //Alpha channel [0,1] where 0 is transparent and 1 opaque
+    float a = 4;
 }
