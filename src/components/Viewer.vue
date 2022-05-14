@@ -73,8 +73,8 @@ function onLoop() {
     //destroyed after it finished. We can however pause the endless loop at the
     //end of each iteration
     if (!player.isLooping) {
-        console.log('loop')
         scene!.animation.pause()
+        scene!.animation.goToFrame(player.startFrame)
         player.togglePlaying() //pause
     }
 }
