@@ -4,6 +4,7 @@ import {
     Color3, Color4,
     Engine,
     HemisphericLight,
+    IAnimationKey,
     MeshBuilder,
     Scene,
     StandardMaterial,
@@ -33,12 +34,17 @@ class SceneBuilder {
     #project: Project
     #scene: Scene
     #nextId: number = 0
+    #defaultMaterial: StandardMaterial
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
         this.#project = project
         this.#engine = new Engine(canvas, true)
         this.#scene = new Scene(this.#engine)
         this.#animationGroup = new AnimationGroup("animationGroup", this.#scene)
+        this.#defaultMaterial = new StandardMaterial("default")
+        this.#defaultMaterial.diffuseColor = Color3.Black()
+
+        console.log(project.colormap)
     }
 
     build(): SceneContainer {
@@ -123,15 +129,8 @@ class SceneBuilder {
             this.#animationGroup.addTargetedAnimation(position, mesh)
         }
 
-        const color = this.#parseColor(sphere.color, "material.diffuseColor")
-        var mat = new StandardMaterial(sphere.name + '_mat', this.#scene)
+        const mat = this.#parseColor(sphere.color, "material")
         mesh.material = mat
-        if (color instanceof Color3) {
-            mat.diffuseColor = color
-        }
-        else {
-            this.#animationGroup.addTargetedAnimation(color, mesh)
-        }
     }
     #buildLine(line: Line) {
         throw Error('Not Implemented')//TODO
@@ -196,41 +195,161 @@ class SceneBuilder {
                 }
         }
     }
-    #parseColor(color: ColorProperty|undefined, property: string): Color3|Animation {
+
+    #parseColor(color: ColorProperty|undefined, name: string): StandardMaterial {
         if (!color || !color.source) {
-            return Color3.Black()
+            return this.#defaultMaterial
         }
 
+        var mat = new StandardMaterial(name)
         switch (color.source.$case) {
             case 'constValue':
                 const c = color.source.constValue
-                return new Color3(c.r, c.g, c.b)
+                mat.diffuseColor = new Color3(c.r, c.g, c.b)
+                mat.alpha = c.a
+                break
+            case 'scalarValue':
+                var [clr, alpha] = this.#mapColor(color.source.scalarValue)
+                mat.diffuseColor = clr
+                mat.alpha = alpha
+                break
             case 'graphId':
                 const id = color.source.graphId
                 const graph = this.#project.graphs.find(g => g.id == id)
                 if (!graph || graph.points.length == 0) {
                     //Referenced graph not found -> return default
-                    return Color3.Black()
+                    return this.#defaultMaterial
+                }
+                else if (graph.points.length == 1) {
+                    const scalar = graph.points[0].value
+                    const [clr, alpha] = this.#mapColor(scalar)
+                    mat.diffuseColor = clr
+                    mat.alpha = alpha
+                    break
                 }
                 else {
-                    const animation = new Animation(graph.name, property, 1.0,
+                    const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
                         Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE)
-                    //We need to normalize the values for the colormap -> get min, max
-                    const min = Math.min(...graph.points.map(p => p.value))
-                    const max = Math.max(...graph.points.map(p => p.value))
-                    const keyFrames = graph.points.map(p => 
-                        ({ frame: p.time, value: this.#translateColor(p.value, min, max)}))
-                    animation.setKeys(keyFrames)
-                    return animation
+                    const alphaAnimation = new Animation(graph.name, "alpha", 1.0,
+                        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE)
+
+                    const clrFrames = Array<IAnimationKey>()
+                    const alphaFrames = Array<IAnimationKey>()
+                    var prevKey = graph.points[0].time
+                    var prevVal = graph.points[0].value
+                    for (var i = 1; i < graph.points.length; ++i) {
+                        //In between frames, the new start is a duplicate of the previous end
+                        //-> remove last frame before adding new
+                        clrFrames.pop()
+                        alphaFrames.pop()
+
+                        const toKey = graph.points[i].time
+                        const toVal = graph.points[i].value
+                        const [clr, alpha] = this.#colorFrames(prevKey, prevVal, toKey, toVal)
+                        clrFrames.push(...clr)
+                        alphaFrames.push(...alpha)
+
+                        prevKey = toKey
+                        prevVal = toVal
+                    }
+
+                    colorAnimation.setKeys(clrFrames)
+                    alphaAnimation.setKeys(alphaFrames)
+
+                    this.#animationGroup.addTargetedAnimation(colorAnimation, mat)
+                    this.#animationGroup.addTargetedAnimation(alphaAnimation, mat)
+                    break
                 }
         }
+        return mat
     }
 
-    /**
-     * Translates a value to a color using a color map
-     * @param value Value to be looked up in the color map
-     */
-    #translateColor(value: number, min: number, max: number): Color3 {
-        throw Error('Not Implemented') //TODO
+    #mapColor(scalar: number): [Color3,number] {
+        if (!this.#project.colormap || this.#project.colormap.stops.length == 0) {
+            return [Color3.Black(), 1.0]
+        }
+        const stops = this.#project.colormap.stops
+
+        //get first stop after scalar
+        const stopIdx = stops.findIndex(s => s.value > scalar)
+        if (stopIdx == -1) {
+            //Clamp top
+            const clr = stops[stops.length - 1].color
+            if (!clr) {
+                return [Color3.Black(), 1.0]
+            }
+            else {
+                return [new Color3(clr.r, clr.g, clr.b), clr.a]
+            }
+        }
+        if (stopIdx == 0) {
+            //clamp bottom
+            const clr = stops[0].color
+            if (!clr) {
+                return [Color3.Black(), 1.0]
+            }
+            else {
+                return [new Color3(clr.r, clr.g, clr.b), clr.a]
+            }
+        }
+
+        //linear interpolate between stops
+        const before = stops[stopIdx - 1]
+        const after = stops[stopIdx]
+        if (!before.color || !after.color) {
+            return [Color3.Black(), 1.0]
+        }
+        const lambda = (scalar - before.value) / (after.value - before.value)
+        const red = before.color.r + (after.color.r - before.color.r) * lambda
+        const green = before.color.g + (after.color.g - before.color.g) * lambda
+        const blue = before.color.b + (after.color.b - before.color.b) * lambda
+        const alpha = before.color.a + (after.color.a - before.color.a) * lambda
+        console.log(red, green, blue, alpha)
+        return [new Color3(red, green, blue), alpha]
+    }
+
+    //Produces key frames to get not only start end end values, but also all gradient stops inbetween
+    #colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
+        var clrFrames = Array<IAnimationKey>()
+        var alphaFrames = Array<IAnimationKey>()
+        if (!this.#project.colormap || this.#project.colormap.stops.length == 0) {
+            return [clrFrames, alphaFrames]
+        }
+        const stops = this.#project.colormap.stops
+        const keyRange = toKey - fromKey
+        const valRange = toVal - fromVal
+
+        //get first stop after scalar
+        const fromIdx = stops.findIndex(s => s.value > fromVal)
+        var toIdx = stops.findIndex(s => s.value > toVal)
+        if (toIdx == -1) {
+            //Point one behind last
+            toIdx = stops.length
+        }
+
+        //add first key
+        const fromColor = this.#mapColor(fromVal)
+        clrFrames.push({ frame: fromKey, value: fromColor[0] })
+        alphaFrames.push({ frame: fromKey, value: fromColor[1] })
+
+        //add color stops inbetween
+        const step = fromIdx < toIdx ? 1 : -1
+        for (var i = fromIdx; i != toIdx; i += step) {
+            const stop = stops[i]
+            if (!stop.color) {
+                continue
+            }
+            const lambda = (stop.value - fromVal) / valRange
+            const key = fromKey + lambda * keyRange
+            clrFrames.push({frame: key, value: new Color3(stop.color.r, stop.color.g, stop.color.b)})
+            alphaFrames.push({frame: key, value: stop.color.a})
+        }
+
+        //add last key
+        const toColor = this.#mapColor(toVal)
+        clrFrames.push({ frame: toKey, value: toColor[0] })
+        alphaFrames.push({ frame: toKey, value: toColor[1] })
+
+        return [clrFrames, alphaFrames]
     }
 }
