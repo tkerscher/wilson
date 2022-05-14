@@ -43,8 +43,6 @@ class SceneBuilder {
         this.#animationGroup = new AnimationGroup("animationGroup", this.#scene)
         this.#defaultMaterial = new StandardMaterial("default")
         this.#defaultMaterial.diffuseColor = Color3.Black()
-
-        console.log(project.colormap)
     }
 
     build(): SceneContainer {
@@ -304,7 +302,6 @@ class SceneBuilder {
         const green = before.color.g + (after.color.g - before.color.g) * lambda
         const blue = before.color.b + (after.color.b - before.color.b) * lambda
         const alpha = before.color.a + (after.color.a - before.color.a) * lambda
-        console.log(red, green, blue, alpha)
         return [new Color3(red, green, blue), alpha]
     }
 
