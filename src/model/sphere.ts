@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { VectorProperty, ScalarProperty, ColorProperty } from "./properties";
+import { ColorProperty, VectorProperty, ScalarProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,12 +13,12 @@ export interface Sphere {
   description: string;
   /** True, if visible in 3D viewer */
   isVisible: boolean;
+  /** Color */
+  color: ColorProperty | undefined;
   /** center of sphere */
   position: VectorProperty | undefined;
   /** Radius */
   radius: ScalarProperty | undefined;
-  /** Color */
-  color: ColorProperty | undefined;
 }
 
 function createBaseSphere(): Sphere {
@@ -26,9 +26,9 @@ function createBaseSphere(): Sphere {
     name: "",
     description: "",
     isVisible: false,
+    color: undefined,
     position: undefined,
     radius: undefined,
-    color: undefined,
   };
 }
 
@@ -46,17 +46,17 @@ export const Sphere = {
     if (message.isVisible === true) {
       writer.uint32(24).bool(message.isVisible);
     }
+    if (message.color !== undefined) {
+      ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
+    }
     if (message.position !== undefined) {
       VectorProperty.encode(
         message.position,
-        writer.uint32(34).fork()
+        writer.uint32(42).fork()
       ).ldelim();
     }
     if (message.radius !== undefined) {
-      ScalarProperty.encode(message.radius, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.color !== undefined) {
-      ColorProperty.encode(message.color, writer.uint32(50).fork()).ldelim();
+      ScalarProperty.encode(message.radius, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -78,13 +78,13 @@ export const Sphere = {
           message.isVisible = reader.bool();
           break;
         case 4:
-          message.position = VectorProperty.decode(reader, reader.uint32());
+          message.color = ColorProperty.decode(reader, reader.uint32());
           break;
         case 5:
-          message.radius = ScalarProperty.decode(reader, reader.uint32());
+          message.position = VectorProperty.decode(reader, reader.uint32());
           break;
         case 6:
-          message.color = ColorProperty.decode(reader, reader.uint32());
+          message.radius = ScalarProperty.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -99,14 +99,14 @@ export const Sphere = {
       name: isSet(object.name) ? String(object.name) : "",
       description: isSet(object.description) ? String(object.description) : "",
       isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
+      color: isSet(object.color)
+        ? ColorProperty.fromJSON(object.color)
+        : undefined,
       position: isSet(object.position)
         ? VectorProperty.fromJSON(object.position)
         : undefined,
       radius: isSet(object.radius)
         ? ScalarProperty.fromJSON(object.radius)
-        : undefined,
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
         : undefined,
     };
   },
@@ -117,6 +117,10 @@ export const Sphere = {
     message.description !== undefined &&
       (obj.description = message.description);
     message.isVisible !== undefined && (obj.isVisible = message.isVisible);
+    message.color !== undefined &&
+      (obj.color = message.color
+        ? ColorProperty.toJSON(message.color)
+        : undefined);
     message.position !== undefined &&
       (obj.position = message.position
         ? VectorProperty.toJSON(message.position)
@@ -124,10 +128,6 @@ export const Sphere = {
     message.radius !== undefined &&
       (obj.radius = message.radius
         ? ScalarProperty.toJSON(message.radius)
-        : undefined);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
         : undefined);
     return obj;
   },
@@ -137,6 +137,10 @@ export const Sphere = {
     message.name = object.name ?? "";
     message.description = object.description ?? "";
     message.isVisible = object.isVisible ?? false;
+    message.color =
+      object.color !== undefined && object.color !== null
+        ? ColorProperty.fromPartial(object.color)
+        : undefined;
     message.position =
       object.position !== undefined && object.position !== null
         ? VectorProperty.fromPartial(object.position)
@@ -144,10 +148,6 @@ export const Sphere = {
     message.radius =
       object.radius !== undefined && object.radius !== null
         ? ScalarProperty.fromPartial(object.radius)
-        : undefined;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
         : undefined;
     return message;
   },

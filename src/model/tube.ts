@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { ScalarProperty, ColorProperty } from "./properties";
+import { ColorProperty, ScalarProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,6 +13,8 @@ export interface Tube {
   description: string;
   /** True, if visible in 3D viewer */
   isVisible: boolean;
+  /** Color of the tube at a certain point identified by time */
+  color: ColorProperty | undefined;
   /** Index of path to follow */
   pathId: number;
   /**
@@ -22,8 +24,6 @@ export interface Tube {
   isGrowing: boolean;
   /** Radius of the tube at a certain point identified by time */
   radius: ScalarProperty | undefined;
-  /** Color of the tube at a certain point identified by time */
-  color: ColorProperty | undefined;
 }
 
 function createBaseTube(): Tube {
@@ -31,10 +31,10 @@ function createBaseTube(): Tube {
     name: "",
     description: "",
     isVisible: false,
+    color: undefined,
     pathId: 0,
     isGrowing: false,
     radius: undefined,
-    color: undefined,
   };
 }
 
@@ -49,17 +49,17 @@ export const Tube = {
     if (message.isVisible === true) {
       writer.uint32(24).bool(message.isVisible);
     }
+    if (message.color !== undefined) {
+      ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
+    }
     if (message.pathId !== 0) {
-      writer.uint32(32).uint32(message.pathId);
+      writer.uint32(40).uint32(message.pathId);
     }
     if (message.isGrowing === true) {
-      writer.uint32(40).bool(message.isGrowing);
+      writer.uint32(48).bool(message.isGrowing);
     }
     if (message.radius !== undefined) {
-      ScalarProperty.encode(message.radius, writer.uint32(50).fork()).ldelim();
-    }
-    if (message.color !== undefined) {
-      ColorProperty.encode(message.color, writer.uint32(58).fork()).ldelim();
+      ScalarProperty.encode(message.radius, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -81,16 +81,16 @@ export const Tube = {
           message.isVisible = reader.bool();
           break;
         case 4:
-          message.pathId = reader.uint32();
+          message.color = ColorProperty.decode(reader, reader.uint32());
           break;
         case 5:
-          message.isGrowing = reader.bool();
+          message.pathId = reader.uint32();
           break;
         case 6:
-          message.radius = ScalarProperty.decode(reader, reader.uint32());
+          message.isGrowing = reader.bool();
           break;
         case 7:
-          message.color = ColorProperty.decode(reader, reader.uint32());
+          message.radius = ScalarProperty.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -105,13 +105,13 @@ export const Tube = {
       name: isSet(object.name) ? String(object.name) : "",
       description: isSet(object.description) ? String(object.description) : "",
       isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
+      color: isSet(object.color)
+        ? ColorProperty.fromJSON(object.color)
+        : undefined,
       pathId: isSet(object.pathId) ? Number(object.pathId) : 0,
       isGrowing: isSet(object.isGrowing) ? Boolean(object.isGrowing) : false,
       radius: isSet(object.radius)
         ? ScalarProperty.fromJSON(object.radius)
-        : undefined,
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
         : undefined,
     };
   },
@@ -122,15 +122,15 @@ export const Tube = {
     message.description !== undefined &&
       (obj.description = message.description);
     message.isVisible !== undefined && (obj.isVisible = message.isVisible);
+    message.color !== undefined &&
+      (obj.color = message.color
+        ? ColorProperty.toJSON(message.color)
+        : undefined);
     message.pathId !== undefined && (obj.pathId = Math.round(message.pathId));
     message.isGrowing !== undefined && (obj.isGrowing = message.isGrowing);
     message.radius !== undefined &&
       (obj.radius = message.radius
         ? ScalarProperty.toJSON(message.radius)
-        : undefined);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
         : undefined);
     return obj;
   },
@@ -140,15 +140,15 @@ export const Tube = {
     message.name = object.name ?? "";
     message.description = object.description ?? "";
     message.isVisible = object.isVisible ?? false;
+    message.color =
+      object.color !== undefined && object.color !== null
+        ? ColorProperty.fromPartial(object.color)
+        : undefined;
     message.pathId = object.pathId ?? 0;
     message.isGrowing = object.isGrowing ?? false;
     message.radius =
       object.radius !== undefined && object.radius !== null
         ? ScalarProperty.fromPartial(object.radius)
-        : undefined;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
         : undefined;
     return message;
   },

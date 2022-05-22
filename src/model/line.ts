@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { VectorProperty, ScalarProperty, ColorProperty } from "./properties";
+import { ColorProperty, VectorProperty, ScalarProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,16 +13,18 @@ export interface Line {
   description: string;
   /** True, if visible in 3D viewer */
   isVisible: boolean;
+  /** Color */
+  color: ColorProperty | undefined;
   /** start position */
   start: VectorProperty | undefined;
   /** end position */
   end: VectorProperty | undefined;
   /** Line diameter */
   lineWidth: ScalarProperty | undefined;
-  /** Diameter of arrow head or cone. Zero if a simple line should be drawn. */
-  headSize: ScalarProperty | undefined;
-  /** Color */
-  color: ColorProperty | undefined;
+  /** true, if there should be a cone pointing toward the start point */
+  pointForward: boolean;
+  /** true, if there should be a cone pointing toward the end point */
+  pointBackward: boolean;
 }
 
 function createBaseLine(): Line {
@@ -30,11 +32,12 @@ function createBaseLine(): Line {
     name: "",
     description: "",
     isVisible: false,
+    color: undefined,
     start: undefined,
     end: undefined,
     lineWidth: undefined,
-    headSize: undefined,
-    color: undefined,
+    pointForward: false,
+    pointBackward: false,
   };
 }
 
@@ -49,26 +52,26 @@ export const Line = {
     if (message.isVisible === true) {
       writer.uint32(24).bool(message.isVisible);
     }
+    if (message.color !== undefined) {
+      ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
+    }
     if (message.start !== undefined) {
-      VectorProperty.encode(message.start, writer.uint32(34).fork()).ldelim();
+      VectorProperty.encode(message.start, writer.uint32(42).fork()).ldelim();
     }
     if (message.end !== undefined) {
-      VectorProperty.encode(message.end, writer.uint32(42).fork()).ldelim();
+      VectorProperty.encode(message.end, writer.uint32(50).fork()).ldelim();
     }
     if (message.lineWidth !== undefined) {
       ScalarProperty.encode(
         message.lineWidth,
-        writer.uint32(50).fork()
-      ).ldelim();
-    }
-    if (message.headSize !== undefined) {
-      ScalarProperty.encode(
-        message.headSize,
         writer.uint32(58).fork()
       ).ldelim();
     }
-    if (message.color !== undefined) {
-      ColorProperty.encode(message.color, writer.uint32(66).fork()).ldelim();
+    if (message.pointForward === true) {
+      writer.uint32(64).bool(message.pointForward);
+    }
+    if (message.pointBackward === true) {
+      writer.uint32(72).bool(message.pointBackward);
     }
     return writer;
   },
@@ -90,19 +93,22 @@ export const Line = {
           message.isVisible = reader.bool();
           break;
         case 4:
-          message.start = VectorProperty.decode(reader, reader.uint32());
+          message.color = ColorProperty.decode(reader, reader.uint32());
           break;
         case 5:
-          message.end = VectorProperty.decode(reader, reader.uint32());
+          message.start = VectorProperty.decode(reader, reader.uint32());
           break;
         case 6:
-          message.lineWidth = ScalarProperty.decode(reader, reader.uint32());
+          message.end = VectorProperty.decode(reader, reader.uint32());
           break;
         case 7:
-          message.headSize = ScalarProperty.decode(reader, reader.uint32());
+          message.lineWidth = ScalarProperty.decode(reader, reader.uint32());
           break;
         case 8:
-          message.color = ColorProperty.decode(reader, reader.uint32());
+          message.pointForward = reader.bool();
+          break;
+        case 9:
+          message.pointBackward = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -117,6 +123,9 @@ export const Line = {
       name: isSet(object.name) ? String(object.name) : "",
       description: isSet(object.description) ? String(object.description) : "",
       isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
+      color: isSet(object.color)
+        ? ColorProperty.fromJSON(object.color)
+        : undefined,
       start: isSet(object.start)
         ? VectorProperty.fromJSON(object.start)
         : undefined,
@@ -124,12 +133,12 @@ export const Line = {
       lineWidth: isSet(object.lineWidth)
         ? ScalarProperty.fromJSON(object.lineWidth)
         : undefined,
-      headSize: isSet(object.headSize)
-        ? ScalarProperty.fromJSON(object.headSize)
-        : undefined,
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
-        : undefined,
+      pointForward: isSet(object.pointForward)
+        ? Boolean(object.pointForward)
+        : false,
+      pointBackward: isSet(object.pointBackward)
+        ? Boolean(object.pointBackward)
+        : false,
     };
   },
 
@@ -139,6 +148,10 @@ export const Line = {
     message.description !== undefined &&
       (obj.description = message.description);
     message.isVisible !== undefined && (obj.isVisible = message.isVisible);
+    message.color !== undefined &&
+      (obj.color = message.color
+        ? ColorProperty.toJSON(message.color)
+        : undefined);
     message.start !== undefined &&
       (obj.start = message.start
         ? VectorProperty.toJSON(message.start)
@@ -149,14 +162,10 @@ export const Line = {
       (obj.lineWidth = message.lineWidth
         ? ScalarProperty.toJSON(message.lineWidth)
         : undefined);
-    message.headSize !== undefined &&
-      (obj.headSize = message.headSize
-        ? ScalarProperty.toJSON(message.headSize)
-        : undefined);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
-        : undefined);
+    message.pointForward !== undefined &&
+      (obj.pointForward = message.pointForward);
+    message.pointBackward !== undefined &&
+      (obj.pointBackward = message.pointBackward);
     return obj;
   },
 
@@ -165,6 +174,10 @@ export const Line = {
     message.name = object.name ?? "";
     message.description = object.description ?? "";
     message.isVisible = object.isVisible ?? false;
+    message.color =
+      object.color !== undefined && object.color !== null
+        ? ColorProperty.fromPartial(object.color)
+        : undefined;
     message.start =
       object.start !== undefined && object.start !== null
         ? VectorProperty.fromPartial(object.start)
@@ -177,14 +190,8 @@ export const Line = {
       object.lineWidth !== undefined && object.lineWidth !== null
         ? ScalarProperty.fromPartial(object.lineWidth)
         : undefined;
-    message.headSize =
-      object.headSize !== undefined && object.headSize !== null
-        ? ScalarProperty.fromPartial(object.headSize)
-        : undefined;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
-        : undefined;
+    message.pointForward = object.pointForward ?? false;
+    message.pointBackward = object.pointBackward ?? false;
     return message;
   },
 };

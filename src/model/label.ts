@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { VectorProperty, ScalarProperty, ColorProperty } from "./properties";
+import { ColorProperty, VectorProperty, ScalarProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,12 +13,12 @@ export interface Label {
   description: string;
   /** True, if visible in 3D viewer */
   isVisible: boolean;
+  /** Text color */
+  color: ColorProperty | undefined;
   /** Position of upper left corner */
   position: VectorProperty | undefined;
   /** Font size */
   fontSize: ScalarProperty | undefined;
-  /** Text color */
-  color: ColorProperty | undefined;
   /** Background color */
   background: ColorProperty | undefined;
 }
@@ -28,9 +28,9 @@ function createBaseLabel(): Label {
     name: "",
     description: "",
     isVisible: false,
+    color: undefined,
     position: undefined,
     fontSize: undefined,
-    color: undefined,
     background: undefined,
   };
 }
@@ -46,20 +46,20 @@ export const Label = {
     if (message.isVisible === true) {
       writer.uint32(24).bool(message.isVisible);
     }
+    if (message.color !== undefined) {
+      ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
+    }
     if (message.position !== undefined) {
       VectorProperty.encode(
         message.position,
-        writer.uint32(34).fork()
+        writer.uint32(42).fork()
       ).ldelim();
     }
     if (message.fontSize !== undefined) {
       ScalarProperty.encode(
         message.fontSize,
-        writer.uint32(42).fork()
+        writer.uint32(50).fork()
       ).ldelim();
-    }
-    if (message.color !== undefined) {
-      ColorProperty.encode(message.color, writer.uint32(50).fork()).ldelim();
     }
     if (message.background !== undefined) {
       ColorProperty.encode(
@@ -87,13 +87,13 @@ export const Label = {
           message.isVisible = reader.bool();
           break;
         case 4:
-          message.position = VectorProperty.decode(reader, reader.uint32());
+          message.color = ColorProperty.decode(reader, reader.uint32());
           break;
         case 5:
-          message.fontSize = ScalarProperty.decode(reader, reader.uint32());
+          message.position = VectorProperty.decode(reader, reader.uint32());
           break;
         case 6:
-          message.color = ColorProperty.decode(reader, reader.uint32());
+          message.fontSize = ScalarProperty.decode(reader, reader.uint32());
           break;
         case 7:
           message.background = ColorProperty.decode(reader, reader.uint32());
@@ -111,14 +111,14 @@ export const Label = {
       name: isSet(object.name) ? String(object.name) : "",
       description: isSet(object.description) ? String(object.description) : "",
       isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
+      color: isSet(object.color)
+        ? ColorProperty.fromJSON(object.color)
+        : undefined,
       position: isSet(object.position)
         ? VectorProperty.fromJSON(object.position)
         : undefined,
       fontSize: isSet(object.fontSize)
         ? ScalarProperty.fromJSON(object.fontSize)
-        : undefined,
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
         : undefined,
       background: isSet(object.background)
         ? ColorProperty.fromJSON(object.background)
@@ -132,6 +132,10 @@ export const Label = {
     message.description !== undefined &&
       (obj.description = message.description);
     message.isVisible !== undefined && (obj.isVisible = message.isVisible);
+    message.color !== undefined &&
+      (obj.color = message.color
+        ? ColorProperty.toJSON(message.color)
+        : undefined);
     message.position !== undefined &&
       (obj.position = message.position
         ? VectorProperty.toJSON(message.position)
@@ -139,10 +143,6 @@ export const Label = {
     message.fontSize !== undefined &&
       (obj.fontSize = message.fontSize
         ? ScalarProperty.toJSON(message.fontSize)
-        : undefined);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
         : undefined);
     message.background !== undefined &&
       (obj.background = message.background
@@ -156,6 +156,10 @@ export const Label = {
     message.name = object.name ?? "";
     message.description = object.description ?? "";
     message.isVisible = object.isVisible ?? false;
+    message.color =
+      object.color !== undefined && object.color !== null
+        ? ColorProperty.fromPartial(object.color)
+        : undefined;
     message.position =
       object.position !== undefined && object.position !== null
         ? VectorProperty.fromPartial(object.position)
@@ -163,10 +167,6 @@ export const Label = {
     message.fontSize =
       object.fontSize !== undefined && object.fontSize !== null
         ? ScalarProperty.fromPartial(object.fontSize)
-        : undefined;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
         : undefined;
     message.background =
       object.background !== undefined && object.background !== null
