@@ -63,7 +63,7 @@ function loadProject() {
 project.$subscribe((mutation, state) => loadProject())
 function renderLoop() {
     scene!.scene.render()
-    if (!isScrubbing.value) {
+    if (!isScrubbing.value && scene!.animation.animatables.length > 0) {
         player.$patch({ currentFrame: scene!.animation.animatables[0].masterFrame})
     }
 }
