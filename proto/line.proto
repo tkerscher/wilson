@@ -12,15 +12,18 @@ message Line {
     //True, if visible in 3D viewer
     bool isVisible = 3;
 
-    //start position
-    VectorProperty start = 4;
-    //end position
-    VectorProperty end = 5;
-
-    //Line diameter
-    ScalarProperty lineWidth = 6;
-    //Diameter of arrow head or cone. Zero if a simple line should be drawn.
-    ScalarProperty headSize = 7;
     //Color
-    ColorProperty color = 8;
+    ColorProperty color = 4;
+
+    //start position
+    VectorProperty start = 5;
+    //end position
+    VectorProperty end = 6;
+    //Line diameter
+    ScalarProperty lineWidth = 7;
+    
+    //true, if there should be a cone pointing toward the start point
+    bool pointForward = 8;
+    //true, if there should be a cone pointing toward the end point
+    bool pointBackward = 9;
 }

@@ -108,7 +108,11 @@ A line connection two points.
 | start    | `VectorProperty` | Start point of the line. |
 | end      | `VectorProperty` | End point of the line. |
 | lineWidth| `ScalarProperty` | Diameter of the line. |
-| headSize | `ScalarProperty` | Diameter of the cone making the arrow head pointing to end. Zero if no arrow should be drawn. |
+| pointForward | `bool`       | True, if it should point toward start. |
+| pointBackward| `bool`       | True, if it should point toward end. |
+
+If both `pointForward` and `pointBackward` are set, the line will point in
+both direction.
 
 ### Tube
 
