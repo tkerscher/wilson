@@ -11,15 +11,15 @@ message Tube {
     string description = 2;
     //True, if visible in 3D viewer
     bool isVisible = 3;
+    //Color of the tube at a certain point identified by time
+    ColorProperty color = 4;
 
     //Index of path to follow
-    uint32 pathId = 4;
+    uint32 pathId = 5;
     //True if the tube is growing with time,
     //or false, if the tube is always drawn complete
-    bool isGrowing = 5;
+    bool isGrowing = 6;
 
     //Radius of the tube at a certain point identified by time
-    ScalarProperty radius = 6;
-    //Color of the tube at a certain point identified by time
-    ColorProperty color = 7;
+    ScalarProperty radius = 7;
 }

@@ -11,11 +11,11 @@ message Sphere {
     string description = 2;
     //True, if visible in 3D viewer
     bool isVisible = 3;
+    //Color
+    ColorProperty color = 4;
 
     //center of sphere
-    VectorProperty position = 4;
+    VectorProperty position = 5;
     //Radius
-    ScalarProperty radius = 5;
-    //Color
-    ColorProperty color = 6;
+    ScalarProperty radius = 6;
 }

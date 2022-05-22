@@ -11,14 +11,14 @@ message Label {
     string description = 2;
     //True, if visible in 3D viewer
     bool isVisible = 3;
+    //Text color
+    ColorProperty color = 4;
 
     //Position of upper left corner
-    VectorProperty position = 4;
+    VectorProperty position = 5;
 
     //Font size
-    ScalarProperty fontSize = 5;
-    //Text color
-    ColorProperty color = 6;
+    ScalarProperty fontSize = 6;
     //Background color
     ColorProperty background = 7;
 }
