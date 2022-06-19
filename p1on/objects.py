@@ -234,11 +234,14 @@ class Line(Animatable):
     end: {VectorProperty, None}, default=None,
         End position of the line. Origin if None.
     
-    linewidth: ScalarProperty, default=1.0
+    lineWidth: ScalarProperty, default=1.0
         Diameter of the line.
+
+    pointForward: bool, default=False
+        True, if the line should be a arrow pointing from end to start
     
-    headSize: {ScalarProperty, None}, default=None
-        Cone diameter of arrow head. None or zero if no arrow should be drawn.
+    pointBackward: bool, default=False
+        True, if the line should be a arrow pointing from start to end
     """
     def __init__(
         self,
@@ -249,18 +252,20 @@ class Line(Animatable):
         color: ColorProperty = 'black',
         start: Optional[VectorProperty] = None,
         end: Optional[VectorProperty] = None,
-        linewidth: ScalarProperty = 1.0,
-        headSize: Optional[ScalarProperty] = None
+        lineWidth: ScalarProperty = 1.0,
+        pointForward: bool = False,
+        pointBackward: bool = False
     ):
         super().__init__(
             name=name,
             description=description,
             visible=visible,
             color=color)
-        self._start = start
-        self._end = end
-        self._linewidth = linewidth
-        self._headSize = headSize
+        self.start = start
+        self.end = end
+        self.lineWidth = lineWidth
+        self.pointForward = pointForward
+        self.pointBackward = pointBackward
     
     @property
     def start(self) -> Optional[VectorProperty]:
@@ -285,23 +290,28 @@ class Line(Animatable):
         self._end = None
     
     @property
-    def linewidth(self) -> ScalarProperty:
+    def lineWidth(self) -> ScalarProperty:
         """Diameter of the line."""
-        return self._linewidth
-    @linewidth.setter
-    def linewidth(self, value: ScalarProperty) -> None:
-        self._linewidth = value
+        return self._lineWidth
+    @lineWidth.setter
+    def lineWidth(self, value: ScalarProperty) -> None:
+        self._lineWidth = value
+
+    @property
+    def pointForward(self) -> bool:
+        """True, if arrow from end to start"""
+        return self._pointForward
+    @pointForward.setter
+    def pointForward(self, value: bool) -> None:
+        self._pointForward = value
     
     @property
-    def headSize(self) -> Optional[ScalarProperty]:
-        """Cone diameter of arrow head. None or zero if no arrow should be drawn."""
-        return self._headSize
-    @headSize.setter
-    def headSize(self, value: Optional[ScalarProperty]) -> None:
-        self._headSize = value
-    @headSize.deleter
-    def headSize(self) -> None:
-        self._headSize = None
+    def pointBackward(self) -> bool:
+        """True, if arrow from start to end"""
+        return self._pointBackward
+    @pointBackward.setter
+    def pointBackward(self, value: bool) -> None:
+        self._pointBackward = value
 
 class Label(Animatable):
     """Base class of all animatable objects

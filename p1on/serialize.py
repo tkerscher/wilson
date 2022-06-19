@@ -346,10 +346,9 @@ def _serializeLine(line: Line, project: Project) -> proto.Line:
         result.end.CopyFrom(_serializeVectorProperty(
             line.end, line.name + '_end', project))
     result.lineWidth.CopyFrom(_serializeScalarProperty(
-        line.linewidth, line.name + '_lineWidth', project))
-    if line.headSize is not None:
-        result.headSize.CopyFrom(_serializeScalarProperty(
-            line.headSize, line.name + '_headSize', project))
+        line.lineWidth, line.name + '_lineWidth', project))
+    result.pointForward = line.pointForward
+    result.pointBackward = line.pointBackward
     #done
     return result
 

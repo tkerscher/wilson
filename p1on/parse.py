@@ -225,14 +225,15 @@ def _parseLine(
     name = line.name
     description = line.description
     visible = line.isVisible
+    color = _parseColorProperty(line.color, graphDict, False)
+    assert(color is not None)
     #properties
     start = _parseVectorProperty(line.start, pathDict, True)
     end = _parseVectorProperty(line.end, pathDict, True)
-    linewidth = _parseScalarProperty(line.headWidth, graphDict, False)
-    assert(linewidth is not None)
-    headSize = _parseScalarProperty(line.headSize, graphDict, True)
-    color = _parseColorProperty(line.color, graphDict, False)
-    assert(color is not None)
+    lineWidth = _parseScalarProperty(line.headWidth, graphDict, False)
+    assert(lineWidth is not None)
+    pointForward = line.pointForward
+    pointBackward = line.pointBackward
     #Done
     return Line(name,
         description=description,
@@ -240,8 +241,9 @@ def _parseLine(
         color=color,
         start=start,
         end=end,
-        linewidth=linewidth,
-        headSize=headSize)
+        lineWidth=lineWidth,
+        pointForward=pointForward,
+        pointBackward=pointBackward)
 
 def _parseLabel(
     label: proto.Label,

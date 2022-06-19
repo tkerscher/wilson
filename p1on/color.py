@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 
 #XKCD colors taken from: https://xkcd.com/color/rgb.txt
 _colors = {
@@ -955,7 +955,22 @@ _colors = {
 }
 
 def getColorByName(color: str) -> Tuple[float, float, float, float]:
+    """"
+    Returns a color specified by its name.
+    Uses the xkcd color names.
+    """
     if color in _colors:
         return _colors[color]
     else:
         raise ValueError('Unknown color name')
+
+def getColorByRGBA(red: int, green: int, blue: int, alpha: Optional[int] = None) -> Tuple[float, float, float, float]:
+    """
+    Converts color specified by integers in the range 0-255 to the expected float tuple.
+    """
+    return (
+        0.0 if red < 0 else 1.0 if red > 255 else red / 255,
+        0.0 if green < 0 else 1.0 if green > 255 else green / 255,
+        0.0 if blue < 0 else 1.0 if blue > 255 else blue / 255,
+        1.0 if alpha is None else 0.0 if red < 0 else 1.0 if red > 255 else red / 255
+    )
