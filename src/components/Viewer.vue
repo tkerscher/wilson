@@ -17,7 +17,7 @@ import PlayerControl from './PlayerControl.vue'
 import { onMounted, ref } from 'vue'
 
 import { AbstractMesh, IPointerEvent, PickingInfo, PointerEventTypes } from '@babylonjs/core';
-import { createScene, SceneContainer } from '../sceneBuilder'
+import { createScene, SceneContainer } from '../scene/build'
 
 import { useProject, ObjectMeta } from '../stores/project'
 import { usePlayer } from '../stores/player';
