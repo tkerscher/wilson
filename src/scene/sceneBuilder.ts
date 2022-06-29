@@ -29,7 +29,7 @@ export class SceneBuilder {
         this.scene = new Scene(this.engine)
         this.animationGroup = new AnimationGroup("animationGroup", this.scene)
 
-        this.defaultMaterial = new StandardMaterial("deafult")
+        this.defaultMaterial = new StandardMaterial("default")
         this.defaultMaterial.diffuseColor = Color3.Black()
 
         //clear color

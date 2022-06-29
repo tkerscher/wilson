@@ -11,7 +11,12 @@ interface PathPoint {
 export class PathInterpolator {
     path: Array<PathPoint>
 
-    constructor(prop: VectorProperty | undefined, project: Project) {
+    constructor(prop: VectorProperty | number | undefined, project: Project) {
+        if (typeof prop == 'number') {
+            this.path = this.#parsePath(prop, project)
+            return
+        }
+
         //fall back
         if (!prop || !prop.source) {
             this.path = [{ time: 0.0, position: new Vector3() }]
@@ -25,14 +30,17 @@ export class PathInterpolator {
                 return
             case 'pathId':
                 const id = prop.source.pathId
-                const path = project.paths.find(p => p.id == id)
-                if (!path || path.points.length == 0) {
-                    this.path = [{ time: 0.0, position: new Vector3() }]
-                    return
-                }
-                this.path = path.points.map(p => ({ time: p.time,
-                    position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
+                this.path = this.#parsePath(id, project)
         }
+    }
+
+    #parsePath(id: number, project: Project): Array<PathPoint> {
+        const path = project.paths.find(p => p.id == id)
+        if (!path || path.points.length == 0) {
+            return [{ time: 0.0, position: new Vector3() }]
+        }
+        return path.points.map(p => ({ time: p.time,
+            position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
     }
 
     interpolate(t: number): Vector3 {

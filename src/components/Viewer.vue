@@ -55,6 +55,12 @@ function loadProject() {
     //Build scene
     scene = createScene(project.$state, canvas.value)
     scene.scene.onPointerUp = onSelect
+    //tube update
+    scene.scene.registerBeforeRender(() => {
+        if (player.isPlaying || isScrubbing.value) {
+            scene!.update(player.currentFrame)
+        }
+    })
     //Run animation/render
     scene.animation.play(true)
     scene.engine.runRenderLoop(renderLoop)

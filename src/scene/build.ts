@@ -10,11 +10,14 @@ import { buildCamera } from "./camera"
 import { buildLine } from "./line"
 import { SceneBuilder } from "./sceneBuilder"
 import { buildSphere } from "./sphere"
+import { TubeController } from "./tube"
 
 export interface SceneContainer {
     animation: AnimationGroup,
     engine: Engine,
-    scene: Scene
+    scene: Scene,
+
+    update: { (t: number): void }
 }
 
 export function createScene(project: Project, canvas: HTMLCanvasElement): SceneContainer {
@@ -28,7 +31,7 @@ export function createScene(project: Project, canvas: HTMLCanvasElement): SceneC
     //Otherwise the ids will be wrong
     project.spheres.forEach(s => buildSphere(builder, s))
     project.lines.forEach(l => buildLine(builder, l))
-    //project.tubes.forEach(t => buildTube(t))
+    const tubes = project.tubes.map(t => new TubeController(builder, t))
     //project.labels.forEach(l => buildLabel(l))
 
     //set animation speed
@@ -46,6 +49,7 @@ export function createScene(project: Project, canvas: HTMLCanvasElement): SceneC
     return {
         animation: builder.animationGroup,
         engine: builder.engine,
-        scene: builder.scene
+        scene: builder.scene,
+        update: t => tubes.forEach(tt => tt.update(t))
     }
 }
