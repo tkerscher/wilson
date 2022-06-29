@@ -81,6 +81,7 @@ function onLoop() {
     if (!player.isLooping) {
         scene!.animation.pause()
         scene!.animation.goToFrame(player.startFrame)
+        scene!.update(player.startFrame)
         player.togglePlaying() //pause
     }
 }
