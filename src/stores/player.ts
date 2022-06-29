@@ -7,7 +7,7 @@ export const usePlayer = defineStore('player', {
         endFrame: 100.0,
 
         speedRatio: 1.0,
-        stepSize: 1.0,
+        stepSize: 10.0,
 
         isCameraLocked: false,
         isFullscreen: false,
@@ -17,16 +17,18 @@ export const usePlayer = defineStore('player', {
     actions: {
         //TODO: Convert stepSize (seconds) to framecount via speedRatio
         forward() {
-            if (this.endFrame - this.currentFrame > this.stepSize) {
-                this.currentFrame += this.stepSize
+            let step = this.stepSize * this.speedRatio
+            if (this.endFrame - this.currentFrame > step) {
+                this.currentFrame += step
             }
             else {
                 this.currentFrame = this.endFrame
             }
         },
         backward() {
-            if (this.currentFrame - this.startFrame > this.stepSize) {
-                this.currentFrame -= this.stepSize
+            let step = this.stepSize * this.speedRatio
+            if (this.currentFrame - this.startFrame > step) {
+                this.currentFrame -= step
             }
             else {
                 this.currentFrame = this.startFrame
