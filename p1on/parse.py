@@ -92,8 +92,8 @@ def _parseColormap(colormap: proto.ColorMap) -> ColorMap:
     return cmap
 
 def _parseCamera(camera: proto.Camera, pathDict: Dict[int, Path]) -> Camera:
-    position = _parseVectorProperty(camera.position, pathDict, True)
-    target = _parseVectorProperty(camera.target, pathDict, True)
+    position = ( camera.position.x, camera.position.y, camera.position.z )
+    target = ( camera.target.x, camera.target.y, camera.target.z )
     return Camera(position=position, target=target)
 
 ################################ Properties ####################################

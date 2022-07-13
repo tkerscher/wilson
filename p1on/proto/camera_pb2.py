@@ -11,16 +11,16 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import p1on.proto.properties_pb2 as properties__pb2
+import p1on.proto.vector_pb2 as vector__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63\x61mera.proto\x12\x04p1on\x1a\x10properties.proto\"V\n\x06\x43\x61mera\x12&\n\x08position\x18\x01 \x01(\x0b\x32\x14.p1on.VectorProperty\x12$\n\x06target\x18\x02 \x01(\x0b\x32\x14.p1on.VectorPropertyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63\x61mera.proto\x12\x04p1on\x1a\x0cvector.proto\"F\n\x06\x43\x61mera\x12\x1e\n\x08position\x18\x01 \x01(\x0b\x32\x0c.p1on.Vector\x12\x1c\n\x06target\x18\x02 \x01(\x0b\x32\x0c.p1on.Vectorb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'camera_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _CAMERA._serialized_start=40
-  _CAMERA._serialized_end=126
+  _CAMERA._serialized_start=36
+  _CAMERA._serialized_end=106
 # @@protoc_insertion_point(module_scope)

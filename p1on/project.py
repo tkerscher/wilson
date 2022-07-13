@@ -1,6 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Tuple
 
 from p1on.objects import Animatable
 from p1on.data import ColorLike, ColorMap, Graph, Path, VectorProperty
@@ -10,35 +10,35 @@ class Camera:
     
     Attributes
     ----------
-    position: {VectorProperty, None}, default=None
-        The position the camera sits. Origin if None
+    position: {Tuple[float, float, float], None}, default=None
+        The position the camera sits. (1,1,1) if None
     
-    target: {VectorProperty, None}: default=None
-        The location the camera points at.
+    target: {Tuple[float, float, float], None}: default=None
+        The location the camera points at. (0,0,0) if None
     """
     def __init__(
         self,
         *,
-        position: Optional[VectorProperty] = None,
-        target: Optional[VectorProperty] = None
+        position: Optional[Tuple[float, float, float]] = None,
+        target: Optional[Tuple[float, float, float]] = None
     ):
         self.position = position
         self.target = target
     
     @property
-    def position(self) -> Optional[VectorProperty]:
+    def position(self) -> Optional[Tuple[float, float, float]]:
         """Position the camera sits."""
         return self._position
     @position.setter
-    def position(self, value: Optional[VectorProperty]) -> None:
+    def position(self, value: Optional[Tuple[float, float, float]]) -> None:
         self._position = value
 
     @property
-    def target(self) -> Optional[VectorProperty]:
+    def target(self) -> Optional[Tuple[float, float, float]]:
         """Location the camera points at."""
         return self._target
     @target.setter
-    def target(self, value: Optional[VectorProperty]) -> None:
+    def target(self, value: Optional[Tuple[float, float, float]]) -> None:
         self._target = value
 
 class Project:

@@ -279,11 +279,13 @@ def _serializeColorProperty(
 def _serializeCamera(camera: Camera, project: Project) -> proto.Camera:
     result = proto.Camera()
     if camera.position is not None:
-        result.position.CopyFrom(_serializeVectorProperty(
-            camera.position, 'camera_position', project))
+        result.position.x = camera.position[0]
+        result.position.y = camera.position[1]
+        result.position.z = camera.position[2]
     if camera.target is not None:
-        result.target.CopyFrom(_serializeVectorProperty(
-            camera.target, 'camera_target', project))
+        result.target.x = camera.target[0]
+        result.target.y = camera.target[1]
+        result.target.z = camera.target[2]
     return result
 
 ################################## Objects #####################################
