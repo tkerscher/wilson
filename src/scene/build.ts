@@ -19,7 +19,7 @@ export class SceneContainer {
     animation: AnimationGroup
     engine: Engine
     scene: Scene
-    //camera: ArcRotateCamera
+    camera: ArcRotateCamera
     
     // Animation control
     get currentFrame(): number { return this.animation.animatables[0].masterFrame }
@@ -35,7 +35,7 @@ export class SceneContainer {
         let builder = new SceneBuilder(project, canvas)
 
         //create camera
-        buildCamera(builder, project.camera)
+        this.camera = buildCamera(builder, project.camera)
 
         ///create objects
         //The order must be same as in Project!
