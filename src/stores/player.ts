@@ -9,13 +9,11 @@ export const usePlayer = defineStore('player', {
         speedRatio: 1.0,
         stepSize: 10.0,
 
-        isCameraLocked: false,
-        isFullscreen: false,
         isLooping: false,
-        isPlaying: false
+        isPlaying: false,
+        isScrubbing: false
     }),
     actions: {
-        //TODO: Convert stepSize (seconds) to framecount via speedRatio
         forward() {
             let step = this.stepSize * this.speedRatio
             if (this.endFrame - this.currentFrame > step) {
@@ -33,12 +31,6 @@ export const usePlayer = defineStore('player', {
             else {
                 this.currentFrame = this.startFrame
             }
-        },
-        toggleCameraLocked() {
-            this.isCameraLocked = !this.isCameraLocked
-        },
-        toggleLooping() {
-            this.isLooping = !this.isLooping
         },
         togglePlaying() {
             this.isPlaying = !this.isPlaying
