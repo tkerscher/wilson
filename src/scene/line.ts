@@ -46,7 +46,12 @@ function alignVector(dir: Vector3): Quaternion {
     if (theta < 1e-7) {
         axis = new Vector3(1.0,0.0,0.0) //rotate around e_x
         if (dir.y < 0.0)
-        theta = Math.PI //radians
+            theta = Math.PI //radians
+    }
+    else if(theta > 3.141592) {
+        axis = new Vector3(1.0,0.0,0.0) //rotate around e_x
+        if (dir.y > 0.0)
+            theta = Math.PI //radians
     }
 
     //create rotation quaternion
