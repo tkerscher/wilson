@@ -217,7 +217,10 @@ export class SceneBuilder {
         const valRange = toVal - fromVal
 
         //get first stop after scalar
-        const fromIdx = stops.findIndex(s => s.value > fromVal)
+        let fromIdx = stops.findIndex(s => s.value > fromVal)
+        if (fromIdx == -1) {
+            fromIdx = stops.length - 1
+        }
         var toIdx = stops.findIndex(s => s.value > toVal)
         if (toIdx == -1) {
             //Point one behind last
@@ -230,7 +233,7 @@ export class SceneBuilder {
         alphaFrames.push({ frame: fromKey, value: fromColor[1] })
 
         //add color stops inbetween
-        const step = fromIdx < toIdx ? 1 : -1
+        const step = fromIdx <= toIdx ? 1 : -1
         for (var i = fromIdx; i != toIdx; i += step) {
             const stop = stops[i]
             if (!stop.color) {
