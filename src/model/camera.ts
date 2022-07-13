@@ -1,16 +1,15 @@
 /* eslint-disable */
-import Long from "long";
+import { Vector } from "./vector";
 import * as _m0 from "protobufjs/minimal";
-import { VectorProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
 /** Virtual camera dictating the point of view rendered in 3D mode */
 export interface Camera {
   /** position of camera */
-  position: VectorProperty | undefined;
+  position: Vector | undefined;
   /** target the camera looks at */
-  target: VectorProperty | undefined;
+  target: Vector | undefined;
 }
 
 function createBaseCamera(): Camera {
@@ -23,13 +22,10 @@ export const Camera = {
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.position !== undefined) {
-      VectorProperty.encode(
-        message.position,
-        writer.uint32(10).fork()
-      ).ldelim();
+      Vector.encode(message.position, writer.uint32(10).fork()).ldelim();
     }
     if (message.target !== undefined) {
-      VectorProperty.encode(message.target, writer.uint32(18).fork()).ldelim();
+      Vector.encode(message.target, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -42,10 +38,10 @@ export const Camera = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.position = VectorProperty.decode(reader, reader.uint32());
+          message.position = Vector.decode(reader, reader.uint32());
           break;
         case 2:
-          message.target = VectorProperty.decode(reader, reader.uint32());
+          message.target = Vector.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -58,11 +54,9 @@ export const Camera = {
   fromJSON(object: any): Camera {
     return {
       position: isSet(object.position)
-        ? VectorProperty.fromJSON(object.position)
+        ? Vector.fromJSON(object.position)
         : undefined,
-      target: isSet(object.target)
-        ? VectorProperty.fromJSON(object.target)
-        : undefined,
+      target: isSet(object.target) ? Vector.fromJSON(object.target) : undefined,
     };
   },
 
@@ -70,12 +64,10 @@ export const Camera = {
     const obj: any = {};
     message.position !== undefined &&
       (obj.position = message.position
-        ? VectorProperty.toJSON(message.position)
+        ? Vector.toJSON(message.position)
         : undefined);
     message.target !== undefined &&
-      (obj.target = message.target
-        ? VectorProperty.toJSON(message.target)
-        : undefined);
+      (obj.target = message.target ? Vector.toJSON(message.target) : undefined);
     return obj;
   },
 
@@ -83,11 +75,11 @@ export const Camera = {
     const message = createBaseCamera();
     message.position =
       object.position !== undefined && object.position !== null
-        ? VectorProperty.fromPartial(object.position)
+        ? Vector.fromPartial(object.position)
         : undefined;
     message.target =
       object.target !== undefined && object.target !== null
-        ? VectorProperty.fromPartial(object.target)
+        ? Vector.fromPartial(object.target)
         : undefined;
     return message;
   },
@@ -123,11 +115,6 @@ export type Exact<P, I extends P> = P extends Builtin
         Exclude<keyof I, KeysOfUnion<P>>,
         never
       >;
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
