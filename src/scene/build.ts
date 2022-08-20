@@ -11,6 +11,7 @@ import {
 import { Project } from "../model/project"
 import { buildCamera } from "./camera"
 import { buildLine } from "./line"
+import { createOrientationViewScene } from "./orientationView"
 import { SceneBuilder } from "./sceneBuilder"
 import { buildSphere } from "./sphere"
 import { TubeController } from "./tube"
@@ -19,6 +20,7 @@ export class SceneContainer {
     animation: AnimationGroup
     engine: Engine
     scene: Scene
+    indicator: Scene
     camera: ArcRotateCamera
     
     // Animation control
@@ -74,9 +76,13 @@ export class SceneContainer {
         this.animation = builder.animationGroup
         this.scene = builder.scene
 
+        //Create indicator
+        this.indicator = createOrientationViewScene(this.engine, this.camera)
+
         //add some render logic
         this.engine.runRenderLoop(() => {
             this.scene.render()
+            this.indicator.render()
         })
         this.scene.registerBeforeRender(() => {
             tubes.forEach(t => t.update(this.currentFrame))

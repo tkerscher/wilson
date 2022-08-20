@@ -87,7 +87,7 @@ player.$subscribe((mutation, state) => {
 function resizeCanvas() {
     canvas.value!.width = canvas.value!.clientWidth
     canvas.value!.height = canvas.value!.clientHeight
-    scene?.engine?.resize() //TODO: Do I need this?
+    scene?.engine!.resize(true) //Force resize event
 }
 const resizer = new ResizeObserver(resizeCanvas)
 
