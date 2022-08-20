@@ -32,7 +32,11 @@ export class SceneContainer {
     goToFrame(frame: number) { this.animation.goToFrame(frame) }
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
-        let builder = new SceneBuilder(project, canvas)
+        //create engine
+        this.engine = new Engine(canvas, true)
+
+        //create scene builder
+        let builder = new SceneBuilder(project, this.engine)
 
         //create camera
         this.camera = buildCamera(builder, project.camera)
@@ -68,7 +72,6 @@ export class SceneContainer {
 
         //copy from builder
         this.animation = builder.animationGroup
-        this.engine = builder.engine
         this.scene = builder.scene
 
         //add some render logic

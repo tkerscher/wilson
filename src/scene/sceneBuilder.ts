@@ -15,7 +15,6 @@ import { setProperty } from "../util/property";
 
 export class SceneBuilder {
     animationGroup: AnimationGroup
-    engine: Engine
     scene: Scene
 
     project: Project
@@ -23,10 +22,9 @@ export class SceneBuilder {
 
     defaultMaterial: StandardMaterial
 
-    constructor(project: Project, canvas: HTMLCanvasElement) {
+    constructor(project: Project, engine: Engine) {
         this.project = project
-        this.engine = new Engine(canvas, true)
-        this.scene = new Scene(this.engine)
+        this.scene = new Scene(engine)
         this.animationGroup = new AnimationGroup("animationGroup", this.scene)
 
         this.defaultMaterial = new StandardMaterial("default")
