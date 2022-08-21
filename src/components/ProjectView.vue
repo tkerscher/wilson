@@ -1,24 +1,17 @@
 <template>
 <div class="container">
     <div class="main-container">
-        <div class="controller-container">
-            <PlayerControl class="controller" />
-        </div>
-        <div class="scene-view">
-            <SceneView />
-        </div>
+        <PlayerControl class="controller" />
+        <SceneView class="scene-view"/>
     </div>
-    <div class="sidebar">
-        <ResizableContainer
-            store-key="sidebar"
-            default-size="300px"
-            grip-position="left"
-            class="sidebar-resize">
-            <div>
-                <button>test</button>
-            </div>
-        </ResizableContainer>
-    </div>
+    <ResizableContainer
+        grip-position="left"
+        store-key="sidebar-width"
+        default-size="300px"
+        class="sidebar"
+    >
+        <button style="width: 100%;">OK</button>
+    </ResizableContainer>
 </div>
 </template>
 
@@ -27,7 +20,7 @@ import ResizableContainer from './ResizableContainer.vue'
 import SceneView from './SceneView.vue'
 import PlayerControl from './PlayerControl.vue'
 
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 
@@ -74,11 +67,9 @@ project.$subscribe((mutation, state) => init())
     flex: 1;
 }
 
-.sidebar-resize {
-    min-width: 100px;
-    max-width: 40%;
-}
 .sidebar {
-    max-width: 40%;
+    width: 300px;
+    height: 100%;
+    background-color: blueviolet;
 }
 </style>
