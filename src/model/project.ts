@@ -3,13 +3,12 @@ import { ProjectMeta } from "./meta";
 import { Graph } from "./graph";
 import { Path } from "./path";
 import { ColorMap } from "./colormap";
-import { Color } from "./color";
 import { Camera } from "./camera";
 import { Sphere } from "./sphere";
 import { Line } from "./line";
 import { Tube } from "./tube";
 import { Label } from "./label";
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "p1on";
 
@@ -27,8 +26,6 @@ export interface Project {
    * global color map
    */
   colormap: ColorMap | undefined;
-  /** Clear color, i.e. scene background */
-  clearColor: Color | undefined;
   /** Overrides standard camera if provided */
   camera: Camera | undefined;
   /** list of animated spheres */
@@ -47,7 +44,6 @@ function createBaseProject(): Project {
     graphs: [],
     paths: [],
     colormap: undefined,
-    clearColor: undefined,
     camera: undefined,
     spheres: [],
     lines: [],
@@ -72,9 +68,6 @@ export const Project = {
     }
     if (message.colormap !== undefined) {
       ColorMap.encode(message.colormap, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.clearColor !== undefined) {
-      Color.encode(message.clearColor, writer.uint32(74).fork()).ldelim();
     }
     if (message.camera !== undefined) {
       Camera.encode(message.camera, writer.uint32(82).fork()).ldelim();
@@ -113,9 +106,6 @@ export const Project = {
         case 5:
           message.colormap = ColorMap.decode(reader, reader.uint32());
           break;
-        case 9:
-          message.clearColor = Color.decode(reader, reader.uint32());
-          break;
         case 10:
           message.camera = Camera.decode(reader, reader.uint32());
           break;
@@ -151,9 +141,6 @@ export const Project = {
       colormap: isSet(object.colormap)
         ? ColorMap.fromJSON(object.colormap)
         : undefined,
-      clearColor: isSet(object.clearColor)
-        ? Color.fromJSON(object.clearColor)
-        : undefined,
       camera: isSet(object.camera) ? Camera.fromJSON(object.camera) : undefined,
       spheres: Array.isArray(object?.spheres)
         ? object.spheres.map((e: any) => Sphere.fromJSON(e))
@@ -187,10 +174,6 @@ export const Project = {
     message.colormap !== undefined &&
       (obj.colormap = message.colormap
         ? ColorMap.toJSON(message.colormap)
-        : undefined);
-    message.clearColor !== undefined &&
-      (obj.clearColor = message.clearColor
-        ? Color.toJSON(message.clearColor)
         : undefined);
     message.camera !== undefined &&
       (obj.camera = message.camera ? Camera.toJSON(message.camera) : undefined);
@@ -231,10 +214,6 @@ export const Project = {
       object.colormap !== undefined && object.colormap !== null
         ? ColorMap.fromPartial(object.colormap)
         : undefined;
-    message.clearColor =
-      object.clearColor !== undefined && object.clearColor !== null
-        ? Color.fromPartial(object.clearColor)
-        : undefined;
     message.camera =
       object.camera !== undefined && object.camera !== null
         ? Camera.fromPartial(object.camera)
@@ -273,10 +252,9 @@ export type DeepPartial<T> = T extends Builtin
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin
   ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<
-        Exclude<keyof I, KeysOfUnion<P>>,
-        never
-      >;
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

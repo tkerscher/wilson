@@ -25,7 +25,6 @@ export const useProject = defineStore('project', {
         paths: <Path[]>[],
         colormap: undefined,
 
-        clearColor: { r: 1.0, g: 1.0, b: 1.0, a: 1.0 },
         camera: undefined,
 
         spheres: <Sphere[]>[],
