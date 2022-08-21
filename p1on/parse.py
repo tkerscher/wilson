@@ -1,3 +1,4 @@
+from tokenize import group
 from typing import Dict, Optional, Tuple
 import numpy as np
 
@@ -45,9 +46,6 @@ def parseProjectFromString(data: str) -> Project:
     result.addAnimatables(_parseLabel(l, _graphs, _paths) for l in project.labels)
 
     #additional properties
-    if project.HasField('clearColor'):
-        c = project.clearColor
-        result.clearColor = (c.r, c.g, c.b)
     if project.HasField('camera'):
         result.camera = _parseCamera(project.camera, _paths)
     if project.HasField('colormap'):
@@ -173,11 +171,10 @@ def _parseSphere(
     graphDict: Dict[int, Graph],
     pathDict: Dict[int, Path]
 ) -> Sphere:
-    result = Sphere()
     #meta
     name = sphere.name
+    group = sphere.group
     description = sphere.description
-    visible = sphere.isVisible
     #properties
     position = _parseVectorProperty(sphere.position, pathDict, True)
     radius = _parseScalarProperty(sphere.radius, graphDict, False)
@@ -186,8 +183,8 @@ def _parseSphere(
     assert(color is not None)
     #done
     return Sphere(name,
+        group=group,
         description=description,
-        visible=visible,
         color=color,
         position=position,
         radius=radius)
@@ -199,8 +196,8 @@ def _parseTube(
 ) -> Tube:
     #meta
     name = tube.name
+    group = tube.group
     description = tube.description
-    visible = tube.isVisible
     #properties
     path: PathLike = graphDict[tube.pathId] if tube.pathId in graphDict else np.empty((0,4)) #type: ignore[assignment]
     isGrowing = tube.isGrowing
@@ -210,8 +207,8 @@ def _parseTube(
     assert(color is not None)
     #done
     return Tube(path, name,
+        group=group,
         description=description,
-        visible=visible,
         isGrowing=isGrowing,
         radius=radius,
         color=color)
@@ -223,8 +220,8 @@ def _parseLine(
 ) -> Line:
     #meta
     name = line.name
+    group = line.group
     description = line.description
-    visible = line.isVisible
     color = _parseColorProperty(line.color, graphDict, False)
     assert(color is not None)
     #properties
@@ -236,8 +233,8 @@ def _parseLine(
     pointBackward = line.pointBackward
     #Done
     return Line(name,
+        group=group,
         description=description,
-        visible=visible,
         color=color,
         start=start,
         end=end,
@@ -252,8 +249,8 @@ def _parseLabel(
 ) -> Label:
     #meta
     name = label.name
+    group = label.group
     description = label.description
-    visible = label.isVisible
     #properties
     color = _parseColorProperty(label.color, graphDict, False)
     assert(color is not None)
@@ -264,8 +261,8 @@ def _parseLabel(
         background = (1.0,1.0,1.0,0.0) #transparent
     #done
     return Label(name,
+        group=group,
         description=description,
-        visible=visible,
         color=color,
         position=position,
         fontSize=fontSize,

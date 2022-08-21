@@ -9,12 +9,12 @@ class Animatable(ABC):
     ----------
     name: {str, None}, default=None
         Name of this object
+
+    group: {str, None}, default=None
+        Name of group the animatable belongs to.
     
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-    
-    visible: {bool}, default=True
-        Wether to show this object in the animation
 
     color: ColorProperty, default='black'
         Color of the surface
@@ -23,13 +23,13 @@ class Animatable(ABC):
         self,
         name: Optional[str] = None,
         *,               
+        group: Optional[str] = None,
         description: Optional[str] = None,
-        visible: bool = True,
         color: ColorProperty = 'black'
     ):
         self._name = name
+        self._group = group
         self._description = description
-        self._visible = visible
         self._color = color
     
     @property
@@ -42,6 +42,17 @@ class Animatable(ABC):
     @name.deleter
     def name(self) -> None:
         self._name = None
+
+    @property
+    def group(self) -> Optional[str]:
+        """Name of group the animatable belongs to."""
+        return self._group
+    @group.setter
+    def group(self, value: Optional[str]) -> None:
+        self._group = value
+    @group.deleter
+    def group(self) -> None:
+        self._group = None
     
     @property
     def description(self) -> Optional[str]:
@@ -53,14 +64,6 @@ class Animatable(ABC):
     @description.deleter
     def description(self) -> None:
         self._description = None
-    
-    @property
-    def visible(self) -> bool:
-        """Wether to show this object in the animation."""
-        return self._visible
-    @visible.setter
-    def visible(self, value: bool) -> None:
-        self._visible = value
 
     @property
     def color(self) -> ColorProperty:
@@ -81,11 +84,11 @@ class Sphere(Animatable):
     name: {str, None}, default=None
         Name of this object
     
+    group: {str, None}, default=None
+        Name of group the sphere belongs to.
+
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-    
-    visible: {bool}, default=True
-        Wether to show this object in the animation
     
     position: {VectorProperty, None}, default=None
         Center of the sphere given in x,y,z coordinates. Defaults to the origin
@@ -100,17 +103,17 @@ class Sphere(Animatable):
     def __init__(
         self,
         name: Optional[str] = None,
-        *,               
+        *,
+        group: Optional[str] = None,
         description: Optional[str] = None,
-        visible: bool = True,
         position: Optional[VectorProperty] = None,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = 'black'
     ):
         super().__init__(
             name=name,
+            group=group,
             description=description,
-            visible=visible,
             color=color)
         self._position = position
         self._radius = radius
@@ -145,12 +148,12 @@ class Tube(Animatable):
 
     name: {str, None}, default=None
         Name of this object
+
+    group: {str, None}, default=None
+        Name of group the tube belongs to.
     
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-    
-    visible: {bool}, default=True
-        Wether to show this object in the animation
     
     isGrowing: {bool}, default=True
         Wether the tube should grow in time as determined by the path it's
@@ -168,17 +171,17 @@ class Tube(Animatable):
         self,
         path: PathLike,
         name: Optional[str] = None,
-        *,               
+        *,
+        group: Optional[str] = None,
         description: Optional[str] = None,
-        visible: bool = True,
         isGrowing: bool = False,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = 'black'
     ):
         super().__init__(
             name=name,
+            group=group,
             description=description,
-            visible=visible,
             color=color)
         self.path = path
         self.isGrowing = isGrowing
@@ -219,11 +222,11 @@ class Line(Animatable):
     name: {str, None}, default=None
         Name of this object
     
+    group: {str, None}, default=None
+        Name of group the line belongs to.
+
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-    
-    visible: {bool}, default=True
-        Wether to show this object in the animation
 
     color: ColorProperty, default='black'
         Color of the surface
@@ -246,9 +249,9 @@ class Line(Animatable):
     def __init__(
         self,
         name: Optional[str] = None,
-        *,               
+        *,
+        group: Optional[str] = None,
         description: Optional[str] = None,
-        visible: bool = True,
         color: ColorProperty = 'black',
         start: Optional[VectorProperty] = None,
         end: Optional[VectorProperty] = None,
@@ -258,8 +261,8 @@ class Line(Animatable):
     ):
         super().__init__(
             name=name,
+            group=group,
             description=description,
-            visible=visible,
             color=color)
         self.start = start
         self.end = end
@@ -321,11 +324,11 @@ class Label(Animatable):
     name: {str, None}, default=None
         Name of this object
     
+    group: {str, None}, default=None
+        Name of group the label belongs to.
+
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-    
-    visible: {bool}, default=True
-        Wether to show this object in the animation
 
     color: ColorProperty, default='black'
         Color of the surface
@@ -342,9 +345,9 @@ class Label(Animatable):
     def __init__(
         self,
         name: Optional[str] = None,
-        *,               
+        *,
+        group: Optional[str] = None,
         description: Optional[str] = None,
-        visible: bool = True,
         color: ColorProperty = 'black',
         position: Optional[VectorProperty] = None,
         fontSize: Optional[ScalarProperty] = None,
@@ -352,8 +355,8 @@ class Label(Animatable):
     ):
         super().__init__(
             name=name,
+            group=group,
             description=description,
-            visible=visible,
             color=color)
         self._position = position
         self._fontSize = fontSize

@@ -28,11 +28,7 @@ def serializeProject(project: Project) -> str:
     if project.date is not None:
         out.meta.date.FromDatetime(project.date)
 
-    #extra props
-    if isinstance(project.clearColor, str):
-        out.clearColor.CopyFrom(_serializeColor(getColorByName(project.clearColor)))
-    else:
-        out.clearColor.CopyFrom(_serializeColor(project.clearColor))
+    #camera
     if project.camera is not None:
         out.camera.CopyFrom(_serializeCamera(project.camera, project))
     if project.colormap is not None:
@@ -295,7 +291,8 @@ def _writeObjectMeta(target, meta: Animatable, project: Project) -> None: #type:
     target.name = meta.name
     if meta.description is not None:
         target.description = meta.description
-    target.isVisible = meta.visible
+    if meta.group is not None:
+        target.group = meta.group
     target.color.CopyFrom(_serializeColorProperty(meta.color, meta.name + '_color', project))
 
 def _serializeSphere(sphere: Sphere, project: Project) -> proto.Sphere:
