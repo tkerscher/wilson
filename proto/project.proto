@@ -2,7 +2,6 @@ syntax = "proto3";
 package p1on;
 
 import "camera.proto";
-import "color.proto";
 import "meta.proto";
 
 import "graph.proto";
@@ -33,8 +32,6 @@ message Project {
 
     //-----------------------Scene-------------------------
     
-    //Clear color, i.e. scene background
-    Color clearColor = 9;
     //Overrides standard camera if provided
     Camera camera = 10;
     
