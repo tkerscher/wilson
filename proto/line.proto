@@ -7,23 +7,23 @@ import "properties.proto";
 message Line {
     //Name as shown in explorer
     string name = 1;
+    //Name of group this belongs to
+    string group = 2;
     //Additional text shown when selected
-    string description = 2;
-    //True, if visible in 3D viewer
-    bool isVisible = 3;
+    string description = 3;
 
     //Color
     ColorProperty color = 4;
 
     //start position
-    VectorProperty start = 5;
+    VectorProperty start = 10;
     //end position
-    VectorProperty end = 6;
+    VectorProperty end = 11;
     //Line diameter
-    ScalarProperty lineWidth = 7;
+    ScalarProperty lineWidth = 12;
     
     //true, if there should be a cone pointing toward the start point
-    bool pointForward = 8;
+    bool pointForward = 13;
     //true, if there should be a cone pointing toward the end point
-    bool pointBackward = 9;
+    bool pointBackward = 14;
 }

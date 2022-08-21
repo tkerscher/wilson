@@ -78,15 +78,13 @@ a 3D scene.
 
 All objects have a common set of properties:
 
-| Property    | Type     | Description |
-|-------------|----------|-------------|
-| name        | `string` | Name to be shown in the explorer. |
-| description | `string` | Text to be shown when the object is selected in the scene. |
-| isVisible   | `bool`   | `true` if the object should be drawn in the scene, `false` otherwise. |
-| color       | `ColorProperty` | Color of the object. |
-
-Note that `isVisible` is not animatible. Since all objects have some sort of size property, this one
-can simply be set to zero to make the object vanish.
+| Property    | ID | Type     | Description |
+|-------------|----|----------|-------------|
+| name        | 01 | `string` | Name to be shown in the explorer. |
+| group       | 02 | `string` | Name of the group the objects belong to. |
+| description | 03 | `string` | Text to be shown when the object is selected in the scene. |
+| color       | 04 | `ColorProperty` | Color of the object. |
+|             | 05 - 10 | | *Reserved* |
 
 There are five types of objects:
 

@@ -7,15 +7,15 @@ import "properties.proto";
 message Sphere {
     //Name as shown in explorer
     string name = 1;
+    //Name of group this belongs to
+    string group = 2;
     //Additional text shown when selected
-    string description = 2;
-    //True, if visible in 3D viewer
-    bool isVisible = 3;
+    string description = 3;
     //Color
     ColorProperty color = 4;
 
     //center of sphere
-    VectorProperty position = 5;
+    VectorProperty position = 10;
     //Radius
-    ScalarProperty radius = 6;
+    ScalarProperty radius = 11;
 }
