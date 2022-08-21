@@ -59,10 +59,6 @@ function alignVector(dir: Vector3): Quaternion {
 }
 
 export function buildLine(builder: SceneBuilder, line: Line) {
-    if (!line.isVisible) {
-        return
-    }
-
     var mesh
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
@@ -78,6 +74,7 @@ export function buildLine(builder: SceneBuilder, line: Line) {
         mesh = MeshBuilder.CreateLathe(line.name, { shape: doubleArrowShape, tessellation: 24})
     }
     mesh.uniqueId = builder.nextId++
+    mesh.parent = builder.getGroup(line.group)
 
     const mat = builder.parseColor(line.color, "material")
     mesh.material = mat

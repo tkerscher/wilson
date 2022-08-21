@@ -34,6 +34,8 @@ export class SceneContainer {
     goToFrame(frame: number) { this.animation.goToFrame(frame) }
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
+        console.log('foo')
+
         //create engine
         this.engine = new Engine(canvas, true)
 
@@ -87,5 +89,8 @@ export class SceneContainer {
         this.scene.registerBeforeRender(() => {
             tubes.forEach(t => t.update(this.currentFrame))
         })
+
+        //DEBUG
+        console.log(builder.groupMap)
     }
 }

@@ -5,6 +5,7 @@ import {
     Color4, 
     Engine, 
     IAnimationKey, 
+    Node, 
     Scene, 
     StandardMaterial, 
     Vector3
@@ -22,6 +23,8 @@ export class SceneBuilder {
     project: Project
     nextId: number = 0
 
+    groupMap: Map<string, Node>
+
     defaultMaterial: StandardMaterial
 
     constructor(project: Project, engine: Engine) {
@@ -29,10 +32,23 @@ export class SceneBuilder {
         this.scene = new Scene(engine)
         this.animationGroup = new AnimationGroup("animationGroup", this.scene)
 
+        this.groupMap = new Map<string, Node>()
+
         this.defaultMaterial = new StandardMaterial("default")
         this.defaultMaterial.diffuseColor = Color3.Black()
 
         this.scene.clearColor = BackgroundColor
+    }
+
+    getGroup(group: string): Node {
+        if (!this.groupMap.has(group)) {
+            let value = new Node(group + '_group', this.scene)
+            this.groupMap.set(group, value)
+            return value
+        }
+        else {
+            return this.groupMap.get(group)!
+        }
     }
 
     parseScalar(scalar: ScalarProperty|undefined, target: any, property: string): void {

@@ -76,6 +76,7 @@ export class TubeController {
         this.update(builder.project.meta?.startTime ?? 0.0)
         this.#mesh = this.#mesh! //tell typescript that it's not undefined anymore
         this.#mesh.uniqueId = builder.nextId++
+        this.#mesh.parent = builder.getGroup(tube.group)
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != 'graphId') {
