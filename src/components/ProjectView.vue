@@ -1,13 +1,29 @@
 <template>
 <div class="container">
-    <div class="scene-view">
-        <SceneView />
+    <div class="main-container">
+        <div class="controller-container">
+            <PlayerControl class="controller" />
+        </div>
+        <div class="scene-view">
+            <SceneView />
+        </div>
     </div>
-    <PlayerControl class="controller" />
+    <div class="sidebar">
+        <ResizableContainer
+            store-key="sidebar"
+            default-size="300px"
+            grip-position="left"
+            class="sidebar-resize">
+            <div>
+                <button>test</button>
+            </div>
+        </ResizableContainer>
+    </div>
 </div>
 </template>
 
 <script setup lang="ts">
+import ResizableContainer from './ResizableContainer.vue'
 import SceneView from './SceneView.vue'
 import PlayerControl from './PlayerControl.vue'
 
@@ -35,18 +51,34 @@ project.$subscribe((mutation, state) => init())
 <style scoped>
 .container {
     width: 100%;
+    max-width: 100%;
     height: 100%;
+    max-height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column-reverse;
+    flex: 1;
+    background-color: #3d3d3d;
 }
 
 .controller {
-    position: fixed;
-    bottom: 0;
+    width: 100%;
 }
 
 .scene-view {
     width: 100%;
     flex: 1;
+}
+
+.sidebar-resize {
+    min-width: 100px;
+    max-width: 40%;
+}
+.sidebar {
+    max-width: 40%;
 }
 </style>
