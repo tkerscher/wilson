@@ -8,10 +8,10 @@ export const protobufPackage = "p1on";
 export interface Label {
   /** Name as shown in explorer */
   name: string;
-  /** Text to be shown in 3D */
+  /** Name of group this belongs to */
+  group: string;
+  /** Additional text shown when selected */
   description: string;
-  /** True, if visible in 3D viewer */
-  isVisible: boolean;
   /** Text color */
   color: ColorProperty | undefined;
   /** Position of upper left corner */
@@ -25,8 +25,8 @@ export interface Label {
 function createBaseLabel(): Label {
   return {
     name: "",
+    group: "",
     description: "",
-    isVisible: false,
     color: undefined,
     position: undefined,
     fontSize: undefined,
@@ -39,11 +39,11 @@ export const Label = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
+    if (message.group !== "") {
+      writer.uint32(18).string(message.group);
     }
-    if (message.isVisible === true) {
-      writer.uint32(24).bool(message.isVisible);
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
     }
     if (message.color !== undefined) {
       ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
@@ -51,19 +51,19 @@ export const Label = {
     if (message.position !== undefined) {
       VectorProperty.encode(
         message.position,
-        writer.uint32(42).fork()
+        writer.uint32(82).fork()
       ).ldelim();
     }
     if (message.fontSize !== undefined) {
       ScalarProperty.encode(
         message.fontSize,
-        writer.uint32(50).fork()
+        writer.uint32(90).fork()
       ).ldelim();
     }
     if (message.background !== undefined) {
       ColorProperty.encode(
         message.background,
-        writer.uint32(58).fork()
+        writer.uint32(98).fork()
       ).ldelim();
     }
     return writer;
@@ -80,21 +80,21 @@ export const Label = {
           message.name = reader.string();
           break;
         case 2:
-          message.description = reader.string();
+          message.group = reader.string();
           break;
         case 3:
-          message.isVisible = reader.bool();
+          message.description = reader.string();
           break;
         case 4:
           message.color = ColorProperty.decode(reader, reader.uint32());
           break;
-        case 5:
+        case 10:
           message.position = VectorProperty.decode(reader, reader.uint32());
           break;
-        case 6:
+        case 11:
           message.fontSize = ScalarProperty.decode(reader, reader.uint32());
           break;
-        case 7:
+        case 12:
           message.background = ColorProperty.decode(reader, reader.uint32());
           break;
         default:
@@ -108,8 +108,8 @@ export const Label = {
   fromJSON(object: any): Label {
     return {
       name: isSet(object.name) ? String(object.name) : "",
+      group: isSet(object.group) ? String(object.group) : "",
       description: isSet(object.description) ? String(object.description) : "",
-      isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
       color: isSet(object.color)
         ? ColorProperty.fromJSON(object.color)
         : undefined,
@@ -128,9 +128,9 @@ export const Label = {
   toJSON(message: Label): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
+    message.group !== undefined && (obj.group = message.group);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.isVisible !== undefined && (obj.isVisible = message.isVisible);
     message.color !== undefined &&
       (obj.color = message.color
         ? ColorProperty.toJSON(message.color)
@@ -153,8 +153,8 @@ export const Label = {
   fromPartial<I extends Exact<DeepPartial<Label>, I>>(object: I): Label {
     const message = createBaseLabel();
     message.name = object.name ?? "";
+    message.group = object.group ?? "";
     message.description = object.description ?? "";
-    message.isVisible = object.isVisible ?? false;
     message.color =
       object.color !== undefined && object.color !== null
         ? ColorProperty.fromPartial(object.color)

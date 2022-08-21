@@ -34,12 +34,10 @@ export const useProject = defineStore('project', {
     }),
     getters: {
         isEmpty: (state): boolean => {
-            //Check if there is anything to draw
-            //array.some returns false on empty ones
-            return !state.spheres.some(s => s.isVisible) &&
-                   !state.lines.some(l => l.isVisible) &&
-                   !state.tubes.some(t => t.isVisible) &&
-                   !state.labels.some(l => l.isVisible);
+            return state.spheres.length == 0 &&
+                   state.lines.length == 0 &&
+                   state.tubes.length == 0 &&
+                   state.labels.length == 0;
         }
     },
     actions: {
@@ -48,8 +46,6 @@ export const useProject = defineStore('project', {
                 const array = new Uint8Array(buffer)
                 const project = Project.decode(array)
                 this.$patch(project)
-                //Debug:
-                console.log(Project.toJSON(project))
             })
         },
         /**

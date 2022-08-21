@@ -8,10 +8,10 @@ export const protobufPackage = "p1on";
 export interface Sphere {
   /** Name as shown in explorer */
   name: string;
+  /** Name of group this belongs to */
+  group: string;
   /** Additional text shown when selected */
   description: string;
-  /** True, if visible in 3D viewer */
-  isVisible: boolean;
   /** Color */
   color: ColorProperty | undefined;
   /** center of sphere */
@@ -23,8 +23,8 @@ export interface Sphere {
 function createBaseSphere(): Sphere {
   return {
     name: "",
+    group: "",
     description: "",
-    isVisible: false,
     color: undefined,
     position: undefined,
     radius: undefined,
@@ -39,11 +39,11 @@ export const Sphere = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.description !== "") {
-      writer.uint32(18).string(message.description);
+    if (message.group !== "") {
+      writer.uint32(18).string(message.group);
     }
-    if (message.isVisible === true) {
-      writer.uint32(24).bool(message.isVisible);
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
     }
     if (message.color !== undefined) {
       ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
@@ -51,11 +51,11 @@ export const Sphere = {
     if (message.position !== undefined) {
       VectorProperty.encode(
         message.position,
-        writer.uint32(42).fork()
+        writer.uint32(82).fork()
       ).ldelim();
     }
     if (message.radius !== undefined) {
-      ScalarProperty.encode(message.radius, writer.uint32(50).fork()).ldelim();
+      ScalarProperty.encode(message.radius, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -71,18 +71,18 @@ export const Sphere = {
           message.name = reader.string();
           break;
         case 2:
-          message.description = reader.string();
+          message.group = reader.string();
           break;
         case 3:
-          message.isVisible = reader.bool();
+          message.description = reader.string();
           break;
         case 4:
           message.color = ColorProperty.decode(reader, reader.uint32());
           break;
-        case 5:
+        case 10:
           message.position = VectorProperty.decode(reader, reader.uint32());
           break;
-        case 6:
+        case 11:
           message.radius = ScalarProperty.decode(reader, reader.uint32());
           break;
         default:
@@ -96,8 +96,8 @@ export const Sphere = {
   fromJSON(object: any): Sphere {
     return {
       name: isSet(object.name) ? String(object.name) : "",
+      group: isSet(object.group) ? String(object.group) : "",
       description: isSet(object.description) ? String(object.description) : "",
-      isVisible: isSet(object.isVisible) ? Boolean(object.isVisible) : false,
       color: isSet(object.color)
         ? ColorProperty.fromJSON(object.color)
         : undefined,
@@ -113,9 +113,9 @@ export const Sphere = {
   toJSON(message: Sphere): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
+    message.group !== undefined && (obj.group = message.group);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.isVisible !== undefined && (obj.isVisible = message.isVisible);
     message.color !== undefined &&
       (obj.color = message.color
         ? ColorProperty.toJSON(message.color)
@@ -134,8 +134,8 @@ export const Sphere = {
   fromPartial<I extends Exact<DeepPartial<Sphere>, I>>(object: I): Sphere {
     const message = createBaseSphere();
     message.name = object.name ?? "";
+    message.group = object.group ?? "";
     message.description = object.description ?? "";
-    message.isVisible = object.isVisible ?? false;
     message.color =
       object.color !== undefined && object.color !== null
         ? ColorProperty.fromPartial(object.color)
