@@ -13,6 +13,8 @@ import { Project } from "../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../model/properties";
 import { setProperty } from "../util/property";
 
+const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0)
+
 export class SceneBuilder {
     animationGroup: AnimationGroup
     scene: Scene
@@ -30,9 +32,7 @@ export class SceneBuilder {
         this.defaultMaterial = new StandardMaterial("default")
         this.defaultMaterial.diffuseColor = Color3.Black()
 
-        //clear color
-        const cc = this.project.clearColor
-        this.scene.clearColor = cc ? new Color4(cc.r, cc.g, cc.b, 1.0) : new Color4(1.0,1.0,1.0,1.0)
+        this.scene.clearColor = BackgroundColor
     }
 
     parseScalar(scalar: ScalarProperty|undefined, target: any, property: string): void {
