@@ -11,7 +11,7 @@ export interface ProjectMeta {
   /** Author of the project */
   author: string;
   /** Date of event */
-  date: Date | undefined;
+  date: Timestamp | undefined;
   /** Time value, from which the animation starts */
   startTime: number;
   /** Time value, where the animation ends */
@@ -43,10 +43,7 @@ export const ProjectMeta = {
       writer.uint32(18).string(message.author);
     }
     if (message.date !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.date),
-        writer.uint32(26).fork()
-      ).ldelim();
+      Timestamp.encode(message.date, writer.uint32(26).fork()).ldelim();
     }
     if (message.startTime !== 0) {
       writer.uint32(33).double(message.startTime);
@@ -74,9 +71,7 @@ export const ProjectMeta = {
           message.author = reader.string();
           break;
         case 3:
-          message.date = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.date = Timestamp.decode(reader, reader.uint32());
           break;
         case 4:
           message.startTime = reader.double();
@@ -110,7 +105,8 @@ export const ProjectMeta = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.author !== undefined && (obj.author = message.author);
-    message.date !== undefined && (obj.date = message.date.toISOString());
+    message.date !== undefined &&
+      (obj.date = fromTimestamp(message.date).toISOString());
     message.startTime !== undefined && (obj.startTime = message.startTime);
     message.endTime !== undefined && (obj.endTime = message.endTime);
     message.speedRatio !== undefined && (obj.speedRatio = message.speedRatio);
@@ -123,7 +119,10 @@ export const ProjectMeta = {
     const message = createBaseProjectMeta();
     message.name = object.name ?? "";
     message.author = object.author ?? "";
-    message.date = object.date ?? undefined;
+    message.date =
+      object.date !== undefined && object.date !== null
+        ? Timestamp.fromPartial(object.date)
+        : undefined;
     message.startTime = object.startTime ?? 0;
     message.endTime = object.endTime ?? 0;
     message.speedRatio = object.speedRatio ?? 0;
@@ -173,13 +172,13 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
-function fromJsonTimestamp(o: any): Date {
+function fromJsonTimestamp(o: any): Timestamp {
   if (o instanceof Date) {
-    return o;
+    return toTimestamp(o);
   } else if (typeof o === "string") {
-    return new Date(o);
+    return toTimestamp(new Date(o));
   } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
+    return Timestamp.fromJSON(o);
   }
 }
 

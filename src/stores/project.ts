@@ -15,7 +15,7 @@ export const useProject = defineStore('project', {
         meta: {
             name: "New Project",
             author: "",
-            date: new Date(),
+            date: { seconds: 0, nanos: 0 },
             startTime: 0.0,
             endTime: 0.0,
             speedRatio: 1.0
