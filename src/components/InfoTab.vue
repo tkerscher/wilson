@@ -1,0 +1,94 @@
+<template>
+<table>
+    <tr>
+        <td>Title:</td>
+        <td>{{title}}</td>
+    </tr>
+    <tr>
+        <td>Author:</td>
+        <td>{{author}}</td>
+    </tr>
+    <tr>
+        <td>Date:</td>
+        <td>{{date}}</td>
+    </tr>
+    <tr>
+        <td>Timestamp:</td>
+        <td>{{timestamp}} ns</td>
+    </tr>
+    <tr>
+        <td>Start:</td>
+        <td>{{eventStart}} ns</td>
+    </tr>
+    <tr>
+        <td>End:</td>
+        <td>{{eventEnd}} ns</td>
+    </tr>
+    <tr>
+        <td>Duration:</td>
+        <td>{{duration}} ns</td>
+    </tr>
+</table>
+
+<div class="disclaimer">
+    P1ON is an open source project under the MIT-License.<br />
+    Checkout the project's <a href="https://github.com/tkerscher/P1ON">sourcecode</a>.
+</div>
+</template>
+
+<script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { useProject } from '../stores/project'
+const project = useProject()
+
+const author = computed(() => getDefault(project.$state.meta?.author, 'No Author'))
+const title = computed(() => getDefault(project.$state.meta?.name, 'No Title'))
+const date = computed(() => new Date(project.$state.meta?.date?.seconds ?? 0).toString())
+const timestamp = computed(() => {
+    const nanos = project.$state.meta?.date?.nanos ?? 0
+    return (nanos + 1e10).toLocaleString('en-US').slice(3)
+})
+const eventStart = computed(() => (project.$state.meta?.startTime ?? 0).toLocaleString('en-US'))
+const eventEnd = computed(() => (project.$state.meta?.endTime ?? 0).toLocaleString('en-US'))
+const duration = computed(() => (
+    (project.$state.meta?.endTime ?? 0) - (project.$state.meta?.startTime ?? 0)).toLocaleString('en-US'))
+function getDefault(value: string|undefined, def: string): string {
+    if (!value || value.length == 0)
+        return def
+    else
+        return value
+}
+</script>
+
+<style scoped>
+table {
+    width: 100%;
+    color: white;
+    border-collapse: separate;
+    border-spacing: 12px 15px;
+    margin-top: 10px;
+    font-family: sans-serif;
+}
+table tr td:nth-child(1) {
+    width: 60px;
+    text-align: right;
+    vertical-align: top;
+    font-weight: bolder;
+}
+table tr td:nth-child(2) {
+    text-align: left;
+}
+
+.disclaimer {
+    width: fit-content;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    font-style: italic;
+    color: white;
+    font-weight: light;
+    font-size: 0.8em;
+    font-family: sans-serif;
+}
+</style>
