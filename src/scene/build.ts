@@ -1,9 +1,12 @@
 import {
+    AbstractMesh,
     Animation,
     AnimationGroup, 
     ArcRotateCamera, 
+    Color3, 
     Engine, 
     HemisphericLight, 
+    Node, 
     Scene, 
     TransformNode, 
     Vector3
@@ -22,6 +25,9 @@ export class SceneContainer {
     scene: Scene
     indicator: Scene
     camera: ArcRotateCamera
+    groupMap: Map<string, Node>
+
+    #selectedMesh?: AbstractMesh
     
     // Animation control
     get currentFrame(): number { return this.animation.animatables[0].masterFrame }
@@ -32,6 +38,35 @@ export class SceneContainer {
     play(loop: boolean = true) { this.animation.play(loop) }
     pause() { this.animation.pause() }
     goToFrame(frame: number) { this.animation.goToFrame(frame) }
+
+    //selection
+    select(id: number|null) {
+        if (this.#selectedMesh)
+            this.#selectedMesh.renderOutline = false
+        
+        if (id != null) {
+            const mesh = this.scene.getMeshByUniqueId(id)
+            if (mesh) {
+                this.#selectedMesh = mesh
+                mesh.renderOutline = true
+                mesh.outlineColor = Color3.Red()
+                mesh.outlineWidth = 0.1
+            }
+            else {
+                this.#selectedMesh = undefined
+            }
+        }
+    }
+
+    //group
+    setGroupEnabled(name: string, enabled: boolean) {
+        if (this.groupMap.has(name)) {
+            const group = this.groupMap.get(name)!
+            if (group.isEnabled() != enabled) {
+                group.setEnabled(enabled)
+            }
+        }
+    }
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
         console.log('foo')
@@ -77,6 +112,7 @@ export class SceneContainer {
         //copy from builder
         this.animation = builder.animationGroup
         this.scene = builder.scene
+        this.groupMap = builder.groupMap
 
         //Create indicator
         this.indicator = createOrientationViewScene(this.engine, this.camera)
@@ -89,8 +125,5 @@ export class SceneContainer {
         this.scene.registerBeforeRender(() => {
             tubes.forEach(t => t.update(this.currentFrame))
         })
-
-        //DEBUG
-        console.log(builder.groupMap)
     }
 }
