@@ -38,9 +38,7 @@ class IndicatorBuilder {
     #inverse: Quaternion
 
     constructor(engine: Engine, source: Camera) {
-        console.log(engine)
         this.engine = engine
-        console.log(this.engine)
         this.source = source
         this.#rotation = new Quaternion()
         this.#inverse = new Quaternion()
