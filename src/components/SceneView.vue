@@ -7,15 +7,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
+import { useObjects } from '../stores/objects'
 import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 import { MutationType } from 'pinia'
 
 import { SceneContainer } from '../scene/build';
+import { PointerEventTypes } from '@babylonjs/core'
 
 const canvas = ref<HTMLCanvasElement|null>(null)
 const player = usePlayer()
 const project = useProject()
+const objects = useObjects()
 
 var scene: SceneContainer|null = null
 
@@ -41,6 +44,21 @@ function buildScene() {
             scene!.pause()
             scene!.goToFrame(player.startFrame)
             player.togglePlaying() //pause
+        }
+    })
+
+    //pointer interaction
+    scene.scene.onPointerObservable.add((pointerInfo) => {
+        if (pointerInfo.type == PointerEventTypes.POINTERUP &&
+            pointerInfo.pickInfo?.hit && pointerInfo.pickInfo.pickedMesh)
+        {
+            const id = pointerInfo.pickInfo.pickedMesh.uniqueId;
+            if (objects.selectedObjectIdx == id) {
+                objects.selectedObjectIdx = null
+            }
+            else {
+                objects.selectedObjectIdx = id
+            }
         }
     })
 
@@ -84,9 +102,17 @@ player.$subscribe((mutation, state) => {
     }
 })
 
+objects.$subscribe((mutation, state) => {
+    scene?.select(objects.selectedObjectIdx)
+    //TODO: Bit too much to update all groups every time...
+    objects.groups.forEach(g => scene?.setGroupEnabled(g.name, g.visible))
+})
+
 function resizeCanvas() {
-    canvas.value!.width = canvas.value!.clientWidth
-    canvas.value!.height = canvas.value!.clientHeight
+    if (!canvas.value)
+        return
+    canvas.value.width = canvas.value.clientWidth
+    canvas.value.height = canvas.value.clientHeight
     scene?.engine!.resize(true) //Force resize event
 }
 const resizer = new ResizeObserver(resizeCanvas)

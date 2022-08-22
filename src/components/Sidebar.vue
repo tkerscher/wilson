@@ -23,7 +23,8 @@
             </div>
         </div>
         <div class="active-tab-container">
-                <InfoTab v-if="activeTab == 3" />
+                <ObjectExplorer v-if="activeTab == 0" />
+                <InfoTab v-else-if="activeTab == 3" />
                 <div v-else>
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
@@ -36,6 +37,7 @@
 
 <script setup lang="ts">
 import InfoTab from './InfoTab.vue'
+import ObjectExplorer from './ObjectExplorer.vue'
 import SearchInput from './SearchInput.vue'
 import { onBeforeMount, ref } from 'vue'
 const searchQuery = ref('')
