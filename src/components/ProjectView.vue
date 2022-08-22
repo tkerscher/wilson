@@ -10,7 +10,9 @@
         default-size="300px"
         class="sidebar"
     >
-        <button style="width: 100%;">OK</button>
+        <div class="sidebar-content">
+            <Sidebar />
+        </div>
     </ResizableContainer>
 </div>
 </template>
@@ -18,6 +20,7 @@
 <script setup lang="ts">
 import ResizableContainer from './ResizableContainer.vue'
 import SceneView from './SceneView.vue'
+import Sidebar from './Sidebar.vue'
 import PlayerControl from './PlayerControl.vue'
 
 import { onMounted, ref } from 'vue'
@@ -26,6 +29,8 @@ import { useProject } from '../stores/project'
 
 const player = usePlayer()
 const project = useProject()
+
+const query = ref('')
 
 function init() {
     player.$reset()
@@ -68,8 +73,15 @@ project.$subscribe((mutation, state) => init())
 }
 
 .sidebar {
-    width: 300px;
+    min-width: 200px;
+}
+.sidebar-content {
     height: 100%;
-    background-color: blueviolet;
+    width: 100%;
+    background-color: rgb(26, 26, 26);
+}
+
+.search-box {
+    width: 100%;
 }
 </style>
