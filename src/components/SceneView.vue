@@ -1,10 +1,17 @@
 <template>
     <div class="container">
         <canvas id="render-canvas" ref="canvas"></canvas>
+        <Toolbar
+            class="toolbar"
+            @exit="exit"
+            @toggle-grid="toggleGrid"
+            @reset-camera="resetCamera"
+            @export="exportProject" />
     </div>
 </template>
 
 <script setup lang="ts">
+import Toolbar from './Toolbar.vue'
 import { onMounted, ref } from 'vue'
 
 import { useObjects } from '../stores/objects'
@@ -12,7 +19,7 @@ import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 import { MutationType } from 'pinia'
 
-import { SceneContainer } from '../scene/build';
+import { SceneContainer } from '../scene/build'
 import { PointerEventTypes } from '@babylonjs/core'
 
 const canvas = ref<HTMLCanvasElement|null>(null)
@@ -122,6 +129,20 @@ onMounted(() => {
     buildScene()
     resizer.observe(canvas.value!)
 })
+
+//Toolbar functions
+function exit() {
+    project.$reset()
+}
+function toggleGrid() {
+
+}
+function resetCamera() {
+
+}
+function exportProject() {
+
+}
 </script>
 
 <style scoped>
@@ -135,5 +156,11 @@ onMounted(() => {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+.toolbar {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
 }
 </style>
