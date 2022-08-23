@@ -79,8 +79,6 @@ export class SceneContainer {
     }
 
     constructor(project: Project, canvas: HTMLCanvasElement) {
-        console.log('foo')
-
         //create engine
         this.engine = new Engine(canvas, true)
 

@@ -84,11 +84,9 @@ export const useObjects = defineStore('objects', () => {
             
             return a.name.localeCompare(b.name)
         })
-
-        console.log(groups.value)
     }
     parseProject()
-    project.$subscribe(parseProject)
+    project.$subscribe(parseProject, { detached: true })
 
     return { groups, selectedObjectIdx }
 })
