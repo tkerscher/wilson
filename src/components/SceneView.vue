@@ -138,7 +138,7 @@ function toggleGrid() {
     scene?.grid.setEnabled(!scene.grid.isEnabled())
 }
 function resetCamera() {
-
+    scene?.resetCamera()
 }
 function exportProject() {
 

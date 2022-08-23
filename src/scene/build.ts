@@ -29,6 +29,8 @@ export class SceneContainer {
     grid: Node
     groupMap: Map<string, Node>
 
+    #defCamTarget: Vector3
+    #defCamPosition: Vector3
     #selectedMesh?: AbstractMesh
     
     // Animation control
@@ -70,6 +72,12 @@ export class SceneContainer {
         }
     }
 
+    //camera
+    resetCamera() {
+        this.camera.setTarget(this.#defCamTarget)
+        this.camera.setPosition(this.#defCamPosition)
+    }
+
     constructor(project: Project, canvas: HTMLCanvasElement) {
         console.log('foo')
 
@@ -81,6 +89,8 @@ export class SceneContainer {
 
         //create camera
         this.camera = buildCamera(builder, project.camera)
+        this.#defCamPosition = this.camera.position.clone()
+        this.#defCamTarget = this.camera.target.clone()
 
         ///create objects
         //The order must be same as in Project!
