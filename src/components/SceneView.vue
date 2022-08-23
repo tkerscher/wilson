@@ -15,20 +15,22 @@ import Toolbar from './Toolbar.vue'
 import { onMounted, ref } from 'vue'
 
 import { useObjects } from '../stores/objects'
+import { usePaths } from '../stores/paths'
 import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 import { MutationType } from 'pinia'
 
 import { SceneContainer } from '../scene/build'
+import { PathVisualizer } from '../scene/paths'
 import { PointerEventTypes } from '@babylonjs/core'
 
+// Scene / Project
+
 const canvas = ref<HTMLCanvasElement|null>(null)
-const player = usePlayer()
-const project = useProject()
-const objects = useObjects()
-
 var scene: SceneContainer|null = null
+var pathVis: PathVisualizer|null = null
 
+const project = useProject()
 function buildScene() {
     //sanity check
     if (project.isEmpty || !canvas.value) {
@@ -54,6 +56,9 @@ function buildScene() {
         }
     })
 
+    //create path visualizer
+    pathVis = new PathVisualizer(scene.scene, project)
+
     //pointer interaction
     scene.scene.onPointerObservable.add((pointerInfo) => {
         if (pointerInfo.type == PointerEventTypes.POINTERUP &&
@@ -76,6 +81,9 @@ function buildScene() {
 }
 project.$subscribe((mutation, state) => buildScene())
 
+// Player
+
+const player = usePlayer()
 player.$subscribe((mutation, state) => {
     //there has to be an animation to manipulate
     if (!scene) {
@@ -109,11 +117,29 @@ player.$subscribe((mutation, state) => {
     }
 })
 
+// Objects
+
+const objects = useObjects()
 objects.$subscribe((mutation, state) => {
     scene?.select(objects.selectedObjectIdx)
     //TODO: Bit too much to update all groups every time...
     objects.groups.forEach(g => scene?.setGroupEnabled(g.name, g.visible))
 })
+
+// Paths
+
+const paths = usePaths()
+paths.$subscribe((mutation, state) => {
+    if (!pathVis)
+        return
+
+    //TODO: Might be a bit much to update always all paths
+    for (const path of paths.paths) {
+        pathVis.setPath(path.id, path.visible, path.color)
+    }
+})
+
+// Resize
 
 function resizeCanvas() {
     if (!canvas.value)
