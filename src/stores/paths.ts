@@ -24,7 +24,7 @@ export const usePaths = defineStore('paths', () => {
             visible: false}))
     }
     parseProject()
-    project.$subscribe(parseProject)
+    project.$subscribe(parseProject, { detached: true })
 
     return { paths, showHidden }
 })
