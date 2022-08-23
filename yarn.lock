@@ -14,6 +14,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@babylonjs/materials@^5.20.0":
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.20.0.tgz#16f49a9efe89953e6d4717a7f97965179b0e4097"
+  integrity sha512-LmAiTk2iJopbce6y14CygXBx7tiU80g8MDywkmPS/JD8dtGcfDX6b7VymDb+G0DBLNuvfbPQ1+DmxyjhO7C2YA==
+  dependencies:
+    tslib "^2.4.0"
+
 "@esbuild/linux-loong64@0.14.54":
   version "0.14.54"
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.14.54.tgz#de2a4be678bd4d0d1ffbb86e6de779cde5999028"

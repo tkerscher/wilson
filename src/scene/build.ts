@@ -4,10 +4,10 @@ import {
     AnimationGroup, 
     ArcRotateCamera, 
     Color3, 
-    Engine, 
+    Engine,
     HemisphericLight, 
     Node, 
-    Scene, 
+    Scene,
     TransformNode, 
     Vector3
 } from "@babylonjs/core"
@@ -16,6 +16,7 @@ import { buildCamera } from "./camera"
 import { buildLine } from "./line"
 import { createOrientationViewScene } from "./orientationView"
 import { SceneBuilder } from "./sceneBuilder"
+import { buildGrid } from "./grid"
 import { buildSphere } from "./sphere"
 import { TubeController } from "./tube"
 
@@ -25,6 +26,7 @@ export class SceneContainer {
     scene: Scene
     indicator: Scene
     camera: ArcRotateCamera
+    grid: Node
     groupMap: Map<string, Node>
 
     #selectedMesh?: AbstractMesh
@@ -113,6 +115,9 @@ export class SceneContainer {
         this.animation = builder.animationGroup
         this.scene = builder.scene
         this.groupMap = builder.groupMap
+
+        //create grid mesh
+        this.grid = buildGrid(this.scene)
 
         //Create indicator
         this.indicator = createOrientationViewScene(this.engine, this.camera)
