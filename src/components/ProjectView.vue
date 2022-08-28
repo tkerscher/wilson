@@ -40,6 +40,10 @@ function init() {
         isPlaying: true,
         isLooping: true
     })
+    addEventListener('fullscreenchange', () => {
+        //update gui
+        player.isFullscreen = !!document.fullscreenElement
+    })
 }
 
 function fullscreen() {
@@ -48,11 +52,9 @@ function fullscreen() {
     
     if (player.isFullscreen || document.fullscreenElement) {
         document.exitFullscreen()
-        player.isFullscreen = false
     }
     else {
         mainDiv.value.requestFullscreen()
-            .then(() => player.isFullscreen = true)
     }
 }
 
