@@ -144,6 +144,10 @@ paths.$subscribe((mutation, state) => {
 function resizeCanvas() {
     if (!canvas.value)
         return
+    //first remove width and height to force layout update
+    //TODO: This should not be necessary...
+    canvas.value.width = 0
+    canvas.value.height = 0
     canvas.value.width = canvas.value.clientWidth
     canvas.value.height = canvas.value.clientHeight
     scene?.engine!.resize(true) //Force resize event

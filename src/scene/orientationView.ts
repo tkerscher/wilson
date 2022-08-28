@@ -59,7 +59,7 @@ class IndicatorBuilder {
 
         //scale and position
         this.root.scalingDeterminant = 0.2
-        this.root.position = new Vector3(0.85 * CameraSideLength, 0.85 * CameraSideLength, 0)
+        this.root.position = new Vector3(0.85 * CameraSideLength, CameraSideLength - 1.2, 0)
 
         //wire up cameras
         this.updateAspectRatio()
@@ -78,7 +78,7 @@ class IndicatorBuilder {
             camera.orthoLeft = -ratio
             camera.orthoRight = ratio
             //update position
-            root.position.x = 0.9 * ratio
+            root.position.x = ratio - 1.2
         }
         
         update()
