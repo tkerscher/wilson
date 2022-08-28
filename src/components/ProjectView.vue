@@ -1,7 +1,7 @@
 <template>
 <div class="container">
-    <div class="main-container">
-        <PlayerControl class="controller" />
+    <div class="main-container" ref="mainDiv">
+        <PlayerControl class="controller" @toggleFullscreen="fullscreen"/>
         <SceneView class="scene-view"/>
     </div>
     <ResizableContainer
@@ -30,7 +30,7 @@ import { useProject } from '../stores/project'
 const player = usePlayer()
 const project = useProject()
 
-const query = ref('')
+const mainDiv = ref<HTMLDivElement|null>(null)
 
 function init() {
     player.$reset()
@@ -40,6 +40,20 @@ function init() {
         isPlaying: true,
         isLooping: true
     })
+}
+
+function fullscreen() {
+    if (!mainDiv || !mainDiv.value.requestFullscreen)
+        return
+    
+    if (player.isFullscreen || document.fullscreenElement) {
+        document.exitFullscreen()
+        player.isFullscreen = false
+    }
+    else {
+        mainDiv.value.requestFullscreen()
+            .then(() => player.isFullscreen = true)
+    }
 }
 
 onMounted(init)

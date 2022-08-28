@@ -3,9 +3,6 @@
     <div class="player-control-container">
         <div class="top-action-bar">
             <div class="left-action-group">
-                <div :class="['action-button', player.isCameraLocked ? 'camera-fixed-icon' : 'camera-icon']"
-                     role="button" title="Fix Camera" @mouseup="player.toggleCameraLocked"></div>
-                <div class="action-button info-icon" role="button" title="Show Project Info" @mouseup="emits('openInfoClicked')"></div>
             </div>
             <div class="middle-action-group">
                 <div class="action-button rewind-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
@@ -45,7 +42,6 @@ import { usePlayer } from '../stores/player'
 const player = usePlayer()
 
 const emits = defineEmits<{
-    (e: 'openInfoClicked'): void,
     (e: 'scrubbingStart'): void,
     (e: 'scrubbingEnd'): void
     (e: 'toggleFullscreen'): void
@@ -125,14 +121,6 @@ const emits = defineEmits<{
     background-color: #3497ff !important;
 }
 
-.camera-icon {
-    mask-image: url(../assets/icons/video.svg);
-    -webkit-mask-image: url(../assets/icons/video.svg);
-}
-.camera-fixed-icon {
-    mask-image: url(../assets/icons/video-slash.svg);
-    -webkit-mask-image: url(../assets/icons/video-slash.svg);
-}
 .compress-icon {
     mask-image: url(../assets/icons/compress.svg);
     -webkit-mask-image: url(../assets/icons/compress.svg);
@@ -144,10 +132,6 @@ const emits = defineEmits<{
 .forward-icon {
     mask-image: url(../assets/icons/forward-fast.svg);
     -webkit-mask-image: url(../assets/icons/forward-fast.svg);
-}
-.info-icon {
-    mask-image: url(../assets/icons/circle-info.svg);
-    -webkit-mask-image: url(../assets/icons/circle-info.svg);
 }
 .pause-icon {
     mask-image: url(../assets/icons/circle-pause.svg);

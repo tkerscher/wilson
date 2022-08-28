@@ -34,6 +34,9 @@ export const usePlayer = defineStore('player', {
         },
         togglePlaying() {
             this.isPlaying = !this.isPlaying
+        },
+        toggleLooping() {
+            this.isLooping = !this.isLooping
         }
     }
 })
