@@ -6,7 +6,7 @@
             @exit="exit"
             @toggle-grid="toggleGrid"
             @reset-camera="resetCamera"
-            @export="exportProject" />
+            @screenshot="screenshot" />
     </div>
 </template>
 
@@ -166,8 +166,8 @@ function toggleGrid() {
 function resetCamera() {
     scene?.resetCamera()
 }
-function exportProject() {
-
+function screenshot() {
+    scene?.screenshot()
 }
 </script>
 

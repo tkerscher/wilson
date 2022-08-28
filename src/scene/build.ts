@@ -8,6 +8,7 @@ import {
     HemisphericLight, 
     Node, 
     Scene,
+    Tools,
     TransformNode, 
     Vector3
 } from "@babylonjs/core"
@@ -78,9 +79,14 @@ export class SceneContainer {
         this.camera.setPosition(this.#defCamPosition)
     }
 
+    //screenshot
+    screenshot() {
+        Tools.CreateScreenshot(this.engine, this.camera, { precision: 2.0 })
+    }
+
     constructor(project: Project, canvas: HTMLCanvasElement) {
         //create engine
-        this.engine = new Engine(canvas, true)
+        this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true })
 
         //create scene builder
         let builder = new SceneBuilder(project, this.engine)

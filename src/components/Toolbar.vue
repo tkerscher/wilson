@@ -20,9 +20,9 @@
     </div>
     <div class="button"
          role="button"
-         title="Export"
-         @mouseup="emits('export')">
-        <div class="icon export-icon"></div>     
+         title="Screenshot"
+         @mouseup="emits('screenshot')">
+        <div class="icon camera-icon"></div>     
     </div>
 </div>
 </template>
@@ -32,7 +32,7 @@ const emits = defineEmits<{
     (e: 'exit'): void,
     (e: 'toggleGrid'): void,
     (e: 'resetCamera'): void,
-    (e: 'export'): void
+    (e: 'screenshot'): void
 }>()
 </script>
 
@@ -68,13 +68,13 @@ const emits = defineEmits<{
     -webkit-mask-position: center;
     background-color: #d3d3d3;
 }
+.camera-icon {
+    mask-image: url(../assets/icons/camera.svg);
+    -webkit-mask-image: url(../assets/icons/camera.svg);
+}
 .exit-icon {
     mask-image: url(../assets/icons/exit.svg);
     -webkit-mask-image: url(../assets/icons/exit.svg);
-}
-.export-icon {
-    mask-image: url(../assets/icons/file-arrow-down.svg);
-    -webkit-mask-image: url(../assets/icons/file-arrow-down.svg);
 }
 .grid-icon {
     mask-image: url(../assets/icons/border-all.svg);
