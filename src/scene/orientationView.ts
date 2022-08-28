@@ -34,14 +34,9 @@ class IndicatorBuilder {
     root: TransformNode
     buttons: Array<Mesh>
 
-    #rotation: Quaternion
-    #inverse: Quaternion
-
     constructor(engine: Engine, source: Camera) {
         this.engine = engine
         this.source = source
-        this.#rotation = new Quaternion()
-        this.#inverse = new Quaternion()
 
         //Create separate scene (-> allows to toggle this control)
         this.scene = new Scene(engine)
