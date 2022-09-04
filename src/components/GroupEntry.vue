@@ -1,5 +1,5 @@
 <template>
-<div class="root">
+<div class="root" v-if="!empty">
     <div class="header">
         <div :class="['button', expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
              :title="expanded ? 'Collapse Group' : 'Expand Group'"
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div v-if="expanded" class="content">
-        <div v-for="item in props.group.members"
+        <div v-for="item in filtered"
              :class="['item', { 'item-selected': props.modelValue == item.id }]"
              @mouseup.stop="emits('update:modelValue', item.id)">
             <span>{{item.name}}</span>
@@ -30,18 +30,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Group } from '../stores/objects'
 
 const props = defineProps<{
     group: Group,
-    modelValue: number|null
+    modelValue: number|null,
+    searchQuery: string
 }>()
 const emits = defineEmits<{
     (e: 'update:modelValue', value: number|null): void
 }>()
 
 const expanded = ref(false)
+const filtered = computed(() => props.group.members.filter(
+    m => m.name.toLowerCase().includes(props.searchQuery.toLowerCase())))
+const empty = computed(() => filtered.value.length == 0)
 </script>
 
 <style scoped>
