@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import SearchInput from './SearchInput.vue'
 
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useGraphs } from '../stores/graphs'
 const graphs = useGraphs()
 
