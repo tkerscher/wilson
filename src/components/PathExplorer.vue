@@ -1,7 +1,7 @@
 <template>
 <div class="root">
     <div
-        v-for="(path, index) in paths.paths"
+        v-for="(path, index) in filtered"
         class="item">
         <div class="header">
             <span class="name">{{path.name}}</span>
@@ -20,8 +20,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { usePaths } from '../stores/paths'
 const paths = usePaths()
+
+const props = defineProps<{
+    searchQuery: string
+}>()
+const filtered = computed(() => paths.paths.filter(
+    p => p.name.toLowerCase().includes(props.searchQuery.toLowerCase())))
 
 function changeColor(e: Event, index: number) {
     const picker = e.target as HTMLInputElement;
