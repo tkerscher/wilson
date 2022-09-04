@@ -8,6 +8,7 @@
         :value="props.modelValue"
         @input="onInput"
         @keyup.esc="clear"
+        @keyup.enter="finish"
     />
 </div>
 </template>
@@ -30,6 +31,10 @@ function clear() {
     else {
         input.value!.blur()
     }
+}
+
+function finish() {
+    input.value!.blur()
 }
 
 function onInput(e: Event) {

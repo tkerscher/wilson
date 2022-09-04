@@ -9,7 +9,7 @@
     </div>
     <div class="list">
         <div
-        v-for="graph in graphs.graphs"
+        v-for="graph in filteredGraphs"
         class="item">
         <div class="header">
             <span class="name">{{graph.name}}</span>
@@ -31,9 +31,11 @@ import { useGraphs } from '../stores/graphs'
 const graphs = useGraphs()
 
 const searchQuery = ref('')
+const filteredGraphs = computed(() =>
+    graphs.graphs.filter(g => g.name.includes(searchQuery.value)))
 
 function reset() {
-
+    graphs.graphs.forEach(g => g.visible = false)
 }
 </script>
 
@@ -110,9 +112,9 @@ function reset() {
 }
 
 .reset-button {
-    width: 20px;
-    height: 20px;
-    margin: 5px;
+    width: 18px;
+    height: 18px;
+    margin: 6px;
     background-color: lightgray;
     mask-repeat: no-repeat;
     mask-position: center;
@@ -120,6 +122,9 @@ function reset() {
     -webkit-mask-position: center;
     mask-image: url(../assets/icons/eye-slash.svg);
     -webkit-mask-image: url(../assets/icons/eye-slash.svg);
+}
+.reset-button:hover {
+    cursor: pointer;
 }
 
 .show-button:hover {
