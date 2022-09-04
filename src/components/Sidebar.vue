@@ -24,8 +24,8 @@
         </div>
         <div class="active-tab-container">
                 <ObjectExplorer v-if="activeTab == 0" />
-                <PathExplorer v-else-if="activeTab == 2" />
-                <InfoTab v-else-if="activeTab == 4" />
+                <PathExplorer v-else-if="activeTab == 1" />
+                <InfoTab v-else-if="activeTab == 3" />
                 <div v-else>
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
@@ -52,7 +52,6 @@ function toggleShowHidden() {
 
 const tabIcons = [
     { icon: 'cube-icon', title: 'Objects' },
-    { icon: 'chart-icon', title: 'Graphs'},
     { icon: 'track-icon', title: 'Paths' },
     { icon: 'film-icon', title: 'Render'},
     { icon: 'info-icon', title: 'Info'}

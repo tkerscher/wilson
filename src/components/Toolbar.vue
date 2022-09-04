@@ -14,6 +14,12 @@
     </div>
     <div class="button"
          role="button"
+         title="Open Graph Explorer"
+         @mouseup="emits('openGraphs')">
+        <div class="icon graph-icon"></div>     
+    </div>
+    <div class="button"
+         role="button"
          title="Reset Camera"
          @mouseup="emits('resetCamera')">
         <div class="icon reset-camera-icon"></div>     
@@ -30,9 +36,10 @@
 <script setup lang="ts">
 const emits = defineEmits<{
     (e: 'exit'): void,
-    (e: 'toggleGrid'): void,
     (e: 'resetCamera'): void,
     (e: 'screenshot'): void
+    (e: 'toggleGrid'): void,
+    (e: 'openGraphs'): void
 }>()
 </script>
 
@@ -75,6 +82,10 @@ const emits = defineEmits<{
 .exit-icon {
     mask-image: url(../assets/icons/exit.svg);
     -webkit-mask-image: url(../assets/icons/exit.svg);
+}
+.graph-icon {
+    mask-image: url(../assets/icons/chart.svg);
+    -webkit-mask-image: url(../assets/icons/chart.svg);
 }
 .grid-icon {
     mask-image: url(../assets/icons/border-all.svg);

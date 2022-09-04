@@ -5,6 +5,7 @@
             class="toolbar"
             @exit="exit"
             @toggle-grid="toggleGrid"
+            @open-graphs="openGraphs"
             @reset-camera="resetCamera"
             @screenshot="screenshot" />
     </div>
@@ -13,6 +14,7 @@
 <script setup lang="ts">
 import Toolbar from './Toolbar.vue'
 import { onMounted, ref } from 'vue'
+import { openPlot } from '../plot/openPlot'
 
 import { useObjects } from '../stores/objects'
 import { usePaths } from '../stores/paths'
@@ -166,6 +168,9 @@ function exit() {
 }
 function toggleGrid() {
     scene?.grid.setEnabled(!scene.grid.isEnabled())
+}
+function openGraphs() {
+    openPlot(project.graphs)
 }
 function resetCamera() {
     scene?.resetCamera()
