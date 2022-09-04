@@ -17,10 +17,10 @@ import { CloudUploadIcon } from '@heroicons/vue/solid'
 import { useProject } from '../stores/project'
 const project = useProject()
 
-function onFileSelected(e: Event) {
+async function onFileSelected(e: Event) {
     const fileInput = e.target! as HTMLInputElement
     if (fileInput.files) {
-        project.loadProject(fileInput.files[0])
+        project.loadProject(await fileInput.files[0].arrayBuffer())
     }
 }
 </script>

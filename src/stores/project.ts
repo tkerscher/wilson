@@ -41,12 +41,11 @@ export const useProject = defineStore('project', {
         }
     },
     actions: {
-        loadProject(file: File) {
-            file.arrayBuffer().then(buffer => {
-                const array = new Uint8Array(buffer)
-                const project = Project.decode(array)
-                this.$patch(project)
-            })
+        loadProject(buffer: ArrayBuffer) {
+            const array = new Uint8Array(buffer)
+            const project = Project.decode(array)
+            console.log(this.$state)
+            this.$patch(project)
         },
         /**
          * Returns the object meta by id
