@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { Graph } from "../model/graph"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 export interface GraphHandle extends Graph {
     visible: boolean
@@ -8,6 +8,7 @@ export interface GraphHandle extends Graph {
 
 export const useGraphs = defineStore('graphs', () => {
     const graphs = ref<Array<GraphHandle>>([])
+    const visible = computed(() => graphs.value.filter(g => g.visible))
 
-    return { graphs }
+    return { graphs, visible }
 })
