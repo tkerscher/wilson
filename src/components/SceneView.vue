@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import Toolbar from './Toolbar.vue'
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { openPlot } from '../plot/openPlot'
 
 import { useObjects } from '../stores/objects'
@@ -53,8 +53,8 @@ function buildScene() {
         //end of each iteration
         if (!player.isLooping) {
             scene!.pause()
-            scene!.goToFrame(player.startFrame)
             player.togglePlaying() //pause
+            nextTick(() => scene!.goToFrame(player.endFrame))
         }
     })
 
@@ -107,6 +107,9 @@ player.$subscribe((mutation, state) => {
     //Play Pause
     if (scene.isPlaying != state.isPlaying) {
         if (state.isPlaying) {
+            //restart if necessary
+            if (player.currentFrame == player.endFrame)
+                scene.goToFrame(player.startFrame)
             scene.play()
         }
         else {
