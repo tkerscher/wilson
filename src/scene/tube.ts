@@ -21,6 +21,7 @@ export class TubeController {
     #name: string
     #growing: boolean
     #mesh: Mesh | undefined
+    #startTime: number
     #endTime: number
     #scene: Scene
 
@@ -61,8 +62,9 @@ export class TubeController {
 
         //set endtime
         this.#N = this.#keys.length
+        this.#startTime = this.#keys[0]
         this.#endTime = this.#keys[this.#N - 1]
-        const period = this.#endTime - this.#keys[0]
+        const period = this.#endTime - this.#startTime
         
         //fill control points
         this.#path = this.#keys.map(t => this.#pathInt.interpolate(t))
@@ -92,9 +94,10 @@ export class TubeController {
             }
             else {
                 let graphInt = new ScalarInterpolator(id, builder.project)
+                const startTime = this.#startTime
                 let data = new Uint8Array(function*() {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
-                        const t = i / TEXTURE_SIZE * period
+                        const t = i / TEXTURE_SIZE * period + startTime
                         const v = graphInt.interpolate(t)
                         const [color, alpha] = builder.mapColor(v)
 
@@ -118,8 +121,7 @@ export class TubeController {
         }
     }
 
-    update(t: number) {
-        
+    update(t: number) {        
         //safety guard
         if (this.#keys.length < 2) {
             return
@@ -144,7 +146,7 @@ export class TubeController {
         }
 
         //Edge case: t earlier than first key frame (plus some slack) -> render empty
-        if (t - this.#keys[0] <= 1e-4) {
+        if (t - this.#startTime <= 1e-4) {
             this.#mesh = MeshBuilder.CreateTube(this.#name, {
                     path: this.#path,
                     radius: 0.0,
