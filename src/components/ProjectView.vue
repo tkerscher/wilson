@@ -37,6 +37,7 @@ function init() {
     player.$patch({
         startFrame: project.meta?.startTime ?? 0.0,
         endFrame: project.meta?.endTime ?? 0.0,
+        speedRatio: project.meta?.speedRatio ?? 1.0,
         isPlaying: true,
         isLooping: true
     })
