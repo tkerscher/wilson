@@ -26,7 +26,7 @@ onBeforeMount(() => {
     }
 })
 
-function openFile(file: File) {
-    project.loadProject(file.arrayBuffer())
+async function openFile(file: File) {
+    project.loadProject(await file.arrayBuffer())
 }
 </script>
