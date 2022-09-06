@@ -33,6 +33,7 @@ export class SceneContainer {
     #defCamTarget: Vector3
     #defCamPosition: Vector3
     #selectedMesh?: AbstractMesh
+    #dirty: boolean = true
     
     // Animation control
     get currentFrame(): number { return this.animation.animatables[0].masterFrame }
@@ -42,7 +43,7 @@ export class SceneContainer {
     set speedRatio(value: number) { this.animation.speedRatio = value }
     play(loop: boolean = true) { this.animation.play(loop) }
     pause() { this.animation.pause() }
-    goToFrame(frame: number) { this.animation.goToFrame(frame) }
+    goToFrame(frame: number) { this.animation.goToFrame(frame); this.#dirty = true }
 
     //selection
     select(id: number|null) {
@@ -142,7 +143,13 @@ export class SceneContainer {
             this.indicator.render()
         })
         this.scene.registerBeforeRender(() => {
-            tubes.forEach(t => t.update(this.currentFrame))
+            if (this.animation.isPlaying || this.#dirty) {
+                tubes.forEach(t => {
+                    if (t.isEnabled)
+                        t.update(this.currentFrame)
+                })
+                this.#dirty = false
+            }
         })
     }
 }
