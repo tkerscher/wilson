@@ -166,6 +166,7 @@ class IndicatorBuilder {
     createAxis(name: string, to: Vector3, color: Color3) {
         const mat = new StandardMaterial(name + '_mat')
         mat.emissiveColor = color
+        mat.freeze()
     
         const axis = MeshBuilder.CreateTube(name, {
             path: [ Vector3.Zero(), to],
@@ -186,6 +187,7 @@ function loadTexture(path: string, scene: Scene): StandardMaterial {
     const mat = new StandardMaterial('', scene)
     mat.emissiveTexture = tex
     mat.diffuseTexture = tex
+    mat.freeze()
 
     //done
     return mat

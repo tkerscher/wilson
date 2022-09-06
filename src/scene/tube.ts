@@ -54,9 +54,11 @@ export class TubeController {
 
         //panic: We need at least two points to create a tube
         if (this.#keys.length < 2) {
+            this.#startTime = 0.0
             this.#endTime = 0.0
             this.#path = []
             this.#radii = []
+            this.#N = 0
             return
         }
 
@@ -191,5 +193,9 @@ export class TubeController {
             updatable: true,
             instance: this.#mesh
         }, this.#scene)
+    }
+
+    get isEnabled(): boolean {
+        return this.#mesh?.isEnabled() ?? false
     }
 }

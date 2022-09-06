@@ -13,6 +13,7 @@ import {
 import { Project } from "../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../model/properties";
 import { setProperty } from "../util/property";
+import { toHex } from "../util/colorToHex";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0)
 
@@ -25,6 +26,7 @@ export class SceneBuilder {
 
     groupMap: Map<string, Node>
 
+    #materialMap: Map<string, StandardMaterial>
     defaultMaterial: StandardMaterial
 
     constructor(project: Project, engine: Engine) {
@@ -34,8 +36,11 @@ export class SceneBuilder {
 
         this.groupMap = new Map<string, Node>()
 
+        this.#materialMap = new Map<string, StandardMaterial>()
         this.defaultMaterial = new StandardMaterial("default")
         this.defaultMaterial.diffuseColor = Color3.Black()
+        this.defaultMaterial.freeze()
+
 
         this.scene.clearColor = BackgroundColor
     }
@@ -113,19 +118,15 @@ export class SceneBuilder {
             return this.defaultMaterial
         }
 
-        var mat = new StandardMaterial(name)
         switch (color.source.$case) {
             case 'constValue':
                 const c = color.source.constValue
-                mat.diffuseColor = new Color3(c.r, c.g, c.b)
-                mat.alpha = c.a
-                break
+                return this.getStaticMaterial(c.r, c.g, c.b, c.a)
             case 'scalarValue':
-                var [clr, alpha] = this.mapColor(color.source.scalarValue)
-                mat.diffuseColor = clr
-                mat.alpha = alpha
-                break
+                const [clr, alpha] = this.mapColor(color.source.scalarValue)
+                return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha)
             case 'graphId':
+                const mat = new StandardMaterial(name)
                 const id = color.source.graphId
                 const graph = this.project.graphs.find(g => g.id == id)
                 if (!graph || graph.points.length == 0) {
@@ -135,9 +136,7 @@ export class SceneBuilder {
                 else if (graph.points.length == 1) {
                     const scalar = graph.points[0].value
                     const [clr, alpha] = this.mapColor(scalar)
-                    mat.diffuseColor = clr
-                    mat.alpha = alpha
-                    break
+                    return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha)
                 }
                 else {
                     const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
@@ -170,10 +169,9 @@ export class SceneBuilder {
 
                     this.animationGroup.addTargetedAnimation(colorAnimation, mat)
                     this.animationGroup.addTargetedAnimation(alphaAnimation, mat)
-                    break
+                    return mat
                 }
         }
-        return mat
     }
 
     mapColor(scalar: number): [Color3,number] {
@@ -217,6 +215,25 @@ export class SceneBuilder {
         const blue = before.color.b + (after.color.b - before.color.b) * lambda
         const alpha = before.color.a + (after.color.a - before.color.a) * lambda
         return [new Color3(red, green, blue), alpha]
+    }
+
+    getStaticMaterial(r: number, g: number, b: number, a: number): StandardMaterial {
+        //color already in use?
+        const key = toHex(r, g, b, a)
+        if (this.#materialMap.has(key)) {
+            return this.#materialMap.get(key)!
+        }
+        else {
+            //create new material
+            const mat = new StandardMaterial(key, this.scene)
+            mat.diffuseColor = new Color3(r, g, b)
+            mat.alpha = a
+            mat.freeze() //improves performance for static materials
+            //store it
+            this.#materialMap.set(key, mat)
+            //done
+            return mat
+        }
     }
 
     //Produces key frames to get not only start end end values, but also all gradient stops inbetween
