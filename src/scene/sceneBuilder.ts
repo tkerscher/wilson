@@ -236,6 +236,21 @@ export class SceneBuilder {
         }
     }
 
+    isStaticMaterial(color: ColorProperty|undefined): boolean {
+        if (!color || !color.source)
+            return true
+        
+        switch (color.source.$case) {
+        case 'constValue':
+        case 'scalarValue':
+            return true
+        case 'graphId':
+            const id = color.source.graphId
+            const graph = this.project.graphs.find(g => g.id == id)
+            return !graph || graph.points.length <= 0
+        }
+    }
+
     //Produces key frames to get not only start end end values, but also all gradient stops inbetween
     colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
         var clrFrames = Array<IAnimationKey>()

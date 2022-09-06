@@ -18,7 +18,7 @@ import { buildLine } from "./line"
 import { createOrientationViewScene } from "./orientationView"
 import { SceneBuilder } from "./sceneBuilder"
 import { buildGrid } from "./grid"
-import { buildSphere } from "./sphere"
+import { SphereBuilder } from "./sphere"
 import { TubeController } from "./tube"
 
 export class SceneContainer {
@@ -100,7 +100,8 @@ export class SceneContainer {
         ///create objects
         //The order must be same as in Project!
         //Otherwise the ids will be wrong
-        project.spheres.forEach(s => buildSphere(builder, s))
+        const sphereBuilder = new SphereBuilder(builder)
+        project.spheres.forEach(s => sphereBuilder.build(s))
         project.lines.forEach(l => buildLine(builder, l))
         const tubes = project.tubes.map(t => new TubeController(builder, t))
         //project.labels.forEach(l => buildLabel(l))
