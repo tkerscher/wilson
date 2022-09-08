@@ -7,6 +7,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "protoc": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_opt=oneof=unions --ts_proto_opt=useDate=false --ts_proto_out=./src/model --proto_path=./proto ./proto/project.proto",
+    "protoc_win": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_opt=esModuleInterop=true --ts_proto_opt=oneof=unions --ts_proto_opt=useDate=false --ts_proto_out=./src/model --proto_path=./proto ./proto/project.proto",
     "protopy": "protoc -I=proto --python_out=p1on/proto proto/*.proto"
   },
   "dependencies": {
