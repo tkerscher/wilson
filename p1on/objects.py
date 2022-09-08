@@ -174,7 +174,7 @@ class Tube(Animatable):
         *,
         group: Optional[str] = None,
         description: Optional[str] = None,
-        isGrowing: bool = False,
+        isGrowing: bool = True,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = 'black'
     ):
