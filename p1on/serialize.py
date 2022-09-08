@@ -1,6 +1,7 @@
 import numpy as np
 import cmasher as cmr
 from typing import Any, Tuple
+from zlib import compress
 
 from p1on.color import getColorByName
 from p1on.data import (
@@ -14,9 +15,9 @@ from p1on.objects import Animatable, Label, Line, Sphere, Tube
 from p1on.project import Camera, Project
 import p1on.proto as proto
 
-def serializeProject(project: Project) -> str:
+def serializeProject(project: Project) -> bytes:
     """
-    Returns a string containing the serialized representation of the given
+    Returns a bytes object containing the serialized representation of the given
     project ready to be saved.
     """
     out = proto.Project()
@@ -105,7 +106,7 @@ def saveProject(project: Project, path: str) -> None:
     Saves the project to the given file.
     """
     with open(path, 'wb') as f:
-        f.write(serializeProject(project))
+        f.write(compress(serializeProject(project)))
 
 ################################## Data ########################################
 

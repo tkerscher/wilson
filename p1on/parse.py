@@ -1,5 +1,6 @@
 from tokenize import group
 from typing import Dict, Optional, Tuple
+from zlib import decompress
 import numpy as np
 
 from p1on.objects import Label, Line, Sphere, Tube
@@ -13,9 +14,9 @@ from p1on.data import (
 from p1on.project import Camera, Project
 import p1on.proto as proto
 
-def parseProjectFromString(data: str) -> Project:
+def parseProjectFromBytes(data: bytes) -> Project:
     """
-    Parses the project from the given string and returns the loaded project
+    Parses the project from the given bytes object and returns the loaded project
     """
     #ask protobuf to parse string
     project = proto.Project()
@@ -59,7 +60,7 @@ def parseProjectFromFile(path: str) -> Project:
     Loads a project from the given file and returns it.
     """
     with open(path, 'rb') as f:
-        return parseProjectFromFile(f.read()) #type: ignore[arg-type]
+        return parseProjectFromFile(decompress(f.read())) #type: ignore[arg-type]
 
 ################################## Data ########################################
 

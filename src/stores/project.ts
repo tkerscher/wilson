@@ -6,6 +6,7 @@ import { Path } from "../model/path"
 import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
 import { Tube } from "../model/tube"
+import { inflate } from "pako"
 
 export type ObjectMeta = Sphere | Line | Tube | Label;
 
@@ -42,7 +43,7 @@ export const useProject = defineStore('project', {
     },
     actions: {
         loadProject(buffer: ArrayBuffer) {
-            const array = new Uint8Array(buffer)
+            const array = inflate(new Uint8Array(buffer))
             const project = Project.decode(array)
             console.log(this.$state)
             this.$patch(project)
