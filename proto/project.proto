@@ -6,12 +6,11 @@ import "meta.proto";
 
 import "graph.proto";
 import "path.proto";
-//import "script.proto";
 import "colormap.proto";
 
-import "label.proto";
 import "line.proto";
 import "sphere.proto";
+import "text.proto";
 import "tube.proto";
 
 //Root container for all animation relevant data
@@ -25,8 +24,6 @@ message Project {
     repeated Graph graphs = 2;
     //list of paths
     repeated Path paths = 3;
-    //list of scripts
-    //repeated Script scripts = 4;
     //global color map
     ColorMap colormap = 5;
 
@@ -43,6 +40,6 @@ message Project {
     repeated Line lines = 17;
     //list of animated tubes
     repeated Tube tubes = 18;
-    //list of animated labels
-    repeated Label labels = 19;
+    //list of animated text
+    repeated Text texts = 19;
 }
