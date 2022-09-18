@@ -20,6 +20,7 @@ import { SceneBuilder } from "./sceneBuilder"
 import { buildGrid } from "./grid"
 import { SphereBuilder } from "./sphere"
 import { TubeController } from "./tube"
+import { TextBuilder } from "./text"
 
 export class SceneContainer {
     animation: AnimationGroup
@@ -104,7 +105,8 @@ export class SceneContainer {
         project.spheres.forEach(s => sphereBuilder.build(s))
         project.lines.forEach(l => buildLine(builder, l))
         const tubes = project.tubes.map(t => new TubeController(builder, t))
-        //project.labels.forEach(l => buildLabel(l))
+        const textBuilder = new TextBuilder(builder)
+        project.texts.forEach(t => textBuilder.build(t))
 
         //set animation speed
         const ratio = project.meta?.speedRatio
