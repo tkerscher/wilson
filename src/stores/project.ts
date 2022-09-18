@@ -1,14 +1,14 @@
 import { defineStore } from "pinia"
 import { Graph } from "../model/graph"
-import { Label } from "../model/label"
 import { Line } from "../model/line"
 import { Path } from "../model/path"
 import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
+import { Text } from "../model/text"
 import { Tube } from "../model/tube"
 import { inflate } from "pako"
 
-export type ObjectMeta = Sphere | Line | Tube | Label;
+export type ObjectMeta = Sphere | Line | Text | Tube;
 
 export const useProject = defineStore('project', {
     state: (): Project => ({
@@ -31,14 +31,14 @@ export const useProject = defineStore('project', {
         spheres: <Sphere[]>[],
         lines: <Line[]>[],
         tubes: <Tube[]>[],
-        labels: <Label[]>[]
+        texts: <Text[]>[]
     }),
     getters: {
         isEmpty: (state): boolean => {
             return state.spheres.length == 0 &&
                    state.lines.length == 0 &&
                    state.tubes.length == 0 &&
-                   state.labels.length == 0;
+                   state.texts.length == 0;
         }
     },
     actions: {
@@ -76,11 +76,11 @@ export const useProject = defineStore('project', {
                 id -= this.$state.tubes.length
             }
             //Is it a label?
-            if (id < this.$state.labels.length) {
-                return this.$state.labels[id]
+            if (id < this.$state.texts.length) {
+                return this.$state.texts[id]
             }
             else {
-                //run out of objects
+                //ran out of objects
                 return null
             }
         }
