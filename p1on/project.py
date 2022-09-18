@@ -79,9 +79,6 @@ class Project:
     animatables: Iterable[Animatable]
         List of animatables to be included into the project
     
-    clearColor: ColorLike, default='white'
-        Background color of the whole animation scene
-    
     camera: Optional[Camera], default=None
         An optional animatable camera
 
@@ -101,7 +98,6 @@ class Project:
         graphs: Iterable[Graph] = [],
         paths: Iterable[Path] = [],
         animatables: Iterable[Animatable] = [],
-        clearColor: ColorLike = 'white',
         camera: Optional[Camera] = None,
         colormap: Optional[ColorMap] = None
     ):
@@ -115,7 +111,6 @@ class Project:
         self.graphs = graphs # type: ignore[assignment]
         self.paths = paths # type: ignore[assignment]
         self.animatables = animatables # type: ignore[assignment]
-        self.clearColor = clearColor
         self.camera = camera
         self.colormap = colormap
     
@@ -246,14 +241,6 @@ class Project:
     def clearAnimatables(self) -> None:
         """Removes all animatables from this project"""
         self._animatables = []
-    
-    @property
-    def clearColor(self) -> ColorLike:
-        """Background color of the whole animation scene"""
-        return self._clear
-    @clearColor.setter
-    def clearColor(self, value: ColorLike) -> None:
-        self._clear = value
     
     @property
     def camera(self) -> Optional[Camera]:

@@ -1,9 +1,10 @@
+from pydoc import describe
 from tokenize import group
 from typing import Dict, Optional, Tuple
 from zlib import decompress
 import numpy as np
 
-from p1on.objects import Label, Line, Sphere, Tube
+from p1on.objects import Line, Sphere, Text, Tube
 from p1on.data import (
     ColorMap,
     ColorProperty,
@@ -44,7 +45,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.addAnimatables(_parseSphere(s, _graphs, _paths) for s in project.spheres)
     result.addAnimatables(_parseTube(t, _graphs, _paths) for t in project.tubes)
     result.addAnimatables(_parseLine(l, _graphs, _paths) for l in project.lines)
-    result.addAnimatables(_parseLabel(l, _graphs, _paths) for l in project.labels)
+    result.addAnimatables(_parseText(t, _graphs, _paths) for t in project.texts)
 
     #additional properties
     if project.HasField('camera'):
@@ -94,6 +95,26 @@ def _parseCamera(camera: proto.Camera, pathDict: Dict[int, Path]) -> Camera:
     position = ( camera.position.x, camera.position.y, camera.position.z )
     target = ( camera.target.x, camera.target.y, camera.target.z )
     return Camera(position=position, target=target)
+
+def _parseTextPosition(position: proto.TextPosition) -> str:
+    if position == proto.TextPosition.CENTER:
+        position = 'center'
+    elif position == proto.TextPosition.UPPER_RIGHT:
+        position = 'upper right'
+    elif position == proto.TextPosition.TOP:
+        position = 'top'
+    elif position == proto.TextPosition.UPPER_LEFT:
+        position = 'upper left'
+    elif position == proto.TextPosition.LEFT:
+        position = 'left'
+    elif position == proto.TextPosition.LOWER_LEFT:
+        position = 'lower left'
+    elif position == proto.TextPosition.BOTTOM:
+        position = 'bottom'
+    elif position == proto.TextPosition.LOWER_RIGHT:
+        position = 'lower right'
+    elif position == proto.TextPosition.RIGHT:
+        position = 'right'
 
 ################################ Properties ####################################
 
@@ -243,28 +264,26 @@ def _parseLine(
         pointForward=pointForward,
         pointBackward=pointBackward)
 
-def _parseLabel(
-    label: proto.Label,
+def _parseText(
+    text: proto.Text,
     graphDict: Dict[int, Graph],
     pathDict: Dict[int, Path]
-) -> Label:
+) -> Text:
     #meta
-    name = label.name
-    group = label.group
-    description = label.description
+    name = text.name
+    group = text.group
+    description = text.description
     #properties
-    color = _parseColorProperty(label.color, graphDict, False)
-    assert(color is not None)
-    position = _parseVectorProperty(label.position, pathDict, True)
-    fontSize = _parseScalarProperty(label.fontSize, graphDict, True)
-    background = _parseColorProperty(label.background, graphDict, True)
-    if background is None:
-        background = (1.0,1.0,1.0,0.0) #transparent
+    content = text.content #TODO: fetch referenced graphs and paths
+    position = _parseTextPosition(text.position)
+    fontSize = _parseScalarProperty(text.fontSize, graphDict, False)
+    bold = text.bold
+    italic = text.italic
     #done
-    return Label(name,
+    return Text(content, name,
         group=group,
         description=description,
-        color=color,
         position=position,
         fontSize=fontSize,
-        background=background)
+        bold=bold,
+        italic=italic)

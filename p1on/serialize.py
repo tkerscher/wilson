@@ -1,6 +1,7 @@
 import numpy as np
 import cmasher as cmr
-from typing import Any, Tuple
+import re
+from typing import Any, List, Tuple
 from zlib import compress
 
 from p1on.color import getColorByName
@@ -11,9 +12,12 @@ from p1on.data import (
     ScalarProperty,
     Path,
     VectorProperty )
-from p1on.objects import Animatable, Label, Line, Sphere, Tube
+from p1on.objects import Animatable, Line, Sphere, Text, Tube
 from p1on.project import Camera, Project
 import p1on.proto as proto
+
+#Mandatory xkcd: https://xkcd.com/1171/
+text_pattern = re.compile("%\(([^\.]+?)(?:\[(\d*?)\])?(\.[x-z])?\)(.*?[a-z])?", re.MULTILINE)
 
 def serializeProject(project: Project) -> bytes:
     """
@@ -42,7 +46,7 @@ def serializeProject(project: Project) -> bytes:
     nextSphereId = 1
     nextLineId = 1
     nextTubeId = 1
-    nextLabelId = 1
+    nextTextId = 1
 
     #animatables
     for a in project.animatables:
@@ -62,11 +66,11 @@ def serializeProject(project: Project) -> bytes:
                 a.name = 'Tube ' + str(nextTubeId)
                 nextTubeId += 1
             out.tubes.append(_serializeTube(a, project))
-        elif isinstance(a, Label):
+        elif isinstance(a, Text):
             if a.name is None:
-                a.name = 'Label ' + str(nextLabelId)
-                nextLabelId += 1
-            out.labels.append(_serializeLabel(a, project))
+                a.name = 'Label ' + str(nextTextId)
+                nextTextId += 1
+            out.texts.append(_serializeText(a, project))
     
     #serialize data
     #Do this after serializing animatables as they might add implicit data
@@ -194,9 +198,9 @@ def _serializeScalarProperty(
     project: Project
 ) -> proto.ScalarProperty:
     result = proto.ScalarProperty()
-    if isinstance(scalar, float):
+    if isinstance(scalar, float) or isinstance(scalar, int):
         #const value
-        result.constValue = scalar
+        result.constValue = float(scalar)
     elif isinstance(scalar, Graph):
         #graph -> check if already present in project
         #      -> Either fetch graph id or add graph
@@ -285,6 +289,28 @@ def _serializeCamera(camera: Camera, project: Project) -> proto.Camera:
         result.target.z = camera.target[2]
     return result
 
+def _serializeTextPosition(target: proto.Text, position: str) -> None:
+    if position == 'center':
+        target.position = proto.TextPosition.CENTER
+    elif position == 'top' or position == 't':
+        target.position = proto.TextPosition.TOP
+    elif position == 'bottom' or position == 'b':
+        target.position = proto.TextPosition.BOTTOM
+    elif position == 'left' or position == 'l':
+        target.position = proto.TextPosition.LEFT
+    elif position == 'right' or position == 'r':
+        target.position = proto.TextPosition.RIGHT
+    elif position == 'upper right' or position == 'ur':
+        target.position = proto.TextPosition.UPPER_RIGHT
+    elif position == 'upper left' or position == 'ul':
+        target.position = proto.TextPosition.UPPER_LEFT
+    elif position == 'lower right' or position == 'lr':
+        target.position = proto.TextPosition.LOWER_RIGHT
+    elif position == 'lower left' or position == 'll':
+        target.position = proto.TextPosition.LOWER_LEFT
+    else:
+        raise ValueError('Unknown Text Position!')
+
 ################################## Objects #####################################
 
 def _writeObjectMeta(target, meta: Animatable, project: Project) -> None: #type: ignore[no-untyped-def]
@@ -293,13 +319,13 @@ def _writeObjectMeta(target, meta: Animatable, project: Project) -> None: #type:
     if meta.description is not None:
         target.description = meta.description
     if meta.group is not None:
-        target.group = meta.group
-    target.color.CopyFrom(_serializeColorProperty(meta.color, meta.name + '_color', project))
+        target.group = meta.group    
 
 def _serializeSphere(sphere: Sphere, project: Project) -> proto.Sphere:
     result = proto.Sphere()
     assert(sphere.name is not None)
     _writeObjectMeta(result, sphere, project)
+    result.color.CopyFrom(_serializeColorProperty(sphere.color, sphere.name + '_color', project))
     #properties
     if sphere.position is not None:
         result.position.CopyFrom(_serializeVectorProperty(sphere.position, sphere.name + '_position', project))
@@ -312,6 +338,7 @@ def _serializeTube(tube: Tube, project: Project) -> proto.Tube:
     #meta
     assert(tube.name is not None)
     _writeObjectMeta(result, tube, project)
+    result.color.CopyFrom(_serializeColorProperty(tube.color, tube.name + '_color', project))
     #properties
     result.radius.CopyFrom(_serializeScalarProperty(tube.radius, tube.name + '_radius', project))
     result.isGrowing = tube.isGrowing
@@ -338,6 +365,7 @@ def _serializeLine(line: Line, project: Project) -> proto.Line:
     result = proto.Line()
     assert(line.name is not None)
     _writeObjectMeta(result, line, project)
+    result.color.CopyFrom(_serializeColorProperty(line.color, line.name + '_color', project))
     #properties
     if line.start is not None:
         result.start.CopyFrom(_serializeVectorProperty(
@@ -352,18 +380,109 @@ def _serializeLine(line: Line, project: Project) -> proto.Line:
     #done
     return result
 
-def _serializeLabel(label: Label, project: Project) -> proto.Label:
-    result = proto.Label()
-    assert(label.name is not None)
-    _writeObjectMeta(result, label, project)
+def _createTempSub(graphs: List[Tuple[str,ScalarProperty]], paths: List[Tuple[str, VectorProperty]]):
+    """Build the substitute function for the template processing via regex"""
+
+    def sub(match: re.Match) -> str:
+        name = match[1]
+        #Index graph?
+        if name == 'graphs':
+            #sanity check
+            if match[2] is None:
+                raise ValueError(f'Error in text reference "{match[0]}": No graph index provided!')
+            graph_id = int(match)
+            if graph_id < 0 or graph_id >= len(graphs):
+                raise ValueError(f'Error in text reference "{match[0]}": Graph index out of range!')
+            if match[3] is not None:
+                raise ValueError(f'Error in text reference "{match[0]}": Graphs do not provide properties!')
+            
+            #process graph
+            graph = graphs[graph_id][1] #tuple: (name, graph)
+            
+            #const value?
+            if graph.HasField('constValue'):
+                #const value -> replace it
+                return f'%{match.group(4) or "s"}' % graph.constValue
+            else:
+                #construct correct template string
+                return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
+        elif name == 'paths':
+            #sanity check
+            if match[2] is None:
+                raise ValueError(f'Error in text reference "{match[0]}": No path index provided!')
+            path_id = int(match)
+            if path_id < 0 or path_id >= len(paths):
+                raise ValueError(f'Error in text reference "{match[0]}": Path index out of range!')
+            
+            #process path
+            path = paths[path_id][1] #tuple: (name, path)
+            
+            #const value?
+            if path.HasField('constValue'):
+                #check what to print
+                if match.group(3) == '.x':
+                    return f'${match.group(4) or "s"}' % path.constValue.x
+                elif match.group(3) == '.y':
+                    return f'${match.group(4) or "s"}' % path.constValue.y
+                else: #match.group(3) == '.z'
+                    return f'${match.group(4) or "s"}' % path.constValue.z
+            else:
+                #construct correct template string
+                return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
+        
+        #it must be a named data object
+
+        #sanity check -> no index if named
+        if match.group(2) is not None:
+            raise ValueError(f'Error in text reference "{match[0]}": Cannot index named data!')
+
+        #search by name; lists of tuple: (name, data)
+        graph_matches = [g[1] for g in graphs if g[0] == name]
+        path_matches = [p[1] for p in paths if p[0] == name]
+
+        #sanity check
+        matches = len(graph_matches) + len(path_matches)
+        if matches == 0:
+            raise ValueError(f'Error in text reference "{match[0]}": The referenced data was not found!')
+        if matches > 1:
+            raise ValueError(f'Error in text reference "{match[0]}": The referenced data is not unique by name!')
+        
+        #Is it a path?
+        if len(path_matches) == 1:
+            path = path_matches[0]
+            return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
+        else:
+            graph = graph_matches[0]
+            return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
+    
+    return sub
+
+def _serializeText(text: Text, project: Project) -> proto.Text:
+    result = proto.Text()
+    #meta
+    assert(text.name is not None)
+    _writeObjectMeta(result, text, project)
     #properties
-    if label.position is not None:
-        result.position.CopyFrom(_serializeVectorProperty(
-            label.position, label.name + '_position', project))
-    if label.fontSize is not None:
-        result.fontSize.CopyFrom(_serializeScalarProperty(
-            label.fontSize, label.name + '_fontSize', project))
-    result.background.CopyFrom(_serializeColorProperty(
-        label.background, label.name + '_background', project))
+    _serializeTextPosition(result, text.position)
+    result.fontSize.CopyFrom(_serializeScalarProperty(
+        text.fontSize, text.name + '_fontSize', project))
+    result.bold = text.bold
+    result.italic = text.italic
+    
+    #serialize data obtain list of properties (either const or global id)
+    gn, pn = text.name + '_graph ', text.name + '_path'
+    graphs = [(
+        g.name if isinstance(g, Graph) else '',            #name (if graph)
+        _serializeScalarProperty(g, gn + str(i), project)) #scalar prop
+        for i, g in enumerate(text.graphs)]
+    paths = [(
+        p.name if isinstance(p, Path) else '',             #name (if path)
+        _serializeVectorProperty(p, pn + str(i), project)) #vector prop
+        for i, p in enumerate(text.paths)]
+
+    #find all references and replace with global id
+    sub = _createTempSub(graphs, paths)
+    result.content = re.sub(text_pattern, sub, text.content)
+    
     #done
     return result

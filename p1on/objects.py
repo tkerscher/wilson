@@ -1,6 +1,7 @@
 from abc import ABC
-from typing import Optional
-from p1on.data import PathLike, ScalarProperty, VectorProperty, ColorProperty
+from typing import List, Iterable, Optional
+from xmlrpc.client import Boolean
+from p1on.data import GraphLike, PathLike, ScalarProperty, VectorProperty, ColorProperty
 
 class Animatable(ABC):
     """Base class of all animatable objects
@@ -15,22 +16,17 @@ class Animatable(ABC):
     
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
-
-    color: ColorProperty, default='black'
-        Color of the surface
     """
     def __init__(
         self,
         name: Optional[str] = None,
         *,               
         group: Optional[str] = None,
-        description: Optional[str] = None,
-        color: ColorProperty = 'black'
+        description: Optional[str] = None
     ):
         self._name = name
         self._group = group
         self._description = description
-        self._color = color
     
     @property
     def name(self) -> Optional[str]:
@@ -63,18 +59,7 @@ class Animatable(ABC):
         self._description = value
     @description.deleter
     def description(self) -> None:
-        self._description = None
-
-    @property
-    def color(self) -> ColorProperty:
-        """Color of the sphere"""
-        return self._color
-    @color.setter
-    def color(self, value: ColorProperty) -> None:
-        self._color = value
-    @color.deleter
-    def color(self) -> None:
-        self._color = 'transparent'  
+        self._description = None 
 
 class Sphere(Animatable):
     """Simple sphere in 3D space
@@ -113,10 +98,10 @@ class Sphere(Animatable):
         super().__init__(
             name=name,
             group=group,
-            description=description,
-            color=color)
-        self._position = position
-        self._radius = radius
+            description=description)
+        self.position = position
+        self.radius = radius
+        self.color = color
     
     @property
     def position(self) -> Optional[VectorProperty]:
@@ -136,6 +121,17 @@ class Sphere(Animatable):
     @radius.setter
     def radius(self, value: ScalarProperty) -> None:
         self._radius = value  
+
+    @property
+    def color(self) -> ColorProperty:
+        """Color of the sphere"""
+        return self._color
+    @color.setter
+    def color(self, value: ColorProperty) -> None:
+        self._color = value
+    @color.deleter
+    def color(self) -> None:
+        self._color = 'black' 
 
 class Tube(Animatable):
     """Simple sphere in 3D space
@@ -181,11 +177,11 @@ class Tube(Animatable):
         super().__init__(
             name=name,
             group=group,
-            description=description,
-            color=color)
+            description=description)
         self.path = path
         self.isGrowing = isGrowing
         self.radius = radius
+        self.color = color
     
     @property
     def path(self) -> PathLike:
@@ -213,6 +209,17 @@ class Tube(Animatable):
     @isGrowing.setter
     def isGrowing(self, value: bool) -> None:
         self._isGrowing = value
+
+    @property
+    def color(self) -> ColorProperty:
+        """Color of the surface"""
+        return self._color
+    @color.setter
+    def color(self, value: ColorProperty) -> None:
+        self._color = value
+    @color.deleter
+    def color(self) -> None:
+        self._color = 'black' 
 
 class Line(Animatable):
     """Animated line in 3D space
@@ -262,13 +269,13 @@ class Line(Animatable):
         super().__init__(
             name=name,
             group=group,
-            description=description,
-            color=color)
+            description=description)
         self.start = start
         self.end = end
         self.lineWidth = lineWidth
         self.pointForward = pointForward
         self.pointBackward = pointBackward
+        self.color = color
     
     @property
     def start(self) -> Optional[VectorProperty]:
@@ -316,78 +323,149 @@ class Line(Animatable):
     def pointBackward(self, value: bool) -> None:
         self._pointBackward = value
 
-class Label(Animatable):
-    """Base class of all animatable objects
+    @property
+    def color(self) -> ColorProperty:
+        """Color of the surface"""
+        return self._color
+    @color.setter
+    def color(self, value: ColorProperty) -> None:
+        self._color = value
+    @color.deleter
+    def color(self) -> None:
+        self._color = 'black' 
+
+class Text(Animatable):
+    """Animated text on the screen surface
     
     Attributes
     ----------
+    content: {str}, default=""
+        Text to be displayed
+
     name: {str, None}, default=None
         Name of this object
     
     group: {str, None}, default=None
-        Name of group the label belongs to.
+        Name of group the line belongs to.
 
     description: {str, None}, default=None
         Additional description shown while this object is highlighted
+    
+    position: str, default='lower left'
+        Position of the text
+    
+    fontSize: ScalarProperty, default=16
+        Font size of the text
+    
+    bold: bool, default=False
+        Whether to draw the text bold
 
-    color: ColorProperty, default='black'
-        Color of the surface
-    
-    position: {VectorProperty, None}, default=None
-        Upper left corner of the label. Origin if None
-    
-    fontsize: {ScalarProperty, None}, default=None
-        Font size of label
-    
-    background: ColorProperty, default='transparent'
-        Background of label
+    italic: bool, default=False
+        Whether to draw the text in italic
+
+    graphs: Iterable[GraphLike], default=[]
+        List of graphs referenced in the text
+
+    paths: Iterable[PathLike], default=[]
+        List of paths referenced in the text
     """
-    def __init__(
-        self,
+    def __init__(self,
+        content: str = "",
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
         description: Optional[str] = None,
-        color: ColorProperty = 'black',
-        position: Optional[VectorProperty] = None,
-        fontSize: Optional[ScalarProperty] = None,
-        background: ColorProperty = 'transparent'
+        position: str = 'lower left',
+        fontSize: ScalarProperty = 16,
+        bold: bool = False,
+        italic: bool = False,
+        graphs: Iterable[GraphLike] = [],
+        paths: Iterable[PathLike] = []
     ):
         super().__init__(
             name=name,
             group=group,
-            description=description,
-            color=color)
-        self._position = position
-        self._fontSize = fontSize
-        self._background = background
+            description=description)
+        self.content = content
+        self.position = position
+        self.fontSize = fontSize
+        self.bold = bold
+        self.italic = italic
+        self.graphs = graphs
+        self.paths = paths
     
+    #All allowed values for position
+    _positions = (
+        'center', 'c',
+        'top', 't',
+        'bottom', 'b',
+        'left', 'l',
+        'right', 'r',
+        'upper right', 'ur',
+        'upper left', 'ul',
+        'lower left', 'll',
+        'lower right', 'lr')
+
     @property
-    def position(self) -> Optional[VectorProperty]:
-        """Upper left corner of the label. Origin if None"""
+    def content(self) -> str:
+        """Text to be displayed on the screen"""
+        return self._content
+    @content.setter
+    def content(self, value: str) -> None:
+        self._content = value
+
+    @property
+    def position(self) -> str:
+        """Position of the text"""
         return self._position
     @position.setter
-    def position(self, value: Optional[VectorProperty]) -> None:
+    def position(self, value: str) -> None:
+        if not value in Text._positions:
+            raise ValueError('The value is not a valid position!')
         self._position = value
-    @position.deleter
-    def position(self) -> None:
-        self._position = None
     
     @property
-    def fontSize(self) -> Optional[ScalarProperty]:
-        """Font size of label"""
+    def fontSize(self) -> ScalarProperty:
+        """Font size of the text"""
         return self._fontSize
     @fontSize.setter
-    def fontSize(self, value: Optional[ScalarProperty]) -> None:
+    def fontSize(self, value: ScalarProperty) -> None:
         self._fontSize = value
-    @fontSize.deleter
-    def fontSize(self) -> None:
-        self._fontSize = None
-    
+
     @property
-    def background(self) -> ColorProperty:
-        """Background of label"""
-        return self._background
-    @background.setter
-    def background(self, value: ColorProperty) -> None:
-        self._background = value
+    def bold(self) -> bool:
+        """`True` if the text should be drawn bold"""
+        return self._bold
+    @bold.setter
+    def bold(self, value: bool) -> None:
+        self._bold = value
+
+    @property
+    def italic(self) -> bold:
+        """`True` if the text should be drawn in italic"""
+        return self._italic
+    @italic.setter
+    def italic(self, value: bool) -> None:
+        self._italic = value
+
+    @property
+    def graphs(self) -> List[GraphLike]:
+        """List of graphs referenced in the text"""
+        return self._graphs
+    @graphs.setter
+    def graphs(self, value: Iterable[GraphLike]) -> None:
+        self._graphs = list(value)
+    @graphs.deleter
+    def graphs(self) -> None:
+        self._graphs = []
+
+    @property
+    def paths(self) -> List[PathLike]:
+        """List of paths referenced in the text"""
+        return self._paths
+    @paths.setter
+    def paths(self, value: Iterable[PathLike]) -> None:
+        self._paths = list(value)
+    @paths.deleter
+    def paths(self) -> None:
+        self._paths = []
