@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Color } from "./color";
 import _m0 from "protobufjs/minimal";
+import { Color } from "./color";
 
 export const protobufPackage = "p1on";
 
@@ -23,10 +23,7 @@ function createBaseColorMap(): ColorMap {
 }
 
 export const ColorMap = {
-  encode(
-    message: ColorMap,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ColorMap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.stops) {
       ColorMap_Stop.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -52,19 +49,13 @@ export const ColorMap = {
   },
 
   fromJSON(object: any): ColorMap {
-    return {
-      stops: Array.isArray(object?.stops)
-        ? object.stops.map((e: any) => ColorMap_Stop.fromJSON(e))
-        : [],
-    };
+    return { stops: Array.isArray(object?.stops) ? object.stops.map((e: any) => ColorMap_Stop.fromJSON(e)) : [] };
   },
 
   toJSON(message: ColorMap): unknown {
     const obj: any = {};
     if (message.stops) {
-      obj.stops = message.stops.map((e) =>
-        e ? ColorMap_Stop.toJSON(e) : undefined
-      );
+      obj.stops = message.stops.map((e) => e ? ColorMap_Stop.toJSON(e) : undefined);
     } else {
       obj.stops = [];
     }
@@ -73,8 +64,7 @@ export const ColorMap = {
 
   fromPartial<I extends Exact<DeepPartial<ColorMap>, I>>(object: I): ColorMap {
     const message = createBaseColorMap();
-    message.stops =
-      object.stops?.map((e) => ColorMap_Stop.fromPartial(e)) || [];
+    message.stops = object.stops?.map((e) => ColorMap_Stop.fromPartial(e)) || [];
     return message;
   },
 };
@@ -84,10 +74,7 @@ function createBaseColorMap_Stop(): ColorMap_Stop {
 }
 
 export const ColorMap_Stop = {
-  encode(
-    message: ColorMap_Stop,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ColorMap_Stop, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
@@ -128,53 +115,29 @@ export const ColorMap_Stop = {
   toJSON(message: ColorMap_Stop): unknown {
     const obj: any = {};
     message.value !== undefined && (obj.value = message.value);
-    message.color !== undefined &&
-      (obj.color = message.color ? Color.toJSON(message.color) : undefined);
+    message.color !== undefined && (obj.color = message.color ? Color.toJSON(message.color) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<ColorMap_Stop>, I>>(
-    object: I
-  ): ColorMap_Stop {
+  fromPartial<I extends Exact<DeepPartial<ColorMap_Stop>, I>>(object: I): ColorMap_Stop {
     const message = createBaseColorMap_Stop();
     message.value = object.value ?? 0;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? Color.fromPartial(object.color)
-        : undefined;
+    message.color = (object.color !== undefined && object.color !== null) ? Color.fromPartial(object.color) : undefined;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

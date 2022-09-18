@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Vector } from "./vector";
 import _m0 from "protobufjs/minimal";
+import { Vector } from "./vector";
 
 export const protobufPackage = "p1on";
 
@@ -68,9 +68,7 @@ export const Path = {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
-      points: Array.isArray(object?.points)
-        ? object.points.map((e: any) => Path_Point.fromJSON(e))
-        : [],
+      points: Array.isArray(object?.points) ? object.points.map((e: any) => Path_Point.fromJSON(e)) : [],
     };
   },
 
@@ -79,9 +77,7 @@ export const Path = {
     message.name !== undefined && (obj.name = message.name);
     message.id !== undefined && (obj.id = Math.round(message.id));
     if (message.points) {
-      obj.points = message.points.map((e) =>
-        e ? Path_Point.toJSON(e) : undefined
-      );
+      obj.points = message.points.map((e) => e ? Path_Point.toJSON(e) : undefined);
     } else {
       obj.points = [];
     }
@@ -102,10 +98,7 @@ function createBasePath_Point(): Path_Point {
 }
 
 export const Path_Point = {
-  encode(
-    message: Path_Point,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Path_Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.time !== 0) {
       writer.uint32(9).double(message.time);
     }
@@ -139,64 +132,38 @@ export const Path_Point = {
   fromJSON(object: any): Path_Point {
     return {
       time: isSet(object.time) ? Number(object.time) : 0,
-      position: isSet(object.position)
-        ? Vector.fromJSON(object.position)
-        : undefined,
+      position: isSet(object.position) ? Vector.fromJSON(object.position) : undefined,
     };
   },
 
   toJSON(message: Path_Point): unknown {
     const obj: any = {};
     message.time !== undefined && (obj.time = message.time);
-    message.position !== undefined &&
-      (obj.position = message.position
-        ? Vector.toJSON(message.position)
-        : undefined);
+    message.position !== undefined && (obj.position = message.position ? Vector.toJSON(message.position) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Path_Point>, I>>(
-    object: I
-  ): Path_Point {
+  fromPartial<I extends Exact<DeepPartial<Path_Point>, I>>(object: I): Path_Point {
     const message = createBasePath_Point();
     message.time = object.time ?? 0;
-    message.position =
-      object.position !== undefined && object.position !== null
-        ? Vector.fromPartial(object.position)
-        : undefined;
+    message.position = (object.position !== undefined && object.position !== null)
+      ? Vector.fromPartial(object.position)
+      : undefined;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

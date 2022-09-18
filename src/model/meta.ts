@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Timestamp } from "./google/protobuf/timestamp";
 import _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "p1on";
 
@@ -11,7 +11,9 @@ export interface ProjectMeta {
   /** Author of the project */
   author: string;
   /** Date of event */
-  date: Timestamp | undefined;
+  date:
+    | Timestamp
+    | undefined;
   /** Time value, from which the animation starts */
   startTime: number;
   /** Time value, where the animation ends */
@@ -21,21 +23,11 @@ export interface ProjectMeta {
 }
 
 function createBaseProjectMeta(): ProjectMeta {
-  return {
-    name: "",
-    author: "",
-    date: undefined,
-    startTime: 0,
-    endTime: 0,
-    speedRatio: 0,
-  };
+  return { name: "", author: "", date: undefined, startTime: 0, endTime: 0, speedRatio: 0 };
 }
 
 export const ProjectMeta = {
-  encode(
-    message: ProjectMeta,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ProjectMeta, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -105,24 +97,18 @@ export const ProjectMeta = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.author !== undefined && (obj.author = message.author);
-    message.date !== undefined &&
-      (obj.date = fromTimestamp(message.date).toISOString());
+    message.date !== undefined && (obj.date = fromTimestamp(message.date).toISOString());
     message.startTime !== undefined && (obj.startTime = message.startTime);
     message.endTime !== undefined && (obj.endTime = message.endTime);
     message.speedRatio !== undefined && (obj.speedRatio = message.speedRatio);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<ProjectMeta>, I>>(
-    object: I
-  ): ProjectMeta {
+  fromPartial<I extends Exact<DeepPartial<ProjectMeta>, I>>(object: I): ProjectMeta {
     const message = createBaseProjectMeta();
     message.name = object.name ?? "";
     message.author = object.author ?? "";
-    message.date =
-      object.date !== undefined && object.date !== null
-        ? Timestamp.fromPartial(object.date)
-        : undefined;
+    message.date = (object.date !== undefined && object.date !== null) ? Timestamp.fromPartial(object.date) : undefined;
     message.startTime = object.startTime ?? 0;
     message.endTime = object.endTime ?? 0;
     message.speedRatio = object.speedRatio ?? 0;
@@ -130,35 +116,17 @@ export const ProjectMeta = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

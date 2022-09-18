@@ -1,41 +1,43 @@
 /* eslint-disable */
-import { ProjectMeta } from "./meta";
-import { Graph } from "./graph";
-import { Path } from "./path";
-import { ColorMap } from "./colormap";
-import { Camera } from "./camera";
-import { Sphere } from "./sphere";
-import { Line } from "./line";
-import { Tube } from "./tube";
-import { Label } from "./label";
 import _m0 from "protobufjs/minimal";
+import { Camera } from "./camera";
+import { ColorMap } from "./colormap";
+import { Graph } from "./graph";
+import { Line } from "./line";
+import { ProjectMeta } from "./meta";
+import { Path } from "./path";
+import { Sphere } from "./sphere";
+import { Text } from "./text";
+import { Tube } from "./tube";
 
 export const protobufPackage = "p1on";
 
 /** Root container for all animation relevant data */
 export interface Project {
   /** Meta information */
-  meta: ProjectMeta | undefined;
+  meta:
+    | ProjectMeta
+    | undefined;
   /** list of graphs */
   graphs: Graph[];
   /** list of paths */
   paths: Path[];
-  /**
-   * list of scripts
-   * repeated Script scripts = 4;
-   * global color map
-   */
-  colormap: ColorMap | undefined;
+  /** global color map */
+  colormap:
+    | ColorMap
+    | undefined;
   /** Overrides standard camera if provided */
-  camera: Camera | undefined;
+  camera:
+    | Camera
+    | undefined;
   /** list of animated spheres */
   spheres: Sphere[];
   /** list of animated lines */
   lines: Line[];
   /** list of animated tubes */
   tubes: Tube[];
-  /** list of animated labels */
-  labels: Label[];
+  /** list of animated text */
+  texts: Text[];
 }
 
 function createBaseProject(): Project {
@@ -48,15 +50,12 @@ function createBaseProject(): Project {
     spheres: [],
     lines: [],
     tubes: [],
-    labels: [],
+    texts: [],
   };
 }
 
 export const Project = {
-  encode(
-    message: Project,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Project, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.meta !== undefined) {
       ProjectMeta.encode(message.meta, writer.uint32(10).fork()).ldelim();
     }
@@ -81,8 +80,8 @@ export const Project = {
     for (const v of message.tubes) {
       Tube.encode(v!, writer.uint32(146).fork()).ldelim();
     }
-    for (const v of message.labels) {
-      Label.encode(v!, writer.uint32(154).fork()).ldelim();
+    for (const v of message.texts) {
+      Text.encode(v!, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -119,7 +118,7 @@ export const Project = {
           message.tubes.push(Tube.decode(reader, reader.uint32()));
           break;
         case 19:
-          message.labels.push(Label.decode(reader, reader.uint32()));
+          message.texts.push(Text.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -132,129 +131,87 @@ export const Project = {
   fromJSON(object: any): Project {
     return {
       meta: isSet(object.meta) ? ProjectMeta.fromJSON(object.meta) : undefined,
-      graphs: Array.isArray(object?.graphs)
-        ? object.graphs.map((e: any) => Graph.fromJSON(e))
-        : [],
-      paths: Array.isArray(object?.paths)
-        ? object.paths.map((e: any) => Path.fromJSON(e))
-        : [],
-      colormap: isSet(object.colormap)
-        ? ColorMap.fromJSON(object.colormap)
-        : undefined,
+      graphs: Array.isArray(object?.graphs) ? object.graphs.map((e: any) => Graph.fromJSON(e)) : [],
+      paths: Array.isArray(object?.paths) ? object.paths.map((e: any) => Path.fromJSON(e)) : [],
+      colormap: isSet(object.colormap) ? ColorMap.fromJSON(object.colormap) : undefined,
       camera: isSet(object.camera) ? Camera.fromJSON(object.camera) : undefined,
-      spheres: Array.isArray(object?.spheres)
-        ? object.spheres.map((e: any) => Sphere.fromJSON(e))
-        : [],
-      lines: Array.isArray(object?.lines)
-        ? object.lines.map((e: any) => Line.fromJSON(e))
-        : [],
-      tubes: Array.isArray(object?.tubes)
-        ? object.tubes.map((e: any) => Tube.fromJSON(e))
-        : [],
-      labels: Array.isArray(object?.labels)
-        ? object.labels.map((e: any) => Label.fromJSON(e))
-        : [],
+      spheres: Array.isArray(object?.spheres) ? object.spheres.map((e: any) => Sphere.fromJSON(e)) : [],
+      lines: Array.isArray(object?.lines) ? object.lines.map((e: any) => Line.fromJSON(e)) : [],
+      tubes: Array.isArray(object?.tubes) ? object.tubes.map((e: any) => Tube.fromJSON(e)) : [],
+      texts: Array.isArray(object?.texts) ? object.texts.map((e: any) => Text.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: Project): unknown {
     const obj: any = {};
-    message.meta !== undefined &&
-      (obj.meta = message.meta ? ProjectMeta.toJSON(message.meta) : undefined);
+    message.meta !== undefined && (obj.meta = message.meta ? ProjectMeta.toJSON(message.meta) : undefined);
     if (message.graphs) {
-      obj.graphs = message.graphs.map((e) => (e ? Graph.toJSON(e) : undefined));
+      obj.graphs = message.graphs.map((e) => e ? Graph.toJSON(e) : undefined);
     } else {
       obj.graphs = [];
     }
     if (message.paths) {
-      obj.paths = message.paths.map((e) => (e ? Path.toJSON(e) : undefined));
+      obj.paths = message.paths.map((e) => e ? Path.toJSON(e) : undefined);
     } else {
       obj.paths = [];
     }
-    message.colormap !== undefined &&
-      (obj.colormap = message.colormap
-        ? ColorMap.toJSON(message.colormap)
-        : undefined);
-    message.camera !== undefined &&
-      (obj.camera = message.camera ? Camera.toJSON(message.camera) : undefined);
+    message.colormap !== undefined && (obj.colormap = message.colormap ? ColorMap.toJSON(message.colormap) : undefined);
+    message.camera !== undefined && (obj.camera = message.camera ? Camera.toJSON(message.camera) : undefined);
     if (message.spheres) {
-      obj.spheres = message.spheres.map((e) =>
-        e ? Sphere.toJSON(e) : undefined
-      );
+      obj.spheres = message.spheres.map((e) => e ? Sphere.toJSON(e) : undefined);
     } else {
       obj.spheres = [];
     }
     if (message.lines) {
-      obj.lines = message.lines.map((e) => (e ? Line.toJSON(e) : undefined));
+      obj.lines = message.lines.map((e) => e ? Line.toJSON(e) : undefined);
     } else {
       obj.lines = [];
     }
     if (message.tubes) {
-      obj.tubes = message.tubes.map((e) => (e ? Tube.toJSON(e) : undefined));
+      obj.tubes = message.tubes.map((e) => e ? Tube.toJSON(e) : undefined);
     } else {
       obj.tubes = [];
     }
-    if (message.labels) {
-      obj.labels = message.labels.map((e) => (e ? Label.toJSON(e) : undefined));
+    if (message.texts) {
+      obj.texts = message.texts.map((e) => e ? Text.toJSON(e) : undefined);
     } else {
-      obj.labels = [];
+      obj.texts = [];
     }
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Project>, I>>(object: I): Project {
     const message = createBaseProject();
-    message.meta =
-      object.meta !== undefined && object.meta !== null
-        ? ProjectMeta.fromPartial(object.meta)
-        : undefined;
+    message.meta = (object.meta !== undefined && object.meta !== null)
+      ? ProjectMeta.fromPartial(object.meta)
+      : undefined;
     message.graphs = object.graphs?.map((e) => Graph.fromPartial(e)) || [];
     message.paths = object.paths?.map((e) => Path.fromPartial(e)) || [];
-    message.colormap =
-      object.colormap !== undefined && object.colormap !== null
-        ? ColorMap.fromPartial(object.colormap)
-        : undefined;
-    message.camera =
-      object.camera !== undefined && object.camera !== null
-        ? Camera.fromPartial(object.camera)
-        : undefined;
+    message.colormap = (object.colormap !== undefined && object.colormap !== null)
+      ? ColorMap.fromPartial(object.colormap)
+      : undefined;
+    message.camera = (object.camera !== undefined && object.camera !== null)
+      ? Camera.fromPartial(object.camera)
+      : undefined;
     message.spheres = object.spheres?.map((e) => Sphere.fromPartial(e)) || [];
     message.lines = object.lines?.map((e) => Line.fromPartial(e)) || [];
     message.tubes = object.tubes?.map((e) => Tube.fromPartial(e)) || [];
-    message.labels = object.labels?.map((e) => Label.fromPartial(e)) || [];
+    message.texts = object.texts?.map((e) => Text.fromPartial(e)) || [];
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

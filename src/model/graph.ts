@@ -67,9 +67,7 @@ export const Graph = {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
-      points: Array.isArray(object?.points)
-        ? object.points.map((e: any) => Graph_Point.fromJSON(e))
-        : [],
+      points: Array.isArray(object?.points) ? object.points.map((e: any) => Graph_Point.fromJSON(e)) : [],
     };
   },
 
@@ -78,9 +76,7 @@ export const Graph = {
     message.name !== undefined && (obj.name = message.name);
     message.id !== undefined && (obj.id = Math.round(message.id));
     if (message.points) {
-      obj.points = message.points.map((e) =>
-        e ? Graph_Point.toJSON(e) : undefined
-      );
+      obj.points = message.points.map((e) => e ? Graph_Point.toJSON(e) : undefined);
     } else {
       obj.points = [];
     }
@@ -91,8 +87,7 @@ export const Graph = {
     const message = createBaseGraph();
     message.name = object.name ?? "";
     message.id = object.id ?? 0;
-    message.points =
-      object.points?.map((e) => Graph_Point.fromPartial(e)) || [];
+    message.points = object.points?.map((e) => Graph_Point.fromPartial(e)) || [];
     return message;
   },
 };
@@ -102,10 +97,7 @@ function createBaseGraph_Point(): Graph_Point {
 }
 
 export const Graph_Point = {
-  encode(
-    message: Graph_Point,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Graph_Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.time !== 0) {
       writer.uint32(9).double(message.time);
     }
@@ -150,9 +142,7 @@ export const Graph_Point = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Graph_Point>, I>>(
-    object: I
-  ): Graph_Point {
+  fromPartial<I extends Exact<DeepPartial<Graph_Point>, I>>(object: I): Graph_Point {
     const message = createBaseGraph_Point();
     message.time = object.time ?? 0;
     message.value = object.value ?? 0;
@@ -160,35 +150,17 @@ export const Graph_Point = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

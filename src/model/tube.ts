@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { ColorProperty, ScalarProperty } from "./properties";
 import _m0 from "protobufjs/minimal";
+import { ColorProperty, ScalarProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,7 +13,9 @@ export interface Tube {
   /** Additional text shown when selected */
   description: string;
   /** Color of the tube at a certain point identified by time */
-  color: ColorProperty | undefined;
+  color:
+    | ColorProperty
+    | undefined;
   /** Index of path to follow */
   pathId: number;
   /**
@@ -26,15 +28,7 @@ export interface Tube {
 }
 
 function createBaseTube(): Tube {
-  return {
-    name: "",
-    group: "",
-    description: "",
-    color: undefined,
-    pathId: 0,
-    isGrowing: false,
-    radius: undefined,
-  };
+  return { name: "", group: "", description: "", color: undefined, pathId: 0, isGrowing: false, radius: undefined };
 }
 
 export const Tube = {
@@ -104,14 +98,10 @@ export const Tube = {
       name: isSet(object.name) ? String(object.name) : "",
       group: isSet(object.group) ? String(object.group) : "",
       description: isSet(object.description) ? String(object.description) : "",
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
-        : undefined,
+      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       pathId: isSet(object.pathId) ? Number(object.pathId) : 0,
       isGrowing: isSet(object.isGrowing) ? Boolean(object.isGrowing) : false,
-      radius: isSet(object.radius)
-        ? ScalarProperty.fromJSON(object.radius)
-        : undefined,
+      radius: isSet(object.radius) ? ScalarProperty.fromJSON(object.radius) : undefined,
     };
   },
 
@@ -119,18 +109,11 @@ export const Tube = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.group !== undefined && (obj.group = message.group);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
-        : undefined);
+    message.description !== undefined && (obj.description = message.description);
+    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.pathId !== undefined && (obj.pathId = Math.round(message.pathId));
     message.isGrowing !== undefined && (obj.isGrowing = message.isGrowing);
-    message.radius !== undefined &&
-      (obj.radius = message.radius
-        ? ScalarProperty.toJSON(message.radius)
-        : undefined);
+    message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
     return obj;
   },
 
@@ -139,49 +122,29 @@ export const Tube = {
     message.name = object.name ?? "";
     message.group = object.group ?? "";
     message.description = object.description ?? "";
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
-        : undefined;
+    message.color = (object.color !== undefined && object.color !== null)
+      ? ColorProperty.fromPartial(object.color)
+      : undefined;
     message.pathId = object.pathId ?? 0;
     message.isGrowing = object.isGrowing ?? false;
-    message.radius =
-      object.radius !== undefined && object.radius !== null
-        ? ScalarProperty.fromPartial(object.radius)
-        : undefined;
+    message.radius = (object.radius !== undefined && object.radius !== null)
+      ? ScalarProperty.fromPartial(object.radius)
+      : undefined;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

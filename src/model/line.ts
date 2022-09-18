@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { ColorProperty, VectorProperty, ScalarProperty } from "./properties";
 import _m0 from "protobufjs/minimal";
+import { ColorProperty, ScalarProperty, VectorProperty } from "./properties";
 
 export const protobufPackage = "p1on";
 
@@ -13,13 +13,21 @@ export interface Line {
   /** Additional text shown when selected */
   description: string;
   /** Color */
-  color: ColorProperty | undefined;
+  color:
+    | ColorProperty
+    | undefined;
   /** start position */
-  start: VectorProperty | undefined;
+  start:
+    | VectorProperty
+    | undefined;
   /** end position */
-  end: VectorProperty | undefined;
+  end:
+    | VectorProperty
+    | undefined;
   /** Line diameter */
-  lineWidth: ScalarProperty | undefined;
+  lineWidth:
+    | ScalarProperty
+    | undefined;
   /** true, if there should be a cone pointing toward the start point */
   pointForward: boolean;
   /** true, if there should be a cone pointing toward the end point */
@@ -61,10 +69,7 @@ export const Line = {
       VectorProperty.encode(message.end, writer.uint32(90).fork()).ldelim();
     }
     if (message.lineWidth !== undefined) {
-      ScalarProperty.encode(
-        message.lineWidth,
-        writer.uint32(98).fork()
-      ).ldelim();
+      ScalarProperty.encode(message.lineWidth, writer.uint32(98).fork()).ldelim();
     }
     if (message.pointForward === true) {
       writer.uint32(104).bool(message.pointForward);
@@ -122,22 +127,12 @@ export const Line = {
       name: isSet(object.name) ? String(object.name) : "",
       group: isSet(object.group) ? String(object.group) : "",
       description: isSet(object.description) ? String(object.description) : "",
-      color: isSet(object.color)
-        ? ColorProperty.fromJSON(object.color)
-        : undefined,
-      start: isSet(object.start)
-        ? VectorProperty.fromJSON(object.start)
-        : undefined,
+      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
+      start: isSet(object.start) ? VectorProperty.fromJSON(object.start) : undefined,
       end: isSet(object.end) ? VectorProperty.fromJSON(object.end) : undefined,
-      lineWidth: isSet(object.lineWidth)
-        ? ScalarProperty.fromJSON(object.lineWidth)
-        : undefined,
-      pointForward: isSet(object.pointForward)
-        ? Boolean(object.pointForward)
-        : false,
-      pointBackward: isSet(object.pointBackward)
-        ? Boolean(object.pointBackward)
-        : false,
+      lineWidth: isSet(object.lineWidth) ? ScalarProperty.fromJSON(object.lineWidth) : undefined,
+      pointForward: isSet(object.pointForward) ? Boolean(object.pointForward) : false,
+      pointBackward: isSet(object.pointBackward) ? Boolean(object.pointBackward) : false,
     };
   },
 
@@ -145,26 +140,14 @@ export const Line = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.group !== undefined && (obj.group = message.group);
-    message.description !== undefined &&
-      (obj.description = message.description);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? ColorProperty.toJSON(message.color)
-        : undefined);
-    message.start !== undefined &&
-      (obj.start = message.start
-        ? VectorProperty.toJSON(message.start)
-        : undefined);
-    message.end !== undefined &&
-      (obj.end = message.end ? VectorProperty.toJSON(message.end) : undefined);
+    message.description !== undefined && (obj.description = message.description);
+    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
+    message.start !== undefined && (obj.start = message.start ? VectorProperty.toJSON(message.start) : undefined);
+    message.end !== undefined && (obj.end = message.end ? VectorProperty.toJSON(message.end) : undefined);
     message.lineWidth !== undefined &&
-      (obj.lineWidth = message.lineWidth
-        ? ScalarProperty.toJSON(message.lineWidth)
-        : undefined);
-    message.pointForward !== undefined &&
-      (obj.pointForward = message.pointForward);
-    message.pointBackward !== undefined &&
-      (obj.pointBackward = message.pointBackward);
+      (obj.lineWidth = message.lineWidth ? ScalarProperty.toJSON(message.lineWidth) : undefined);
+    message.pointForward !== undefined && (obj.pointForward = message.pointForward);
+    message.pointBackward !== undefined && (obj.pointBackward = message.pointBackward);
     return obj;
   },
 
@@ -173,57 +156,35 @@ export const Line = {
     message.name = object.name ?? "";
     message.group = object.group ?? "";
     message.description = object.description ?? "";
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? ColorProperty.fromPartial(object.color)
-        : undefined;
-    message.start =
-      object.start !== undefined && object.start !== null
-        ? VectorProperty.fromPartial(object.start)
-        : undefined;
-    message.end =
-      object.end !== undefined && object.end !== null
-        ? VectorProperty.fromPartial(object.end)
-        : undefined;
-    message.lineWidth =
-      object.lineWidth !== undefined && object.lineWidth !== null
-        ? ScalarProperty.fromPartial(object.lineWidth)
-        : undefined;
+    message.color = (object.color !== undefined && object.color !== null)
+      ? ColorProperty.fromPartial(object.color)
+      : undefined;
+    message.start = (object.start !== undefined && object.start !== null)
+      ? VectorProperty.fromPartial(object.start)
+      : undefined;
+    message.end = (object.end !== undefined && object.end !== null)
+      ? VectorProperty.fromPartial(object.end)
+      : undefined;
+    message.lineWidth = (object.lineWidth !== undefined && object.lineWidth !== null)
+      ? ScalarProperty.fromPartial(object.lineWidth)
+      : undefined;
     message.pointForward = object.pointForward ?? false;
     message.pointBackward = object.pointBackward ?? false;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
-      $case: T["$case"];
-    }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
