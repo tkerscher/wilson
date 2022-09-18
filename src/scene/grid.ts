@@ -21,8 +21,8 @@ export function buildGrid(scene: Scene): Node {
 	material.minorUnitVisibility = 0.45
 	material.gridRatio = 2
 	material.backFaceCulling = false
-	material.mainColor = Color3.White()
-	material.lineColor = Color3.White()
+	material.mainColor = new Color3(0.471, 0.471, 0.471)
+	material.lineColor = new Color3(0.471, 0.471, 0.471)
 	material.opacity = 0.98
 
     //grid plane
@@ -34,7 +34,7 @@ export function buildGrid(scene: Scene): Node {
     const xMat = new StandardMaterial("xAxis_mat", scene)
     xMat.diffuseColor = XColor
     const xAxis = MeshBuilder.CreateTube("xAxis", {
-        path: [ new Vector3(-1000,0,0), new Vector3(1000,0,0)],
+        path: [ new Vector3(-500,0,0), new Vector3(500,0,0)],
         radius: 0.05
     }, scene)
     xAxis.material = xMat
@@ -44,7 +44,7 @@ export function buildGrid(scene: Scene): Node {
     const yMat = new StandardMaterial("xAxis_mat", scene)
     yMat.diffuseColor = YColor
     const yAxis = MeshBuilder.CreateTube("xAxis", {
-        path: [ new Vector3(0,-1000,0), new Vector3(0,1000,0)],
+        path: [ new Vector3(0,-500,0), new Vector3(0,500,0)],
         radius: 0.05
     }, scene)
     yAxis.material = yMat
