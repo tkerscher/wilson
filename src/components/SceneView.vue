@@ -7,7 +7,8 @@
             @toggle-grid="toggleGrid"
             @open-graphs="openGraphs"
             @reset-camera="resetCamera"
-            @screenshot="screenshot" />
+            @screenshot="screenshot"
+            @toggle-theme="toggleTheme"/>
     </div>
 </template>
 
@@ -20,6 +21,7 @@ import { useObjects } from '../stores/objects'
 import { usePaths } from '../stores/paths'
 import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
+import { useTheme } from '../stores/theme'
 import { MutationType } from 'pinia'
 
 import { SceneContainer } from '../scene/build'
@@ -180,6 +182,11 @@ function resetCamera() {
 }
 function screenshot() {
     scene?.screenshot()
+}
+const theme = useTheme()
+function toggleTheme() {
+    theme.toggleTheme()
+    scene?.updateTheme()
 }
 </script>
 

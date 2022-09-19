@@ -1,16 +1,15 @@
 import {
-    Color4,
     Vector3
 } from "@babylonjs/core"
 import {
     AdvancedDynamicTexture,
     Control,
+    Rectangle,
     StackPanel,
     TextBlock
 } from "@babylonjs/gui/2D"
 import { sprintf } from "sprintf-js";
 import { Project } from "../model/project";
-import { ColorProperty } from "../model/properties";
 import { Text, TextPosition, textPositionToJSON } from "../model/text"
 import { PathInterpolator } from "../util/pathInterpolate";
 import { ScalarInterpolator } from "../util/scalarInterpolate";
@@ -127,15 +126,23 @@ export class TextBuilder {
     #builder: SceneBuilder
     #texture: AdvancedDynamicTexture
     #panels: Map<number, StackPanel>
-    #animationHooks: Array<(frame: number) => void>
     #engine: TextEngine
+    
+    rootContainer: Rectangle
 
     constructor(builder: SceneBuilder) {
         this.#builder = builder
         this.#texture = AdvancedDynamicTexture.CreateFullscreenUI("UI", true, builder.scene)
         this.#panels = new Map<number, StackPanel>()
-        this.#animationHooks = new Array<(frame: number) => void>()
         this.#engine = new TextEngine()
+        
+        //build root container
+        this.rootContainer = new Rectangle("textRoot")
+        this.rootContainer.width = 1.0
+        this.rootContainer.height = 1.0
+        this.rootContainer.thickness = 0
+        this.rootContainer.color = "white" //default text color
+        this.#texture.addControl(this.rootContainer)
     }
 
     build(text: Text) {
@@ -158,7 +165,6 @@ export class TextBuilder {
             block.fontWeight = "800"
         if (text.italic)
             block.fontStyle = "italic"
-        block.color = "white"
         
         //position
         this.#getPanel(text.position).addControl(block)
@@ -222,7 +228,7 @@ export class TextBuilder {
             break;
         }
 
-        this.#texture.addControl(panel)
+        this.rootContainer.addControl(panel)
         this.#panels.set(position, panel)
         return panel
     }

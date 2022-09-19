@@ -74,7 +74,7 @@ function timelineMove(e: MouseEvent) {
     height: 8px;
     width: 100%;
     margin: auto 10px;
-    background-color: lightgray;
+    background-color: var(--primary6);
     border-radius: 9999px; /** It's over 9000! */
 
     display: flex;
@@ -85,7 +85,7 @@ function timelineMove(e: MouseEvent) {
     cursor: pointer;
 }
 .elapsed-bar {
-    background-color: #3497ff;
+    background-color: var(--highlight1);
     height: 100%;
     border-radius: 9999px;
 }
@@ -97,6 +97,6 @@ function timelineMove(e: MouseEvent) {
     margin-left: -9px;
 
     border-radius: 10px;
-    background-color: #3497ff;
+    background-color: var(--highlight1);
 }
 </style>

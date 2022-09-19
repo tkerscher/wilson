@@ -88,7 +88,7 @@ onBeforeMount(() => {
     width: 100%;
     height: 30px;
     min-height: 30px;
-    background-color: #2c2c2c;
+    background-color: var(--primary3);
     border-radius: 5px;
     display: flex;
     flex-direction: row-reverse;
@@ -112,7 +112,7 @@ onBeforeMount(() => {
     width: 20px;
     height: 20px;
     margin: 5px;
-    background-color: lightgray;
+    background-color: var(--primary7);
     mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-repeat: no-repeat;
@@ -131,11 +131,11 @@ onBeforeMount(() => {
 .active-tab-container {
     height: 100%;
     flex: 1;
-    background-color: #2c2c2c;
+    background-color: var(--primary3);
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     overflow-y: auto;
-    scrollbar-color: #3497ff #d3d3d3;
+    scrollbar-color: var(--highlight1) var(--foreground2);
     scrollbar-width: thin;
     overflow-y: scroll;
 }
@@ -143,11 +143,11 @@ onBeforeMount(() => {
     width: 8px;
 } 
 .active-tab-container::-webkit-scrollbar-track {
-    background-color: #d3d3d3;
+    background-color: var(--foreground2);
     border-radius: 100px;
 } 
 .active-tab-container::-webkit-scrollbar-thumb {
-    background-color: #3497ff;
+    background-color: var(--highlight1);
     border-radius: 100px;
 }
 
@@ -155,7 +155,7 @@ onBeforeMount(() => {
     width: 20px;
     height: 20px;
     margin: 5px;
-    background-color: orange;
+    background-color: var(--highlight2);
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
@@ -166,7 +166,7 @@ onBeforeMount(() => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: white;
+    color: var(--foreground1);
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     user-select: none;
@@ -174,11 +174,11 @@ onBeforeMount(() => {
 }
 .tab-button:hover {
     cursor: pointer;
-    background-color: white;
+    background-color: var(--primary3);
 }
 .active-header {
     width: 100px;
-    background-color: #2c2c2c !important;
+    background-color: var(--primary3) !important;
 }
 
 .chart-icon {

@@ -63,7 +63,6 @@ function getDefault(value: string|undefined, def: string): string {
 <style scoped>
 table {
     width: 100%;
-    color: white;
     border-collapse: separate;
     border-spacing: 12px 15px;
     margin-top: 10px;
@@ -86,7 +85,6 @@ table tr td:nth-child(2) {
     margin-right: auto;
     text-align: left;
     font-style: italic;
-    color: white;
     font-weight: light;
     font-size: 0.8em;
     font-family: sans-serif;

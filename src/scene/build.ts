@@ -4,6 +4,7 @@ import {
     AnimationGroup, 
     ArcRotateCamera, 
     Color3, 
+    Color4,
     Engine,
     HemisphericLight, 
     Node, 
@@ -12,6 +13,7 @@ import {
     TransformNode, 
     Vector3
 } from "@babylonjs/core"
+import { Rectangle } from "@babylonjs/gui/2D"
 import { Project } from "../model/project"
 import { buildCamera } from "./camera"
 import { buildLine } from "./line"
@@ -30,6 +32,7 @@ export class SceneContainer {
     camera: ArcRotateCamera
     grid: Node
     groupMap: Map<string, Node>
+    textRoot: Rectangle
 
     #defCamTarget: Vector3
     #defCamPosition: Vector3
@@ -86,6 +89,19 @@ export class SceneContainer {
         Tools.CreateScreenshot(this.engine, this.camera, { precision: 2.0 })
     }
 
+    //theme
+    updateTheme() {
+        //retrieve colors from css
+        const style = getComputedStyle(document.documentElement)
+        const color = style.getPropertyValue('--scene-font-color')
+        const clear = style.getPropertyValue('--scene-background')
+        const grid  = style.getPropertyValue('--grid-color')
+        //update colors
+        this.textRoot.color = color
+        this.scene.clearColor = Color4.FromColor3(
+            Color3.FromHexString(clear), 1.0)
+    }
+
     constructor(project: Project, canvas: HTMLCanvasElement) {
         //create engine
         this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true })
@@ -107,6 +123,9 @@ export class SceneContainer {
         const tubes = project.tubes.map(t => new TubeController(builder, t))
         const textBuilder = new TextBuilder(builder)
         project.texts.forEach(t => textBuilder.build(t))
+
+        //retrieve text root
+        this.textRoot = textBuilder.rootContainer
 
         //set animation speed
         const ratio = project.meta?.speedRatio
@@ -136,6 +155,9 @@ export class SceneContainer {
 
         //create grid mesh
         this.grid = buildGrid(this.scene)
+
+        //set theme
+        this.updateTheme()
 
         //Create indicator
         this.indicator = createOrientationViewScene(this.engine, this.camera)

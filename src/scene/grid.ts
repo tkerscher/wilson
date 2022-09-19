@@ -21,7 +21,7 @@ export function buildGrid(scene: Scene): Node {
 	material.minorUnitVisibility = 0.45
 	material.gridRatio = 2
 	material.backFaceCulling = false
-	material.mainColor = new Color3(0.471, 0.471, 0.471)
+	material.mainColor = new Color3(0.471, 0.471, 0.471) //default color
 	material.lineColor = new Color3(0.471, 0.471, 0.471)
 	material.opacity = 0.98
 

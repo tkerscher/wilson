@@ -109,14 +109,13 @@ function dragging(e: MouseEvent) {
 
 <style scoped>
 .dial-input {
-    color: white;
     user-select: none;
 }
 .dial-input:hover {
     cursor: ew-resize;    
 }
 .dial-input:focus {
-    border-bottom: 2px solid #3497ff;
+    border-bottom: 2px solid var(--highlight1);
     margin-bottom: -2px;
 }
 
@@ -131,9 +130,9 @@ function dragging(e: MouseEvent) {
     outline: 0px solid transparent;
 }
 .input-valid {
-    border-bottom: 2px solid #3497ff;
+    border-bottom: 2px solid var(--highlight1);
 }
 .input-invalid {
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid var(--error);
 }
 </style>

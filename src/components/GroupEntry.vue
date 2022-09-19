@@ -51,7 +51,6 @@ const empty = computed(() => filtered.value.length == 0)
 <style scoped>
 .root {
     width: 100%;
-    color: white;
     font-size: 0.8em;
 }
 .header {
@@ -74,7 +73,7 @@ const empty = computed(() => filtered.value.length == 0)
     height: 12px;
     width: 12px;
     margin-right: 10px;
-    background-color: white;
+    background-color: var(--primary7);
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
@@ -87,15 +86,15 @@ const empty = computed(() => filtered.value.length == 0)
 .item {
     margin-left: 10px;
     padding: 5px 0px 5px 20px;
-    border-left: 1px rgb(138, 138, 138) solid;
+    border-left: 1px var(--primary6) solid;
     text-align: left;
 }
 .item:hover {
     cursor: pointer;
-    background-color: #3d3d3d;
+    background-color: var(--primary5);
 }
 .item-selected {
-    background-color: #3d3d3d;
+    background-color: var(--primary5);
 }
 
 .description {

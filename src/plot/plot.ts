@@ -1,6 +1,8 @@
 import { Config, Data, Layout } from "plotly.js-basic-dist-min";
 import { Graph } from "../model/graph";
 
+const useDarkTheme = document.documentElement.getAttribute('theme') == 'dark'
+
 export function createPlotData(graphs: Graph[]): Data[] {
     return graphs.map(graph => ({
         x: graph.points.map(p => p.time),
@@ -21,24 +23,24 @@ export const PlotLayot: Partial<Layout> = {
     autosize: true,
     dragmode: 'pan',
     font: {
-        color: 'white'
+        color: useDarkTheme ? 'white' : 'black'
     },
     margin: {
         t: 40
     },
-    paper_bgcolor: '#3d3d3d',
-    plot_bgcolor: '#3d3d3d',
+    paper_bgcolor: useDarkTheme ? '#3d3d3d' : 'white',
+    plot_bgcolor: useDarkTheme ? '#3d3d3d' : 'white',
     xaxis: {
         autorange: true,
         title: 'Time [ns]',
-        gridcolor: '#d3d3d3',
-        zerolinecolor: 'white',
+        gridcolor: useDarkTheme ? '#d3d3d3' : 'black',
+        zerolinecolor: useDarkTheme ? 'white' : 'black',
         zerolinewidth: 2
     },
     yaxis: {
         autorange: true,
-        gridcolor: '#d3d3d3',
-        zerolinecolor: 'white',
+        gridcolor: useDarkTheme ? '#d3d3d3' : 'black',
+        zerolinecolor: useDarkTheme ? 'white' : 'black',
         zerolinewidth: 2
     }
 }

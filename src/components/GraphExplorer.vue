@@ -53,7 +53,7 @@ function reset() {
     width: 100%;
     height: 30px;
     min-height: 30px;
-    background-color: #2c2c2c;
+    background-color: var(--primary3);
     border-radius: 5px;
     display: flex;
     flex-direction: row-reverse;
@@ -67,7 +67,7 @@ function reset() {
 .list {
     height: 100%;
     flex: 1;
-    background-color: #2c2c2c;
+    background-color: var(--primary3);
     border-radius: 5px;
     overflow-y: auto;
     scrollbar-color: #3497ff #d3d3d3;
@@ -95,7 +95,6 @@ function reset() {
     align-items: center;
 }
 .name {
-    color: white;
     text-align: left;
     font-size: 0.8em;
     flex: 1;
@@ -115,7 +114,7 @@ function reset() {
     width: 18px;
     height: 18px;
     margin: 6px;
-    background-color: lightgray;
+    background-color: var(--primary7);
     mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-repeat: no-repeat;
@@ -130,16 +129,16 @@ function reset() {
 .show-button:hover {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 .hide-button:hover {
     mask-image: url(../assets/icons/eye-slash.svg);
     -webkit-mask-image: url(../assets/icons/eye-slash.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 .hide-button {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 </style>

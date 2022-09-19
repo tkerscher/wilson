@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import "./style.css"
+
 import GraphExplorer from './components/GraphExplorer.vue'
 import GraphPlot from './components/GraphPlot.vue'
 import ResizableContainer from './components/ResizableContainer.vue'
@@ -22,7 +24,9 @@ import ResizableContainer from './components/ResizableContainer.vue'
 import { onMounted } from 'vue'
 import { extractGraphs } from './plot/openPlot'
 import { GraphHandle, useGraphs } from './stores/graphs'
+import { useTheme } from './stores/theme'
 const graphs = useGraphs()
+const theme = useTheme() //sideeffect
 
 onMounted(() => {
     extractGraphs()
@@ -37,7 +41,6 @@ onMounted(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   
   position: fixed;
   top: 0;
@@ -60,6 +63,6 @@ onMounted(() => {
 .sidebar-container {
     height: 100%;
     width: 100%;
-    background-color: #1a1a1a;
+    background-color: var(--primary2);
 }
 </style>

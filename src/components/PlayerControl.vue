@@ -52,7 +52,7 @@ const emits = defineEmits<{
 .background-container {
     width: 100%;
     height: 90px;
-    background-color: #2c2c2c;
+    background-color: var(--primary2);
 }
 .player-control-container {
     width: 100%;
@@ -88,7 +88,7 @@ const emits = defineEmits<{
 .bottom-action-bar {
     height: 20px;
     display: flex;
-    color: white;
+    /* color: white; */
     margin: 10px;
 }
 
@@ -101,7 +101,7 @@ const emits = defineEmits<{
 .action-button {
     width: 20px;
     height: 20px;
-    background-color: lightgray;
+    background-color: var(--primary5);
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
@@ -109,7 +109,7 @@ const emits = defineEmits<{
 }
 .action-button:hover {
     cursor: pointer;
-    background-color: white;
+    background-color: var(--primary7);
 }
 
 .play-button {
@@ -118,7 +118,7 @@ const emits = defineEmits<{
     margin: 5px 0;
 }
 .toggle-active {
-    background-color: #3497ff !important;
+    background-color: var(--highlight1) !important;
 }
 
 .compress-icon {

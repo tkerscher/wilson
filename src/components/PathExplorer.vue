@@ -51,7 +51,6 @@ function changeColor(e: Event, index: number) {
     align-items: center;
 }
 .name {
-    color: white;
     text-align: left;
     font-size: 0.8em;
     flex: 1;
@@ -89,16 +88,16 @@ function changeColor(e: Event, index: number) {
 .show-button:hover {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 .hide-button:hover {
     mask-image: url(../assets/icons/eye-slash.svg);
     -webkit-mask-image: url(../assets/icons/eye-slash.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 .hide-button {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: white;
+    background-color: var(--primary7);
 }
 </style>

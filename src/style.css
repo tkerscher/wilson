@@ -1,6 +1,47 @@
-.icon {
-    width: 24px;
-    height: 24px;
+:root {
+    --primary1: #060606;
+    --primary2: #181818;
+    --primary3: #2b2b2b;
+    --primary4: #3d3d3d;
+    --primary5: #777777;
+    --primary6: #b1b1b1;
+    --primary7: #ececec;
+
+    --scene-background: #3d3d3d;
+    --grid-color:       #777777;
+    --scene-font-color: #ffffff;
+
+    --toolbox-background: #1a1a1ad5;
+
+    --highlight1: #3497ff;
+    --highlight2: #ffa500;
+
+    --error: #e02a2a;
+}
+
+[theme='light'] {
+    --primary1: #f8f8f8;
+    --primary2: #ebedef;
+    --primary3: #d6d8d9;
+    --primary4: #c4c4c4;
+    --primary5: #c3c7cd;
+    --primary6: #a4a9b2;
+    --primary7: #616161;
+
+    --scene-background: #ffffff;
+    --grid-color:       #777777;
+    --scene-font-color: #000000;
+
+    --toolbox-background: #616161d5;
+
+    --highlight1: #3497ff;
+    --highlight2: #ffa500;
+
+    --error: #e02a2a;
+}
+
+body {
+    color: var(--primary7);
 }
 
 .p-button {

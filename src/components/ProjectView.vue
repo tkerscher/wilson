@@ -95,6 +95,6 @@ project.$subscribe((mutation, state) => init())
 .sidebar-content {
     height: 100%;
     width: 100%;
-    background-color: #1a1a1a;
+    background-color: var(--primary2);
 }
 </style>

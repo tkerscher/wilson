@@ -8,6 +8,12 @@
     </div>
     <div class="button"
          role="button"
+         title="Toggle Theme"
+         @mouseup="emits('toggleTheme')">
+        <div :class="['icon', theme.useDarkTheme ? 'moon-icon' : 'sun-icon']"></div>   
+    </div>
+    <div class="button"
+         role="button"
          title="Toggle Grid"
          @mouseup="emits('toggleGrid')">
         <div class="icon grid-icon"></div>     
@@ -34,11 +40,15 @@
 </template>
 
 <script setup lang="ts">
+import { useTheme } from '../stores/theme';
+const theme = useTheme()
+
 const emits = defineEmits<{
     (e: 'exit'): void,
     (e: 'resetCamera'): void,
     (e: 'screenshot'): void
     (e: 'toggleGrid'): void,
+    (e: 'toggleTheme'): void,
     (e: 'openGraphs'): void
 }>()
 </script>
@@ -49,7 +59,7 @@ const emits = defineEmits<{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #1a1a1ad5;
+    background-color: var(--toolbox-background);
     border-radius: 10px;
 }
 
@@ -60,10 +70,10 @@ const emits = defineEmits<{
 }
 .button:hover {
     cursor: pointer;
-    background-color: #2c2c2c;
+    background-color: var(--primary4);
 }
 .button:hover > .icon {
-    background-color: #3497ff;
+    background-color: var(--highlight1);
 }
 .icon {
     width: 28px;
@@ -94,5 +104,15 @@ const emits = defineEmits<{
 .reset-camera-icon {
     mask-image: url(../assets/icons/camera-rotate.svg);
     -webkit-mask-image: url(../assets/icons/camera-rotate.svg);
+}
+
+.moon-icon {
+    mask-image: url(../assets/icons/moon.svg);
+    -webkit-mask-image: url(../assets/icons/moon.svg);
+}
+
+.sun-icon {
+    mask-image: url(../assets/icons/sun.svg);
+    -webkit-mask-image: url(../assets/icons/sun.svg);
 }
 </style>

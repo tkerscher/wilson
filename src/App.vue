@@ -16,7 +16,9 @@ import ProjectView from './components/ProjectView.vue'
 
 import { onBeforeMount, ref } from "vue"
 import { useProject } from './stores/project'
+import { useTheme } from "./stores/theme"
 const project = useProject()
+const theme = useTheme() //side effect only
 
 const url = ref('')
 onBeforeMount(() => {
