@@ -9,6 +9,7 @@ export const usePlayer = defineStore('player', {
         speedRatio: 1.0,
         stepSize: 10.0,
 
+        isFullscreen: false,
         isLooping: false,
         isPlaying: false,
         isScrubbing: false
