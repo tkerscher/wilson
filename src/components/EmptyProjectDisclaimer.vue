@@ -6,14 +6,13 @@
             Select a file to watch it.
         </p>
         <label for="file-upload" class="p-button">
-            <CloudUploadIcon class="icon" />Open File
+            <div class="icon upload-icon"></div>Open File
         </label>
         <input id="file-upload" type="file" accept=".p1on" @change="onFileSelected"/>
     </div>
 </template>
 
 <script setup lang="ts">
-import { CloudUploadIcon } from '@heroicons/vue/solid'
 import { useProject } from '../stores/project'
 const project = useProject()
 
@@ -35,7 +34,23 @@ async function onFileSelected(e: Event) {
     align-items: center;
     justify-content: center;
 
-    background-color: #2c2c2c;
+    background-color: var(--background);
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    margin: 2px 5px 2px 2px;
+    background-color: #ffffff;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.upload-icon {
+    mask-image: url(../assets/icons/upload.svg);
+    -webkit-mask-image: url(../assets/icons/upload.svg);
 }
 
 .banner {
@@ -45,7 +60,6 @@ async function onFileSelected(e: Event) {
 .disclaimer {
     font-size: x-large;
     font-weight: bolder;
-    color: white;
 }
 
 input[type="file"] {

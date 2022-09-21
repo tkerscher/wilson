@@ -17,6 +17,8 @@
     --highlight2: #ffa500;
 
     --error: #e02a2a;
+
+    --background: #2c2c2c;
 }
 
 [theme='light'] {
@@ -38,6 +40,8 @@
     --highlight2: #ffa500;
 
     --error: #e02a2a;
+
+    --background: #ffffff;
 }
 
 body {
