@@ -4,24 +4,27 @@
 </template>
 
 <script setup lang="ts">
-import { PlotConfig, PlotLayot, createPlotData } from '../plot/plot'
-import { newPlot, react, relayout } from 'plotly.js-basic-dist'
+import { PlotConfig, createPlotData, createPlotLayout } from '../plot/plot'
+import { newPlot, react, relayout } from "plotly.js-basic-dist"
 
 import { onMounted, ref, nextTick } from "vue"
 import { useGraphs } from '../stores/graphs';
+import { useTheme } from '../stores/theme'
 const graphs = useGraphs()
+const theme = useTheme()
+const PlotLayout = createPlotLayout(theme.useDarkTheme)
 
 let issueRedraw = false
 function redraw() {
     issueRedraw = false
-    react(plotDiv.value, createPlotData(graphs.visible), PlotLayot, PlotConfig)
+    react(plotDiv.value, createPlotData(graphs.visible), PlotLayout, PlotConfig)
 }
-const resizer = new ResizeObserver(() => relayout(plotDiv.value!, PlotLayot))
+const resizer = new ResizeObserver(() => relayout(plotDiv.value!, PlotLayout))
 
 const plotDiv = ref<HTMLDivElement|null>(null)
 onMounted(() => {
     //Start with empty 
-    newPlot(plotDiv.value!, [], PlotLayot, PlotConfig);
+    newPlot(plotDiv.value!, [], PlotLayout, PlotConfig);
 
     //watch for changes in graphs
     graphs.$subscribe(() => {
