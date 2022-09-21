@@ -13,6 +13,23 @@ import {
     Vector3
 } from "@babylonjs/core";
 
+//import assets to get mangled url in production
+import xUrl from '../assets/textures/x.png'
+import yUrl from '../assets/textures/y.png'
+import zUrl from '../assets/textures/z.png'
+
+import xHoverUrl from '../assets/textures/x_hover.png'
+import yHoverUrl from '../assets/textures/y_hover.png'
+import zHoverUrl from '../assets/textures/z_hover.png'
+
+import negXUrl from '../assets/textures/negx.png'
+import negYUrl from '../assets/textures/negy.png'
+import negZUrl from '../assets/textures/negz.png'
+
+import negXHoverUrl from '../assets/textures/negx_hover.png'
+import negYHoverUrl from '../assets/textures/negy_hover.png'
+import negZHoverUrl from '../assets/textures/negz_hover.png'
+
 // Orientation view is a independent scene showing the orientation of a given
 // camera/scene
 
@@ -111,28 +128,16 @@ class IndicatorBuilder {
 
     createIndicatorObject() {    
         //x axis
-        this.createButton('x', new Vector3(4,0,0),
-            './src/assets/textures/x.png',
-            './src/assets/textures/x_hover.png')
-        this.createButton('nx', new Vector3(-4,0,0),
-            './src/assets/textures/negx.png',
-            './src/assets/textures/negx_hover.png')
+        this.createButton('x', new Vector3(4,0,0), xUrl, xHoverUrl)
+        this.createButton('nx', new Vector3(-4,0,0), negXUrl, negXHoverUrl)
     
         //y axis
-        this.createButton('y', new Vector3(0,4,0),
-            './src/assets/textures/y.png',
-            './src/assets/textures/y_hover.png')
-        this.createButton('ny', new Vector3(0,-4,0),
-            './src/assets/textures/negy.png',
-            './src/assets/textures/negy_hover.png')
+        this.createButton('y', new Vector3(0,4,0), yUrl, yHoverUrl)
+        this.createButton('ny', new Vector3(0,-4,0), negYUrl, negYHoverUrl)
     
         //z axis
-        this.createButton('z', new Vector3(0,0,4),
-            './src/assets/textures/z.png',
-            './src/assets/textures/z_hover.png')
-        this.createButton('nz', new Vector3(0,0,-4),
-            './src/assets/textures/negz.png',
-            './src/assets/textures/negz_hover.png')
+        this.createButton('z', new Vector3(0,0,4), zUrl, zHoverUrl)
+        this.createButton('nz', new Vector3(0,0,-4), negZUrl, negZHoverUrl)
     
         //axis lines
         this.createAxis('xAxis', new Vector3(3.5,0,0), XColor)
