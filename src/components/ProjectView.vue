@@ -48,7 +48,7 @@ function init() {
 }
 
 function fullscreen() {
-    if (!mainDiv || !mainDiv.value.requestFullscreen)
+    if (!mainDiv.value || !mainDiv.value.requestFullscreen)
         return
     
     if (player.isFullscreen || document.fullscreenElement) {

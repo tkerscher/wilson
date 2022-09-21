@@ -17,7 +17,7 @@ const PlotLayout = createPlotLayout(theme.useDarkTheme)
 let issueRedraw = false
 function redraw() {
     issueRedraw = false
-    react(plotDiv.value, createPlotData(graphs.visible), PlotLayout, PlotConfig)
+    react(plotDiv.value!, createPlotData(graphs.visible), PlotLayout, PlotConfig)
 }
 const resizer = new ResizeObserver(() => relayout(plotDiv.value!, PlotLayout))
 
