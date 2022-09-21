@@ -177,10 +177,9 @@ export class TextBuilder {
         //lazy creation
         if (this.#panels.has(position))
             return this.#panels.get(position)!
-        
+
         const panel = new StackPanel(textPositionToJSON(position))
         panel.adaptWidthToChildren = true
-        panel.adaptHeightToChildren = true
         panel.spacing = 5
         panel.paddingBottom = "10"
         panel.paddingTop = "20"
@@ -266,40 +265,40 @@ export class TextBuilder {
     #setAlignment(position: TextPosition, target: TextBlock) {
         switch (position) {
         case TextPosition.CENTER:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
             break;
         case TextPosition.UPPER_RIGHT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
             break;
         case TextPosition.TOP:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
             break;
         case TextPosition.UPPER_LEFT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP
             break;
         case TextPosition.LEFT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
             break;
         case TextPosition.LOWER_LEFT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
             break;
         case TextPosition.BOTTOM:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
             break;
         case TextPosition.LOWER_RIGHT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM
             break;
         case TextPosition.RIGHT:
-            target.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
-            target.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
+            target.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT
+            target.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
             break;
         }
     }
