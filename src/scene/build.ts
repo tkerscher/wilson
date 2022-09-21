@@ -93,9 +93,9 @@ export class SceneContainer {
     updateTheme() {
         //retrieve colors from css
         const style = getComputedStyle(document.documentElement)
-        const color = style.getPropertyValue('--scene-font-color')
-        const clear = style.getPropertyValue('--scene-background')
-        const grid  = style.getPropertyValue('--grid-color')
+        const color = style.getPropertyValue('--scene-font-color').trim()
+        const clear = style.getPropertyValue('--scene-background').trim()
+        const grid  = style.getPropertyValue('--grid-color').trim()
         //update colors
         this.textRoot.color = color
         this.scene.clearColor = Color4.FromColor3(
