@@ -1,22 +1,24 @@
 <template>
 <div class="root">
     <div class="search-header">
-        <div class="reset-button"
+        <div class="button reset-icon"
+            role="button"
+            title="Reset Graphs"
+            @mouseup="reset"></div>
+        <div :class="['button', showHidden ? 'show-icon' : 'hide-icon']"
+             :title="showHidden ? 'Show Hidden Graphs' : 'Hide Graphs'"
              role="button"
-             title="Reset Graphs"
-             @mouseup="reset"></div>
+             @mouseup="showHidden = !showHidden"></div>
         <SearchInput class="search-box" v-model="searchQuery" />
     </div>
     <div class="list">
         <div
         v-for="graph in filteredGraphs"
         class="item">
-        <div class="header">
+        <div class="header"
+             @mouseup.stop="graph.visible = !graph.visible">
             <span class="name">{{graph.name}}</span>
-            <div :class="['toggle', graph.visible ? 'hide-button' : 'show-button']"
-                :title="graph.visible ? 'Remove Graph' : 'Draw Graph'"
-                role="button"
-                @mouseup.stop="graph.visible = !graph.visible"></div>
+            <div v-if="graph.visible" class="icon visible-icon"></div>
         </div>
     </div>
     </div>
@@ -30,9 +32,12 @@ import { computed, ref } from "vue"
 import { useGraphs } from '../stores/graphs'
 const graphs = useGraphs()
 
+const showHidden = ref(false)
+
 const searchQuery = ref('')
 const filteredGraphs = computed(() =>
-    graphs.graphs.filter(g => g.name.includes(searchQuery.value)))
+    graphs.graphs.filter(g => g.name.includes(searchQuery.value) && //search query
+     (showHidden.value || g.name.charAt(0) != ".")))                //hidden graphs
 
 function reset() {
     graphs.graphs.forEach(g => g.visible = false)
@@ -62,7 +67,7 @@ function reset() {
 }
 .search-box {
     flex: 1;
-    margin-left: 5px;
+    margin: 0 5px;
 }
 .list {
     height: 100%;
@@ -94,6 +99,9 @@ function reset() {
     flex-direction: row;
     align-items: center;
 }
+.header:hover {
+    cursor: pointer;
+}
 .name {
     text-align: left;
     font-size: 0.8em;
@@ -110,35 +118,45 @@ function reset() {
     -webkit-mask-position: center;
 }
 
-.reset-button {
+.button {
     width: 18px;
     height: 18px;
-    margin: 6px;
+    margin: 4px;
     background-color: var(--primary7);
     mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    mask-image: url(../assets/icons/eye-slash.svg);
-    -webkit-mask-image: url(../assets/icons/eye-slash.svg);
 }
-.reset-button:hover {
+.button:hover {
     cursor: pointer;
+    background-color: var(--primary7);
 }
 
-.show-button:hover {
+.icon {
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary7);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
+.hide-icon {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: var(--primary7);
 }
-.hide-button:hover {
+.show-icon {
     mask-image: url(../assets/icons/eye-slash.svg);
     -webkit-mask-image: url(../assets/icons/eye-slash.svg);
-    background-color: var(--primary7);
 }
-.hide-button {
+.reset-icon {
+    mask-image: url(../assets/icons/trash.svg);
+    -webkit-mask-image: url(../assets/icons/trash.svg);
+}
+.visible-icon {
     mask-image: url(../assets/icons/eye.svg);
     -webkit-mask-image: url(../assets/icons/eye.svg);
-    background-color: var(--primary7);
 }
 </style>
