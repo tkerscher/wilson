@@ -325,11 +325,11 @@ def _serializeSphere(sphere: Sphere, project: Project) -> proto.Sphere:
     result = proto.Sphere()
     assert(sphere.name is not None)
     _writeObjectMeta(result, sphere, project)
-    result.color.CopyFrom(_serializeColorProperty(sphere.color, sphere.name + '_color', project))
+    result.color.CopyFrom(_serializeColorProperty(sphere.color, f'.{sphere.name}_color', project))
     #properties
     if sphere.position is not None:
-        result.position.CopyFrom(_serializeVectorProperty(sphere.position, sphere.name + '_position', project))
-    result.radius.CopyFrom(_serializeScalarProperty(sphere.radius, sphere.name + '_radius', project))
+        result.position.CopyFrom(_serializeVectorProperty(sphere.position, f'.{sphere.name}_position', project))
+    result.radius.CopyFrom(_serializeScalarProperty(sphere.radius, f'.{sphere.name}_radius', project))
     #done
     return result
 
@@ -338,9 +338,9 @@ def _serializeTube(tube: Tube, project: Project) -> proto.Tube:
     #meta
     assert(tube.name is not None)
     _writeObjectMeta(result, tube, project)
-    result.color.CopyFrom(_serializeColorProperty(tube.color, tube.name + '_color', project))
+    result.color.CopyFrom(_serializeColorProperty(tube.color, f'.{tube.name}_color', project))
     #properties
-    result.radius.CopyFrom(_serializeScalarProperty(tube.radius, tube.name + '_radius', project))
+    result.radius.CopyFrom(_serializeScalarProperty(tube.radius, f'.{tube.name}_radius', project))
     result.isGrowing = tube.isGrowing
     #path
     if isinstance(tube.path, Path):
@@ -356,7 +356,7 @@ def _serializeTube(tube: Tube, project: Project) -> proto.Tube:
     else:
         #path like, but not a path -> create new path
         id = len(project.paths)
-        project.paths.append(Path(tube.path, tube.name + '_path'))
+        project.paths.append(Path(tube.path, f'.{tube.name}_path'))
         result.pathId = id
     #done
     return result
@@ -365,16 +365,16 @@ def _serializeLine(line: Line, project: Project) -> proto.Line:
     result = proto.Line()
     assert(line.name is not None)
     _writeObjectMeta(result, line, project)
-    result.color.CopyFrom(_serializeColorProperty(line.color, line.name + '_color', project))
+    result.color.CopyFrom(_serializeColorProperty(line.color, f'.{line.name}_color', project))
     #properties
     if line.start is not None:
         result.start.CopyFrom(_serializeVectorProperty(
-            line.start, line.name + '_start', project))
+            line.start, f'.{line.name}_start', project))
     if line.end is not None:
         result.end.CopyFrom(_serializeVectorProperty(
-            line.end, line.name + '_end', project))
+            line.end, f'.{line.name}_end', project))
     result.lineWidth.CopyFrom(_serializeScalarProperty(
-        line.lineWidth, line.name + '_lineWidth', project))
+        line.lineWidth, f'.{line.name}_lineWidth', project))
     result.pointForward = line.pointForward
     result.pointBackward = line.pointBackward
     #done
@@ -465,12 +465,12 @@ def _serializeText(text: Text, project: Project) -> proto.Text:
     #properties
     _serializeTextPosition(result, text.position)
     result.fontSize.CopyFrom(_serializeScalarProperty(
-        text.fontSize, text.name + '_fontSize', project))
+        text.fontSize, f'.{text.name}_fontSize', project))
     result.bold = text.bold
     result.italic = text.italic
     
     #serialize data obtain list of properties (either const or global id)
-    gn, pn = text.name + '_graph ', text.name + '_path'
+    gn, pn = f'.{text.name}_graph ', f'.{text.name}_path'
     graphs = [(
         g.name if isinstance(g, Graph) else '',            #name (if graph)
         _serializeScalarProperty(g, gn + str(i), project)) #scalar prop
