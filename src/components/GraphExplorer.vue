@@ -1,11 +1,11 @@
 <template>
 <div class="root">
     <div class="search-header">
-        <div class="button reset-icon"
+        <div class="button trash-icon"
             role="button"
             title="Reset Graphs"
             @mouseup="reset"></div>
-        <div :class="['button', showHidden ? 'show-icon' : 'hide-icon']"
+        <div :class="['button', showHidden ? 'eye-slash-icon' : ' eye-icon']"
              :title="showHidden ? 'Show Hidden Graphs' : 'Hide Graphs'"
              role="button"
              @mouseup="showHidden = !showHidden"></div>
@@ -18,7 +18,7 @@
         <div class="header"
              @mouseup.stop="graph.visible = !graph.visible">
             <span class="name">{{graph.name}}</span>
-            <div v-if="graph.visible" class="icon visible-icon"></div>
+            <div v-if="graph.visible" class="icon eye-icon"></div>
         </div>
     </div>
     </div>
@@ -141,22 +141,5 @@ function reset() {
     mask-position: center;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-}
-
-.hide-icon {
-    mask-image: url(../assets/icons/eye.svg);
-    -webkit-mask-image: url(../assets/icons/eye.svg);
-}
-.show-icon {
-    mask-image: url(../assets/icons/eye-slash.svg);
-    -webkit-mask-image: url(../assets/icons/eye-slash.svg);
-}
-.reset-icon {
-    mask-image: url(../assets/icons/trash.svg);
-    -webkit-mask-image: url(../assets/icons/trash.svg);
-}
-.visible-icon {
-    mask-image: url(../assets/icons/eye.svg);
-    -webkit-mask-image: url(../assets/icons/eye.svg);
 }
 </style>

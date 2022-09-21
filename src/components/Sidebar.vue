@@ -3,7 +3,7 @@
     <div class="header">
         <div
             role="button"
-            :class="['header-button', showHidden ? 'hide-icon' : 'show-icon']"
+            :class="['header-button', showHidden ? 'eye-icon' : 'eye-slash-icon']"
             :title="showHidden ? 'Hide hidden objects' : 'Show hidden objects'"
             @mouseup="toggleShowHidden"
         ></div>
@@ -52,7 +52,7 @@ function toggleShowHidden() {
 
 const tabIcons = [
     { icon: 'cube-icon', title: 'Objects' },
-    { icon: 'track-icon', title: 'Paths' },
+    { icon: 'curve-icon', title: 'Paths' },
     { icon: 'film-icon', title: 'Render'},
     { icon: 'info-icon', title: 'Info'}
 ]
@@ -179,34 +179,5 @@ onBeforeMount(() => {
 .active-header {
     width: 100px;
     background-color: var(--primary3) !important;
-}
-
-.chart-icon {
-    mask-image: url(../assets/icons/chart.svg);
-    -webkit-mask-image: url(../assets/icons/chart.svg);
-}
-.cube-icon {
-    mask-image: url(../assets/icons/cube.svg);
-    -webkit-mask-image: url(../assets/icons/cube.svg);
-}
-.film-icon {
-    mask-image: url(../assets/icons/film.svg);
-    -webkit-mask-image: url(../assets/icons/film.svg);
-}
-.info-icon {
-    mask-image: url(../assets/icons/circle-info.svg);
-    -webkit-mask-image: url(../assets/icons/circle-info.svg);
-}
-.hide-icon {
-    mask-image: url(../assets/icons/eye.svg);
-    -webkit-mask-image: url(../assets/icons/eye.svg);
-}
-.show-icon {
-    mask-image: url(../assets/icons/eye-slash.svg);
-    -webkit-mask-image: url(../assets/icons/eye-slash.svg);
-}
-.track-icon {
-    mask-image: url(../assets/icons/curve.svg);
-    -webkit-mask-image: url(../assets/icons/curve.svg);
 }
 </style>

@@ -22,13 +22,13 @@
          role="button"
          title="Open Graph Explorer"
          @mouseup="emits('openGraphs')">
-        <div class="icon graph-icon"></div>     
+        <div class="icon chart-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Reset Camera"
          @mouseup="emits('resetCamera')">
-        <div class="icon reset-camera-icon"></div>     
+        <div class="icon camera-rotate-icon"></div>     
     </div>
     <div class="button"
          role="button"
@@ -84,35 +84,5 @@ const emits = defineEmits<{
     mask-position: center;
     -webkit-mask-position: center;
     background-color: #d3d3d3;
-}
-.camera-icon {
-    mask-image: url(../assets/icons/camera.svg);
-    -webkit-mask-image: url(../assets/icons/camera.svg);
-}
-.exit-icon {
-    mask-image: url(../assets/icons/exit.svg);
-    -webkit-mask-image: url(../assets/icons/exit.svg);
-}
-.graph-icon {
-    mask-image: url(../assets/icons/chart.svg);
-    -webkit-mask-image: url(../assets/icons/chart.svg);
-}
-.grid-icon {
-    mask-image: url(../assets/icons/border-all.svg);
-    -webkit-mask-image: url(../assets/icons/border-all.svg);
-}
-.reset-camera-icon {
-    mask-image: url(../assets/icons/camera-rotate.svg);
-    -webkit-mask-image: url(../assets/icons/camera-rotate.svg);
-}
-
-.moon-icon {
-    mask-image: url(../assets/icons/moon.svg);
-    -webkit-mask-image: url(../assets/icons/moon.svg);
-}
-
-.sun-icon {
-    mask-image: url(../assets/icons/sun.svg);
-    -webkit-mask-image: url(../assets/icons/sun.svg);
 }
 </style>

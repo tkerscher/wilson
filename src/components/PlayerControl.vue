@@ -5,7 +5,7 @@
             <div class="left-action-group">
             </div>
             <div class="middle-action-group">
-                <div class="action-button rewind-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
+                <div class="action-button backward-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
                 <div :class="['action-button', 'play-button', player.isPlaying ? 'pause-icon' : 'play-icon']"
                      role="button" title="Play/Pause" @mouseup="player.togglePlaying"></div>
                 <div class="action-button forward-icon" role="button" title="Forward 10 sec" @mouseup="player.forward"></div>
@@ -119,34 +119,5 @@ const emits = defineEmits<{
 }
 .toggle-active {
     background-color: var(--highlight1) !important;
-}
-
-.compress-icon {
-    mask-image: url(../assets/icons/compress.svg);
-    -webkit-mask-image: url(../assets/icons/compress.svg);
-}
-.expand-icon {
-    mask-image: url(../assets/icons/expand.svg);
-    -webkit-mask-image: url(../assets/icons/expand.svg);
-}
-.forward-icon {
-    mask-image: url(../assets/icons/forward-fast.svg);
-    -webkit-mask-image: url(../assets/icons/forward-fast.svg);
-}
-.pause-icon {
-    mask-image: url(../assets/icons/circle-pause.svg);
-    -webkit-mask-image: url(../assets/icons/circle-pause.svg);
-}
-.play-icon {
-    mask-image: url(../assets/icons/circle-play.svg);
-    -webkit-mask-image: url(../assets/icons/circle-play.svg);
-}
-.repeat-icon {
-    mask-image: url(../assets/icons/repeat.svg);
-    -webkit-mask-image: url(../assets/icons/repeat.svg);
-}
-.rewind-icon {
-    mask-image: url(../assets/icons/backward-fast.svg);
-    -webkit-mask-image: url(../assets/icons/backward-fast.svg);
 }
 </style>

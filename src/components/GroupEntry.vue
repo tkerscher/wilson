@@ -10,7 +10,7 @@
             <span v-if="props.group.name.length > 0">{{ props.group.name }}</span>
             <span v-else class="empty-label">Ungrouped</span>
         </div>
-        <div :class="['button', props.group.visible ? 'visible-icon' : 'hide-icon']"
+        <div :class="['button', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
              :title="props.group.visible ? 'Hide Group' : 'Show Group'"
              role="button"
              @mouseup.stop="props.group.visible = !props.group.visible">
@@ -100,22 +100,5 @@ const empty = computed(() => filtered.value.length == 0)
 .description {
     margin-left: 10px;
     font-style: italic;
-}
-
-.chevron-right-icon {
-    mask-image: url(../assets/icons/chevron-right.svg);
-    -webkit-mask-image: url(../assets/icons/chevron-right.svg);
-}
-.chevron-down-icon {
-    mask-image: url(../assets/icons/chevron-down.svg);
-    -webkit-mask-image: url(../assets/icons/chevron-down.svg);
-}
-.visible-icon {
-    mask-image: url(../assets/icons/eye.svg);
-    -webkit-mask-image: url(../assets/icons/eye.svg);
-}
-.hide-icon {
-    mask-image: url(../assets/icons/eye-slash.svg);
-    -webkit-mask-image: url(../assets/icons/eye-slash.svg);
 }
 </style>

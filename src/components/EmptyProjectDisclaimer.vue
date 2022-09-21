@@ -48,11 +48,6 @@ async function onFileSelected(e: Event) {
     -webkit-mask-position: center;
 }
 
-.upload-icon {
-    mask-image: url(../assets/icons/upload.svg);
-    -webkit-mask-image: url(../assets/icons/upload.svg);
-}
-
 .banner {
     height: 20%;
 }

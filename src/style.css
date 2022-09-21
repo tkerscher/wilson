@@ -1,3 +1,5 @@
+/*********************************** THEMES ***********************************/
+
 :root {
     --primary1: #060606;
     --primary2: #181818;
@@ -44,6 +46,8 @@
     --background: #ffffff;
 }
 
+/********************************* CONTROLS ***********************************/
+
 body {
     color: var(--primary7);
 }
@@ -68,4 +72,115 @@ body {
 }
 .p-button:active {
     background-color: #2675ca;
+}
+
+/*********************************** ICONS ************************************/
+
+.backward-icon {
+    mask-image: url(./assets/icons/backward-fast.svg);
+    -webkit-mask-image: url(./assets/icons/backward-fast.svg);
+}
+.camera-icon {
+    mask-image: url(./assets/icons/camera.svg);
+    -webkit-mask-image: url(./assets/icons/camera.svg);
+}
+.camera-rotate-icon {
+    mask-image: url(./assets/icons/camera-rotate.svg);
+    -webkit-mask-image: url(./assets/icons/camera-rotate.svg);
+}
+.chart-icon {
+    mask-image: url(./assets/icons/chart.svg);
+    -webkit-mask-image: url(./assets/icons/chart.svg);
+}
+.check-icon {
+    mask-image: url(./assets/icons/check.svg);
+    -webkit-mask-image: url(./assets/icons/check.svg);
+}
+.chevron-down-icon {
+    mask-image: url(./assets/icons/chevron-down.svg);
+    -webkit-mask-image: url(./assets/icons/chevron-down.svg);
+}
+.chevron-right-icon {
+    mask-image: url(./assets/icons/chevron-right.svg);
+    -webkit-mask-image: url(./assets/icons/chevron-right.svg);
+}
+.compress-icon {
+    mask-image: url(./assets/icons/compress.svg);
+    -webkit-mask-image: url(./assets/icons/compress.svg);
+}
+.cube-icon {
+    mask-image: url(./assets/icons/cube.svg);
+    -webkit-mask-image: url(./assets/icons/cube.svg);
+}
+.curve-icon {
+    mask-image: url(./assets/icons/curve.svg);
+    -webkit-mask-image: url(./assets/icons/curve.svg);
+}
+.exit-icon {
+    mask-image: url(./assets/icons/exit.svg);
+    -webkit-mask-image: url(./assets/icons/exit.svg);
+}
+.expand-icon {
+    mask-image: url(./assets/icons/expand.svg);
+    -webkit-mask-image: url(./assets/icons/expand.svg);
+}
+.eye-icon {
+    mask-image: url(./assets/icons/eye.svg);
+    -webkit-mask-image: url(./assets/icons/eye.svg);
+}
+.eye-slash-icon {
+    mask-image: url(./assets/icons/eye-slash.svg);
+    -webkit-mask-image: url(./assets/icons/eye-slash.svg);
+}
+.film-icon {
+    mask-image: url(./assets/icons/film.svg);
+    -webkit-mask-image: url(./assets/icons/film.svg);
+}
+.forward-icon {
+    mask-image: url(./assets/icons/forward-fast.svg);
+    -webkit-mask-image: url(./assets/icons/forward-fast.svg);
+}
+.grid-icon {
+    mask-image: url(./assets/icons/grid.svg);
+    -webkit-mask-image: url(./assets/icons/grid.svg);
+}
+.info-icon {
+    mask-image: url(./assets/icons/circle-info.svg);
+    -webkit-mask-image: url(./assets/icons/circle-info.svg);
+}
+.moon-icon {
+    mask-image: url(./assets/icons/moon.svg);
+    -webkit-mask-image: url(./assets/icons/moon.svg);
+}
+.pause-icon {
+    mask-image: url(./assets/icons/circle-pause.svg);
+    -webkit-mask-image: url(./assets/icons/circle-pause.svg);
+}
+.play-icon {
+    mask-image: url(./assets/icons/circle-play.svg);
+    -webkit-mask-image: url(./assets/icons/circle-play.svg);
+}
+.repeat-icon {
+    mask-image: url(./assets/icons/repeat.svg);
+    -webkit-mask-image: url(./assets/icons/repeat.svg);
+}
+.sun-icon {
+    mask-image: url(./assets/icons/sun.svg);
+    -webkit-mask-image: url(./assets/icons/sun.svg);
+}
+.trash-icon {
+    mask-image: url(./assets/icons/trash.svg);
+    -webkit-mask-image: url(./assets/icons/trash.svg);
+}
+.upload-icon {
+    mask-image: url(./assets/icons/upload.svg);
+    -webkit-mask-image: url(./assets/icons/upload.svg);
+}
+.video-icon {
+    mask-image: url(./assets/icons/video.svg);
+    -webkit-mask-image: url(./assets/icons/video.svg);
+}
+.xmark-icon {
+    mask-image: url(./assets/icons/xmark.svg);
+    -webkit-mask-image: url(./assets/icons/xmark.svg);
 }
