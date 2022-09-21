@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/pako": "^2.0.0",
-    "@types/plotly.js-basic-dist-min": "^2.12.0",
+    "@types/plotly.js-basic-dist": "^1.54.0",
     "@types/sprintf-js": "^1.1.2",
     "@vitejs/plugin-vue": "^2.3.1",
     "ts-proto": "^1.110.4",

@@ -105,17 +105,17 @@
   resolved "https://registry.yarnpkg.com/@types/pako/-/pako-2.0.0.tgz#12ab4c19107528452e73ac99132c875ccd43bdfb"
   integrity sha512-10+iaz93qR5WYxTo+PMifD5TSxiOtdRaxBf7INGGXMQgTCu8Z/7GYWYFUOS3q/G0nE5boj1r4FEB+WSy7s5gbA==
 
-"@types/plotly.js-basic-dist-min@^2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@types/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.12.0.tgz#5b635be9ae5676698b034015e7257ce3627dd09d"
-  integrity sha512-g5/C7VNQZngKD8EvJv5Nh4X1ifnSsrFKQxWcg/eAUKovMNWvdgk239Yu1gsecCkqtUkjDL4hyCZYqgtvI3Bi2Q==
+"@types/plotly.js-basic-dist@^1.54.0":
+  version "1.54.0"
+  resolved "https://registry.yarnpkg.com/@types/plotly.js-basic-dist/-/plotly.js-basic-dist-1.54.0.tgz#02d74eb54a658c903984481da847b3d8b3aa0647"
+  integrity sha512-sccKjidjBltVJlfVE0bthWG1j/dwBYvZDbKIreToDXqaGaPg5nRU+5NRoP2AbnMa96lu0eVFu8zYwRPA4sS7kQ==
   dependencies:
     "@types/plotly.js" "*"
 
 "@types/plotly.js@*":
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.12.2.tgz#9e4c61d3aaf33aee98fc5bdbeffd6cd85271f3f8"
-  integrity sha512-cYJMFl01yZVuyrJcDD5LZzRK0wlizWe4lqoT4x87v2TXISZ7HVioWxEVt9n3OiqHDWqqAGMx8Erj7TJ3PeMTjw==
+  version "2.12.3"
+  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.12.3.tgz#571d555fb78a0fbba9f396d91babc9fa863e8aa8"
+  integrity sha512-zCz97C+xLDF/SqXcC8ITmiZDnukTg+gwBtXvyiY6tuUexGdK61hYFooec4nfgh+M4L9VkqpxdcITC5ZI/1U2uw==
   dependencies:
     "@types/d3" "^3"
 
