@@ -1,12 +1,29 @@
 import { Config, Data, Layout } from "plotly.js-basic-dist";
 import { Graph } from "../model/graph";
+import { Interpolation } from "../model/interpolation";
+
+function getShapeFromInterpolation(int: Interpolation): string {
+    switch (int) {
+        case Interpolation.AHEAD:
+            return 'vh'
+        case Interpolation.HOLD:
+            return 'hv'
+        case Interpolation.LINEAR:
+        case Interpolation.UNRECOGNIZED:
+        default:
+            return 'linear'
+    }
+}
 
 export function createPlotData(graphs: Graph[]): Data[] {
     return graphs.map(graph => ({
         x: graph.points.map(p => p.time),
         y: graph.points.map(p => p.value),
         mode: 'lines+markers',
-        name: graph.name
+        name: graph.name,
+        line: {
+            shape: getShapeFromInterpolation(graph.interpolation)
+        }
     }))
 }
 
