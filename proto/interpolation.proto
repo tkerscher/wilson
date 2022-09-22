@@ -1,0 +1,15 @@
+syntax = "proto3";
+package p1on;
+
+//Interpolation modes
+enum Interpolation {
+    //Linear interpolate between consecutive data points
+    LINEAR = 0;
+    //Hold the last value until next data point is reached
+    HOLD = 1;
+    //Hold the next value until next data point is reached
+    AHEAD = 2;
+    //Hold last value until exactly in between two consecutive data points
+    //when it will hold the next value
+    STEP = 3;
+}
