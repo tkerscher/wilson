@@ -1,5 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { Interpolation, interpolationFromJSON, interpolationToJSON } from "./interpolation";
 
 export const protobufPackage = "p1on";
 
@@ -11,6 +12,8 @@ export interface Graph {
   id: number;
   /** interpolation points */
   points: Graph_Point[];
+  /** interpolation mode */
+  interpolation: Interpolation;
 }
 
 /** Interpolation point */
@@ -22,7 +25,7 @@ export interface Graph_Point {
 }
 
 function createBaseGraph(): Graph {
-  return { name: "", id: 0, points: [] };
+  return { name: "", id: 0, points: [], interpolation: 0 };
 }
 
 export const Graph = {
@@ -35,6 +38,9 @@ export const Graph = {
     }
     for (const v of message.points) {
       Graph_Point.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.interpolation !== 0) {
+      writer.uint32(32).int32(message.interpolation);
     }
     return writer;
   },
@@ -55,6 +61,9 @@ export const Graph = {
         case 3:
           message.points.push(Graph_Point.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.interpolation = reader.int32() as any;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -68,6 +77,7 @@ export const Graph = {
       name: isSet(object.name) ? String(object.name) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
       points: Array.isArray(object?.points) ? object.points.map((e: any) => Graph_Point.fromJSON(e)) : [],
+      interpolation: isSet(object.interpolation) ? interpolationFromJSON(object.interpolation) : 0,
     };
   },
 
@@ -80,6 +90,7 @@ export const Graph = {
     } else {
       obj.points = [];
     }
+    message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
     return obj;
   },
 
@@ -88,6 +99,7 @@ export const Graph = {
     message.name = object.name ?? "";
     message.id = object.id ?? 0;
     message.points = object.points?.map((e) => Graph_Point.fromPartial(e)) || [];
+    message.interpolation = object.interpolation ?? 0;
     return message;
   },
 };

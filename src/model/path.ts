@@ -1,5 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { Interpolation, interpolationFromJSON, interpolationToJSON } from "./interpolation";
 import { Vector } from "./vector";
 
 export const protobufPackage = "p1on";
@@ -12,6 +13,8 @@ export interface Path {
   id: number;
   /** interpolation points */
   points: Path_Point[];
+  /** interpolation mode */
+  interpolation: Interpolation;
 }
 
 /** Interpolation point */
@@ -23,7 +26,7 @@ export interface Path_Point {
 }
 
 function createBasePath(): Path {
-  return { name: "", id: 0, points: [] };
+  return { name: "", id: 0, points: [], interpolation: 0 };
 }
 
 export const Path = {
@@ -36,6 +39,9 @@ export const Path = {
     }
     for (const v of message.points) {
       Path_Point.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.interpolation !== 0) {
+      writer.uint32(32).int32(message.interpolation);
     }
     return writer;
   },
@@ -56,6 +62,9 @@ export const Path = {
         case 3:
           message.points.push(Path_Point.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.interpolation = reader.int32() as any;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -69,6 +78,7 @@ export const Path = {
       name: isSet(object.name) ? String(object.name) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
       points: Array.isArray(object?.points) ? object.points.map((e: any) => Path_Point.fromJSON(e)) : [],
+      interpolation: isSet(object.interpolation) ? interpolationFromJSON(object.interpolation) : 0,
     };
   },
 
@@ -81,6 +91,7 @@ export const Path = {
     } else {
       obj.points = [];
     }
+    message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
     return obj;
   },
 
@@ -89,6 +100,7 @@ export const Path = {
     message.name = object.name ?? "";
     message.id = object.id ?? 0;
     message.points = object.points?.map((e) => Path_Point.fromPartial(e)) || [];
+    message.interpolation = object.interpolation ?? 0;
     return message;
   },
 };
