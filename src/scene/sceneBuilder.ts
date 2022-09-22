@@ -12,6 +12,7 @@ import {
 } from "@babylonjs/core";
 import { Project } from "../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../model/properties";
+import { getInterpolation } from "./interpolation";
 import { setProperty } from "../util/property";
 import { toHex } from "../util/colorToHex";
 
@@ -82,6 +83,7 @@ export class SceneBuilder {
                     const keyFrames = graph.points.map(p =>
                         ({ frame: p.time, value: p.value}))
                     animation.setKeys(keyFrames)
+                    animation.setEasingFunction(getInterpolation(graph.interpolation))
                     this.animationGroup.addTargetedAnimation(animation, target)
                     return
                 }
@@ -111,6 +113,7 @@ export class SceneBuilder {
                     const keyFrames = path.points.map(p => ({ frame: p.time,
                         value: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
                     animation.setKeys(keyFrames)
+                    animation.setEasingFunction(getInterpolation(path.interpolation))
                     this.animationGroup.addTargetedAnimation(animation, target)
                     return
                 }
@@ -170,6 +173,10 @@ export class SceneBuilder {
 
                     colorAnimation.setKeys(clrFrames)
                     alphaAnimation.setKeys(alphaFrames)
+
+                    const interpolation = getInterpolation(graph.interpolation)
+                    colorAnimation.setEasingFunction(interpolation)
+                    alphaAnimation.setEasingFunction(interpolation)
 
                     this.animationGroup.addTargetedAnimation(colorAnimation, mat)
                     this.animationGroup.addTargetedAnimation(alphaAnimation, mat)

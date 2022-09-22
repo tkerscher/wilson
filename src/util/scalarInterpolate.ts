@@ -1,5 +1,6 @@
 import { Project } from "../model/project"
 import { ScalarProperty } from "../model/properties"
+import { getInterpolation } from "../scene/interpolation"
 
 interface ControlPoint {
     time: number
@@ -7,11 +8,12 @@ interface ControlPoint {
 }
 
 export class ScalarInterpolator {
-    points: Array<ControlPoint>
+    points: Array<ControlPoint> = []
+    #ease: ((t:number) => number)|null = null
 
     constructor(prop: ScalarProperty | number | undefined, project: Project) {
         if (typeof prop == 'number') {
-            this.points = this.#parseGraph(prop, project)
+            this.#parseGraph(prop, project)
             return
         }
 
@@ -28,17 +30,21 @@ export class ScalarInterpolator {
                 return
             case 'graphId':
                 const id = prop.source.graphId
-                this.points = this.#parseGraph(id, project)
+                this.#parseGraph(id, project)
+                return
         }
     }
 
-    #parseGraph(id: number, project: Project): Array<ControlPoint> {
+    #parseGraph(id: number, project: Project) {
         const graph = project.graphs.find(g => g.id == id)
         if (!graph || graph.points.length == 0) {
+            //static graph
             this.points = [{ time: 0.0, value: 0.0}]
-            return [{ time: 0.0, value: 0.0 }]
         }
-        return graph.points.map(p => ({ time: p.time, value: p.value }))
+        else {
+            this.points = graph.points.map(p => ({ time: p.time, value: p.value }))
+            this.#ease = getInterpolation(graph.interpolation)?.ease ?? null
+        }
     }
 
     interpolate(t: number): number {
@@ -63,7 +69,11 @@ export class ScalarInterpolator {
 
         const t_start = this.points[stopIdx - 1].time
         const t_end = this.points[stopIdx].time
-        const lambda = (t - t_start) / (t_end - t_start)
+        var lambda = (t - t_start) / (t_end - t_start)
+
+        //ease if wanted
+        if (!!this.#ease)
+            lambda = this.#ease(lambda)
 
         const v_start = this.points[stopIdx - 1].value
         const v_end = this.points[stopIdx].value

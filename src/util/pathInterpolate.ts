@@ -1,6 +1,7 @@
 import { Vector3 } from "@babylonjs/core";
 import { Project } from "../model/project";
 import { VectorProperty } from "../model/properties";
+import { getInterpolation } from "../scene/interpolation"
 
 //similar to path point, but position cannot be undefined
 interface PathPoint {
@@ -9,11 +10,12 @@ interface PathPoint {
 }
 
 export class PathInterpolator {
-    path: Array<PathPoint>
+    path: Array<PathPoint> = []
+    #ease: ((t:number) => number)|null = null
 
     constructor(prop: VectorProperty | number | undefined, project: Project) {
         if (typeof prop == 'number') {
-            this.path = this.#parsePath(prop, project)
+            this.#parsePath(prop, project)
             return
         }
 
@@ -30,17 +32,21 @@ export class PathInterpolator {
                 return
             case 'pathId':
                 const id = prop.source.pathId
-                this.path = this.#parsePath(id, project)
+                this.#parsePath(id, project)
+                return
         }
     }
 
-    #parsePath(id: number, project: Project): Array<PathPoint> {
+    #parsePath(id: number, project: Project) {
         const path = project.paths.find(p => p.id == id)
         if (!path || path.points.length == 0) {
-            return [{ time: 0.0, position: new Vector3() }]
+            this.path =  [{ time: 0.0, position: new Vector3() }]
         }
-        return path.points.map(p => ({ time: p.time,
-            position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
+        else {
+            this.path = path.points.map(p => ({ time: p.time,
+                position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
+            this.#ease = getInterpolation(path.interpolation)?.ease ?? null
+        }
     }
 
     interpolate(t: number): Vector3 {
@@ -65,7 +71,11 @@ export class PathInterpolator {
 
         const t_start = this.path[stopIdx - 1].time
         const t_end = this.path[stopIdx].time
-        const lambda = (t - t_start) / (t_end - t_start)
+        var lambda = (t - t_start) / (t_end - t_start)
+
+        //ease if wanted
+        if (!!this.#ease)
+            lambda = this.#ease(lambda)
 
         const p_start = this.path[stopIdx - 1].position
         const p_end = this.path[stopIdx].position
