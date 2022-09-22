@@ -3,9 +3,11 @@
     <div
         v-for="(path, index) in filtered"
         class="item">
-        <div class="header"
-            @mouseup.stop="path.visible = !path.visible">
-            <span class="name">{{path.name}}</span>
+        <div class="header">
+            <span class="name"
+                  @mouseup.stop="path.visible = !path.visible">
+                {{path.name}}
+            </span>
             <input v-if="path.visible"
                    type="color"
                    class="color-picker"
@@ -57,21 +59,9 @@ function changeColor(e: Event, index: number) {
     flex: 1;
 }
 .color-picker {
-    background-color: transparent;
-    width: 20px;
-    height: 22px;
-    margin-top: -3px;
-    margin-bottom: -3px;
-    border: none;
-}
-.color-picker::-webkit-color-swatch {
-    border-radius: 999px;
-    padding: 0;
-    border: none;
-}
-.color-picker::-moz-color-swatch {
-    border-radius: 999px;
-    padding: 0;
-    border: none;
+    width: 26px;
+    height: 28px;
+    margin-top: -4px;
+    margin-bottom: -4px;
 }
 </style>

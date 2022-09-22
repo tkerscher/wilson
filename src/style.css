@@ -74,6 +74,21 @@ body {
     background-color: #2675ca;
 }
 
+input[type=color] {
+    background-color: transparent;
+    border: none;
+}
+input[type=color]::-webkit-color-swatch {
+    border-radius: 999px;
+    padding: 0;
+    border: none;
+}
+input[type=color]::-moz-color-swatch {
+    border-radius: 999px;
+    padding: 0;
+    border: none;
+}
+
 /*********************************** ICONS ************************************/
 
 .icon-small {
