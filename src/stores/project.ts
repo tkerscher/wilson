@@ -16,6 +16,7 @@ export const useProject = defineStore('project', {
         meta: {
             name: "New Project",
             author: "",
+            description: "",
             date: { seconds: 0, nanos: 0 },
             startTime: 0.0,
             endTime: 0.0,
@@ -45,7 +46,6 @@ export const useProject = defineStore('project', {
         loadProject(buffer: ArrayBuffer) {
             const array = inflate(new Uint8Array(buffer))
             const project = Project.decode(array)
-            console.log(this.$state)
             this.$patch(project)
         },
         /**

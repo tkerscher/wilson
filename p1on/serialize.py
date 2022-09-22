@@ -32,6 +32,8 @@ def serializeProject(project: Project) -> bytes:
         out.meta.author = project.author
     if project.date is not None:
         out.meta.date.FromDatetime(project.date)
+    if project.description is not None:
+        out.meta.description = project.description
 
     #camera
     if project.camera is not None:

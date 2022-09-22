@@ -28,7 +28,13 @@
         <td>Duration:</td>
         <td>{{duration}} ns</td>
     </tr>
+    <tr>
+        <td>Description:</td>
+        <td></td>
+    </tr>
 </table>
+
+<p class="desc">{{ description }}</p>
 
 <div class="disclaimer">
     P1ON is an open source project under the MIT-License.<br />
@@ -41,17 +47,18 @@ import { computed } from '@vue/reactivity';
 import { useProject } from '../stores/project'
 const project = useProject()
 
-const author = computed(() => getDefault(project.$state.meta?.author, 'No Author'))
-const title = computed(() => getDefault(project.$state.meta?.name, 'No Title'))
-const date = computed(() => new Date(project.$state.meta?.date?.seconds ?? 0).toString())
+const author = computed(() => getDefault(project.meta?.author, 'No Author'))
+const title = computed(() => getDefault(project.meta?.name, 'No Title'))
+const description = computed(() => getDefault(project.meta?.description, 'No description'))
+const date = computed(() => new Date(project.meta?.date?.seconds ?? 0).toString())
 const timestamp = computed(() => {
-    const nanos = project.$state.meta?.date?.nanos ?? 0
+    const nanos = project.meta?.date?.nanos ?? 0
     return (nanos + 1e10).toLocaleString('en-US').slice(3)
 })
-const eventStart = computed(() => (project.$state.meta?.startTime ?? 0).toLocaleString('en-US'))
-const eventEnd = computed(() => (project.$state.meta?.endTime ?? 0).toLocaleString('en-US'))
+const eventStart = computed(() => (project.meta?.startTime ?? 0).toLocaleString('en-US'))
+const eventEnd = computed(() => (project.meta?.endTime ?? 0).toLocaleString('en-US'))
 const duration = computed(() => (
-    (project.$state.meta?.endTime ?? 0) - (project.$state.meta?.startTime ?? 0)).toLocaleString('en-US'))
+    (project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US'))
 function getDefault(value: string|undefined, def: string): string {
     if (!value || value.length == 0)
         return def
@@ -75,6 +82,12 @@ table tr td:nth-child(1) {
     font-weight: bolder;
 }
 table tr td:nth-child(2) {
+    text-align: left;
+}
+
+.desc {
+    width: 100%;
+    margin-left: 10px;
     text-align: left;
 }
 

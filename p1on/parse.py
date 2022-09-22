@@ -28,6 +28,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.name = project.meta.name
     result.author = project.meta.author
     result.date = project.meta.date.ToDateTime() if project.meta.HasField('date') else None
+    result.description = project.meta.description
 
     #load time stuff
     result.startTime = project.meta.startTime

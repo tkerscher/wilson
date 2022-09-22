@@ -20,10 +20,12 @@ export interface ProjectMeta {
   endTime: number;
   /** Playback speed in time units per second */
   speedRatio: number;
+  /** additional description of the event */
+  description: string;
 }
 
 function createBaseProjectMeta(): ProjectMeta {
-  return { name: "", author: "", date: undefined, startTime: 0, endTime: 0, speedRatio: 0 };
+  return { name: "", author: "", date: undefined, startTime: 0, endTime: 0, speedRatio: 0, description: "" };
 }
 
 export const ProjectMeta = {
@@ -45,6 +47,9 @@ export const ProjectMeta = {
     }
     if (message.speedRatio !== 0) {
       writer.uint32(49).double(message.speedRatio);
+    }
+    if (message.description !== "") {
+      writer.uint32(58).string(message.description);
     }
     return writer;
   },
@@ -74,6 +79,9 @@ export const ProjectMeta = {
         case 6:
           message.speedRatio = reader.double();
           break;
+        case 7:
+          message.description = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -90,6 +98,7 @@ export const ProjectMeta = {
       startTime: isSet(object.startTime) ? Number(object.startTime) : 0,
       endTime: isSet(object.endTime) ? Number(object.endTime) : 0,
       speedRatio: isSet(object.speedRatio) ? Number(object.speedRatio) : 0,
+      description: isSet(object.description) ? String(object.description) : "",
     };
   },
 
@@ -101,6 +110,7 @@ export const ProjectMeta = {
     message.startTime !== undefined && (obj.startTime = message.startTime);
     message.endTime !== undefined && (obj.endTime = message.endTime);
     message.speedRatio !== undefined && (obj.speedRatio = message.speedRatio);
+    message.description !== undefined && (obj.description = message.description);
     return obj;
   },
 
@@ -112,6 +122,7 @@ export const ProjectMeta = {
     message.startTime = object.startTime ?? 0;
     message.endTime = object.endTime ?? 0;
     message.speedRatio = object.speedRatio ?? 0;
+    message.description = object.description ?? "";
     return message;
   },
 };

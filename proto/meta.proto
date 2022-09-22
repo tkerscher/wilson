@@ -18,4 +18,7 @@ message ProjectMeta {
     double endTime = 5;
     //Playback speed in time units per second
     double speedRatio = 6;
+
+    //additional description of the event
+    string description = 7;
 }
