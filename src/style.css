@@ -76,6 +76,27 @@ body {
 
 /*********************************** ICONS ************************************/
 
+.icon-small {
+    width: 16px;
+    height: 16px;
+}
+.icon-medium {
+    width: 20px;
+    height: 20px;
+}
+.icon-large {
+    width: 28px;
+    height: 28px;
+}
+.icon-small,
+.icon-medium,
+.icon-large {
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
 .backward-icon {
     mask-image: url(./assets/icons/backward-fast.svg);
     -webkit-mask-image: url(./assets/icons/backward-fast.svg);

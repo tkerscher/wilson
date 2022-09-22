@@ -6,7 +6,7 @@
             Select a file to watch it.
         </p>
         <label for="file-upload" class="p-button">
-            <div class="icon upload-icon"></div>Open File
+            <div class="icon icon-small upload-icon"></div>Open File
         </label>
         <input id="file-upload" type="file" accept=".p1on" @change="onFileSelected"/>
     </div>
@@ -38,14 +38,8 @@ async function onFileSelected(e: Event) {
 }
 
 .icon {
-    width: 16px;
-    height: 16px;
     margin: 2px 5px 2px 2px;
     background-color: #ffffff;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
 }
 
 .banner {

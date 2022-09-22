@@ -1,11 +1,11 @@
 <template>
 <div class="root">
     <div class="search-header">
-        <div class="button trash-icon"
+        <div class="button icon-medium trash-icon"
             role="button"
             title="Reset Graphs"
             @mouseup="reset"></div>
-        <div :class="['button', showHidden ? 'eye-slash-icon' : ' eye-icon']"
+        <div :class="['button', 'icon-medium', showHidden ? 'eye-slash-icon' : ' eye-icon']"
              :title="showHidden ? 'Show Hidden Graphs' : 'Hide Graphs'"
              role="button"
              @mouseup="showHidden = !showHidden"></div>
@@ -18,7 +18,7 @@
         <div class="header"
              @mouseup.stop="graph.visible = !graph.visible">
             <span class="name">{{graph.name}}</span>
-            <div v-if="graph.visible" class="icon eye-icon"></div>
+            <div v-if="graph.visible" class="icon icon-small eye-icon"></div>
         </div>
     </div>
     </div>
@@ -108,25 +108,9 @@ function reset() {
     flex: 1;
 }
 
-.toggle {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
-}
-
 .button {
-    width: 18px;
-    height: 18px;
     margin: 4px;
     background-color: var(--primary7);
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
 }
 .button:hover {
     cursor: pointer;
@@ -134,12 +118,6 @@ function reset() {
 }
 
 .icon {
-    width: 12px;
-    height: 12px;
     background-color: var(--primary7);
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
 }
 </style>

@@ -5,11 +5,11 @@
         <p>Loading Event ...</p>
     </div>
     <div v-else-if="state == 'finished'" class="container finished">
-        <div class="icon check"></div>
+        <div class="icon check-icon"></div>
         <p>Download finished!</p>
     </div>
     <div v-else class="container failed">
-        <div class="icon cross"></div>
+        <div class="icon xmark-icon"></div>
         <p>Could not open event:<br />{{response}}</p>
     </div>
 </div>
@@ -65,10 +65,9 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
     font-size: 1.4em;
     font-weight: bold;
-    background-color: #2c2c2c;
+    background-color: var(--background);
 }
 
 .image {
@@ -83,15 +82,6 @@ onMounted(() => {
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-position: center;
-    background-color: white;
-}
-
-.check {
-    mask-image: url(../assets/icons/check.svg);
-    -webkit-mask-image: url(../assets/icons/check.svg);
-}
-.cross {
-    mask-image: url(../assets/icons/xmark.svg);
-    -webkit-mask-image: url(../assets/icons/xmark.svg);
+    background-color: var(--primary7);
 }
 </style>

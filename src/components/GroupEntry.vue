@@ -1,7 +1,7 @@
 <template>
 <div class="root" v-if="!empty">
     <div class="header">
-        <div :class="['button', expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
+        <div :class="['button', 'icon-small', expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
              :title="expanded ? 'Collapse Group' : 'Expand Group'"
              role="button"
              @mouseup.stop="expanded = !expanded">
@@ -10,7 +10,7 @@
             <span v-if="props.group.name.length > 0">{{ props.group.name }}</span>
             <span v-else class="empty-label">Ungrouped</span>
         </div>
-        <div :class="['button', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
+        <div :class="['button', 'icon-small', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
              :title="props.group.visible ? 'Hide Group' : 'Show Group'"
              role="button"
              @mouseup.stop="props.group.visible = !props.group.visible">
@@ -70,14 +70,8 @@ const empty = computed(() => filtered.value.length == 0)
 }
 
 .button {
-    height: 12px;
-    width: 12px;
     margin-right: 10px;
     background-color: var(--primary7);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
 }
 .button:hover {
     cursor: pointer;

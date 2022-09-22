@@ -4,37 +4,40 @@
          role="button"
          title="Exit"
          @mouseup="emits('exit')">
-        <div class="icon exit-icon"></div>
+        <div class="icon-large exit-icon toolbar-icon"></div>
     </div>
     <div class="button"
          role="button"
          title="Toggle Theme"
          @mouseup="emits('toggleTheme')">
-        <div :class="['icon', theme.useDarkTheme ? 'moon-icon' : 'sun-icon']"></div>   
+        <div :class="[
+            'icon-large',
+            theme.useDarkTheme ? 'moon-icon' : 'sun-icon',
+             'toolbar-icon']"></div>   
     </div>
     <div class="button"
          role="button"
          title="Toggle Grid"
          @mouseup="emits('toggleGrid')">
-        <div class="icon grid-icon"></div>     
+        <div class="icon-large grid-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Open Graph Explorer"
          @mouseup="emits('openGraphs')">
-        <div class="icon chart-icon"></div>     
+        <div class="icon-large chart-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Reset Camera"
          @mouseup="emits('resetCamera')">
-        <div class="icon camera-rotate-icon"></div>     
+        <div class="icon-large camera-rotate-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Screenshot"
          @mouseup="emits('screenshot')">
-        <div class="icon camera-icon"></div>     
+        <div class="icon-large camera-icon toolbar-icon"></div>     
     </div>
 </div>
 </template>
@@ -75,14 +78,8 @@ const emits = defineEmits<{
 .button:hover > .icon {
     background-color: var(--highlight1);
 }
-.icon {
-    width: 28px;
-    height: 28px;
+.toolbar-icon {
     margin: 11px;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
     background-color: #d3d3d3;
 }
 </style>

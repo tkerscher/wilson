@@ -3,7 +3,7 @@
     <div class="header">
         <div
             role="button"
-            :class="['header-button', showHidden ? 'eye-icon' : 'eye-slash-icon']"
+            :class="['header-button', 'icon-medium', showHidden ? 'eye-icon' : 'eye-slash-icon']"
             :title="showHidden ? 'Hide hidden objects' : 'Show hidden objects'"
             @mouseup="toggleShowHidden"
         ></div>
@@ -16,7 +16,7 @@
                 :class="['tab-button', {'active-header' : activeTab == index}]"
                 @mousedown="onSelectTab(index)"
             >
-                <div :class="['tab-icon', item.icon]"></div>
+                <div :class="['tab-icon', 'icon-medium', item.icon]"></div>
                 <div v-if="activeTab == index" class="tab-title">
                     {{ item.title }}
                 </div>
@@ -109,14 +109,8 @@ onBeforeMount(() => {
 }
 
 .header-button {
-    width: 20px;
-    height: 20px;
     margin: 5px;
     background-color: var(--primary7);
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
 }
 .header-button:hover {
     cursor: pointer;
@@ -152,14 +146,8 @@ onBeforeMount(() => {
 }
 
 .tab-icon {
-    width: 20px;
-    height: 20px;
     margin: 5px;
     background-color: var(--highlight2);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
 }
 .tab-button {
     width: 30px;

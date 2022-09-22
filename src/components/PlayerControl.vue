@@ -5,11 +5,11 @@
             <div class="left-action-group">
             </div>
             <div class="middle-action-group">
-                <div class="action-button backward-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
-                <div :class="['action-button', 'play-button', player.isPlaying ? 'pause-icon' : 'play-icon']"
+                <div class="action-button icon-medium backward-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
+                <div :class="['action-button', 'icon-large', 'play-button', player.isPlaying ? 'pause-icon' : 'play-icon']"
                      role="button" title="Play/Pause" @mouseup="player.togglePlaying"></div>
-                <div class="action-button forward-icon" role="button" title="Forward 10 sec" @mouseup="player.forward"></div>
-                <div :class="['action-button', 'repeat-icon', player.isLooping ? 'toggle-active' : '']"
+                <div class="action-button icon-medium forward-icon" role="button" title="Forward 10 sec" @mouseup="player.forward"></div>
+                <div :class="['action-button', 'icon-medium', 'repeat-icon', player.isLooping ? 'toggle-active' : '']"
                      role="button" title="Toggle Repeat" @mouseup="player.toggleLooping"></div>
             </div>
             <div class="right-action-group">
@@ -18,7 +18,7 @@
                            prefix="x "
                            style="width: 80px"
                            v-model="player.speedRatio" />
-                <div :class="['action-button', player.isFullscreen ? 'compress-icon' : 'expand-icon']"
+                <div :class="['action-button', 'icon-medium', player.isFullscreen ? 'compress-icon' : 'expand-icon']"
                      role="button" title="Toggle Fullscreen" @mouseup="emits('toggleFullscreen')"></div>
             </div>
         </div>
@@ -99,13 +99,7 @@ const emits = defineEmits<{
 }
 
 .action-button {
-    width: 20px;
-    height: 20px;
     background-color: var(--primary5);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
 }
 .action-button:hover {
     cursor: pointer;
@@ -113,8 +107,6 @@ const emits = defineEmits<{
 }
 
 .play-button {
-    width: 30px;
-    height: 30px;
     margin: 5px 0;
 }
 .toggle-active {
