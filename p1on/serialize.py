@@ -9,6 +9,7 @@ from p1on.data import (
     ColorMap,
     ColorProperty,
     Graph,
+    Interpolation,
     ScalarProperty,
     Path,
     VectorProperty )
@@ -119,11 +120,24 @@ def saveProject(project: Project, path: str) -> None:
 
 ################################## Data ########################################
 
+def _serializeInterpolation(intpol: Interpolation) -> proto.Interpolation:
+    if intpol == Interpolation.LINEAR:
+        return proto.Interpolation.LINEAR
+    if intpol == Interpolation.HOLD:
+        return proto.Interpolation.HOLD
+    if intpol == Interpolation.AHEAD:
+        return proto.Interpolation.AHEAD
+    if intpol == Interpolation.STEP:
+        return proto.Interpolation.STEP
+    else:
+        raise ValueError("Unknown interpolation mode!")
+
 def _serializeGraph(graph: Graph, id: int) -> proto.Graph:
     result = proto.Graph()
     #meta
     result.name = graph.name
     result.id = id
+    result.interpolation = _serializeInterpolation(graph.interpolation)
     #data - sorted by time
     a = np.array(graph.array, dtype=np.float64)
     a = a[a[:,0].argsort()]
@@ -140,6 +154,7 @@ def _serializePath(path: Path, id: int) -> proto.Path:
     #meta
     result.name = path.name
     result.id = id
+    result.interpolation = _serializeInterpolation(path.interpolation)
     #data - sorted by time
     a = np.array(path.array, dtype=np.float64)
     a = a[a[:,0].argsort()]

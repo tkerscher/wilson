@@ -1,7 +1,21 @@
 from __future__ import annotations
 import numpy as np
+from enum import Enum
 from numpy.typing import ArrayLike
 from typing import Tuple, Union
+
+class Interpolation(Enum):
+    """Data Interpolation modes"""
+
+    LINEAR = 0,
+    """Linear interpolate between consecutive data points"""
+    HOLD = 1,
+    """Hold the last value until next data point is reached"""
+    AHEAD = 2,
+    """Hold the next value until next data point is reached"""
+    STEP = 3,
+    """Hold last value until exactly in between two consecutive data points
+    when it will hold the next value"""
 
 class Graph:
     """2D function mapping time to a scalar value by interpolating between
@@ -14,14 +28,19 @@ class Graph:
     
     name: str, default=''
         Name of the graph
+    
+    interpolation: Interpolation, default=LINEAR
+        Interpolation mode to use to get values in between data points
     """
     def __init__(
         self,
         array: ArrayLike,
-        name:str = ''
+        name:str = '',
+        interpolation: Interpolation = Interpolation.LINEAR
     ):
         self.array = array
         self.name = name
+        self.interpolation = interpolation
     
     @property
     def array(self) -> ArrayLike:
@@ -42,6 +61,14 @@ class Graph:
     def name(self, value: str) -> None:
         self._name = str(value)
 
+    @property
+    def interpolation(self) -> Interpolation:
+        """Interpolation mode to use to get values in between data points"""
+        return self._interpolation
+    @interpolation.setter
+    def interpolation(self, value: Interpolation) -> None:
+        self._interpolation = value
+
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Graph) \
             and other.name == self.name \
@@ -58,14 +85,19 @@ class Path:
     
     name: str, default=''
         Name of the graph
+
+    interpolation: Interpolation, default=LINEAR
+        Interpolation mode to use to get values in between data points
     """
     def __init__(
         self,
         array: ArrayLike,
-        name:str = ''
+        name:str = '',
+        interpolation: Interpolation = Interpolation.LINEAR
     ):
         self.array = array
         self.name = name
+        self.interpolation = interpolation
     
     @property
     def array(self) -> ArrayLike:
@@ -85,6 +117,14 @@ class Path:
     @name.setter
     def name(self, value: str) -> None:
         self._name = str(value)
+    
+    @property
+    def interpolation(self) -> Interpolation:
+        """Interpolation mode to use to get values in between data points"""
+        return self._interpolation
+    @interpolation.setter
+    def interpolation(self, value: Interpolation) -> None:
+        self._interpolation = value
     
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Path) \

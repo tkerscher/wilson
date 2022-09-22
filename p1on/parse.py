@@ -1,5 +1,3 @@
-from pydoc import describe
-from tokenize import group
 from typing import Dict, Optional, Tuple
 from zlib import decompress
 import numpy as np
@@ -9,6 +7,7 @@ from p1on.data import (
     ColorMap,
     ColorProperty,
     Graph,
+    Interpolation,
     ScalarProperty,
     Path, PathLike,
     VectorProperty )
@@ -69,25 +68,37 @@ def parseProjectFromFile(path: str) -> Project:
 
 ################################## Data ########################################
 
+def _parseInterpolation(intpol: proto.Interpolation) -> Interpolation:
+    if intpol == proto.Interpolation.HOLD:
+        return Interpolation.HOLD
+    if intpol == proto.Interpolation.AHEAD:
+        return Interpolation.AHEAD
+    if intpol == proto.Interpolation.STEP:
+        return Interpolation.STEP
+    #return default if default or not known
+    return Interpolation.LINEAR
+
 def _parseGraph(graph: proto.Graph) -> Tuple[int, Graph]:
     #meta
     name = graph.name
+    interpolation = _parseInterpolation(graph.interpolation)
     #data
     array = np.empty((len(graph.points),2), dtype=np.float64)
     for i, point in enumerate(graph.points):
         array[i] = point.time, point.value
     #done -> return id value tuple to allow constructing a dict
-    return (graph.id, Graph(array, name))
+    return (graph.id, Graph(array, name, interpolation))
 
 def _parsePath(path: proto.Path) -> Tuple[int, Path]:
     #meta
     name = path.name
+    interpolation = _parseInterpolation(path.interpolation)
     #data
     array = np.empty((len(path.points),4))
     for i, point in enumerate(path.points):
         array[i] = point.time, point.x, point.y, point.z
     #done -> return id value tuple to allow constructing a dict
-    return (path.id, Path(array, name))
+    return (path.id, Path(array, name, interpolation))
 
 def _parseColormap(colormap: proto.ColorMap) -> ColorMap:
     cmap = np.empty((len(colormap.stops),5))

@@ -2,6 +2,7 @@ from p1on.proto.camera_pb2 import Camera
 from p1on.proto.color_pb2 import Color
 from p1on.proto.colormap_pb2 import ColorMap
 from p1on.proto.graph_pb2 import Graph
+from p1on.proto.interpolation_pb2 import Interpolation
 from p1on.proto.line_pb2 import Line
 from p1on.proto.meta_pb2 import ProjectMeta
 from p1on.proto.path_pb2 import Path
