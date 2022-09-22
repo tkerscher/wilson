@@ -34,7 +34,7 @@
     </tr>
 </table>
 
-<p class="desc">{{ description }}</p>
+<span class="desc">{{ description }}</span>
 
 <div class="disclaimer">
     P1ON is an open source project under the MIT-License.<br />
@@ -101,5 +101,6 @@ table tr td:nth-child(2) {
     font-weight: light;
     font-size: 0.8em;
     font-family: sans-serif;
+    padding: 10px;
 }
 </style>
