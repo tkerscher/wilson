@@ -11,7 +11,7 @@
              @mouseup="showHidden = !showHidden"></div>
         <SearchInput class="search-box" v-model="searchQuery" />
     </div>
-    <div class="list">
+    <div class="list scrollable">
         <div
         v-for="graph in filteredGraphs"
         class="item">
@@ -74,21 +74,6 @@ function reset() {
     flex: 1;
     background-color: var(--primary3);
     border-radius: 5px;
-    overflow-y: auto;
-    scrollbar-color: #3497ff #d3d3d3;
-    scrollbar-width: thin;
-    overflow-y: scroll;
-}
-.list::-webkit-scrollbar {
-    width: 8px;
-} 
-.list::-webkit-scrollbar-track {
-    background-color: #d3d3d3;
-    border-radius: 100px;
-} 
-.list::-webkit-scrollbar-thumb {
-    background-color: #3497ff;
-    border-radius: 100px;
 }
 .item {
     padding: 3px 10px;

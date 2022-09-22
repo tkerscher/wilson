@@ -74,6 +74,23 @@ body {
     background-color: #2675ca;
 }
 
+.scrollable {
+    scrollbar-color: var(--highlight1) var(--primary6);
+    scrollbar-width: thin;
+    overflow-y: scroll;
+}
+.scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+.scrollable::-webkit-scrollbar-track {
+    background-color: var(--primary6);
+    border-radius: 100px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: var(--highlight1);
+    border-radius: 100px;
+}
+
 input[type=color] {
     background-color: transparent;
     border: none;

@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="active-tab-container">
+        <div class="active-tab-container scrollable">
                 <ObjectExplorer v-if="activeTab == 0" :search-query="searchQuery"/>
                 <PathExplorer v-else-if="activeTab == 1" :search-query="searchQuery" />
                 <InfoTab v-else-if="activeTab == 3" />
@@ -128,21 +128,6 @@ onBeforeMount(() => {
     background-color: var(--primary3);
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    overflow-y: auto;
-    scrollbar-color: var(--highlight1) var(--foreground2);
-    scrollbar-width: thin;
-    overflow-y: scroll;
-}
-.active-tab-container::-webkit-scrollbar {
-    width: 8px;
-} 
-.active-tab-container::-webkit-scrollbar-track {
-    background-color: var(--foreground2);
-    border-radius: 100px;
-} 
-.active-tab-container::-webkit-scrollbar-thumb {
-    background-color: var(--highlight1);
-    border-radius: 100px;
 }
 
 .tab-icon {
