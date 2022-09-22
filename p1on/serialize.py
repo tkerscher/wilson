@@ -73,6 +73,9 @@ def serializeProject(project: Project) -> bytes:
                 a.name = 'Label ' + str(nextTextId)
                 nextTextId += 1
             out.texts.append(_serializeText(a, project))
+
+    #hidden groups
+    out.hiddenGroups.extend(project.hiddenGroups)   
     
     #serialize data
     #Do this after serializing animatables as they might add implicit data

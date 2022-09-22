@@ -34,6 +34,9 @@ message Project {
     
     //---------------------Animation-----------------------
 
+    //list of groups hidden by default
+    repeated string hiddenGroups = 15;
+
     //list of animated spheres
     repeated Sphere spheres = 16;
     //list of animated lines

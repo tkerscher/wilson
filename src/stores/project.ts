@@ -32,7 +32,9 @@ export const useProject = defineStore('project', {
         spheres: <Sphere[]>[],
         lines: <Line[]>[],
         tubes: <Tube[]>[],
-        texts: <Text[]>[]
+        texts: <Text[]>[],
+
+        hiddenGroups: []
     }),
     getters: {
         isEmpty: (state): boolean => {
@@ -46,6 +48,7 @@ export const useProject = defineStore('project', {
         loadProject(buffer: ArrayBuffer) {
             const array = inflate(new Uint8Array(buffer))
             const project = Project.decode(array)
+            console.log(project)
             this.$patch(project)
         },
         /**

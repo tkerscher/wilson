@@ -48,6 +48,10 @@ export class SceneBuilder {
     getGroup(group: string): Node {
         if (!this.groupMap.has(group)) {
             let value = new Node(group + '_group', this.scene)
+            //hide hidden group
+            if (!!this.project.hiddenGroups.find(g => g == group))
+                value.setEnabled(false)
+            //store new group in map
             this.groupMap.set(group, value)
             return value
         }

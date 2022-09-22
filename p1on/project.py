@@ -1,5 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
+import string
 from typing import Iterable, List, Optional, Tuple
 
 from p1on.objects import Animatable
@@ -50,20 +51,20 @@ class Project:
     name: str, default=''
         Name of the project
     
-    author: Optional[str], default=None
+    author: Optional[str], default=`None`
         Name of the author or detector of the event
     
-    date: Optional[datetime], default=None
+    date: Optional[datetime], default=`None`
         Date of the experiment or event
     
-    description: Optional[str], default=None
+    description: Optional[str], default=`None`
         Additional information about the event
     
-    startTime: Optional[float], default=None
+    startTime: Optional[float], default=`None`
         Time value, from which the animation starts.
         If None, will be set to earliest graph or path point.
     
-    endTime: Optional[float], default=None
+    endTime: Optional[float], default=`None`
         Time value, where the animation ends.
         If None, will be set to latest graph or path point.
     
@@ -78,11 +79,14 @@ class Project:
     
     animatables: Iterable[Animatable]
         List of animatables to be included into the project
+
+    hiddenGroups: Iterable[str]
+        List of group names, that should be hidden by viewers by default
     
-    camera: Optional[Camera], default=None
+    camera: Optional[Camera], default=`None`
         An optional animatable camera
 
-    colormap: Optional[Camera], default=None
+    colormap: Optional[Camera], default=`None`
         Color map used to translate scalars into colors. If None, viridis is used.
     """
     def __init__(
@@ -98,6 +102,7 @@ class Project:
         graphs: Iterable[Graph] = [],
         paths: Iterable[Path] = [],
         animatables: Iterable[Animatable] = [],
+        hiddenGroups: Iterable[str] = [],
         camera: Optional[Camera] = None,
         colormap: Optional[ColorMap] = None
     ):
@@ -111,6 +116,7 @@ class Project:
         self.graphs = graphs # type: ignore[assignment]
         self.paths = paths # type: ignore[assignment]
         self.animatables = animatables # type: ignore[assignment]
+        self.hiddenGroups = hiddenGroups # type: ignore[assignment]
         self.camera = camera
         self.colormap = colormap
     
@@ -241,6 +247,17 @@ class Project:
     def clearAnimatables(self) -> None:
         """Removes all animatables from this project"""
         self._animatables = []
+    
+    @property
+    def hiddenGroups(self) -> List[str]:
+        """List of group names, that should be hidden by viewers by default"""
+        return self._hiddenGroups
+    @hiddenGroups.setter
+    def hiddenGroups(self, value: Iterable[str]) -> None:
+        self._hiddenGroups = list(value)
+    @hiddenGroups.deleter
+    def hiddenGroups(self) -> None:
+        self._hiddenGroups = []
     
     @property
     def camera(self) -> Optional[Camera]:

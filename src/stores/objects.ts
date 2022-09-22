@@ -38,7 +38,7 @@ export const useObjects = defineStore('objects', () => {
             else {
                 const empty: Group = {
                     name: name,
-                    visible: true,
+                    visible: !project.hiddenGroups.find(g => g == name),
                     members: []
                 }
                 map.set(name, empty)

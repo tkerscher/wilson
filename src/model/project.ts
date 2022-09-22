@@ -30,6 +30,8 @@ export interface Project {
   camera:
     | Camera
     | undefined;
+  /** list of groups hidden by default */
+  hiddenGroups: string[];
   /** list of animated spheres */
   spheres: Sphere[];
   /** list of animated lines */
@@ -47,6 +49,7 @@ function createBaseProject(): Project {
     paths: [],
     colormap: undefined,
     camera: undefined,
+    hiddenGroups: [],
     spheres: [],
     lines: [],
     tubes: [],
@@ -70,6 +73,9 @@ export const Project = {
     }
     if (message.camera !== undefined) {
       Camera.encode(message.camera, writer.uint32(82).fork()).ldelim();
+    }
+    for (const v of message.hiddenGroups) {
+      writer.uint32(122).string(v!);
     }
     for (const v of message.spheres) {
       Sphere.encode(v!, writer.uint32(130).fork()).ldelim();
@@ -108,6 +114,9 @@ export const Project = {
         case 10:
           message.camera = Camera.decode(reader, reader.uint32());
           break;
+        case 15:
+          message.hiddenGroups.push(reader.string());
+          break;
         case 16:
           message.spheres.push(Sphere.decode(reader, reader.uint32()));
           break;
@@ -135,6 +144,7 @@ export const Project = {
       paths: Array.isArray(object?.paths) ? object.paths.map((e: any) => Path.fromJSON(e)) : [],
       colormap: isSet(object.colormap) ? ColorMap.fromJSON(object.colormap) : undefined,
       camera: isSet(object.camera) ? Camera.fromJSON(object.camera) : undefined,
+      hiddenGroups: Array.isArray(object?.hiddenGroups) ? object.hiddenGroups.map((e: any) => String(e)) : [],
       spheres: Array.isArray(object?.spheres) ? object.spheres.map((e: any) => Sphere.fromJSON(e)) : [],
       lines: Array.isArray(object?.lines) ? object.lines.map((e: any) => Line.fromJSON(e)) : [],
       tubes: Array.isArray(object?.tubes) ? object.tubes.map((e: any) => Tube.fromJSON(e)) : [],
@@ -157,6 +167,11 @@ export const Project = {
     }
     message.colormap !== undefined && (obj.colormap = message.colormap ? ColorMap.toJSON(message.colormap) : undefined);
     message.camera !== undefined && (obj.camera = message.camera ? Camera.toJSON(message.camera) : undefined);
+    if (message.hiddenGroups) {
+      obj.hiddenGroups = message.hiddenGroups.map((e) => e);
+    } else {
+      obj.hiddenGroups = [];
+    }
     if (message.spheres) {
       obj.spheres = message.spheres.map((e) => e ? Sphere.toJSON(e) : undefined);
     } else {
@@ -193,6 +208,7 @@ export const Project = {
     message.camera = (object.camera !== undefined && object.camera !== null)
       ? Camera.fromPartial(object.camera)
       : undefined;
+    message.hiddenGroups = object.hiddenGroups?.map((e) => e) || [];
     message.spheres = object.spheres?.map((e) => Sphere.fromPartial(e)) || [];
     message.lines = object.lines?.map((e) => Line.fromPartial(e)) || [];
     message.tubes = object.tubes?.map((e) => Tube.fromPartial(e)) || [];

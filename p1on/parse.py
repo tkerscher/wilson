@@ -48,6 +48,9 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.addAnimatables(_parseLine(l, _graphs, _paths) for l in project.lines)
     result.addAnimatables(_parseText(t, _graphs, _paths) for t in project.texts)
 
+    #hidden groups
+    result.hiddenGroups = project.hiddenGroups
+
     #additional properties
     if project.HasField('camera'):
         result.camera = _parseCamera(project.camera, _paths)

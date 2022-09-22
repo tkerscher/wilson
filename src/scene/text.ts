@@ -153,6 +153,8 @@ export class TextBuilder {
         //meta
         block.uniqueId = this.#builder.nextId++
         const parent = this.#builder.getGroup(text.group)
+        if (!parent.isEnabled())
+            block.isVisible = false
         //hook parent node up
         parent.onEnabledStateChangedObservable.add(
             () => block.isVisible = parent.isEnabled())
