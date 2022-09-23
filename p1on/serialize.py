@@ -12,6 +12,7 @@ from p1on.data import (
     Interpolation,
     ScalarProperty,
     Path,
+    TextLike,
     VectorProperty )
 from p1on.objects import Animatable, Line, Sphere, Tube, Overlay
 from p1on.project import Camera, Project
@@ -210,6 +211,99 @@ def _serializeColormap(colormap: ColorMap) -> proto.ColorMap:
                 stop.color.a = c[4]
     return result
 
+def _serializeText(text: TextLike, objName: str, project: Project) -> str:
+    #plain string?
+    if isinstance(text, str):
+        return text
+    
+    #serialize data obtain list of properties (either const or global id)
+    gn, pn = f'.{objName}_graph ', f'.{objName}_path'
+    graphs = [(
+        g.name if isinstance(g, Graph) else '',            #name (if graph)
+        _serializeScalarProperty(g, gn + str(i), project)) #scalar prop
+        for i, g in enumerate(text.graphs)]
+    paths = [(
+        p.name if isinstance(p, Path) else '',             #name (if path)
+        _serializeVectorProperty(p, pn + str(i), project)) #vector prop
+        for i, p in enumerate(text.paths)]
+
+    #create substitution function
+    def sub(match: re.Match) -> str:
+        name = match[1]
+        #Index graph?
+        if name == 'graphs':
+            #sanity check
+            if match[2] is None:
+                raise ValueError(f'Error in text reference "{match[0]}": No graph index provided!')
+            graph_id = int(match)
+            if graph_id < 0 or graph_id >= len(graphs):
+                raise ValueError(f'Error in text reference "{match[0]}": Graph index out of range!')
+            if match[3] is not None:
+                raise ValueError(f'Error in text reference "{match[0]}": Graphs do not provide properties!')
+            
+            #process graph
+            graph = graphs[graph_id][1] #tuple: (name, graph)
+            
+            #const value?
+            if graph.HasField('constValue'):
+                #const value -> replace it
+                return f'%{match.group(4) or "s"}' % graph.constValue
+            else:
+                #construct correct template string
+                return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
+        elif name == 'paths':
+            #sanity check
+            if match[2] is None:
+                raise ValueError(f'Error in text reference "{match[0]}": No path index provided!')
+            path_id = int(match)
+            if path_id < 0 or path_id >= len(paths):
+                raise ValueError(f'Error in text reference "{match[0]}": Path index out of range!')
+            
+            #process path
+            path = paths[path_id][1] #tuple: (name, path)
+            
+            #const value?
+            if path.HasField('constValue'):
+                #check what to print
+                if match.group(3) == '.x':
+                    return f'${match.group(4) or "s"}' % path.constValue.x
+                elif match.group(3) == '.y':
+                    return f'${match.group(4) or "s"}' % path.constValue.y
+                else: #match.group(3) == '.z'
+                    return f'${match.group(4) or "s"}' % path.constValue.z
+            else:
+                #construct correct template string
+                return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
+        
+        #it must be a named data object
+
+        #sanity check -> no index if named
+        if match.group(2) is not None:
+            raise ValueError(f'Error in text reference "{match[0]}": Cannot index named data!')
+
+        #search by name; lists of tuple: (name, data)
+        graph_matches = [g[1] for g in graphs if g[0] == name]
+        path_matches = [p[1] for p in paths if p[0] == name]
+
+        #sanity check
+        matches = len(graph_matches) + len(path_matches)
+        if matches == 0:
+            raise ValueError(f'Error in text reference "{match[0]}": The referenced data was not found!')
+        if matches > 1:
+            raise ValueError(f'Error in text reference "{match[0]}": The referenced data is not unique by name!')
+        
+        #Is it a path?
+        if len(path_matches) == 1:
+            path = path_matches[0]
+            return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
+        else:
+            graph = graph_matches[0]
+            return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
+    #END def sub
+
+    #find all references and replace with global id
+    return re.sub(text_pattern, sub, text.content)
+
 ################################ Properties ####################################
 
 def _serializeScalarProperty(
@@ -400,109 +494,18 @@ def _serializeLine(line: Line, project: Project) -> proto.Line:
     #done
     return result
 
-def _createTempSub(graphs: List[Tuple[str,ScalarProperty]], paths: List[Tuple[str, VectorProperty]]):
-    """Build the substitute function for the template processing via regex"""
-
-    def sub(match: re.Match) -> str:
-        name = match[1]
-        #Index graph?
-        if name == 'graphs':
-            #sanity check
-            if match[2] is None:
-                raise ValueError(f'Error in text reference "{match[0]}": No graph index provided!')
-            graph_id = int(match)
-            if graph_id < 0 or graph_id >= len(graphs):
-                raise ValueError(f'Error in text reference "{match[0]}": Graph index out of range!')
-            if match[3] is not None:
-                raise ValueError(f'Error in text reference "{match[0]}": Graphs do not provide properties!')
-            
-            #process graph
-            graph = graphs[graph_id][1] #tuple: (name, graph)
-            
-            #const value?
-            if graph.HasField('constValue'):
-                #const value -> replace it
-                return f'%{match.group(4) or "s"}' % graph.constValue
-            else:
-                #construct correct template string
-                return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
-        elif name == 'paths':
-            #sanity check
-            if match[2] is None:
-                raise ValueError(f'Error in text reference "{match[0]}": No path index provided!')
-            path_id = int(match)
-            if path_id < 0 or path_id >= len(paths):
-                raise ValueError(f'Error in text reference "{match[0]}": Path index out of range!')
-            
-            #process path
-            path = paths[path_id][1] #tuple: (name, path)
-            
-            #const value?
-            if path.HasField('constValue'):
-                #check what to print
-                if match.group(3) == '.x':
-                    return f'${match.group(4) or "s"}' % path.constValue.x
-                elif match.group(3) == '.y':
-                    return f'${match.group(4) or "s"}' % path.constValue.y
-                else: #match.group(3) == '.z'
-                    return f'${match.group(4) or "s"}' % path.constValue.z
-            else:
-                #construct correct template string
-                return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
-        
-        #it must be a named data object
-
-        #sanity check -> no index if named
-        if match.group(2) is not None:
-            raise ValueError(f'Error in text reference "{match[0]}": Cannot index named data!')
-
-        #search by name; lists of tuple: (name, data)
-        graph_matches = [g[1] for g in graphs if g[0] == name]
-        path_matches = [p[1] for p in paths if p[0] == name]
-
-        #sanity check
-        matches = len(graph_matches) + len(path_matches)
-        if matches == 0:
-            raise ValueError(f'Error in text reference "{match[0]}": The referenced data was not found!')
-        if matches > 1:
-            raise ValueError(f'Error in text reference "{match[0]}": The referenced data is not unique by name!')
-        
-        #Is it a path?
-        if len(path_matches) == 1:
-            path = path_matches[0]
-            return f'%(paths[{path.pathId}]{match.group(3)}){match.group(4) or ""}'
-        else:
-            graph = graph_matches[0]
-            return f'%(graphs[{graph.graphId}]){match.group(4) or ""}'
-    
-    return sub
-
 def _serializeOverlay(overlay: Overlay, project: Project) -> proto.Overlay:
     result = proto.Overlay()
     #meta
     assert(overlay.name is not None)
     _writeObjectMeta(result, overlay, project)
     #properties
+    result.text = _serializeText(overlay.text, overlay.name, project)
     _serializeTextPosition(result, overlay.position)
     result.fontSize.CopyFrom(_serializeScalarProperty(
         overlay.fontSize, f'.{overlay.name}_fontSize', project))
     result.bold = overlay.bold
     result.italic = overlay.italic
-    
-    #serialize data obtain list of properties (either const or global id)
-    gn, pn = f'.{overlay.name}_graph ', f'.{overlay.name}_path'
-    graphs = [(
-        g.name if isinstance(g, Graph) else '',            #name (if graph)
-        _serializeScalarProperty(g, gn + str(i), project)) #scalar prop
-        for i, g in enumerate(overlay.graphs)]
-    paths = [(
-        p.name if isinstance(p, Path) else '',             #name (if path)
-        _serializeVectorProperty(p, pn + str(i), project)) #vector prop
-        for i, p in enumerate(overlay.paths)]
-
-    #find all references and replace with global id
-    sub = _createTempSub(graphs, paths)
-    result.text = re.sub(text_pattern, sub, overlay.text)
     
     #done
     return result

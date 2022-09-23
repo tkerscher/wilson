@@ -1,7 +1,6 @@
 from abc import ABC
 from typing import List, Iterable, Optional
-from xmlrpc.client import Boolean
-from p1on.data import GraphLike, PathLike, ScalarProperty, VectorProperty, ColorProperty
+from p1on.data import GraphLike, PathLike, TextLike, ScalarProperty, VectorProperty, ColorProperty
 
 class Animatable(ABC):
     """Base class of all animatable objects
@@ -14,7 +13,7 @@ class Animatable(ABC):
     group: {str, None}, default=None
         Name of group the animatable belongs to.
     
-    description: {str, None}, default=None
+    description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
     """
     def __init__(
@@ -22,7 +21,7 @@ class Animatable(ABC):
         name: Optional[str] = None,
         *,               
         group: Optional[str] = None,
-        description: Optional[str] = None
+        description: Optional[TextLike] = None
     ):
         self._name = name
         self._group = group
@@ -51,11 +50,11 @@ class Animatable(ABC):
         self._group = None
     
     @property
-    def description(self) -> Optional[str]:
+    def description(self) -> Optional[TextLike]:
         """The description of the object shown while highlighted."""
         return self._description
     @description.setter
-    def description(self, value: Optional[str]) -> None:
+    def description(self, value: Optional[TextLike]) -> None:
         self._description = value
     @description.deleter
     def description(self) -> None:
@@ -72,7 +71,7 @@ class Sphere(Animatable):
     group: {str, None}, default=None
         Name of group the sphere belongs to.
 
-    description: {str, None}, default=None
+    description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
     
     position: {VectorProperty, None}, default=None
@@ -90,7 +89,7 @@ class Sphere(Animatable):
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
-        description: Optional[str] = None,
+        description: Optional[TextLike] = None,
         position: Optional[VectorProperty] = None,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = 'black'
@@ -148,7 +147,7 @@ class Tube(Animatable):
     group: {str, None}, default=None
         Name of group the tube belongs to.
     
-    description: {str, None}, default=None
+    description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
     
     isGrowing: {bool}, default=True
@@ -169,7 +168,7 @@ class Tube(Animatable):
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
-        description: Optional[str] = None,
+        description: Optional[TextLike] = None,
         isGrowing: bool = True,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = 'black'
@@ -232,7 +231,7 @@ class Line(Animatable):
     group: {str, None}, default=None
         Name of group the line belongs to.
 
-    description: {str, None}, default=None
+    description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
 
     color: ColorProperty, default='black'
@@ -258,7 +257,7 @@ class Line(Animatable):
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
-        description: Optional[str] = None,
+        description: Optional[TextLike] = None,
         color: ColorProperty = 'black',
         start: Optional[VectorProperty] = None,
         end: Optional[VectorProperty] = None,
@@ -339,7 +338,7 @@ class Overlay(Animatable):
     
     Attributes
     ----------
-    text: {str}, default=""
+    text: {TextLike}, default=""
         Text to be displayed
 
     name: {str, None}, default=None
@@ -348,7 +347,7 @@ class Overlay(Animatable):
     group: {str, None}, default=None
         Name of group the line belongs to.
 
-    description: {str, None}, default=None
+    description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
     
     position: str, default='lower left'
@@ -362,19 +361,13 @@ class Overlay(Animatable):
 
     italic: bool, default=False
         Whether to draw the text in italic
-
-    graphs: Iterable[GraphLike], default=[]
-        List of graphs referenced in the text
-
-    paths: Iterable[PathLike], default=[]
-        List of paths referenced in the text
     """
     def __init__(self,
-        text: str = "",
+        text: TextLike = "",
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
-        description: Optional[str] = None,
+        description: Optional[TextLike] = None,
         position: str = 'lower left',
         fontSize: ScalarProperty = 16,
         bold: bool = False,
@@ -407,11 +400,11 @@ class Overlay(Animatable):
         'lower right', 'lr')
 
     @property
-    def text(self) -> str:
+    def text(self) -> TextLike:
         """Text to be displayed on the screen"""
         return self._content
     @text.setter
-    def text(self, value: str) -> None:
+    def text(self, value: TextLike) -> None:
         self._content = value
 
     @property
@@ -447,25 +440,3 @@ class Overlay(Animatable):
     @italic.setter
     def italic(self, value: bool) -> None:
         self._italic = value
-
-    @property
-    def graphs(self) -> List[GraphLike]:
-        """List of graphs referenced in the text"""
-        return self._graphs
-    @graphs.setter
-    def graphs(self, value: Iterable[GraphLike]) -> None:
-        self._graphs = list(value)
-    @graphs.deleter
-    def graphs(self) -> None:
-        self._graphs = []
-
-    @property
-    def paths(self) -> List[PathLike]:
-        """List of paths referenced in the text"""
-        return self._paths
-    @paths.setter
-    def paths(self, value: Iterable[PathLike]) -> None:
-        self._paths = list(value)
-    @paths.deleter
-    def paths(self) -> None:
-        self._paths = []

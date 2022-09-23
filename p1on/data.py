@@ -2,7 +2,7 @@ from __future__ import annotations
 import numpy as np
 from enum import Enum
 from numpy.typing import ArrayLike
-from typing import Tuple, Union
+from typing import Iterable, List, Tuple, Union
 
 class Interpolation(Enum):
     """Data Interpolation modes"""
@@ -74,6 +74,11 @@ class Graph:
             and other.name == self.name \
             and bool(np.equal(other.array, self.array).all())
 
+GraphLike = Union[ArrayLike, Graph]
+"""
+Data types that can be used like a graph.
+"""
+
 class Path:
     """3D function mapping time to a vector value by interpolating between
     control points. Columns of the underlying array are: time, x, y, z.
@@ -131,6 +136,75 @@ class Path:
             and other.name == self.name \
             and bool(np.equal(other.array, self.array).all())
 
+PathLike = Union[ArrayLike, Path]
+"""
+Data types that can be used like a path.
+"""
+
+class Text:
+    """Container for animated text, holding the template string alongside
+    referenced data objects.
+    
+    Attributes
+    ----------
+    
+    content: str, default=''
+        The template string
+    
+    graphs: Iterable[GraphLike], default=[]
+        List of graphs referenced in the text
+
+    paths: Iterable[PathLike], default=[]
+        List of paths referenced in the text
+    """
+    def __init__(self,
+        content: str = "",
+        *,
+        graphs: Iterable[GraphLike] = [],
+        paths: Iterable[PathLike] = []
+    ):
+        self.content = content
+        self.graphs = graphs
+        self.paths = paths
+    
+    @property
+    def content(self) -> str:
+        """The template string"""
+        return self._content
+    @content.setter
+    def content(self, value: str) -> None:
+        self._content = value
+    @content.deleter
+    def content(self) -> None:
+        self._content = ""
+    
+    @property
+    def graphs(self) -> List[GraphLike]:
+        """List of graphs referenced in the text"""
+        return self._graphs
+    @graphs.setter
+    def graphs(self, value: Iterable[GraphLike]) -> None:
+        self._graphs = list(value)
+    @graphs.deleter
+    def graphs(self) -> None:
+        self._graphs = []
+
+    @property
+    def paths(self) -> List[PathLike]:
+        """List of paths referenced in the text"""
+        return self._paths
+    @paths.setter
+    def paths(self, value: Iterable[PathLike]) -> None:
+        self._paths = list(value)
+    @paths.deleter
+    def paths(self) -> None:
+        self._paths = []
+
+TextLike = Union[str, Text]
+"""
+Text either specified as plain string or as a template text.
+"""
+
 ColorMap = Union[ArrayLike, str]
 """
 A color map used to translate scalar values into colors by interpolating between
@@ -139,16 +213,6 @@ consisting of a scalar value followed by a color either as a rgb 3 tuple or rgba
 4 tuple, i.e. an array of either shape (N,4) or (N,5).
 
 Alternatively, one can specify the name of a colormap provided by matplotlib.
-"""
-
-GraphLike = Union[ArrayLike, Graph]
-"""
-Data types that can be used like a graph.
-"""
-
-PathLike = Union[ArrayLike, Path]
-"""
-Data types that can be used like a path.
 """
 
 ColorLike = Union[Tuple[float, float, float], Tuple[float, float, float, float], str]
