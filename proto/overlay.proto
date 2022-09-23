@@ -16,8 +16,8 @@ enum TextPosition {
     RIGHT = 8;       //Middle of right side
 }
 
-//Text drawn on the scene surface
-message Text {
+//Overlay text drawn on the scene surface
+message Overlay {
     //Name as shown in explorer
     string name = 1;
     //Name of group this belongs to
@@ -29,7 +29,7 @@ message Text {
     //ColorProperty color = 4;
 
     //Text to be drawn on the scene
-    string content = 10;
+    string text = 10;
 
     //Position of the text
     TextPosition position = 11;

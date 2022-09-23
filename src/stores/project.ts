@@ -4,11 +4,11 @@ import { Line } from "../model/line"
 import { Path } from "../model/path"
 import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
-import { Text } from "../model/text"
 import { Tube } from "../model/tube"
+import { Overlay } from "../model/overlay"
 import { inflate } from "pako"
 
-export type ObjectMeta = Sphere | Line | Text | Tube;
+export type ObjectMeta = Sphere | Line | Tube | Overlay;
 
 export const useProject = defineStore('project', {
     state: (): Project => ({
@@ -32,7 +32,7 @@ export const useProject = defineStore('project', {
         spheres: <Sphere[]>[],
         lines: <Line[]>[],
         tubes: <Tube[]>[],
-        texts: <Text[]>[],
+        overlays: <Overlay[]>[],
 
         hiddenGroups: []
     }),
@@ -41,7 +41,7 @@ export const useProject = defineStore('project', {
             return state.spheres.length == 0 &&
                    state.lines.length == 0 &&
                    state.tubes.length == 0 &&
-                   state.texts.length == 0;
+                   state.overlays.length == 0;
         }
     },
     actions: {
@@ -79,8 +79,8 @@ export const useProject = defineStore('project', {
                 id -= this.$state.tubes.length
             }
             //Is it a label?
-            if (id < this.$state.texts.length) {
-                return this.$state.texts[id]
+            if (id < this.$state.overlays.length) {
+                return this.$state.overlays[id]
             }
             else {
                 //ran out of objects

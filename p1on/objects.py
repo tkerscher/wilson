@@ -334,12 +334,12 @@ class Line(Animatable):
     def color(self) -> None:
         self._color = 'black' 
 
-class Text(Animatable):
-    """Animated text on the screen surface
+class Overlay(Animatable):
+    """Animated overlay text on the screen surface
     
     Attributes
     ----------
-    content: {str}, default=""
+    text: {str}, default=""
         Text to be displayed
 
     name: {str, None}, default=None
@@ -370,7 +370,7 @@ class Text(Animatable):
         List of paths referenced in the text
     """
     def __init__(self,
-        content: str = "",
+        text: str = "",
         name: Optional[str] = None,
         *,
         group: Optional[str] = None,
@@ -386,7 +386,7 @@ class Text(Animatable):
             name=name,
             group=group,
             description=description)
-        self.content = content
+        self.text = text
         self.position = position
         self.fontSize = fontSize
         self.bold = bold
@@ -407,11 +407,11 @@ class Text(Animatable):
         'lower right', 'lr')
 
     @property
-    def content(self) -> str:
+    def text(self) -> str:
         """Text to be displayed on the screen"""
         return self._content
-    @content.setter
-    def content(self, value: str) -> None:
+    @text.setter
+    def text(self, value: str) -> None:
         self._content = value
 
     @property
@@ -420,7 +420,7 @@ class Text(Animatable):
         return self._position
     @position.setter
     def position(self, value: str) -> None:
-        if not value in Text._positions:
+        if not value in Overlay._positions:
             raise ValueError('The value is not a valid position!')
         self._position = value
     

@@ -2,7 +2,7 @@ from typing import Dict, Optional, Tuple
 from zlib import decompress
 import numpy as np
 
-from p1on.objects import Line, Sphere, Text, Tube
+from p1on.objects import Line, Sphere, Tube, Overlay
 from p1on.data import (
     ColorMap,
     ColorProperty,
@@ -45,7 +45,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.addAnimatables(_parseSphere(s, _graphs, _paths) for s in project.spheres)
     result.addAnimatables(_parseTube(t, _graphs, _paths) for t in project.tubes)
     result.addAnimatables(_parseLine(l, _graphs, _paths) for l in project.lines)
-    result.addAnimatables(_parseText(t, _graphs, _paths) for t in project.texts)
+    result.addAnimatables(_parseOverlay(o, _graphs, _paths) for o in project.overlays)
 
     #hidden groups
     result.hiddenGroups = project.hiddenGroups
@@ -279,23 +279,23 @@ def _parseLine(
         pointForward=pointForward,
         pointBackward=pointBackward)
 
-def _parseText(
-    text: proto.Text,
+def _parseOverlay(
+    overlay: proto.Overlay,
     graphDict: Dict[int, Graph],
     pathDict: Dict[int, Path]
-) -> Text:
+) -> Overlay:
     #meta
-    name = text.name
-    group = text.group
-    description = text.description
+    name = overlay.name
+    group = overlay.group
+    description = overlay.description
     #properties
-    content = text.content #TODO: fetch referenced graphs and paths
-    position = _parseTextPosition(text.position)
-    fontSize = _parseScalarProperty(text.fontSize, graphDict, False)
-    bold = text.bold
-    italic = text.italic
+    text = overlay.text #TODO: fetch referenced graphs and paths
+    position = _parseTextPosition(overlay.position)
+    fontSize = _parseScalarProperty(overlay.fontSize, graphDict, False)
+    bold = overlay.bold
+    italic = overlay.italic
     #done
-    return Text(content, name,
+    return Overlay(text, name,
         group=group,
         description=description,
         position=position,

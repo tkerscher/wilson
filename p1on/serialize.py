@@ -13,7 +13,7 @@ from p1on.data import (
     ScalarProperty,
     Path,
     VectorProperty )
-from p1on.objects import Animatable, Line, Sphere, Text, Tube
+from p1on.objects import Animatable, Line, Sphere, Tube, Overlay
 from p1on.project import Camera, Project
 import p1on.proto as proto
 
@@ -69,11 +69,11 @@ def serializeProject(project: Project) -> bytes:
                 a.name = 'Tube ' + str(nextTubeId)
                 nextTubeId += 1
             out.tubes.append(_serializeTube(a, project))
-        elif isinstance(a, Text):
+        elif isinstance(a, Overlay):
             if a.name is None:
                 a.name = 'Label ' + str(nextTextId)
                 nextTextId += 1
-            out.texts.append(_serializeText(a, project))
+            out.overlays.append(_serializeOverlay(a, project))
 
     #hidden groups
     out.hiddenGroups.extend(project.hiddenGroups)   
@@ -309,7 +309,7 @@ def _serializeCamera(camera: Camera, project: Project) -> proto.Camera:
         result.target.z = camera.target[2]
     return result
 
-def _serializeTextPosition(target: proto.Text, position: str) -> None:
+def _serializeTextPosition(target: proto.Overlay, position: str) -> None:
     if position == 'center':
         target.position = proto.TextPosition.CENTER
     elif position == 'top' or position == 't':
@@ -477,32 +477,32 @@ def _createTempSub(graphs: List[Tuple[str,ScalarProperty]], paths: List[Tuple[st
     
     return sub
 
-def _serializeText(text: Text, project: Project) -> proto.Text:
-    result = proto.Text()
+def _serializeOverlay(overlay: Overlay, project: Project) -> proto.Overlay:
+    result = proto.Overlay()
     #meta
-    assert(text.name is not None)
-    _writeObjectMeta(result, text, project)
+    assert(overlay.name is not None)
+    _writeObjectMeta(result, overlay, project)
     #properties
-    _serializeTextPosition(result, text.position)
+    _serializeTextPosition(result, overlay.position)
     result.fontSize.CopyFrom(_serializeScalarProperty(
-        text.fontSize, f'.{text.name}_fontSize', project))
-    result.bold = text.bold
-    result.italic = text.italic
+        overlay.fontSize, f'.{overlay.name}_fontSize', project))
+    result.bold = overlay.bold
+    result.italic = overlay.italic
     
     #serialize data obtain list of properties (either const or global id)
-    gn, pn = f'.{text.name}_graph ', f'.{text.name}_path'
+    gn, pn = f'.{overlay.name}_graph ', f'.{overlay.name}_path'
     graphs = [(
         g.name if isinstance(g, Graph) else '',            #name (if graph)
         _serializeScalarProperty(g, gn + str(i), project)) #scalar prop
-        for i, g in enumerate(text.graphs)]
+        for i, g in enumerate(overlay.graphs)]
     paths = [(
         p.name if isinstance(p, Path) else '',             #name (if path)
         _serializeVectorProperty(p, pn + str(i), project)) #vector prop
-        for i, p in enumerate(text.paths)]
+        for i, p in enumerate(overlay.paths)]
 
     #find all references and replace with global id
     sub = _createTempSub(graphs, paths)
-    result.content = re.sub(text_pattern, sub, text.content)
+    result.text = re.sub(text_pattern, sub, overlay.text)
     
     #done
     return result

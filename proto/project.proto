@@ -10,8 +10,8 @@ import "colormap.proto";
 
 import "line.proto";
 import "sphere.proto";
-import "text.proto";
 import "tube.proto";
+import "overlay.proto";
 
 //Root container for all animation relevant data
 message Project {
@@ -43,6 +43,6 @@ message Project {
     repeated Line lines = 17;
     //list of animated tubes
     repeated Tube tubes = 18;
-    //list of animated text
-    repeated Text texts = 19;
+    //list of animated overlay text
+    repeated Overlay overlays = 19;
 }

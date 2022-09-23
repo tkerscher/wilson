@@ -9,8 +9,8 @@ import {
     TextBlock
 } from "@babylonjs/gui/2D"
 import { sprintf } from "sprintf-js";
+import { Overlay, TextPosition, textPositionToJSON } from "../model/overlay";
 import { Project } from "../model/project";
-import { Text, TextPosition, textPositionToJSON } from "../model/text"
 import { PathInterpolator } from "../util/pathInterpolate";
 import { ScalarInterpolator } from "../util/scalarInterpolate";
 import { SceneBuilder } from "./sceneBuilder";
@@ -122,7 +122,7 @@ class TextEngine {
     }
 }
 
-export class TextBuilder {
+export class OverlayBuilder {
     #builder: SceneBuilder
     #texture: AdvancedDynamicTexture
     #panels: Map<number, StackPanel>
@@ -145,14 +145,14 @@ export class TextBuilder {
         this.#texture.addControl(this.rootContainer)
     }
 
-    build(text: Text) {
+    build(overlay: Overlay) {
         //create new text block
-        const block = new TextBlock(text.name)
+        const block = new TextBlock(overlay.name)
         block.resizeToFit = true
 
         //meta
         block.uniqueId = this.#builder.nextId++
-        const parent = this.#builder.getGroup(text.group)
+        const parent = this.#builder.getGroup(overlay.group)
         if (!parent.isEnabled())
             block.isVisible = false
         //hook parent node up
@@ -160,16 +160,16 @@ export class TextBuilder {
             () => block.isVisible = parent.isEnabled())
         
         //set params
-        this.#parseContent(text.content, block)
-        this.#builder.parseScalar(text.fontSize, block, "fontSize")
-        this.#setAlignment(text.position, block)
-        if (text.bold)
+        this.#parseContent(overlay.text, block)
+        this.#builder.parseScalar(overlay.fontSize, block, "fontSize")
+        this.#setAlignment(overlay.position, block)
+        if (overlay.bold)
             block.fontWeight = "800"
-        if (text.italic)
+        if (overlay.italic)
             block.fontStyle = "italic"
         
         //position
-        this.#getPanel(text.position).addControl(block)
+        this.#getPanel(overlay.position).addControl(block)
     }
 
     #getPanel(position: TextPosition): StackPanel {

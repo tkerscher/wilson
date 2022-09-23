@@ -22,7 +22,7 @@ import { SceneBuilder } from "./sceneBuilder"
 import { buildGrid } from "./grid"
 import { SphereBuilder } from "./sphere"
 import { TubeController } from "./tube"
-import { TextBuilder } from "./text"
+import { OverlayBuilder } from "./overlay"
 
 export class SceneContainer {
     animation: AnimationGroup
@@ -121,11 +121,11 @@ export class SceneContainer {
         project.spheres.forEach(s => sphereBuilder.build(s))
         project.lines.forEach(l => buildLine(builder, l))
         const tubes = project.tubes.map(t => new TubeController(builder, t))
-        const textBuilder = new TextBuilder(builder)
-        project.texts.forEach(t => textBuilder.build(t))
+        const overlayBuilder = new OverlayBuilder(builder)
+        project.overlays.forEach(o => overlayBuilder.build(o))
 
         //retrieve text root
-        this.textRoot = textBuilder.rootContainer
+        this.textRoot = overlayBuilder.rootContainer
 
         //set animation speed
         const ratio = project.meta?.speedRatio

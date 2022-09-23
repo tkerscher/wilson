@@ -5,9 +5,9 @@ import { ColorMap } from "./colormap";
 import { Graph } from "./graph";
 import { Line } from "./line";
 import { ProjectMeta } from "./meta";
+import { Overlay } from "./overlay";
 import { Path } from "./path";
 import { Sphere } from "./sphere";
-import { Text } from "./text";
 import { Tube } from "./tube";
 
 export const protobufPackage = "p1on";
@@ -38,8 +38,8 @@ export interface Project {
   lines: Line[];
   /** list of animated tubes */
   tubes: Tube[];
-  /** list of animated text */
-  texts: Text[];
+  /** list of animated overlay text */
+  overlays: Overlay[];
 }
 
 function createBaseProject(): Project {
@@ -53,7 +53,7 @@ function createBaseProject(): Project {
     spheres: [],
     lines: [],
     tubes: [],
-    texts: [],
+    overlays: [],
   };
 }
 
@@ -86,8 +86,8 @@ export const Project = {
     for (const v of message.tubes) {
       Tube.encode(v!, writer.uint32(146).fork()).ldelim();
     }
-    for (const v of message.texts) {
-      Text.encode(v!, writer.uint32(154).fork()).ldelim();
+    for (const v of message.overlays) {
+      Overlay.encode(v!, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -127,7 +127,7 @@ export const Project = {
           message.tubes.push(Tube.decode(reader, reader.uint32()));
           break;
         case 19:
-          message.texts.push(Text.decode(reader, reader.uint32()));
+          message.overlays.push(Overlay.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -148,7 +148,7 @@ export const Project = {
       spheres: Array.isArray(object?.spheres) ? object.spheres.map((e: any) => Sphere.fromJSON(e)) : [],
       lines: Array.isArray(object?.lines) ? object.lines.map((e: any) => Line.fromJSON(e)) : [],
       tubes: Array.isArray(object?.tubes) ? object.tubes.map((e: any) => Tube.fromJSON(e)) : [],
-      texts: Array.isArray(object?.texts) ? object.texts.map((e: any) => Text.fromJSON(e)) : [],
+      overlays: Array.isArray(object?.overlays) ? object.overlays.map((e: any) => Overlay.fromJSON(e)) : [],
     };
   },
 
@@ -187,10 +187,10 @@ export const Project = {
     } else {
       obj.tubes = [];
     }
-    if (message.texts) {
-      obj.texts = message.texts.map((e) => e ? Text.toJSON(e) : undefined);
+    if (message.overlays) {
+      obj.overlays = message.overlays.map((e) => e ? Overlay.toJSON(e) : undefined);
     } else {
-      obj.texts = [];
+      obj.overlays = [];
     }
     return obj;
   },
@@ -212,7 +212,7 @@ export const Project = {
     message.spheres = object.spheres?.map((e) => Sphere.fromPartial(e)) || [];
     message.lines = object.lines?.map((e) => Line.fromPartial(e)) || [];
     message.tubes = object.tubes?.map((e) => Tube.fromPartial(e)) || [];
-    message.texts = object.texts?.map((e) => Text.fromPartial(e)) || [];
+    message.overlays = object.overlays?.map((e) => Overlay.fromPartial(e)) || [];
     return message;
   },
 };

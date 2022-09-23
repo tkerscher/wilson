@@ -11,7 +11,7 @@ export enum Interpolation {
   /** AHEAD - Hold the next value until next data point is reached */
   AHEAD = 2,
   /**
-   * STEP - Hold last value until exactly inbetween two consecutive data points
+   * STEP - Hold last value until exactly in between two consecutive data points
    * when it will hold the next value
    */
   STEP = 3,

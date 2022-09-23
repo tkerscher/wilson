@@ -89,8 +89,8 @@ export function textPositionToJSON(object: TextPosition): string {
   }
 }
 
-/** Text drawn on the scene surface */
-export interface Text {
+/** Overlay text drawn on the scene surface */
+export interface Overlay {
   /** Name as shown in explorer */
   name: string;
   /** Name of group this belongs to */
@@ -98,7 +98,7 @@ export interface Text {
   /** Additional text shown when selected */
   description: string;
   /** Text to be drawn on the scene */
-  content: string;
+  text: string;
   /** Position of the text */
   position: TextPosition;
   /** Font style */
@@ -107,12 +107,12 @@ export interface Text {
   italic: boolean;
 }
 
-function createBaseText(): Text {
+function createBaseOverlay(): Overlay {
   return {
     name: "",
     group: "",
     description: "",
-    content: "",
+    text: "",
     position: 0,
     fontSize: undefined,
     bold: false,
@@ -120,8 +120,8 @@ function createBaseText(): Text {
   };
 }
 
-export const Text = {
-  encode(message: Text, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Overlay = {
+  encode(message: Overlay, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -131,8 +131,8 @@ export const Text = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.content !== "") {
-      writer.uint32(82).string(message.content);
+    if (message.text !== "") {
+      writer.uint32(82).string(message.text);
     }
     if (message.position !== 0) {
       writer.uint32(88).int32(message.position);
@@ -149,10 +149,10 @@ export const Text = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Text {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Overlay {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseText();
+    const message = createBaseOverlay();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -166,7 +166,7 @@ export const Text = {
           message.description = reader.string();
           break;
         case 10:
-          message.content = reader.string();
+          message.text = reader.string();
           break;
         case 11:
           message.position = reader.int32() as any;
@@ -188,12 +188,12 @@ export const Text = {
     return message;
   },
 
-  fromJSON(object: any): Text {
+  fromJSON(object: any): Overlay {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       group: isSet(object.group) ? String(object.group) : "",
       description: isSet(object.description) ? String(object.description) : "",
-      content: isSet(object.content) ? String(object.content) : "",
+      text: isSet(object.text) ? String(object.text) : "",
       position: isSet(object.position) ? textPositionFromJSON(object.position) : 0,
       fontSize: isSet(object.fontSize) ? ScalarProperty.fromJSON(object.fontSize) : undefined,
       bold: isSet(object.bold) ? Boolean(object.bold) : false,
@@ -201,12 +201,12 @@ export const Text = {
     };
   },
 
-  toJSON(message: Text): unknown {
+  toJSON(message: Overlay): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.group !== undefined && (obj.group = message.group);
     message.description !== undefined && (obj.description = message.description);
-    message.content !== undefined && (obj.content = message.content);
+    message.text !== undefined && (obj.text = message.text);
     message.position !== undefined && (obj.position = textPositionToJSON(message.position));
     message.fontSize !== undefined &&
       (obj.fontSize = message.fontSize ? ScalarProperty.toJSON(message.fontSize) : undefined);
@@ -215,12 +215,12 @@ export const Text = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Text>, I>>(object: I): Text {
-    const message = createBaseText();
+  fromPartial<I extends Exact<DeepPartial<Overlay>, I>>(object: I): Overlay {
+    const message = createBaseOverlay();
     message.name = object.name ?? "";
     message.group = object.group ?? "";
     message.description = object.description ?? "";
-    message.content = object.content ?? "";
+    message.text = object.text ?? "";
     message.position = object.position ?? 0;
     message.fontSize = (object.fontSize !== undefined && object.fontSize !== null)
       ? ScalarProperty.fromPartial(object.fontSize)

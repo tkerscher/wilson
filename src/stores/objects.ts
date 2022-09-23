@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { useProject } from "./project"
 
-export type ObjectType = 'Sphere' | 'Line' | 'Text' | 'Tube'
+export type ObjectType = 'Sphere' | 'Line' | 'Tube' | 'Overlay'
 
 export interface Object {
     name: string //! NOTE: Copy of the name -> Not synced with project store
@@ -67,12 +67,12 @@ export const useObjects = defineStore('objects', () => {
                 id: id++,
                 type: 'Tube'
             }))
-        project.texts.forEach(text =>
-            getGroup(text.group).members.push({
-                name: text.name,
-                description: text.description,
+        project.overlays.forEach(overlay =>
+            getGroup(overlay.group).members.push({
+                name: overlay.name,
+                description: overlay.description,
                 id: id++,
-                type: 'Text'
+                type: 'Overlay'
             }))
 
         groups.value = Array.from(map.values()).sort((a, b) => {
