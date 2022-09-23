@@ -10,17 +10,22 @@ import {
     StandardMaterial, 
     Vector3
 } from "@babylonjs/core";
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D";
 import { Project } from "../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../model/properties";
 import { getInterpolation } from "./interpolation";
 import { setProperty } from "../util/property";
 import { toHex } from "../util/colorToHex";
+import { TextEngine } from "./textEngine";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0)
 
 export class SceneBuilder {
     animationGroup: AnimationGroup
     scene: Scene
+
+    overlayTexture: AdvancedDynamicTexture
+    textEngine: TextEngine
 
     project: Project
     nextId: number = 0
@@ -42,6 +47,25 @@ export class SceneBuilder {
         this.defaultMaterial.diffuseColor = Color3.Black()
         this.defaultMaterial.freeze()
 
+        this.overlayTexture = AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, this.scene)
+        this.textEngine = new TextEngine(this.project)
+        //hook up text engine
+        {
+            //local refs; cant use this inside lambda
+            const engine = this.textEngine
+            const anim = this.animationGroup
+            const scene = this.scene
+
+            var lastFrame: number = Number.NaN
+            scene.onBeforeRenderObservable.add(() => {
+                //Only update if necessary
+                const currentFrame = anim.animatables[0].masterFrame
+                if (lastFrame != currentFrame) {
+                    lastFrame = currentFrame
+                    engine.update(currentFrame)
+                }
+            })
+        }
 
         this.scene.clearColor = BackgroundColor
     }

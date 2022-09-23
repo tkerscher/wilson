@@ -13,6 +13,7 @@ import {
     TransformNode, 
     Vector3
 } from "@babylonjs/core"
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D"
 import { Rectangle } from "@babylonjs/gui/2D"
 import { Project } from "../model/project"
 import { buildCamera } from "./camera"
@@ -23,6 +24,7 @@ import { buildGrid } from "./grid"
 import { SphereBuilder } from "./sphere"
 import { TubeController } from "./tube"
 import { OverlayBuilder } from "./overlay"
+import { TextEngine } from "./textEngine"
 
 export class SceneContainer {
     animation: AnimationGroup
@@ -32,7 +34,10 @@ export class SceneContainer {
     camera: ArcRotateCamera
     grid: Node
     groupMap: Map<string, Node>
-    textRoot: Rectangle
+
+    overlayRoot: Rectangle
+    overlayTexture: AdvancedDynamicTexture
+    textEngine: TextEngine
 
     #defCamTarget: Vector3
     #defCamPosition: Vector3
@@ -97,7 +102,7 @@ export class SceneContainer {
         const clear = style.getPropertyValue('--scene-background').trim()
         const grid  = style.getPropertyValue('--grid-color').trim()
         //update colors
-        this.textRoot.color = color
+        this.overlayRoot.color = color
         this.scene.clearColor = Color4.FromColor3(
             Color3.FromHexString(clear), 1.0)
     }
@@ -125,7 +130,7 @@ export class SceneContainer {
         project.overlays.forEach(o => overlayBuilder.build(o))
 
         //retrieve text root
-        this.textRoot = overlayBuilder.rootContainer
+        this.overlayRoot = overlayBuilder.rootContainer
 
         //set animation speed
         const ratio = project.meta?.speedRatio
@@ -152,6 +157,8 @@ export class SceneContainer {
         this.animation = builder.animationGroup
         this.scene = builder.scene
         this.groupMap = builder.groupMap
+        this.overlayTexture = builder.overlayTexture
+        this.textEngine = builder.textEngine
 
         //create grid mesh
         this.grid = buildGrid(this.scene)
