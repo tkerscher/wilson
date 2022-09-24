@@ -19,12 +19,13 @@ import { Project } from "../model/project"
 import { buildCamera } from "./camera"
 import { buildLine } from "./line"
 import { createOrientationViewScene } from "./orientationView"
-import { SceneBuilder } from "./sceneBuilder"
+import { isMetadata, Metadata, SceneBuilder } from "./sceneBuilder"
 import { buildGrid } from "./grid"
 import { SphereBuilder } from "./sphere"
 import { TubeController } from "./tube"
 import { OverlayBuilder } from "./overlay"
 import { TextEngine } from "./textEngine"
+import { Description } from "./description"
 
 export class SceneContainer {
     animation: AnimationGroup
@@ -38,10 +39,11 @@ export class SceneContainer {
     overlayRoot: Rectangle
     overlayTexture: AdvancedDynamicTexture
     textEngine: TextEngine
+    #description: Description
 
     #defCamTarget: Vector3
     #defCamPosition: Vector3
-    #selectedMesh?: AbstractMesh
+    //#selectedMesh?: AbstractMesh
     #dirty: boolean = true
     
     // Animation control
@@ -55,20 +57,13 @@ export class SceneContainer {
     goToFrame(frame: number) { this.animation.goToFrame(frame); this.#dirty = true }
 
     //selection
-    select(id: number|null) {
-        if (this.#selectedMesh)
-            this.#selectedMesh.renderOutline = false
-        
+    select(id: number|null) {        
         if (id != null) {
             const mesh = this.scene.getMeshByUniqueId(id)
-            if (mesh) {
-                this.#selectedMesh = mesh
-                mesh.renderOutline = true
-                mesh.outlineColor = Color3.Red()
-                mesh.outlineWidth = 0.1
-            }
-            else {
-                this.#selectedMesh = undefined
+            if (mesh && isMetadata(mesh.metadata)) {
+                this.#description.showDescription(
+                    mesh, mesh.metadata.name, mesh.metadata.description
+                )
             }
         }
     }
@@ -159,6 +154,9 @@ export class SceneContainer {
         this.groupMap = builder.groupMap
         this.overlayTexture = builder.overlayTexture
         this.textEngine = builder.textEngine
+
+        //create description
+        this.#description = new Description(this.overlayTexture, this.textEngine)
 
         //create grid mesh
         this.grid = buildGrid(this.scene)

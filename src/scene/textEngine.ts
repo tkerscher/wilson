@@ -22,6 +22,7 @@ interface _Path {
 
 export class TextEngine {
     #project: Project
+    #dirty: boolean = false
 
     #graphs: Map<number, _Graph>
     #graphProxy: {} //Actually proxy of map, but should not look like map
@@ -57,6 +58,10 @@ export class TextEngine {
         this.#dynamicText = []
     }
 
+    get isDirty(): boolean {
+        return this.#dirty
+    }
+
     //adds text to engine and returns true if it's a dynamic text
     addText(target: TextBlock, template: string): boolean {
         //static content?
@@ -70,6 +75,7 @@ export class TextEngine {
             template: template,
             target: target
         })
+        this.#dirty = true
 
         //check for graph references
         for (const match of template.matchAll(GraphRefPattern)) {
@@ -120,5 +126,7 @@ export class TextEngine {
                 paths: this.#pathProxy
             })
         })
+
+        this.#dirty = false
     }
 }

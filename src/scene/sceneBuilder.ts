@@ -20,6 +20,16 @@ import { TextEngine } from "./textEngine";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0)
 
+export interface Metadata {
+    name: string
+    description: string
+}
+
+export function isMetadata(obj: any): obj is Metadata {
+    //TODO: should I check types?
+    return 'name' in obj && 'description' in obj
+}
+
 export class SceneBuilder {
     animationGroup: AnimationGroup
     scene: Scene
@@ -60,7 +70,7 @@ export class SceneBuilder {
             scene.onBeforeRenderObservable.add(() => {
                 //Only update if necessary
                 const currentFrame = anim.animatables[0].masterFrame
-                if (lastFrame != currentFrame) {
+                if (engine.isDirty || lastFrame != currentFrame) {
                     lastFrame = currentFrame
                     engine.update(currentFrame)
                 }

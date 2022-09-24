@@ -7,7 +7,7 @@ import {
 } from "@babylonjs/core"
 import { Line } from "../model/line"
 import { PathInterpolator } from "../util/pathInterpolate"
-import { SceneBuilder } from "./sceneBuilder"
+import { Metadata, SceneBuilder } from "./sceneBuilder"
 
 const EY = new Vector3(0.0,1.0,0.0)
 
@@ -75,6 +75,12 @@ export function buildLine(builder: SceneBuilder, line: Line) {
     }
     mesh.uniqueId = builder.nextId++
     mesh.parent = builder.getGroup(line.group)
+
+    //meta
+    mesh.metadata = {
+        name: line.name,
+        description: line.description
+    } as Metadata
 
     const mat = builder.parseColor(line.color, "material")
     mesh.material = mat

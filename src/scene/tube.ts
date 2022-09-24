@@ -9,7 +9,7 @@ import {
 import { Tube } from "../model/tube";
 import { PathInterpolator } from "../util/pathInterpolate";
 import { ScalarInterpolator } from "../util/scalarInterpolate";
-import { SceneBuilder } from "./sceneBuilder";
+import { Metadata, SceneBuilder } from "./sceneBuilder";
 
 const TEXTURE_SIZE = 2048
 
@@ -81,6 +81,12 @@ export class TubeController {
         this.#mesh = this.#mesh! //tell typescript that it's not undefined anymore
         this.#mesh.uniqueId = builder.nextId++
         this.#mesh.parent = builder.getGroup(tube.group)
+
+        //meta
+        this.#mesh.metadata = {
+            name: tube.name,
+            description: tube.description
+        } as Metadata
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != 'graphId') {

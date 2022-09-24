@@ -2,7 +2,7 @@ import { InstancedMesh, Mesh, MeshBuilder } from "@babylonjs/core";
 import { ColorProperty } from "../model/properties";
 import { Sphere } from "../model/sphere";
 import { toHex } from "../util/colorToHex";
-import { SceneBuilder } from "./sceneBuilder";
+import { Metadata, SceneBuilder } from "./sceneBuilder";
 
 export class SphereBuilder {
     #builder: SceneBuilder
@@ -31,6 +31,10 @@ export class SphereBuilder {
         //set meta
         obj.uniqueId = this.#builder.nextId++
         obj.parent = this.#builder.getGroup(sphere.group)
+        obj.metadata = {
+            name: sphere.name,
+            description: sphere.description
+        } as Metadata //for type safety
 
         //set params
         this.#builder.parseScalar(sphere.radius, obj, "scalingDeterminant")
