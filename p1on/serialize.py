@@ -235,7 +235,7 @@ def _serializeText(text: TextLike, objName: str, project: Project) -> str:
             #sanity check
             if match[2] is None:
                 raise ValueError(f'Error in text reference "{match[0]}": No graph index provided!')
-            graph_id = int(match)
+            graph_id = int(match[2])
             if graph_id < 0 or graph_id >= len(graphs):
                 raise ValueError(f'Error in text reference "{match[0]}": Graph index out of range!')
             if match[3] is not None:
@@ -255,7 +255,7 @@ def _serializeText(text: TextLike, objName: str, project: Project) -> str:
             #sanity check
             if match[2] is None:
                 raise ValueError(f'Error in text reference "{match[0]}": No path index provided!')
-            path_id = int(match)
+            path_id = int(match[2])
             if path_id < 0 or path_id >= len(paths):
                 raise ValueError(f'Error in text reference "{match[0]}": Path index out of range!')
             
@@ -431,7 +431,7 @@ def _writeObjectMeta(target, meta: Animatable, project: Project) -> None: #type:
     assert(meta.name is not None)
     target.name = meta.name
     if meta.description is not None:
-        target.description = meta.description
+        target.description = _serializeText(meta.description, target.name, project)
     if meta.group is not None:
         target.group = meta.group    
 
