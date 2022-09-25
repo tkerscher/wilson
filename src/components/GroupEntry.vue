@@ -21,9 +21,6 @@
              :class="['item', { 'item-selected': props.modelValue == item.id }]"
              @mouseup.stop="emits('update:modelValue', item.id)">
             <span>{{item.name}}</span>
-            <p v-if="props.modelValue == item.id && item.description.length > 0" class="description">
-                {{item.description}}
-            </p>
         </div>
     </div>
 </div>
@@ -89,10 +86,5 @@ const empty = computed(() => filtered.value.length == 0)
 }
 .item-selected {
     background-color: var(--primary5);
-}
-
-.description {
-    margin-left: 10px;
-    font-style: italic;
 }
 </style>
