@@ -4,17 +4,17 @@ import {
     StackPanel,
     TextBlock
 } from "@babylonjs/gui/2D"
-import { Overlay, TextPosition, textPositionToJSON } from "../model/overlay";
-import { SceneBuilder } from "./sceneBuilder";
+import { Overlay, TextPosition, textPositionToJSON } from "../../model/overlay";
+import { SceneBuildTool } from "./tools";
 
 export class OverlayBuilder {
-    #builder: SceneBuilder
+    #tool: SceneBuildTool
     #panels: Map<number, StackPanel>
     
     rootContainer: Rectangle
 
-    constructor(builder: SceneBuilder) {
-        this.#builder = builder
+    constructor(tool: SceneBuildTool) {
+        this.#tool = tool
         this.#panels = new Map<number, StackPanel>()
         
         //build root container
@@ -23,7 +23,7 @@ export class OverlayBuilder {
         this.rootContainer.height = 1.0
         this.rootContainer.thickness = 0
         this.rootContainer.color = "white" //default text color
-        this.#builder.overlayTexture.addControl(this.rootContainer)
+        this.#tool.overlayTexture.addControl(this.rootContainer)
     }
 
     build(overlay: Overlay) {
@@ -32,17 +32,11 @@ export class OverlayBuilder {
         block.resizeToFit = true
 
         //meta
-        block.uniqueId = this.#builder.nextId++
-        const parent = this.#builder.getGroup(overlay.group)
-        if (!parent.isEnabled())
-            block.isVisible = false
-        //hook parent node up
-        parent.onEnabledStateChangedObservable.add(
-            () => block.isVisible = parent.isEnabled())
+        this.#tool.applyMetadata(block, overlay)
         
         //set params
-        this.#builder.textEngine.addText(block, overlay.text)
-        this.#builder.parseScalar(overlay.fontSize, block, "fontSize")
+        this.#tool.textEngine.addText(block, overlay.text)
+        this.#tool.parseScalar(overlay.fontSize, block, "fontSize")
         this.#setAlignment(overlay.position, block)
         if (overlay.bold)
             block.fontWeight = "800"

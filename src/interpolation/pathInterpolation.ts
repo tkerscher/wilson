@@ -1,7 +1,7 @@
 import { Vector3 } from "@babylonjs/core";
 import { Project } from "../model/project";
 import { VectorProperty } from "../model/properties";
-import { getInterpolation } from "../scene/interpolation"
+import { getInterpolation } from "./functions"
 
 //similar to path point, but position cannot be undefined
 interface PathPoint {
@@ -9,6 +9,10 @@ interface PathPoint {
     position: Vector3
 }
 
+/**
+ * Interpolates between points on a path thus creating a continuous function
+ * in time
+ */
 export class PathInterpolator {
     path: Array<PathPoint> = []
     #ease: ((t:number) => number)|null = null
@@ -37,18 +41,11 @@ export class PathInterpolator {
         }
     }
 
-    #parsePath(id: number, project: Project) {
-        const path = project.paths.find(p => p.id == id)
-        if (!path || path.points.length == 0) {
-            this.path =  [{ time: 0.0, position: new Vector3() }]
-        }
-        else {
-            this.path = path.points.map(p => ({ time: p.time,
-                position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
-            this.#ease = getInterpolation(path.interpolation)?.ease ?? null
-        }
-    }
-
+    /**
+     * Interpolates
+     * @param t The time point to evaluate the path at
+     * @returns The interpolated position
+     */
     interpolate(t: number): Vector3 {
         //get first stop after t
         const stopIdx = this.path.findIndex(p => p.time > t)
@@ -82,5 +79,17 @@ export class PathInterpolator {
         const dir = p_end.subtract(p_start)
 
         return p_start.add(dir.scaleInPlace(lambda))
+    }
+
+    #parsePath(id: number, project: Project) {
+        const path = project.paths.find(p => p.id == id)
+        if (!path || path.points.length == 0) {
+            this.path =  [{ time: 0.0, position: new Vector3() }]
+        }
+        else {
+            this.path = path.points.map(p => ({ time: p.time,
+                position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}))
+            this.#ease = getInterpolation(path.interpolation)?.ease ?? null
+        }
     }
 }

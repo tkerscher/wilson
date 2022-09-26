@@ -10,18 +10,19 @@ import {
     StandardMaterial, 
     Vector3
 } from "@babylonjs/core";
-import { AdvancedDynamicTexture } from "@babylonjs/gui/2D";
-import { Project } from "../model/project";
-import { ColorProperty, ScalarProperty, VectorProperty } from "../model/properties";
-import { getInterpolation } from "./interpolation";
-import { setProperty } from "../util/property";
-import { toHex } from "../util/colorToHex";
-import { TextEngine } from "./textEngine";
+import { AdvancedDynamicTexture, Control } from "@babylonjs/gui/2D";
+import { Project } from "../../model/project";
+import { ColorProperty, ScalarProperty, VectorProperty } from "../../model/properties";
+import { getInterpolation } from "../../interpolation/functions";
+import { setProperty } from "../../util/property";
+import { toHex } from "../../util/colorToHex";
+import { TextEngine } from "../../interpolation/textEngine";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0)
 
 export interface Metadata {
     name: string
+    group: string
     description: string
 }
 
@@ -30,7 +31,11 @@ export function isMetadata(obj: any): obj is Metadata {
     return 'name' in obj && 'description' in obj
 }
 
-export class SceneBuilder {
+/**
+ * Stateful helper class providing functions for common tasks during scene
+ * building as well as bundling common variables
+ */
+export class SceneBuildTool {
     animationGroup: AnimationGroup
     scene: Scene
 
@@ -38,9 +43,8 @@ export class SceneBuilder {
     textEngine: TextEngine
 
     project: Project
-    nextId: number = 0
-
     groupMap: Map<string, Node>
+    #nextId: number = 0
 
     #materialMap: Map<string, StandardMaterial>
     defaultMaterial: StandardMaterial
@@ -80,6 +84,31 @@ export class SceneBuilder {
         this.scene.clearColor = BackgroundColor
     }
 
+    /**
+     * Sets common metadata on the given object
+     * @param obj The object to apply the metadata
+     * @param meta The metadata to apply
+     */
+    applyMetadata(obj: Node|Control, meta: Metadata) {
+        obj.uniqueId = this.#nextId++
+        obj.metadata = meta
+        const parent = this.getGroup(meta.group)
+        if (obj instanceof Node) {
+            obj.parent = parent
+        }
+        else {
+            //virtually link visibility, since controls are orthogonal to nodes
+            obj.isVisible = !parent.isEnabled()
+            parent.onEnabledStateChangedObservable.add(
+                () => obj.isVisible = parent.isEnabled())
+        }
+    }
+
+    /**
+     * Returns the group specified by name or creates it lazily
+     * @param group Name of the group
+     * @returns Group of given name
+     */
     getGroup(group: string): Node {
         if (!this.groupMap.has(group)) {
             let value = new Node(group + '_group', this.scene)
@@ -95,6 +124,13 @@ export class SceneBuilder {
         }
     }
 
+    /**
+     * Processes a given scalar property and either creates a corresponding
+     * animation if needed or sets the static value encoded into it.
+     * @param scalar Scalar property to parse
+     * @param target Target on which to apply property
+     * @param property Which property to set
+     */
     parseScalar(scalar: ScalarProperty|undefined, target: any, property: string): void {
         if (!scalar || !scalar.source) {
             return setProperty(target, property, 0.0)
@@ -124,6 +160,13 @@ export class SceneBuilder {
         }
     }
 
+    /**
+     * Processes a given vector property and either creates a corresponding
+     * animation if needed or sets the static value encoded into it.
+     * @param vector Vector property to parse
+     * @param target Target on which to apply property
+     * @param property Which property to set
+     */
     parseVector(vector: VectorProperty|undefined, target: any, property: string): void {
         if (!vector || !vector.source) {
             return setProperty(target, property, new Vector3())
@@ -154,6 +197,13 @@ export class SceneBuilder {
         }
     }
 
+    /**
+     * Parses the given color property, creates the corresponding material and
+     * animates it if needed.
+     * @param color Color property to parse
+     * @param name Name to give the material
+     * @returns A standard material with the proper color (animation)
+     */
     parseColor(color: ColorProperty|undefined, name: string): StandardMaterial {
         if (!color || !color.source) {
             return this.defaultMaterial
@@ -219,6 +269,11 @@ export class SceneBuilder {
         }
     }
 
+    /**
+     * Looks up a color in the color map specified by the project
+     * @param scalar Value to look up
+     * @returns The corresponding color according to the project's color map
+     */
     mapColor(scalar: number): [Color3,number] {
         if (!this.project.colormap || this.project.colormap.stops.length == 0) {
             return [Color3.Black(), 1.0]
@@ -262,6 +317,15 @@ export class SceneBuilder {
         return [new Color3(red, green, blue), alpha]
     }
 
+    /**
+     * Returns a material with the specified color. Reuses already created ones
+     * to improve render performance
+     * @param r Red channel
+     * @param g Blue channel
+     * @param b Green channel
+     * @param a Alpha channel
+     * @returns Material with the given color
+     */
     getStaticMaterial(r: number, g: number, b: number, a: number): StandardMaterial {
         //color already in use?
         const key = toHex(r, g, b, a)
@@ -281,6 +345,11 @@ export class SceneBuilder {
         }
     }
 
+    /**
+     * Checks, wether the given color property has any animation encoded.
+     * @param color The color property
+     * @returns True, if the color property is static and has no animations
+     */
     isStaticMaterial(color: ColorProperty|undefined): boolean {
         if (!color || !color.source)
             return true
@@ -296,7 +365,14 @@ export class SceneBuilder {
         }
     }
 
-    //Produces key frames to get not only start end end values, but also all gradient stops inbetween
+    /**
+     * Produces key frames to get not only start end end values, but also all gradient stops in between
+     * @param fromKey frame to start with
+     * @param fromVal scalar to start with. Gets translated via color map look up
+     * @param toKey frame to end with
+     * @param toVal scalar to end with. Gets translated via color map look up
+     * @returns Two arrays of animation frames for rgb color and alpha to be used in animations
+     */
     colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
         var clrFrames = Array<IAnimationKey>()
         var alphaFrames = Array<IAnimationKey>()

@@ -14,21 +14,21 @@ import {
 } from "@babylonjs/core";
 
 //import assets to get mangled url in production
-import xUrl from '../assets/textures/x.png'
-import yUrl from '../assets/textures/y.png'
-import zUrl from '../assets/textures/z.png'
+import xUrl from '../../assets/textures/x.png'
+import yUrl from '../../assets/textures/y.png'
+import zUrl from '../../assets/textures/z.png'
 
-import xHoverUrl from '../assets/textures/x_hover.png'
-import yHoverUrl from '../assets/textures/y_hover.png'
-import zHoverUrl from '../assets/textures/z_hover.png'
+import xHoverUrl from '../../assets/textures/x_hover.png'
+import yHoverUrl from '../../assets/textures/y_hover.png'
+import zHoverUrl from '../../assets/textures/z_hover.png'
 
-import negXUrl from '../assets/textures/negx.png'
-import negYUrl from '../assets/textures/negy.png'
-import negZUrl from '../assets/textures/negz.png'
+import negXUrl from '../../assets/textures/negx.png'
+import negYUrl from '../../assets/textures/negy.png'
+import negZUrl from '../../assets/textures/negz.png'
 
-import negXHoverUrl from '../assets/textures/negx_hover.png'
-import negYHoverUrl from '../assets/textures/negy_hover.png'
-import negZHoverUrl from '../assets/textures/negz_hover.png'
+import negXHoverUrl from '../../assets/textures/negx_hover.png'
+import negYHoverUrl from '../../assets/textures/negy_hover.png'
+import negZHoverUrl from '../../assets/textures/negz_hover.png'
 
 // Orientation view is a independent scene showing the orientation of a given
 // camera/scene

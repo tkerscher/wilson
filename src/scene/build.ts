@@ -16,16 +16,19 @@ import {
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D"
 import { Rectangle } from "@babylonjs/gui/2D"
 import { Project } from "../model/project"
-import { buildCamera } from "./camera"
-import { buildLine } from "./line"
-import { createOrientationViewScene } from "./orientationView"
-import { isMetadata, Metadata, SceneBuilder } from "./sceneBuilder"
-import { buildGrid } from "./grid"
-import { SphereBuilder } from "./sphere"
-import { TubeController } from "./tube"
-import { OverlayBuilder } from "./overlay"
-import { TextEngine } from "./textEngine"
-import { Description } from "./description"
+
+import { buildCamera } from "./build/camera"
+import { buildLine } from "./build/line"
+import { SphereBuilder } from "./build/sphere"
+import { TubeController } from "./build/tube"
+import { OverlayBuilder } from "./build/overlay"
+
+import { Description } from "./components/description"
+import { buildGrid } from "./components/grid"
+import { createOrientationViewScene } from "./components/orientationView"
+
+import { isMetadata, SceneBuildTool } from "./build/tools"
+import { TextEngine } from "../interpolation/textEngine"
 
 export class SceneContainer {
     animation: AnimationGroup
@@ -107,21 +110,21 @@ export class SceneContainer {
         this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true })
 
         //create scene builder
-        let builder = new SceneBuilder(project, this.engine)
+        let tool = new SceneBuildTool(project, this.engine)
 
         //create camera
-        this.camera = buildCamera(builder, project.camera)
+        this.camera = buildCamera(tool, project.camera)
         this.#defCamPosition = this.camera.position.clone()
         this.#defCamTarget = this.camera.target.clone()
 
         ///create objects
         //The order must be same as in Project!
         //Otherwise the ids will be wrong
-        const sphereBuilder = new SphereBuilder(builder)
+        const sphereBuilder = new SphereBuilder(tool)
         project.spheres.forEach(s => sphereBuilder.build(s))
-        project.lines.forEach(l => buildLine(builder, l))
-        const tubes = project.tubes.map(t => new TubeController(builder, t))
-        const overlayBuilder = new OverlayBuilder(builder)
+        project.lines.forEach(l => buildLine(tool, l))
+        const tubes = project.tubes.map(t => new TubeController(tool, t))
+        const overlayBuilder = new OverlayBuilder(tool)
         project.overlays.forEach(o => overlayBuilder.build(o))
 
         //retrieve text root
@@ -130,30 +133,30 @@ export class SceneContainer {
         //set animation speed
         const ratio = project.meta?.speedRatio
         if (ratio && ratio != 0.0) {
-            builder.animationGroup.speedRatio = ratio
+            tool.animationGroup.speedRatio = ratio
         }
             
         //let there be light
-        const light = new HemisphericLight("light", new Vector3(1, 1, 0), builder.scene);
+        const light = new HemisphericLight("light", new Vector3(1, 1, 0), tool.scene);
         
         //We must ensure that there is at least one animation for correct UI behaviour
-        if (builder.animationGroup.animatables.length == 0) {
-            const node = new TransformNode("master", builder.scene)
+        if (tool.animationGroup.animatables.length == 0) {
+            const node = new TransformNode("master", tool.scene)
             const anim = new Animation("masterAnimation", "scalingDeterminant", 1.0,
             Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE)
             anim.setKeys([{ frame: 0.0, value: 0.0}, { frame: 1.0, value: 0.0}])
-            builder.animationGroup.addTargetedAnimation(anim, node)
+            tool.animationGroup.addTargetedAnimation(anim, node)
         }
         
         //pad animations to make them all the same length
-        builder.animationGroup.normalize(project.meta?.startTime, project.meta?.endTime)
+        tool.animationGroup.normalize(project.meta?.startTime, project.meta?.endTime)
 
         //copy from builder
-        this.animation = builder.animationGroup
-        this.scene = builder.scene
-        this.groupMap = builder.groupMap
-        this.overlayTexture = builder.overlayTexture
-        this.textEngine = builder.textEngine
+        this.animation = tool.animationGroup
+        this.scene = tool.scene
+        this.groupMap = tool.groupMap
+        this.overlayTexture = tool.overlayTexture
+        this.textEngine = tool.textEngine
 
         //create description
         this.#description = new Description(this.overlayTexture, this.textEngine)

@@ -25,7 +25,7 @@ import { useTheme } from '../stores/theme'
 import { MutationType } from 'pinia'
 
 import { SceneContainer } from '../scene/build'
-import { PathVisualizer } from '../scene/paths'
+import { PathVisualizer } from '../scene/components/pathVisualizer'
 import { PointerEventTypes } from '@babylonjs/core'
 
 // Scene / Project
@@ -142,7 +142,7 @@ paths.$subscribe((mutation, state) => {
 
     //TODO: Might be a bit much to update always all paths
     for (const path of paths.paths) {
-        pathVis.setPath(path.id, path.visible, path.color)
+        pathVis.setPathEnabled(path.id, path.visible, path.color)
     }
 })
 

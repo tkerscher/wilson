@@ -5,9 +5,9 @@ import {
     Quaternion, 
     Vector3 
 } from "@babylonjs/core"
-import { Line } from "../model/line"
-import { PathInterpolator } from "../util/pathInterpolate"
-import { Metadata, SceneBuilder } from "./sceneBuilder"
+import { Line } from "../../model/line"
+import { PathInterpolator } from "../../interpolation/pathInterpolation"
+import { SceneBuildTool } from "./tools"
 
 const EY = new Vector3(0.0,1.0,0.0)
 
@@ -58,7 +58,7 @@ function alignVector(dir: Vector3): Quaternion {
     return Quaternion.RotationAxis(axis, theta)
 }
 
-export function buildLine(builder: SceneBuilder, line: Line) {
+export function buildLine(tool: SceneBuildTool, line: Line) {
     var mesh
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
@@ -73,21 +73,14 @@ export function buildLine(builder: SceneBuilder, line: Line) {
     else {
         mesh = MeshBuilder.CreateLathe(line.name, { shape: doubleArrowShape, tessellation: 24})
     }
-    mesh.uniqueId = builder.nextId++
-    mesh.parent = builder.getGroup(line.group)
+    tool.applyMetadata(mesh, line)
 
-    //meta
-    mesh.metadata = {
-        name: line.name,
-        description: line.description
-    } as Metadata
-
-    const mat = builder.parseColor(line.color, "material")
+    const mat = tool.parseColor(line.color, "material")
     mesh.material = mat
 
-    builder.parseScalar(line.lineWidth, mesh, "scaling.z")
-    builder.parseScalar(line.lineWidth, mesh, "scaling.x")
-    builder.parseVector(line.start, mesh, "position")
+    tool.parseScalar(line.lineWidth, mesh, "scaling.z")
+    tool.parseScalar(line.lineWidth, mesh, "scaling.x")
+    tool.parseVector(line.start, mesh, "position")
 
     //Short cut: Check if we need the lengthy calculation
     //We dont if there is nothing to animate
@@ -112,12 +105,12 @@ export function buildLine(builder: SceneBuilder, line: Line) {
         var times = new Array<number>()
         if (line.start?.source?.$case == 'pathId') {
             const id = line.start.source.pathId
-            const path = builder.project.paths.find(p => p.id == id)
+            const path = tool.project.paths.find(p => p.id == id)
             path?.points.forEach(p => times.push(p.time))
         }
         if (line.end?.source?.$case == 'pathId') {
             const id = line.end.source.pathId
-            const path = builder.project.paths.find(p => p.id == id)
+            const path = tool.project.paths.find(p => p.id == id)
             path?.points.forEach(p => times.push(p.time))
         }
 
@@ -136,8 +129,8 @@ export function buildLine(builder: SceneBuilder, line: Line) {
         times = times.filter((t, idx) => !(idx > 0 && Math.abs(times[idx - 1] - t) < 1e-7))
 
         //Create interpolators
-        const startInt = new PathInterpolator(line.start, builder.project)
-        const endInt = new PathInterpolator(line.end, builder.project)
+        const startInt = new PathInterpolator(line.start, tool.project)
+        const endInt = new PathInterpolator(line.end, tool.project)
 
         console.log(endInt)
 
@@ -169,7 +162,7 @@ export function buildLine(builder: SceneBuilder, line: Line) {
         rotAnimation.setKeys(rotKeys)
 
         //link animation and were done
-        builder.animationGroup.addTargetedAnimation(lengthAnimation, mesh)
-        builder.animationGroup.addTargetedAnimation(rotAnimation, mesh)
+        tool.animationGroup.addTargetedAnimation(lengthAnimation, mesh)
+        tool.animationGroup.addTargetedAnimation(rotAnimation, mesh)
     }
 }

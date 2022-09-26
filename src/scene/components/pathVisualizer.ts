@@ -6,11 +6,17 @@ import {
     StandardMaterial,
     Vector3
 } from "@babylonjs/core"
-import { Project } from "../model/project"
+import { Project } from "../../model/project"
 
+/**
+ * Util class for creating visualization of paths stored in a project. Lazily
+ * creates new visualizations as they are requested and reuses already created
+ * ones.
+ */
 export class PathVisualizer {
     #scene: Scene
     #project: Project
+    // Laz
     #activePaths: Map<number, Mesh>
 
     constructor(scene: Scene, project: Project) {
@@ -19,7 +25,13 @@ export class PathVisualizer {
         this.#activePaths = new Map<number, Mesh>()
     }
 
-    setPath(id: number, enabled: boolean, color: string) {
+    /**
+     * Hides or shows a given path visualization.
+     * @param id Id of path to manipulate
+     * @param enabled True if the path should be visualized
+     * @param color Color of the Visualization
+     */
+    setPathEnabled(id: number, enabled: boolean, color: string) {
         //check for valid path id
         if (this.#project.paths.findIndex(p => p.id == id) == -1)
             return //nothing found

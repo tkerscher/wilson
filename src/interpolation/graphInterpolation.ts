@@ -1,13 +1,18 @@
 import { Project } from "../model/project"
 import { ScalarProperty } from "../model/properties"
-import { getInterpolation } from "../scene/interpolation"
+import { getInterpolation } from "./functions"
 
+//similar to graph point, but value cannot be undefined
 interface ControlPoint {
     time: number
-    value : number
+    value: number
 }
 
-export class ScalarInterpolator {
+/**
+ * Interpolates between points on a graph thus creating a continuous function
+ * in time
+ */
+export class GraphInterpolator {
     points: Array<ControlPoint> = []
     #ease: ((t:number) => number)|null = null
 
@@ -35,18 +40,11 @@ export class ScalarInterpolator {
         }
     }
 
-    #parseGraph(id: number, project: Project) {
-        const graph = project.graphs.find(g => g.id == id)
-        if (!graph || graph.points.length == 0) {
-            //static graph
-            this.points = [{ time: 0.0, value: 0.0}]
-        }
-        else {
-            this.points = graph.points.map(p => ({ time: p.time, value: p.value }))
-            this.#ease = getInterpolation(graph.interpolation)?.ease ?? null
-        }
-    }
-
+    /**
+     * Interpolates
+     * @param t The time point to evaluate the path at
+     * @returns The interpolated value
+     */
     interpolate(t: number): number {
         //get first stop after t
         const stopIdx = this.points.findIndex(p => p.time > t)
@@ -80,4 +78,16 @@ export class ScalarInterpolator {
 
         return v_start * (1 - lambda) + v_end * lambda
     }
+
+    #parseGraph(id: number, project: Project) {
+        const graph = project.graphs.find(g => g.id == id)
+        if (!graph || graph.points.length == 0) {
+            //static graph
+            this.points = [{ time: 0.0, value: 0.0}]
+        }
+        else {
+            this.points = graph.points.map(p => ({ time: p.time, value: p.value }))
+            this.#ease = getInterpolation(graph.interpolation)?.ease ?? null
+        }
+    }    
 }

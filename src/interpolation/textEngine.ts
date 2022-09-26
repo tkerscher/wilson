@@ -2,8 +2,8 @@ import { Vector3 } from "@babylonjs/core"
 import { TextBlock } from "@babylonjs/gui"
 import { sprintf } from "sprintf-js"
 import { Project } from "../model/project"
-import { PathInterpolator } from "../util/pathInterpolate"
-import { ScalarInterpolator } from "../util/scalarInterpolate"
+import { PathInterpolator } from "./pathInterpolation"
+import { GraphInterpolator } from "./graphInterpolation"
 
 //Pattern to check for dynamic text references
 const DataRefPattern = /%\(.+?\)/m
@@ -12,7 +12,7 @@ const PathRefPattern = /%\(paths\[(\d+?)\]\.[x-z]\)/gm
 
 //util interfaces used by TextEngine
 interface _Graph {
-    interpolation: ScalarInterpolator
+    interpolation: GraphInterpolator
     currentValue: number
 }
 interface _Path {
@@ -20,6 +20,10 @@ interface _Path {
     currentValue: Vector3
 }
 
+/**
+ * Updates text based on a template string using interpolation of graphs and
+ * paths on data in the given project.
+ */
 export class TextEngine {
     #project: Project
     #dirty: boolean = false
@@ -62,7 +66,12 @@ export class TextEngine {
         return this.#dirty
     }
 
-    //adds text to engine and returns true if it's a dynamic text
+    /**
+     * Adds text to engine and returns true if it's a dynamic text
+     * @param target TextBlock element to be updated
+     * @param template Template string used for creating text
+     * @returns True, if the text is dynamic
+     */
     addText(target: TextBlock, template: string): boolean {
         //static content?
         if (!DataRefPattern.test(template)) {
@@ -82,7 +91,7 @@ export class TextEngine {
             const graph_id = Number(match[1])
             if (!this.#graphs.has(graph_id)) {
                 this.#graphs.set(graph_id, {
-                    interpolation: new ScalarInterpolator(graph_id, this.#project),
+                    interpolation: new GraphInterpolator(graph_id, this.#project),
                     currentValue: NaN
                 })
             }
@@ -103,12 +112,21 @@ export class TextEngine {
         return true
     }
 
+    /**
+     * Removes the given target from the list of targets to be updated if
+     * previously added.
+     * @param target The target to remove
+     */
     removeText(target: TextBlock) {
         const idx = this.#dynamicText.findIndex(e => e.target == target)
         if (idx > -1)
             this.#dynamicText.splice(idx, 1)
     }
 
+    /**
+     * Updates all registered texts with data evaluated at the given time point
+     * @param currentFrame Time point used for interpolation
+     */
     update(currentFrame: number) {
         //update values
         this.#graphs.forEach((g: _Graph) => {

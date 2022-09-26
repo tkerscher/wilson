@@ -11,7 +11,7 @@ import {
     TextBlock
 } from "@babylonjs/gui"
 import { TransformNode } from "@babylonjs/core"
-import { TextEngine } from "./textEngine"
+import { TextEngine } from "../../interpolation/textEngine"
 
 //Some styling constants
 const AnchorDiameter = "15px"
@@ -25,6 +25,10 @@ const SeparatorHeight = "5px"
 const TextSize = 16
 const TitleWeight = "800"
 
+/**
+ * UI element showing a message box on top of the scene providing additional
+ * information about a given object. Points towards the object in 3D space.
+ */
 export class Description {
     #engine: TextEngine
 
@@ -159,6 +163,13 @@ export class Description {
         })
     }
 
+    /**
+     * Opens or changes the description box to show the given information about
+     * the target object.
+     * @param target Object to point to
+     * @param title Title of the description box
+     * @param content Description text
+     */
     showDescription(target: TransformNode, title: string, content: string) {
         //remove last one
         this.#engine.removeText(this.#text)
@@ -184,6 +195,9 @@ export class Description {
         this.#messageBox.isVisible = true
     }
 
+    /**
+     * Closes the description box
+     */
     clear() {
         this.#anchor.isVisible = false
         this.#line.isVisible = false

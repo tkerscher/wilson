@@ -6,10 +6,10 @@ import {
     StandardMaterial, 
     Vector3 
 } from "@babylonjs/core";
-import { Tube } from "../model/tube";
-import { PathInterpolator } from "../util/pathInterpolate";
-import { ScalarInterpolator } from "../util/scalarInterpolate";
-import { Metadata, SceneBuilder } from "./sceneBuilder";
+import { Tube } from "../../model/tube";
+import { PathInterpolator } from "../../interpolation/pathInterpolation";
+import { GraphInterpolator } from "../../interpolation/graphInterpolation";
+import { SceneBuildTool } from "./tools";
 
 const TEXTURE_SIZE = 2048
 
@@ -28,21 +28,21 @@ export class TubeController {
     //Data
 
     #pathInt: PathInterpolator
-    #radInt: ScalarInterpolator
+    #radInt: GraphInterpolator
     #keys: Array<number>
     #path: Array<Vector3>
     #radii: Array<number>
     #N: number
 
-    constructor(builder: SceneBuilder, tube: Tube) {
+    constructor(tool: SceneBuildTool, tube: Tube) {
         //copy meta
         this.#name = tube.name
         this.#growing = tube.isGrowing
-        this.#scene = builder.scene    
+        this.#scene = tool.scene    
 
         //create interpolators
-        this.#pathInt = new PathInterpolator(tube.pathId, builder.project)
-        this.#radInt = new ScalarInterpolator(tube.radius, builder.project)
+        this.#pathInt = new PathInterpolator(tube.pathId, tool.project)
+        this.#radInt = new GraphInterpolator(tube.radius, tool.project)
 
         //collect animation key times
         this.#keys = this.#pathInt.path.map(p => p.time)
@@ -77,37 +77,30 @@ export class TubeController {
 
         //create mesh
         this.#mesh = undefined
-        this.update(builder.project.meta?.startTime ?? 0.0)
+        this.update(tool.project.meta?.startTime ?? 0.0)
         this.#mesh = this.#mesh! //tell typescript that it's not undefined anymore
-        this.#mesh.uniqueId = builder.nextId++
-        this.#mesh.parent = builder.getGroup(tube.group)
-
-        //meta
-        this.#mesh.metadata = {
-            name: tube.name,
-            description: tube.description
-        } as Metadata
+        tool.applyMetadata(this.#mesh, tube)
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != 'graphId') {
-            this.#mesh.material = builder.parseColor(tube.color, tube.name + '_color')
+            this.#mesh.material = tool.parseColor(tube.color, tube.name + '_color')
         }
         else {
             //graph as color source -> check if id is valid
             const id = tube.color.source.graphId
-            const graph = builder.project.graphs.find(g => g.id == id)
+            const graph = tool.project.graphs.find(g => g.id == id)
             if (!graph || graph.points.length == 0) {
                 //fall back
-                this.#mesh.material = builder.defaultMaterial
+                this.#mesh.material = tool.defaultMaterial
             }
             else {
-                let graphInt = new ScalarInterpolator(id, builder.project)
+                let graphInt = new GraphInterpolator(id, tool.project)
                 const startTime = this.#startTime
                 let data = new Uint8Array(function*() {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
                         const t = i / TEXTURE_SIZE * period + startTime
                         const v = graphInt.interpolate(t)
-                        const [color, alpha] = builder.mapColor(v)
+                        const [color, alpha] = tool.mapColor(v)
 
                         yield color.r * 255
                         yield color.g * 255
@@ -119,10 +112,10 @@ export class TubeController {
                 //bake texture
                 const texture = RawTexture.CreateRGBATexture(
                     data, 1, TEXTURE_SIZE,
-                    builder.scene)
+                    tool.scene)
                 
                 //assign texture
-                const mat = new StandardMaterial(tube.name + '_mat', builder.scene)
+                const mat = new StandardMaterial(tube.name + '_mat', tool.scene)
                 mat.diffuseTexture = texture
                 this.#mesh.material = mat
             }
