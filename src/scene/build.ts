@@ -17,17 +17,17 @@ import { AdvancedDynamicTexture } from "@babylonjs/gui/2D"
 import { Rectangle } from "@babylonjs/gui/2D"
 import { Project } from "../model/project"
 
-import { buildCamera } from "./build/camera"
-import { buildLine } from "./build/line"
-import { SphereBuilder } from "./build/sphere"
-import { TubeController } from "./build/tube"
-import { OverlayBuilder } from "./build/overlay"
+import { buildCamera } from "./objects/camera"
+import { buildLine } from "./objects/line"
+import { SphereBuilder } from "./objects/sphere"
+import { TubeController } from "./objects/tube"
+import { OverlayBuilder } from "./objects/overlay"
 
 import { Description } from "./components/description"
 import { buildGrid } from "./components/grid"
 import { createOrientationViewScene } from "./components/orientationView"
 
-import { isMetadata, SceneBuildTool } from "./build/tools"
+import { isMetadata, SceneBuildTool } from "./objects/tools"
 import { TextEngine } from "../interpolation/textEngine"
 
 export class SceneContainer {

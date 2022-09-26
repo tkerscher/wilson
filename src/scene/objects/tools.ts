@@ -98,7 +98,7 @@ export class SceneBuildTool {
         }
         else {
             //virtually link visibility, since controls are orthogonal to nodes
-            obj.isVisible = !parent.isEnabled()
+            obj.isVisible = parent.isEnabled()
             parent.onEnabledStateChangedObservable.add(
                 () => obj.isVisible = parent.isEnabled())
         }
