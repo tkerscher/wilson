@@ -63,23 +63,6 @@ export class SceneBuildTool {
 
         this.overlayTexture = AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, this.scene)
         this.textEngine = new TextEngine(this.project)
-        //hook up text engine
-        {
-            //local refs; cant use this inside lambda
-            const engine = this.textEngine
-            const anim = this.animationGroup
-            const scene = this.scene
-
-            var lastFrame: number = Number.NaN
-            scene.onBeforeRenderObservable.add(() => {
-                //Only update if necessary
-                const currentFrame = anim.animatables[0].masterFrame
-                if (engine.isDirty || lastFrame != currentFrame) {
-                    lastFrame = currentFrame
-                    engine.update(currentFrame)
-                }
-            })
-        }
 
         this.scene.clearColor = BackgroundColor
     }
