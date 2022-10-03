@@ -1,11 +1,16 @@
 import { Project } from "../../model/project";
 import { SceneController } from "./controller";
 import { LocalController } from "./local";
+import { isWorkerAvailable, WorkerController } from "./worker";
 
 export function createController(project: Project, canvas: HTMLCanvasElement): SceneController {
-    //Right now we only have local controller, but later we want to add
-    //web workers if offscreen canvas are supported. This way we can hide
-    //the decision process
-
-    return new LocalController(project, canvas)
+    //see if offscreen canvas are available
+    if (false) {
+    // if (isWorkerAvailable()) {
+        //use offscreen canvas in web worker
+        return new WorkerController(project, canvas)
+    }
+    else {
+        return new LocalController(project, canvas)
+    }
 }

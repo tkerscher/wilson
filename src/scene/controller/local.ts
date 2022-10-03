@@ -5,19 +5,22 @@ import {
     Tools,
     Vector3
 } from "@babylonjs/core";
+import { Control } from "@babylonjs/gui";
 import { Project } from "../../model/project";
 import { buildScene, SceneContainer } from "../build";
 import { isMetadata } from "../objects/tools";
 import { SceneController } from "./controller";
 
 export class LocalController implements SceneController {
+    #canvas: HTMLCanvasElement|OffscreenCanvas
     #container: SceneContainer
     #engine: Engine
 
     #defaultCameraPosition: Vector3
     #defaultCameraTarget: Vector3
     
-    constructor(project: Project, canvas: HTMLCanvasElement) {
+    constructor(project: Project, canvas: HTMLCanvasElement|OffscreenCanvas) {
+        this.#canvas = canvas
         //create engine
         this.#engine = new Engine(canvas, true, {
             preserveDrawingBuffer: true
@@ -102,19 +105,23 @@ export class LocalController implements SceneController {
     }
 
     resize(width: number, height: number): void {
+        this.#canvas.width = width
+        this.#canvas.height = height
         this.#engine.resize(true)
     }
 
     updateTheme() {
-        //retrieve colors from css
-        const style = getComputedStyle(document.documentElement)
-        const color = style.getPropertyValue('--scene-font-color').trim()
-        const clear = style.getPropertyValue('--scene-background').trim()
-        const grid  = style.getPropertyValue('--grid-color').trim()
-        //update colors
-        this.#container.overlayRoot.color = color
-        this.#container.scene.clearColor = Color4.FromColor3(
-            Color3.FromHexString(clear), 1.0)
+        // @ts-ignore
+        console.log(Control._FontHeightSizes)
+        // //retrieve colors from css
+        // const style = getComputedStyle(document.documentElement)
+        // const color = style.getPropertyValue('--scene-font-color').trim()
+        // const clear = style.getPropertyValue('--scene-background').trim()
+        // const grid  = style.getPropertyValue('--grid-color').trim()
+        // //update colors
+        // this.#container.overlayRoot.color = color
+        // this.#container.scene.clearColor = Color4.FromColor3(
+        //     Color3.FromHexString(clear), 1.0)
     }
 
     /********************************* Other **********************************/

@@ -1,8 +1,8 @@
 <template>
 <div class="container">
     <div class="main-container" ref="mainDiv">
-        <PlayerControl class="controller" @toggleFullscreen="fullscreen"/>
         <SceneView class="scene-view"/>
+        <PlayerControl class="controller" @toggleFullscreen="fullscreen"/>
     </div>
     <ResizableContainer
         grip-position="left"
@@ -75,7 +75,7 @@ project.$subscribe((mutation, state) => init())
 
 .main-container {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     flex: 1;
     background-color: #3d3d3d;
 }

@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <canvas id="render-canvas" ref="canvas"></canvas>
+        <div class="canvas-container" ref="container">
+            <canvas id="render-canvas" ref="canvas"></canvas>
+        </div>
         <Toolbar
             class="toolbar"
             @exit="exit"
@@ -33,6 +35,7 @@ const player = usePlayer()
 const project = useProject()
 
 const canvas = ref<HTMLCanvasElement|null>(null)
+const container = ref<HTMLDivElement|null>(null)
 var controller: SceneController
 
 // Scene / Project
@@ -134,22 +137,16 @@ paths.$subscribe((mutation, state) => {
 
 // Resize
 function resizeCanvas() {
-    if (!canvas.value)
-        return
-    //first remove width and height to force layout update
-    //TODO: This should not be necessary...
-    canvas.value.width = 0
-    canvas.value.height = 0
-    canvas.value.width = canvas.value.clientWidth
-    canvas.value.height = canvas.value.clientHeight
-    controller?.resize(0, 0) //Force resize event
+    controller?.resize(
+        container.value!.clientWidth,
+        container.value!.clientHeight)
 }
 const resizer = new ResizeObserver(resizeCanvas)
 
 onMounted(() => {
-    resizeCanvas()
     buildScene()
-    resizer.observe(canvas.value!)
+    resizeCanvas()
+    resizer.observe(container.value!)
 })
 onBeforeUnmount(() => {
     resizer.disconnect()
@@ -181,7 +178,13 @@ function toggleTheme() {
 
 <style scoped>
 #render-canvas {
-    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    touch-action: none;
+    outline: none;
+}
+.canvas-container {
     flex: 1;
     touch-action: none;
 }
