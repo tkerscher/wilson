@@ -48,6 +48,24 @@ export interface ScreenshotCommand extends _WorkerCommand {
     type: 'screenshot'
 }
 
+export interface PointerDownCommand extends _WorkerCommand {
+    type: 'pointerDown',
+    x: number,
+    y: number
+}
+
+export interface PointerUpCommand extends _WorkerCommand {
+    type: 'pointerUp',
+    x: number,
+    y: number
+}
+
+export interface PointerMoveCommand extends _WorkerCommand {
+    type: 'pointermove',
+    x: number,
+    y: number
+}
+
 export type WorkerCommand =
     PlayCommand |
     PauseCommand |
@@ -59,4 +77,7 @@ export type WorkerCommand =
     SetPathEnabledCommand |
     SetGridEnabledCommand |
     ResizeCommand |
-    ScreenshotCommand
+    ScreenshotCommand |
+    PointerDownCommand |
+    PointerUpCommand |
+    PointerMoveCommand

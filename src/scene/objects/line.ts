@@ -132,8 +132,6 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
         const startInt = new PathInterpolator(line.start, tool.project)
         const endInt = new PathInterpolator(line.end, tool.project)
 
-        console.log(endInt)
-
         //alloc animations
         const lengthAnimation = new Animation(line.name + '_length', "scaling.y",
             1.0, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE)
@@ -155,7 +153,6 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
 
             //create rotation quaternion
             const quat = alignVector(dir)
-            console.log(quat)
             rotKeys.push({ frame: t, value: quat })
         })
         lengthAnimation.setKeys(lengthKeys)

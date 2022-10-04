@@ -1,5 +1,3 @@
-import { Observable } from "@babylonjs/core"
-
 export interface SceneController {
 
     /**************************** Animation Control ***************************/
@@ -77,6 +75,27 @@ export interface SceneController {
      * the user. Provides either the objects unique id.
      */
     registerOnObjectPicked(callback: (objectId: number) => void): void
+
+    /****************************** User Input ********************************/
+
+    // /**
+    //  * Simulates a pointer down event on the scene
+    //  * @param x X coordinate of the event relative to the canvas
+    //  * @param y Y coordinate of the event relative to the canvas
+    //  */
+    simulatePointerDown(x: number, y: number): void
+    // /**
+    //  * Simulates a pointer up event on the scene
+    //  * @param x X coordinate of the event relative to the canvas
+    //  * @param y Y coordinate of the event relative to the canvas
+    //  */
+    simulatePointerUp(x: number, y: number): void
+    // /**
+    //  * Simulates a pointer move event on the scene
+    //  * @param x X coordinate of the event relative to the canvas
+    //  * @param y Y coordinate of the event relative to the canvas
+    //  */
+    simulatePointerMove(x: number, y: number): void
 
     /****************************** Appearance ********************************/
 

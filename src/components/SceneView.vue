@@ -1,7 +1,11 @@
 <template>
     <div class="container">
         <div class="canvas-container" ref="container">
-            <canvas id="render-canvas" ref="canvas"></canvas>
+            <canvas id="render-canvas" ref="canvas"
+                    @pointerdown="onPointerDown"
+                    @pointerup="onPointerUp"
+                    @pointermove="onPointerMove"
+                    ></canvas>
         </div>
         <Toolbar
             class="toolbar"
@@ -173,6 +177,38 @@ const theme = useTheme()
 function toggleTheme() {
     theme.toggleTheme()
     controller?.updateTheme()
+}
+
+//User Input
+function onPointerDown(e: PointerEvent) {
+    if (!canvas.value)
+        return
+
+    const rect = canvas.value.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    controller?.simulatePointerDown(x, y)
+}
+function onPointerUp(e: PointerEvent) {
+    if (!canvas.value)
+        return
+
+    const rect = canvas.value.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    controller?.simulatePointerUp(x, y)
+}
+function onPointerMove(e: PointerEvent) {
+    if (!canvas.value)
+        return
+
+    const rect = canvas.value.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    controller?.simulatePointerMove(x, y)
 }
 </script>
 

@@ -2,6 +2,9 @@ import {
     Color3,
     Color4,
     Engine,
+    PointerEventTypes,
+    PointerInfoPre,
+    PointerInput,
     Tools,
     Vector3
 } from "@babylonjs/core";
@@ -16,10 +19,13 @@ export class LocalController implements SceneController {
     #container: SceneContainer
     #engine: Engine
 
+    #allowInput: boolean
+
     #defaultCameraPosition: Vector3
     #defaultCameraTarget: Vector3
     
-    constructor(project: Project, canvas: HTMLCanvasElement|OffscreenCanvas) {
+    constructor(project: Project, canvas: HTMLCanvasElement|OffscreenCanvas, allowInput: boolean = false) {
+        this.#allowInput = allowInput
         this.#canvas = canvas
         //create engine
         this.#engine = new Engine(canvas, true, {
@@ -95,6 +101,105 @@ export class LocalController implements SceneController {
         this.#container.onObjectPicked.add(e => callback(e.objectId))
     }
 
+    /****************************** User Input ********************************/
+
+    //TODO: It seems web workers do not support creation of pointer events, which
+    //      babylon js needs for simulating events. For now, we simulate only
+    //      the gui texture and hardcode the mesh selection.
+
+    simulatePointerDown(x: number, y: number) {
+        if (this.#allowInput) {
+            //gui interaction
+            this.#container.overlayTexture.pick(x, y,
+                new PointerInfoPre(PointerEventTypes.POINTERDOWN, {
+                    type: 'pointerdown',
+                    target: {},
+                    preventDefault: () => {},
+                    inputIndex: PointerInput.LeftClick,
+                    altKey: false,
+                    button: 0,
+                    buttons: 1,
+                    clientX: x,
+                    clientY: y,
+                    ctrlKey: false,
+                    metaKey: false,
+                    movementX: 0,
+                    movementY: 0,
+                    offsetX: x,
+                    offsetY: y,
+                    pageX: x,
+                    pageY: y,
+                    shiftKey: false,
+                    x: x,
+                    y: y
+                }, x, y))
+        }
+    }
+
+    simulatePointerUp(x: number, y: number) {
+        if (this.#allowInput) {
+            //mesh selection
+            const pick = this.#container.scene.pick(x, y)
+            if (!!pick && pick.hit && !!pick.pickedMesh) {
+                const id = pick.pickedMesh.uniqueId
+                this.select(id)
+            }
+            //gui interaction
+            this.#container.overlayTexture.pick(x, y,
+                new PointerInfoPre(PointerEventTypes.POINTERUP, {
+                    type: 'pointerup',
+                    target: {},
+                    preventDefault: () => {},
+                    inputIndex: PointerInput.LeftClick,
+                    altKey: false,
+                    button: 0,
+                    buttons: 1,
+                    clientX: x,
+                    clientY: y,
+                    ctrlKey: false,
+                    metaKey: false,
+                    movementX: 0,
+                    movementY: 0,
+                    offsetX: x,
+                    offsetY: y,
+                    pageX: x,
+                    pageY: y,
+                    shiftKey: false,
+                    x: x,
+                    y: y
+                }, x, y))
+        }
+    }
+
+    simulatePointerMove(x: number, y: number) {
+        if (this.#allowInput) {
+            //gui interaction
+            this.#container.overlayTexture.pick(x, y,
+                new PointerInfoPre(PointerEventTypes.POINTERMOVE, {
+                    type: 'pointermove',
+                    target: {},
+                    preventDefault: () => {},
+                    inputIndex: PointerInput.Move,
+                    altKey: false,
+                    button: -1,
+                    buttons: 0,
+                    clientX: x,
+                    clientY: y,
+                    ctrlKey: false,
+                    metaKey: false,
+                    movementX: 0,
+                    movementY: 0,
+                    offsetX: x,
+                    offsetY: y,
+                    pageX: x,
+                    pageY: y,
+                    shiftKey: false,
+                    x: x,
+                    y: y
+                }, x, y))
+        }
+    }
+
     /****************************** Appearance ********************************/
 
     get isGridEnabled(): boolean {
@@ -111,8 +216,6 @@ export class LocalController implements SceneController {
     }
 
     updateTheme() {
-        // @ts-ignore
-        console.log(Control._FontHeightSizes)
         // //retrieve colors from css
         // const style = getComputedStyle(document.documentElement)
         // const color = style.getPropertyValue('--scene-font-color').trim()

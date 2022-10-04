@@ -157,8 +157,6 @@ export class Description {
         helper.onPointerMoveObservable.add((data, state) => {
             if (!isDragging)
                 return false
-
-            console.trace()
             
             box.left = startX + data.x
             box.top = startY + data.y

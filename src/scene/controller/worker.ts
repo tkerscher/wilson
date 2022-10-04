@@ -2,6 +2,9 @@ import {
     GoToFrameCommand,
     PauseCommand,
     PlayCommand,
+    PointerDownCommand,
+    PointerMoveCommand,
+    PointerUpCommand,
     ResetCameraCommand,
     ResizeCommand,
     ScreenshotCommand,
@@ -190,5 +193,29 @@ export class WorkerController implements SceneController {
         this.#worker.postMessage({
             type: 'screenshot'
         } as ScreenshotCommand)
+    }
+
+    simulatePointerDown(x: number, y: number): void {
+        this.#worker.postMessage({
+            type: 'pointerDown',
+            x: x,
+            y: y
+        } as PointerDownCommand)
+    }
+
+    simulatePointerUp(x: number, y: number): void {
+        this.#worker.postMessage({
+            type: 'pointerUp',
+            x: x,
+            y: y
+        } as PointerUpCommand)
+    }
+
+    simulatePointerMove(x: number, y: number): void {
+        this.#worker.postMessage({
+            type: 'pointermove',
+            x: x,
+            y: y
+        } as PointerMoveCommand)
     }
 }

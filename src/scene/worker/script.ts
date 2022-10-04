@@ -40,10 +40,16 @@ function messageHandler(ev: MessageEvent<any>) {
     case 'setPathEnabled':
         controller.setPathEnabled(cmd.id, cmd.enabled, cmd.color)
         break
+    case 'pointerDown':
+        controller.simulatePointerDown(cmd.x, cmd.y)
+        break
+    case 'pointerUp':
+        controller.simulatePointerUp(cmd.x, cmd.y)
+        break
+    case 'pointermove':
+        controller.simulatePointerMove(cmd.x, cmd.y, 0, 0)
+        break
     }
-
-    //debug
-    console.log(ev.data)
 }
 
 onmessage = ev => {
@@ -53,15 +59,12 @@ onmessage = ev => {
     const data = new Uint8Array(serialized)
     const project: Project = Project.decode(data)
 
-    //DEBUG
-    const _add = canvas.addEventListener
-    canvas.addEventListener = (type, callback, options?) => {
-        console.log(type)
-        _add(type, callback, options)
-    }
+    //Debug
+    // @ts-ignore
+    canvas.style = {}
 
     //create scene
-    controller = new LocalController(project, canvas)
+    controller = new LocalController(project, canvas, true)
     //register callbacks
     controller.registerOnAnimationLoop(() => postMessage({
         type: 'onAnimationLoop'
