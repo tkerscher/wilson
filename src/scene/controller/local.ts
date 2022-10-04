@@ -33,6 +33,9 @@ export class LocalController implements SceneController {
         })
         //create scene
         this.#container = buildScene(project, this.#engine)
+        //changing cursors brake on offscreen canvas
+        //since we dont do that anyway, disable it
+        this.#container.scene.doNotHandleCursors = true
         //apply theme
         this.updateTheme()
 

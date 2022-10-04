@@ -59,12 +59,9 @@ onmessage = ev => {
     const data = new Uint8Array(serialized)
     const project: Project = Project.decode(data)
 
-    //Debug
-    // @ts-ignore
-    canvas.style = {}
-
     //create scene
     controller = new LocalController(project, canvas, true)
+
     //register callbacks
     controller.registerOnAnimationLoop(() => postMessage({
         type: 'onAnimationLoop'
