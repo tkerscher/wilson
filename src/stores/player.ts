@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 
+const MinSpeed = 0.01
+const MaxSpeed = 999.99
+
 export const usePlayer = defineStore('player', {
     state: () => ({
         currentFrame: 0.0,
@@ -38,6 +41,10 @@ export const usePlayer = defineStore('player', {
         },
         toggleLooping() {
             this.isLooping = !this.isLooping
+        },
+        adjustSpeed(delta: number) {
+            const _speed = this.speedRatio + delta
+            this.speedRatio = _speed < MinSpeed ? MinSpeed : (_speed > MaxSpeed ? MaxSpeed : _speed)
         }
     }
 })

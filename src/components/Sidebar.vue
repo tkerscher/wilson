@@ -1,5 +1,5 @@
 <template>
-<div class="root">
+<div class="root" @keydown.stop @keyup.stop>
     <div class="header">
         <div
             role="button"
