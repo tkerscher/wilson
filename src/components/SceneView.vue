@@ -1,11 +1,7 @@
 <template>
     <div class="container">
         <div class="canvas-container" ref="container">
-            <canvas id="render-canvas" ref="canvas"
-                    @pointerdown="onPointerDown"
-                    @pointerup="onPointerUp"
-                    @pointermove="onPointerMove"
-                    ></canvas>
+            <canvas id="render-canvas" ref="canvas"></canvas>
         </div>
         <Toolbar
             class="toolbar"
@@ -25,6 +21,9 @@ import { openPlot } from '../plot/openPlot'
 
 import { SceneController } from '../scene/controller/controller'
 import { createController } from '../scene/controller/factory'
+
+import { PlayerControl } from '../input/playerControl'
+import { ScenePointerProxy } from '../input/scenePointerProxy'
 
 import { useObjects } from '../stores/objects'
 import { usePaths } from '../stores/paths'
@@ -147,14 +146,26 @@ function resizeCanvas() {
 }
 const resizer = new ResizeObserver(resizeCanvas)
 
+//UI
+var scenePointerProxy: ScenePointerProxy
+var playerControl: PlayerControl
+
 onMounted(() => {
     buildScene()
     resizeCanvas()
     resizer.observe(container.value!)
+
+    //UI
+    scenePointerProxy = new ScenePointerProxy(canvas.value!, controller)
+    playerControl = new PlayerControl(player)
 })
 onBeforeUnmount(() => {
     resizer.disconnect()
     controller.dispose()
+
+    //UI
+    scenePointerProxy.dispose()
+    playerControl.dispose()
 })
 
 //Toolbar functions
@@ -177,38 +188,6 @@ const theme = useTheme()
 function toggleTheme() {
     theme.toggleTheme()
     controller?.updateTheme()
-}
-
-//User Input
-function onPointerDown(e: PointerEvent) {
-    if (!canvas.value)
-        return
-
-    const rect = canvas.value.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    controller?.simulatePointerDown(x, y)
-}
-function onPointerUp(e: PointerEvent) {
-    if (!canvas.value)
-        return
-
-    const rect = canvas.value.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    controller?.simulatePointerUp(x, y)
-}
-function onPointerMove(e: PointerEvent) {
-    if (!canvas.value)
-        return
-
-    const rect = canvas.value.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    controller?.simulatePointerMove(x, y)
 }
 </script>
 
