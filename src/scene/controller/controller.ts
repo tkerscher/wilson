@@ -1,3 +1,5 @@
+import { Theme } from "../theme"
+
 export interface SceneController {
 
     /**************************** Animation Control ***************************/
@@ -159,9 +161,10 @@ export interface SceneController {
      */
     resize(width: number, height: number): void
     /**
-     * Forces an updated of the theme
+     * Updates the scenes theme
+     * @param theme Theme to apply
      */
-    updateTheme(): void
+    setTheme(theme: Theme): void
 
     /********************************* Other **********************************/
 

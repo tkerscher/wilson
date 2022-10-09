@@ -32,6 +32,7 @@ import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 import { useTheme } from '../stores/theme'
 import { MutationType } from 'pinia'
+import { getCurrentTheme } from '../scene/theme'
 
 const objects = useObjects()
 const paths = usePaths()
@@ -191,7 +192,7 @@ function screenshot() {
 const theme = useTheme()
 function toggleTheme() {
     theme.toggleTheme()
-    controller?.updateTheme()
+    controller?.setTheme(getCurrentTheme())
 }
 </script>
 

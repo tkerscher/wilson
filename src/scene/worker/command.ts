@@ -1,3 +1,5 @@
+import { Theme } from "../theme"
+
 interface _WorkerCommand {
     type: string
 }
@@ -43,6 +45,10 @@ export interface ResizeCommand extends _WorkerCommand {
     type: 'resize',
     width: number,
     height: number
+}
+export interface SetThemeCommand extends _WorkerCommand {
+    type: 'setTheme',
+    theme: Theme
 }
 export interface ScreenshotCommand extends _WorkerCommand {
     type: 'screenshot'
@@ -107,6 +113,7 @@ export type WorkerCommand =
     SetPathEnabledCommand |
     SetGridEnabledCommand |
     ResizeCommand |
+    SetThemeCommand |
     SetSpeedRatioCommand |
     ScreenshotCommand |
     PointerDownCommand |

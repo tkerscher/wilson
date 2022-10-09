@@ -14,6 +14,7 @@ import { Control } from "@babylonjs/gui";
 import { Project } from "../../model/project";
 import { buildScene, SceneContainer } from "../build";
 import { isMetadata } from "../objects/tools";
+import { Theme } from "../theme";
 import { SceneController } from "./controller";
 
 export class LocalController implements SceneController {
@@ -38,8 +39,6 @@ export class LocalController implements SceneController {
         //changing cursors brake on offscreen canvas
         //since we dont do that anyway, disable it
         this.#container.scene.doNotHandleCursors = true
-        //apply theme
-        this.updateTheme()
 
         //save default camera position
         this.#defaultCameraPosition = this.#container.camera.position.clone()
@@ -308,16 +307,10 @@ export class LocalController implements SceneController {
         this.#engine.resize(true)
     }
 
-    updateTheme() {
-        // //retrieve colors from css
-        // const style = getComputedStyle(document.documentElement)
-        // const color = style.getPropertyValue('--scene-font-color').trim()
-        // const clear = style.getPropertyValue('--scene-background').trim()
-        // const grid  = style.getPropertyValue('--grid-color').trim()
-        // //update colors
-        // this.#container.overlayRoot.color = color
-        // this.#container.scene.clearColor = Color4.FromColor3(
-        //     Color3.FromHexString(clear), 1.0)
+    setTheme(theme: Theme): void {
+        this.#container.overlayRoot.color = theme.fontColor
+        this.#container.scene.clearColor = Color4.FromColor3(
+            Color3.FromHexString(theme.clearColor), 1.0)
     }
 
     /********************************* Other **********************************/

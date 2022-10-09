@@ -25,6 +25,9 @@ function messageHandler(ev: MessageEvent<any>) {
     case 'resize':
         controller.resize(cmd.width, cmd.height)
         break
+    case 'setTheme':
+        controller.setTheme(cmd.theme)
+        break
     case 'screenshot':
         controller.screenshot()
         break

@@ -4,6 +4,7 @@ import { SceneInitializedEvent, WorkerEvent } from "../worker/event";
 import { SceneController } from "./controller";
 
 import SceneWorker from "../worker/script?worker"
+import { Theme } from "../theme";
 
 export function isWorkerAvailable(): boolean {
     return !!window.Worker &&
@@ -172,8 +173,11 @@ export class WorkerController implements SceneController {
             height: height
         })
     }
-    updateTheme(): void {
-        //throw new Error("Method not implemented.");
+    setTheme(theme: Theme): void {
+        this.#sendCommand({
+            type: 'setTheme',
+            theme: theme
+        })
     }
     dispose(): void {
         //TODO: send dispose command to worker for scene clean up
