@@ -52,9 +52,13 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
 
     //create camera
     const camera = buildCamera(buildTool, project.camera)
-    //create light
-    const light = new HemisphericLight(
-        "light", new Vector3(1, 1, 0), buildTool.scene);
+    //create light that always shines from behind the camera
+    const dir = camera.position.subtract(camera.target)
+    const light = new HemisphericLight("light", dir, buildTool.scene);
+    camera.onViewMatrixChangedObservable.add(() => {
+        camera.position.subtractToRef(camera.target, light.direction)
+    })
+
 
     //create objects
     //  The order in which the objects are created must be the same as in Project!
