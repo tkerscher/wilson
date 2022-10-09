@@ -22,6 +22,7 @@ import { openPlot } from '../plot/openPlot'
 import { SceneController } from '../scene/controller/controller'
 import { createController } from '../scene/controller/factory'
 
+import { CameraControl } from '../input/cameraControl'
 import { PlayerControl } from '../input/playerControl'
 import { ScenePointerProxy } from '../input/scenePointerProxy'
 
@@ -147,6 +148,7 @@ function resizeCanvas() {
 const resizer = new ResizeObserver(resizeCanvas)
 
 //UI
+var cameraControl: CameraControl
 var scenePointerProxy: ScenePointerProxy
 var playerControl: PlayerControl
 
@@ -156,6 +158,7 @@ onMounted(() => {
     resizer.observe(container.value!)
 
     //UI
+    cameraControl = new CameraControl(controller)
     scenePointerProxy = new ScenePointerProxy(canvas.value!, controller)
     playerControl = new PlayerControl(player)
 })
@@ -164,6 +167,7 @@ onBeforeUnmount(() => {
     controller.dispose()
 
     //UI
+    cameraControl.dispose()
     scenePointerProxy.dispose()
     playerControl.dispose()
 })

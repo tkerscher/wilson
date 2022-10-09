@@ -1,20 +1,5 @@
-import {
-    GoToFrameCommand,
-    PauseCommand,
-    PlayCommand,
-    PointerDownCommand,
-    PointerMoveCommand,
-    PointerUpCommand,
-    ResetCameraCommand,
-    ResizeCommand,
-    ScreenshotCommand,
-    SelectCommand,
-    SetGridEnabledCommand,
-    SetGroupEnabledCommand,
-    SetPathEnabledCommand,
-    SetSpeedRatioCommand
-} from "../worker/command";
 import { Project } from "../../model/project";
+import { WorkerCommand } from "../worker/command";
 import { SceneInitializedEvent, WorkerEvent } from "../worker/event";
 import { SceneController } from "./controller";
 
@@ -93,6 +78,10 @@ export class WorkerController implements SceneController {
         })
     }
 
+    #sendCommand(cmd: WorkerCommand) {
+        this.#worker.postMessage(cmd)
+    }
+
     get currentFrame(): number {
         return this.#currentFrame
     }
@@ -107,28 +96,29 @@ export class WorkerController implements SceneController {
     }
     set speedRatio(value: number) {
         this.#speedRatio = value
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'setSpeedRatio',
             value: value
-        } as SetSpeedRatioCommand)
+        })
     }
     play(loop: boolean): void {
         this.#isPlaying = true
-        this.#worker.postMessage({
-            type: 'play'
-        } as PlayCommand)
+        this.#sendCommand({
+            type: 'play',
+            loop: true
+        })
     }
     pause(): void {
         this.#isPlaying = false
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'pause'
-        } as PauseCommand)
+        })
     }
     goToFrame(frame: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'goToFrame',
             frame: frame
-        } as GoToFrameCommand)
+        })
     }
     registerOnFrameChanged(callback: (currentFrame: number) => void): void {
         this.#onFrameChangedCallbacks.push(callback)
@@ -137,30 +127,30 @@ export class WorkerController implements SceneController {
         this.#onAnimationLoopCallbacks.push(callback)
     }
     resetCamera(): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'resetCamera'
-        } as ResetCameraCommand)
+        })
     }
     select(id: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'select',
             id: id
-        } as SelectCommand)
+        })
     }
     setGroupEnabled(group: string, enabled: boolean): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'setGroupEnabled',
             group: group,
             enabled: enabled
-        } as SetGroupEnabledCommand)
+        })
     }
     setPathEnabled(id: number, enabled: boolean, color: string): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'setPathEnabled',
             id: id,
             enabled: enabled,
             color: color
-        } as SetPathEnabledCommand)
+        })
     }
     registerOnObjectPicked(callback: (objectId: number) => void): void {
         this.#onObjectPickedCallbacks.push(callback)
@@ -170,17 +160,17 @@ export class WorkerController implements SceneController {
     }
     setGridEnabled(enabled: boolean): void {
         this.#isGridEnabled = enabled
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'setGridEnabled',
             enabled: enabled
-        } as SetGridEnabledCommand)
+        })
     }
     resize(width: number, height: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'resize',
             width: width,
             height: height
-        } as ResizeCommand)
+        })
     }
     updateTheme(): void {
         //throw new Error("Method not implemented.");
@@ -190,32 +180,74 @@ export class WorkerController implements SceneController {
         this.#worker.terminate()
     }
     screenshot(): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'screenshot'
-        } as ScreenshotCommand)
+        })
     }
 
     simulatePointerDown(x: number, y: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'pointerDown',
             x: x,
             y: y
-        } as PointerDownCommand)
+        })
     }
 
     simulatePointerUp(x: number, y: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'pointerUp',
             x: x,
             y: y
-        } as PointerUpCommand)
+        })
     }
 
     simulatePointerMove(x: number, y: number): void {
-        this.#worker.postMessage({
+        this.#sendCommand({
             type: 'pointermove',
             x: x,
             y: y
-        } as PointerMoveCommand)
+        })
+    }
+
+    panCamera(dx: number, dy: number): void {
+        this.#sendCommand({
+            type: 'panCamera',
+            dx: dx,
+            dy: dy
+        })
+    }
+    rotateCamera(alpha: number, beta: number): void {
+        this.#sendCommand({
+            type: 'rotateCamera',
+            alpha: alpha,
+            beta: beta
+        })
+    }
+    zoomCamera(delta: number): void {
+        this.#sendCommand({
+            type: 'zoom',
+            delta: delta
+        })
+    }
+    setCameraTarget(x: number, y: number, z: number): void {
+        this.#sendCommand({
+            type: 'setCameraTarget',
+            x: x,
+            y: y,
+            z: z
+        })
+    }
+    setCameraRotation(alpha: number, beta: number): void {
+        this.#sendCommand({
+            type: 'setCameraRotation',
+            alpha: alpha,
+            beta: beta
+        })
+    }
+    setCameraZoom(distance: number): void {
+        this.#sendCommand({
+            type: 'setCameraZoom',
+            distance: distance
+        })
     }
 }

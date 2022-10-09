@@ -66,6 +66,36 @@ export interface PointerMoveCommand extends _WorkerCommand {
     y: number
 }
 
+export interface PanCameraCommand extends _WorkerCommand {
+    type: 'panCamera',
+    dx: number,
+    dy: number
+}
+export interface RotateCameraCommand extends _WorkerCommand {
+    type: 'rotateCamera',
+    alpha: number,
+    beta: number
+}
+export interface ZoomCameraCommand extends _WorkerCommand {
+    type: 'zoom',
+    delta: number
+}
+export interface SetCameraTargetCommand extends _WorkerCommand {
+    type: 'setCameraTarget',
+    x: number,
+    y: number,
+    z: number
+}
+export interface SetCameraRotationCommand extends _WorkerCommand {
+    type: 'setCameraRotation',
+    alpha: number,
+    beta: number
+}
+export interface SetCameraZoomCommand extends _WorkerCommand {
+    type: 'setCameraZoom',
+    distance: number
+}
+
 export type WorkerCommand =
     PlayCommand |
     PauseCommand |
@@ -77,7 +107,14 @@ export type WorkerCommand =
     SetPathEnabledCommand |
     SetGridEnabledCommand |
     ResizeCommand |
+    SetSpeedRatioCommand |
     ScreenshotCommand |
     PointerDownCommand |
     PointerUpCommand |
-    PointerMoveCommand
+    PointerMoveCommand |
+    PanCameraCommand |
+    RotateCameraCommand |
+    ZoomCameraCommand |
+    SetCameraTargetCommand |
+    SetCameraRotationCommand |
+    SetCameraZoomCommand

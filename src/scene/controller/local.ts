@@ -1,10 +1,12 @@
 import {
+    Axis,
     Color3,
     Color4,
     Engine,
     PointerEventTypes,
     PointerInfoPre,
     PointerInput,
+    Quaternion,
     Tools,
     Vector3
 } from "@babylonjs/core";
@@ -202,6 +204,94 @@ export class LocalController implements SceneController {
                 }, x, y))
         }
     }
+
+    /**************************** Camera Control ******************************/
+
+    //variables needed for camera
+    #cameraNormal = Vector3.One()
+    #quat = Quaternion.Zero()
+    #delta = Vector3.Zero()
+
+    /**
+     * Pans the camera relative to the screen surface
+     * @param dx Horizontal distance
+     * @param dy Vertical distance
+     */
+     panCamera(dx: number, dy: number) {
+        //calculate normal
+        const cam = this.#container.camera
+        cam.target.subtractToRef(cam.position, this.#cameraNormal)
+        const scale = this.#cameraNormal.length()
+        
+        //normalize distances
+        dx = 2 * dx / this.#engine.getRenderWidth() * scale
+        dy = -2 * dy / this.#engine.getRenderHeight() * scale
+        
+        //create delta
+        this.#delta.copyFromFloats(dx, dy, 0)
+        //rotate according to camera normal
+        cam.getViewMatrix().decompose(undefined, this.#quat, undefined, undefined)
+        this.#delta.applyRotationQuaternionInPlace(this.#quat)
+
+        //pan camera
+        cam.setTarget(cam.target.add(this.#delta))
+        cam.setPosition(cam.position.add(this.#delta))
+     }
+     /**
+      * Rotates the camera around the current target relative to current
+      * orientation
+      * @param alpha horizontal rotation
+      * @param beta vertical rotation
+      */
+     rotateCamera(alpha: number, beta: number) {
+        //update
+        alpha += this.#container.camera.alpha
+        beta += this.#container.camera.beta
+
+        //clip
+        alpha %= 2*Math.PI
+        beta %= Math.PI
+
+        //assign
+        this.#container.camera.alpha = alpha
+        this.#container.camera.beta = beta
+     }
+ 
+     /**
+      * Zooms the camera either in or out depending on the sign of delta
+      * @param delta Amount to zoom
+      */
+     zoomCamera(delta: number) {
+        this.#container.camera.radius += delta
+     }
+ 
+     /**
+      * Sets the camera target, i.e. origin of rotation
+      * @param x 
+      * @param y 
+      * @param z 
+      */
+     setCameraTarget(x: number, y: number, z: number) {
+        this.#container.camera.setTarget(new Vector3(x, y, z))
+     }
+ 
+     /**
+      * Sets the camera rotation
+      * @param alpha 
+      * @param beta 
+      */
+     setCameraRotation(alpha: number, beta: number) {
+        this.#container.camera.alpha = alpha
+        this.#container.camera.beta = beta
+     }
+ 
+     /**
+      * Sets the camera zoom
+      * @param distance 
+      */
+     setCameraZoom(distance: number) {
+        this.#container.camera.radius = distance
+     }
 
     /****************************** Appearance ********************************/
 

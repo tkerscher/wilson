@@ -47,7 +47,25 @@ function messageHandler(ev: MessageEvent<any>) {
         controller.simulatePointerUp(cmd.x, cmd.y)
         break
     case 'pointermove':
-        controller.simulatePointerMove(cmd.x, cmd.y, 0, 0)
+        controller.simulatePointerMove(cmd.x, cmd.y)
+        break
+    case 'panCamera':
+        controller.panCamera(cmd.dx, cmd.dy)
+        break
+    case 'rotateCamera':
+        controller.rotateCamera(cmd.alpha, cmd.beta)
+        break
+    case 'zoom':
+        controller.zoomCamera(cmd.delta)
+        break
+    case 'setCameraTarget':
+        controller.setCameraTarget(cmd.x, cmd.y, cmd.z)
+        break
+    case 'setCameraRotation':
+        controller.setCameraRotation(cmd.alpha, cmd.beta)
+        break
+    case 'setCameraZoom':
+        controller.setCameraZoom(cmd.distance)
         break
     }
 }

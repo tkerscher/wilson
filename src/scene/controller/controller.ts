@@ -97,6 +97,50 @@ export interface SceneController {
     //  */
     simulatePointerMove(x: number, y: number): void
 
+    /**************************** Camera Control ******************************/
+
+    /**
+     * Pans the camera relative to the screen surface
+     * @param dx Horizontal distance
+     * @param dy Vertical distance
+     */
+    panCamera(dx: number, dy: number): void
+
+    /**
+     * Rotates the camera around the current target relative to current
+     * orientation
+     * @param alpha horizontal rotation
+     * @param beta vertical rotation
+     */
+    rotateCamera(alpha: number, beta: number): void
+
+    /**
+     * Zooms the camera either in or out depending on the sign of delta
+     * @param delta Amount to zoom
+     */
+    zoomCamera(delta: number): void
+
+    /**
+     * Sets the camera target, i.e. origin of rotation
+     * @param x 
+     * @param y 
+     * @param z 
+     */
+    setCameraTarget(x: number, y: number, z: number): void
+
+    /**
+     * Sets the camera rotation
+     * @param alpha 
+     * @param beta 
+     */
+    setCameraRotation(alpha: number, beta: number): void
+
+    /**
+     * Sets the camera zoom
+     * @param distance 
+     */
+    setCameraZoom(distance: number): void
+
     /****************************** Appearance ********************************/
 
     /**
