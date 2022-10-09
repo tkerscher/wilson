@@ -17,7 +17,6 @@ export function buildCamera(tool: SceneBuildTool, camera: Camera|undefined): Arc
     const cam = new ArcRotateCamera("camera", 0.0, 0.0, 1.0, target, tool.scene)
     cam.upVector = new Vector3(0,0,1)
     cam.setPosition(position)
-    cam.attachControl(true)
 
     return cam
 }

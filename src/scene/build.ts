@@ -112,6 +112,9 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         }
     })    
 
+    //we handle ui ourselves
+    buildTool.scene.detachControl()
+
     //create container
     const container: SceneContainer = {
         animation: buildTool.animationGroup,
