@@ -224,8 +224,8 @@ export class LocalController implements SceneController {
         const scale = this.#cameraNormal.length()
         
         //normalize distances
-        dx = 2 * dx / this.#engine.getRenderWidth() * scale
-        dy = -2 * dy / this.#engine.getRenderHeight() * scale
+        dx = -dx / this.#engine.getRenderWidth() * scale
+        dy = -dy / this.#engine.getRenderHeight() * scale
         
         //create delta
         this.#delta.copyFromFloats(dx, dy, 0)

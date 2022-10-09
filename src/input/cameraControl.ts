@@ -7,12 +7,25 @@ const PanDy = 50.0
 //Rotation settings
 const dAlpha = 0.05
 const dBeta = 0.05
+//zoom settings
+const dZoom = 0.1
 
 export class CameraControl {
+    #target: HTMLElement
+
     #handlerOnce: (e: KeyboardEvent) => void
     #handlerRepeat: (e: KeyboardEvent) => void
 
-    constructor(s: SceneController) {
+    #onPointerDown: (e: PointerEvent) => void
+    #onPointerUp: (e: PointerEvent) => void
+    #onPointerMove: (e: PointerEvent) => void
+    #onWheel: (e: WheelEvent) => void
+
+    #dragging = false
+
+    constructor(s: SceneController, target: HTMLElement) {
+        this.#target = target
+
         //create key mappings
         const hotKeysOnce = new KeyMap([
             //camera fixed position
@@ -47,13 +60,13 @@ export class CameraControl {
 
             //pan
             ["KeyW", () => s.panCamera(0, PanDy)],
-            ["KeyA", () => s.panCamera(-PanDx, 0)],
+            ["KeyA", () => s.panCamera(PanDx, 0)],
             ["KeyS", () => s.panCamera(0, -PanDy)],
-            ["KeyD", () => s.panCamera(PanDx, 0)],
+            ["KeyD", () => s.panCamera(-PanDx, 0)],
             ["ArrowUp", () => s.panCamera(0, PanDy)],
-            ["ArrowLeft", () => s.panCamera(-PanDx, 0)],
+            ["ArrowLeft", () => s.panCamera(PanDx, 0)],
             ["ArrowDown", () => s.panCamera(0, -PanDy)],
-            ["ArrowRight", () => s.panCamera(PanDx, 0)],
+            ["ArrowRight", () => s.panCamera(-PanDx, 0)],
         ])
         //create handler
         this.#handlerRepeat = e => hotKeysRepeat.exec(e)
@@ -62,16 +75,57 @@ export class CameraControl {
                 hotKeysOnce.exec(e)
         }
 
+        //pointer events
+        const control = this
+        this.#onPointerDown = e => {
+            //Either middle mouse button or left + ctrl
+            const mmb = e.button == 1 && e.buttons == 4 && !e.altKey && !e.ctrlKey
+            const lmb = e.button == 0 && e.buttons == 1 && !e.altKey && e.ctrlKey
+            if (mmb || lmb) {
+                control.#dragging = true
+            }
+        }
+        this.#onPointerUp = e => {
+            control.#dragging = false
+        }
+        this.#onPointerMove = e => {
+            if (control.#dragging) {
+                if (e.shiftKey) {
+                    s.panCamera(e.movementX, e.movementY)
+                }
+                else {
+                    const dAlpha = -e.movementX / control.#target.clientWidth * 2 * Math.PI
+                    const dBeta = -e.movementY / control.#target.clientHeight * Math.PI
+                    s.rotateCamera(dAlpha, dBeta)
+                }
+            }
+        }
+        this.#onWheel = e => {
+            s.zoomCamera(dZoom * e.deltaY)
+        }
+
         //register handler
         document.addEventListener('keydown', this.#handlerRepeat)
         document.addEventListener('keydown', this.#handlerOnce)
+        target.addEventListener('pointerdown', this.#onPointerDown)
+        target.addEventListener('pointerup', this.#onPointerUp)
+        target.addEventListener('pointermove', this.#onPointerMove)
+        target.addEventListener('wheel', this.#onWheel)
     }
 
     dispose() {
         document.removeEventListener('keydown', this.#handlerOnce)
         document.removeEventListener('keydown', this.#handlerRepeat)
+        this.#target.removeEventListener('pointerdown', this.#onPointerDown)
+        this.#target.removeEventListener('pointerup', this.#onPointerUp)
+        this.#target.removeEventListener('pointermove', this.#onPointerMove)
+        this.#target.removeEventListener('wheel', this.#onWheel)
 
         this.#handlerOnce = () => {}
         this.#handlerRepeat = () => {}
+        this.#onPointerDown = () => {}
+        this.#onPointerUp = () => {}
+        this.#onPointerMove = () => {}
+        this.#onWheel = () => {}
     }
 }

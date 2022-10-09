@@ -158,7 +158,7 @@ onMounted(() => {
     resizer.observe(container.value!)
 
     //UI
-    cameraControl = new CameraControl(controller)
+    cameraControl = new CameraControl(controller, canvas.value!)
     scenePointerProxy = new ScenePointerProxy(canvas.value!, controller)
     playerControl = new PlayerControl(player)
 })
