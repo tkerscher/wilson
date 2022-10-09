@@ -23,7 +23,7 @@ import SceneView from './SceneView.vue'
 import Sidebar from './Sidebar.vue'
 import PlayerControl from './PlayerControl.vue'
 
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePlayer } from '../stores/player'
 import { useProject } from '../stores/project'
 
@@ -40,13 +40,14 @@ function init() {
         speedRatio: project.meta?.speedRatio ?? 1.0,
         isPlaying: true,
         isLooping: true
-    })
-    addEventListener('fullscreenchange', () => {
-        //update gui
-        player.isFullscreen = !!document.fullscreenElement
-    })
+    })    
 }
 
+function onKeydown(e: KeyboardEvent) {
+    if (e.code == "KeyF") {
+        fullscreen()
+    }
+}
 function fullscreen() {
     if (!mainDiv.value || !mainDiv.value.requestFullscreen)
         return
@@ -58,8 +59,20 @@ function fullscreen() {
         mainDiv.value.requestFullscreen()
     }
 }
+function onFullscreenChanged() {
+    //update gui
+    player.isFullscreen = !!document.fullscreenElement
+}
 
-onMounted(init)
+onMounted(() => {
+    init()
+    addEventListener('fullscreenchange', onFullscreenChanged)
+    document.addEventListener('keydown', onKeydown)
+})
+onBeforeUnmount(() => {
+    removeEventListener('fullscreenchange', onFullscreenChanged)
+    document.removeEventListener('keydown', onKeydown)
+})
 project.$subscribe((mutation, state) => init())
 </script>
 
