@@ -7,8 +7,15 @@ import SceneWorker from "../worker/script?worker"
 import { Theme } from "../theme";
 
 export function isWorkerAvailable(): boolean {
+    //Check if it's safe to use web worker
+    //In Debug mode, only Chrome supports imports in web worker scripts (which we use)
+    //While they compiled away in production, in debug we can only use chrome with web worker
+    //TODO: It seems currently firefox struggles with babylon js in worker due to references to
+    //      document (which is not available in web workers). Strangely, it works in chrome though
     return !!window.Worker &&
-        !!HTMLCanvasElement.prototype.transferControlToOffscreen
+        !!HTMLCanvasElement.prototype.transferControlToOffscreen &&
+        // @ts-ignore (window.chrome)
+        !!window.chrome
 }
 
 export class WorkerController implements SceneController {
