@@ -1,5 +1,6 @@
 <template>
 <div class="container">
+    <div class="label icon-small magnifying-glass-icon"></div>
     <input
         ref="input"
         type="search"
@@ -10,6 +11,10 @@
         @keyup.esc="clear"
         @keyup.enter="finish"
     />
+    <div :style="{'visibility': nonEmpty ? 'visible' : 'hidden'}"
+         class="button icon-small xmark-icon"
+         role="button"
+         @click="clear"></div>
 </div>
 </template>
 
@@ -23,6 +28,8 @@ const props = defineProps<{
 const emits = defineEmits<{
     (e: 'update:modelValue', value: string): void
 }>()
+
+const nonEmpty = computed(() => props.modelValue.length > 0)
 
 function clear() {
     if (props.modelValue.length > 0) {
@@ -64,8 +71,25 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-input {
-    border: 0;
-    width: 100%;
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.search-box {
+    flex: 1;
+}
+
+.label {
+    background-color: var(--primary7);
+    margin: 0 5px;
+}
+.button {
+    background-color: var(--primary7);
+    margin-right: 5px;
+}
+.button:hover {
+    cursor: pointer;
 }
 </style>

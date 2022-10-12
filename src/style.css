@@ -110,6 +110,24 @@ input[type=color]::-moz-color-swatch {
     border: none;
 }
 
+input[type=search] {
+    width: 100%;
+    appearance: none;
+    outline: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: white;
+}
+input[type=search]:focus {
+    border-bottom: 1px solid var(--highlight1);
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+}
+
 /*********************************** ICONS ************************************/
 
 .icon-small {
@@ -204,6 +222,10 @@ input[type=color]::-moz-color-swatch {
 .info-icon {
     mask-image: url(./assets/icons/circle-info.svg);
     -webkit-mask-image: url(./assets/icons/circle-info.svg);
+}
+.magnifying-glass-icon {
+    mask-image: url(./assets/icons/magnifying-glass.svg);
+    -webkit-mask-image: url(./assets/icons/magnifying-glass.svg);
 }
 .moon-icon {
     mask-image: url(./assets/icons/moon.svg);
