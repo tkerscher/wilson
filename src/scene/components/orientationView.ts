@@ -51,6 +51,8 @@ class IndicatorBuilder {
     root: TransformNode
     buttons: Array<Mesh>
 
+    #buttonZeroRotation = Quaternion.FromEulerAngles(Math.PI, -Math.PI / 2, 0)
+
     constructor(engine: Engine, source: Camera) {
         this.engine = engine
         this.source = source
@@ -107,6 +109,7 @@ class IndicatorBuilder {
         const source = this.source
         const root = this.root
         const buttons = this.buttons
+        const zero = this.#buttonZeroRotation
         
         let rotation = new Quaternion()
         let inverse = new Quaternion()
@@ -119,6 +122,7 @@ class IndicatorBuilder {
             //rotate planes locally in opposite direction to still face the camera
             inverse.copyFrom(rotation)
             inverse.invertInPlace()
+            inverse.multiplyInPlace(zero)
             buttons.forEach(b => b.rotationQuaternion = inverse)
         }
 
@@ -153,15 +157,15 @@ class IndicatorBuilder {
     {
         const defaultMat = loadTexture(defaultTexture, this.scene)
         //const hoverMat = loadTexture(hoverTexture, this.scene)
-    
-        const button = MeshBuilder.CreatePlane(name, {
-                width: 2,
-                height: 2,
-                sideOrientation: Mesh.DOUBLESIDE }, //TODO: One side is enough
-            this.scene)
+
+        const button = MeshBuilder.CreateSphere(name, {
+            diameter: 2.0,
+            segments: 16
+        }, this.scene)
         button.position = position
         button.material = defaultMat
         button.parent = this.root
+        button.rotationQuaternion = this.#buttonZeroRotation
 
         this.buttons.push(button)
     
