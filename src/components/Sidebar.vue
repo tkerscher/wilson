@@ -1,12 +1,6 @@
 <template>
 <div class="root" @keydown.stop @keyup.stop>
     <div class="header">
-        <div
-            role="button"
-            :class="['header-button', 'icon-medium', showHidden ? 'eye-icon' : 'eye-slash-icon']"
-            :title="showHidden ? 'Hide hidden objects' : 'Show hidden objects'"
-            @mouseup="toggleShowHidden"
-        ></div>
         <SearchInput class="search-box" v-model="searchQuery" />
     </div>
     <div class="tab-root">
@@ -43,12 +37,6 @@ import PathExplorer from './PathExplorer.vue'
 import SearchInput from './SearchInput.vue'
 import { onBeforeMount, ref } from 'vue'
 const searchQuery = ref('')
-
-const showHidden = ref(false);
-function toggleShowHidden() {
-    showHidden.value = !showHidden.value
-    localStorage.setItem('showHidden', showHidden.value ? 'true' : 'false')
-}
 
 const tabIcons = [
     { icon: 'cube-icon', title: 'Objects' },
