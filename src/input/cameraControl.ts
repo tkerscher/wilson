@@ -35,7 +35,7 @@ export class CameraControl {
             ["Numpad3",     () => s.setCameraRotation(0, Math.PI / 2)],           //look in x
             ["Alt+Numpad3", () => s.setCameraRotation(Math.PI, Math.PI / 2)],     //look in -x
             ["Numpad7",     () => s.setCameraRotation(0, 0)],                     //look in z
-            ["Alt+Numpad7", () => s.setCameraRotation(-Math.PI / 2, Math.PI / 2)],//look in -z
+            ["Alt+Numpad7", () => s.setCameraRotation(0, Math.PI)],               //look in -z
             ["Numpad9",     () => s.rotateCamera(Math.PI, 0)],//reverse horizontal
             //alt -> no numpad
             ["Digit1",     () => s.setCameraRotation(Math.PI / 2, Math.PI / 2)], //look in y
@@ -43,7 +43,7 @@ export class CameraControl {
             ["Digit3",     () => s.setCameraRotation(0, Math.PI / 2)],           //look in x
             ["Alt+Digit3", () => s.setCameraRotation(Math.PI, Math.PI / 2)],     //look in -x
             ["Digit7",     () => s.setCameraRotation(0, 0)],                     //look in z
-            ["Alt+Digit7", () => s.setCameraRotation(-Math.PI / 2, Math.PI / 2)],//look in -z
+            ["Alt+Digit7", () => s.setCameraRotation(0, Math.PI)],               //look in -z
             ["Digit9",     () => s.rotateCamera(Math.PI, 0)],//reverse horizontal
         ])
         const hotKeysRepeat = new KeyMap([

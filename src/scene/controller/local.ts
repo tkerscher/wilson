@@ -224,12 +224,13 @@ export class LocalController implements SceneController {
         
         //normalize distances
         dx = -dx / this.#engine.getRenderWidth() * scale
-        dy = -dy / this.#engine.getRenderHeight() * scale
+        dy = dy / this.#engine.getRenderHeight() * scale
         
         //create delta
         this.#delta.copyFromFloats(dx, dy, 0)
         //rotate according to camera normal
         cam.getViewMatrix().decompose(undefined, this.#quat, undefined, undefined)
+        this.#quat.invertInPlace()
         this.#delta.applyRotationQuaternionInPlace(this.#quat)
 
         //pan camera
