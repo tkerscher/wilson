@@ -5,6 +5,7 @@ import { SceneController } from "./controller";
 
 import SceneWorker from "../worker/script?worker"
 import { Theme } from "../theme";
+import { takeScreenshot } from "../../util/screenshot";
 
 export function isWorkerAvailable(): boolean {
     //Check if it's safe to use web worker
@@ -19,6 +20,7 @@ export function isWorkerAvailable(): boolean {
 }
 
 export class WorkerController implements SceneController {
+    #canvas: HTMLCanvasElement
     //Worker related
     #worker: Worker
     Ready: Promise<void>
@@ -35,7 +37,10 @@ export class WorkerController implements SceneController {
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
     #onObjectPickedCallbacks: Array<(id: number) => void> = []
 
+    screenshotFilename: string
+
     constructor(project: Project, canvas: HTMLCanvasElement) {
+        this.#canvas = canvas
         //create scene worker
         const worker = new SceneWorker()
         this.#worker = worker
@@ -84,6 +89,9 @@ export class WorkerController implements SceneController {
                 canvas: offscreen
             }, [offscreen, serialized])
         })
+
+        //create file name for screenshots
+        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
     }
 
     #sendCommand(cmd: WorkerCommand) {
@@ -191,9 +199,7 @@ export class WorkerController implements SceneController {
         this.#worker.terminate()
     }
     screenshot(): void {
-        this.#sendCommand({
-            type: 'screenshot'
-        })
+        takeScreenshot(this.#canvas, this.screenshotFilename)
     }
 
     simulatePointerDown(x: number, y: number): void {

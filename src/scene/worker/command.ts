@@ -50,9 +50,6 @@ export interface SetThemeCommand extends _WorkerCommand {
     type: 'setTheme',
     theme: Theme
 }
-export interface ScreenshotCommand extends _WorkerCommand {
-    type: 'screenshot'
-}
 
 export interface PointerDownCommand extends _WorkerCommand {
     type: 'pointerDown',
@@ -103,25 +100,24 @@ export interface SetCameraZoomCommand extends _WorkerCommand {
 }
 
 export type WorkerCommand =
-    PlayCommand |
-    PauseCommand |
     GoToFrameCommand |
+    PanCameraCommand |
+    PauseCommand |
+    PlayCommand |
+    PointerDownCommand |
+    PointerMoveCommand |
+    PointerUpCommand |
     ResetCameraCommand |
+    ResizeCommand |
+    RotateCameraCommand |
     SelectCommand |
+    SetCameraRotationCommand |
+    SetCameraTargetCommand |
+    SetCameraZoomCommand |
+    SetGridEnabledCommand |
     SetGridEnabledCommand |
     SetGroupEnabledCommand |
     SetPathEnabledCommand |
-    SetGridEnabledCommand |
-    ResizeCommand |
-    SetThemeCommand |
     SetSpeedRatioCommand |
-    ScreenshotCommand |
-    PointerDownCommand |
-    PointerUpCommand |
-    PointerMoveCommand |
-    PanCameraCommand |
-    RotateCameraCommand |
-    ZoomCameraCommand |
-    SetCameraTargetCommand |
-    SetCameraRotationCommand |
-    SetCameraZoomCommand
+    SetThemeCommand |
+    ZoomCameraCommand

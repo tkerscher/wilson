@@ -176,4 +176,8 @@ export interface SceneController {
      * Takes a screenshot of the scenes current state
      */
     screenshot(): void
+    /**
+     * Name under which screenshots should be saved.
+     */
+    screenshotFilename: string
 }
