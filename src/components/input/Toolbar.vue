@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '../stores/theme';
+import { useTheme } from '../../stores/theme';
 const theme = useTheme()
 
 const emits = defineEmits<{

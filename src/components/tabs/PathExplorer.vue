@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { usePaths } from '../stores/paths'
+import { usePaths } from '../../stores/paths'
 const paths = usePaths()
 
 const props = defineProps<{

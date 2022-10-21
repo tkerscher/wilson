@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Group } from '../stores/objects'
+import { Group } from '../../stores/objects'
 
 const props = defineProps<{
     group: Group,

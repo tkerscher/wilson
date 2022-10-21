@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import DialInput from './DialInput.vue'
 import Slider from './Slider.vue'
-import { usePlayer } from '../stores/player'
+import { usePlayer } from '../../stores/player'
 const player = usePlayer()
 
 const emits = defineEmits<{

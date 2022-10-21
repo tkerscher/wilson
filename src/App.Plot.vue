@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import "./style.css"
 
-import GraphExplorer from './components/GraphExplorer.vue'
-import GraphPlot from './components/GraphPlot.vue'
+import GraphExplorer from './components/tabs/GraphExplorer.vue'
+import GraphPlot from './components/pages/GraphPlot.vue'
 import ResizableContainer from './components/ResizableContainer.vue'
 
 import { onMounted } from 'vue'

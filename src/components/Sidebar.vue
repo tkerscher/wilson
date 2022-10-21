@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import InfoTab from './InfoTab.vue'
-import ObjectExplorer from './ObjectExplorer.vue'
-import PathExplorer from './PathExplorer.vue'
-import SearchInput from './SearchInput.vue'
+import InfoTab from './tabs/InfoTab.vue'
+import ObjectExplorer from './tabs/ObjectExplorer.vue'
+import PathExplorer from './tabs/PathExplorer.vue'
+import SearchInput from './input/SearchInput.vue'
 import { onBeforeMount, ref } from 'vue'
 const searchQuery = ref('')
 

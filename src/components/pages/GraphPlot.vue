@@ -4,12 +4,12 @@
 </template>
 
 <script setup lang="ts">
-import { PlotConfig, createPlotData, createPlotLayout } from '../plot/plot'
+import { PlotConfig, createPlotData, createPlotLayout } from '../../plot/plot'
 import { newPlot, react, relayout } from "plotly.js-basic-dist"
 
 import { onMounted, ref, nextTick } from "vue"
-import { useGraphs } from '../stores/graphs';
-import { useTheme } from '../stores/theme'
+import { useGraphs } from '../../stores/graphs';
+import { useTheme } from '../../stores/theme'
 const graphs = useGraphs()
 const theme = useTheme()
 const PlotLayout = createPlotLayout(theme.useDarkTheme)

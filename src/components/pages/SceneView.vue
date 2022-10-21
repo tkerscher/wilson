@@ -15,24 +15,24 @@
 </template>
 
 <script setup lang="ts">
-import Toolbar from './Toolbar.vue'
+import Toolbar from '../input/Toolbar.vue'
 import { nextTick,  onBeforeUnmount, onMounted, ref } from 'vue'
-import { openPlot } from '../plot/openPlot'
+import { openPlot } from '../../plot/openPlot'
 
-import { SceneController } from '../scene/controller/controller'
-import { createController } from '../scene/controller/factory'
+import { SceneController } from '../../scene/controller/controller'
+import { createController } from '../../scene/controller/factory'
 
-import { CameraControl } from '../input/cameraControl'
-import { PlayerControl } from '../input/playerControl'
-import { ScenePointerProxy } from '../input/scenePointerProxy'
+import { CameraControl } from '../../input/cameraControl'
+import { PlayerControl } from '../../input/playerControl'
+import { ScenePointerProxy } from '../../input/scenePointerProxy'
 
-import { useObjects } from '../stores/objects'
-import { usePaths } from '../stores/paths'
-import { usePlayer } from '../stores/player'
-import { useProject } from '../stores/project'
-import { useTheme } from '../stores/theme'
+import { useObjects } from '../../stores/objects'
+import { usePaths } from '../../stores/paths'
+import { usePlayer } from '../../stores/player'
+import { useProject } from '../../stores/project'
+import { useTheme } from '../../stores/theme'
 import { MutationType } from 'pinia'
-import { getCurrentTheme } from '../scene/theme'
+import { getCurrentTheme } from '../../scene/theme'
 
 const objects = useObjects()
 const paths = usePaths()

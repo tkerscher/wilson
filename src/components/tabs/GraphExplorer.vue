@@ -26,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import SearchInput from './SearchInput.vue'
+import SearchInput from '../input/SearchInput.vue'
 
 import { computed, ref } from "vue"
-import { useGraphs } from '../stores/graphs'
+import { useGraphs } from '../../stores/graphs'
 const graphs = useGraphs()
 
 const showHidden = ref(false)

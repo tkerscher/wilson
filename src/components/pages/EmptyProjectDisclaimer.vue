@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useProject } from '../stores/project'
+import { useProject } from '../../stores/project'
 const project = useProject()
 
 async function onFileSelected(e: Event) {

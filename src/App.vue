@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import "./style.css"
 
-import Download from './components/Download.vue'
-import EmptyProjectDisclaimer from './components/EmptyProjectDisclaimer.vue'
-import ProjectView from './components/ProjectView.vue'
+import Download from './components/pages/Download.vue'
+import EmptyProjectDisclaimer from './components/pages/EmptyProjectDisclaimer.vue'
+import ProjectView from './components/pages/ProjectView.vue'
 
 import { onBeforeMount, ref } from "vue"
 import { useProject } from './stores/project'

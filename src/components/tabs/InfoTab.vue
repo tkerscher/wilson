@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { useProject } from '../stores/project'
+import { useProject } from '../../stores/project'
 const project = useProject()
 
 const author = computed(() => getDefault(project.meta?.author, 'No Author'))

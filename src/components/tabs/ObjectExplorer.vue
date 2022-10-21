@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import GroupEntry from './GroupEntry.vue'
-import { useObjects } from '../stores/objects'
+import { useObjects } from '../../stores/objects'
 const objects = useObjects()
 
 const props = defineProps<{

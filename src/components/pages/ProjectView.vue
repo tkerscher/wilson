@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import ResizableContainer from './ResizableContainer.vue'
+import ResizableContainer from '../ResizableContainer.vue'
 import SceneView from './SceneView.vue'
-import Sidebar from './Sidebar.vue'
-import PlayerControl from './PlayerControl.vue'
+import Sidebar from '../Sidebar.vue'
+import PlayerControl from '../input/PlayerControl.vue'
 
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { usePlayer } from '../stores/player'
-import { useProject } from '../stores/project'
+import { usePlayer } from '../../stores/player'
+import { useProject } from '../../stores/project'
 
 const player = usePlayer()
 const project = useProject()
