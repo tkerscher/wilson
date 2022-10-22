@@ -12,19 +12,25 @@ import { useGraphs } from '../../stores/graphs';
 import { useTheme } from '../../stores/theme'
 const graphs = useGraphs()
 const theme = useTheme()
-const PlotLayout = createPlotLayout(theme.useDarkTheme)
+
+let plotLayout = createPlotLayout(theme.useDarkTheme)
+theme.$subscribe((mutation, state) => {
+    plotLayout = createPlotLayout(state.useDarkTheme)
+    if (plotDiv.value)
+        relayout(plotDiv.value, plotLayout)
+})
 
 let issueRedraw = false
 function redraw() {
     issueRedraw = false
-    react(plotDiv.value!, createPlotData(graphs.visible), PlotLayout, PlotConfig)
+    react(plotDiv.value!, createPlotData(graphs.visible), plotLayout, PlotConfig)
 }
-const resizer = new ResizeObserver(() => relayout(plotDiv.value!, PlotLayout))
+const resizer = new ResizeObserver(() => relayout(plotDiv.value!, plotLayout))
 
 const plotDiv = ref<HTMLDivElement|null>(null)
 onMounted(() => {
     //Start with empty 
-    newPlot(plotDiv.value!, [], PlotLayout, PlotConfig);
+    newPlot(plotDiv.value!, [], plotLayout, PlotConfig);
 
     //watch for changes in graphs
     graphs.$subscribe(() => {

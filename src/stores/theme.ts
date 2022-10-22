@@ -28,6 +28,15 @@ export const useTheme = defineStore('theme', () => {
     document.documentElement.setAttribute('theme',
             useDarkTheme.value ? "dark" : "light")
 
+    //listen to storage event to keep this sync across windows
+    addEventListener('storage', (ev: StorageEvent) => {
+        if (ev.key == "theme" &&
+            (ev.newValue == "dark") != useDarkTheme.value)
+        {
+            toggleTheme()
+        }
+    })
+
     //done
     return { useDarkTheme, toggleTheme }
 })
