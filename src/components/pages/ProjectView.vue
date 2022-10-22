@@ -90,7 +90,7 @@ project.$subscribe((mutation, state) => init())
     display: flex;
     flex-direction: column;
     flex: 1;
-    background-color: #3d3d3d;
+    background-color: var(--primary3);
 }
 
 .controller {
