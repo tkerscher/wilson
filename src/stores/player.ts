@@ -15,7 +15,10 @@ export const usePlayer = defineStore('player', {
         isFullscreen: false,
         isLooping: false,
         isPlaying: false,
-        isScrubbing: false
+        isScrubbing: false,
+
+        isRecording: false,
+        recorderFps: 30
     }),
     actions: {
         forward() {
@@ -41,6 +44,9 @@ export const usePlayer = defineStore('player', {
         },
         toggleLooping() {
             this.isLooping = !this.isLooping
+        },
+        toggleRecording() {
+            this.isRecording = !this.isRecording
         },
         adjustSpeed(delta: number) {
             const _speed = this.speedRatio + delta

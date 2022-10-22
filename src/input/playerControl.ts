@@ -10,6 +10,7 @@ export interface Player {
     backward(): void
     forward(): void
     toggleLooping(): void
+    toggleRecording(): void
 
     adjustSpeed(delta: number): void
 }
@@ -27,6 +28,7 @@ export class PlayerControl {
             ["KeyJ", () => p.backward()],
             ["KeyL", () => p.forward()],
             ["KeyM", () => p.toggleLooping()],
+            ["KeyB", () => p.toggleRecording()]
         ])
         const hotKeysRepeat = new KeyMap([
             //speed

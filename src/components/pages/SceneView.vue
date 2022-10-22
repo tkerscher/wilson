@@ -35,6 +35,8 @@ import { useResolution } from '../../stores/resolution'
 import { useTheme } from '../../stores/theme'
 import { MutationType } from 'pinia'
 import { getCurrentTheme } from '../../scene/theme'
+import { VideoRecorder } from '@babylonjs/core'
+import { ScreenRecorder } from '../../video/screenRecorder'
 
 const objects = useObjects()
 const paths = usePaths()
@@ -90,6 +92,7 @@ function buildScene() {
 //project.$subscribe((mutation, state) => buildScene())
 
 // Player
+let recorder: ScreenRecorder
 player.$subscribe((mutation, state) => {
     //there has to be an animation to manipulate
     if (!controller) {
@@ -123,6 +126,16 @@ player.$subscribe((mutation, state) => {
     //Speed ratio
     if (controller.speedRatio != state.speedRatio) {
         controller.speedRatio = state.speedRatio
+    }
+
+    //Recorder
+    if (recorder.isRecording != state.isRecording) {
+        if (state.isRecording) {
+            recorder.start(player.recorderFps)
+        }
+        else {
+            recorder.stop()
+        }
     }
 })
 
@@ -210,6 +223,12 @@ onMounted(() => {
     cameraControl = new CameraControl(controller, canvas.value!)
     scenePointerProxy = new ScenePointerProxy(canvas.value!, controller)
     playerControl = new PlayerControl(player)
+
+    //Recorder
+    let videoName = project.meta?.name ?? ''
+    if (videoName.length == 0)
+        videoName = "event"
+    recorder = new ScreenRecorder(canvas.value!, videoName + '.webm')
 })
 onBeforeUnmount(() => {
     resizer.disconnect()

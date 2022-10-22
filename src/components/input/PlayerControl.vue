@@ -3,6 +3,9 @@
     <div class="player-control-container">
         <div class="top-action-bar">
             <div class="left-action-group">
+                <div :class="[player.isRecording ? 'icon-recording' : 'action-button', 'icon-medium', 'video-icon']"
+                     role="button" :title="player.isRecording ? 'Stop Recording' : 'Start Recording'"
+                     @mouseup="player.toggleRecording"></div>
             </div>
             <div class="middle-action-group">
                 <div class="action-button icon-medium backward-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
@@ -111,5 +114,18 @@ const emits = defineEmits<{
 }
 .toggle-active {
     background-color: var(--highlight1) !important;
+}
+
+.icon-recording {
+    background-color: red;
+    animation: blink 2s infinite;  
+    animation-timing-function: steps(1, end);
+}
+.icon-recording:hover {
+    cursor: pointer;
+}
+@keyframes blink {
+    0%  { background-color: red; }
+    50% { background-color: var(--primary7); }
 }
 </style>

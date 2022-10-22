@@ -1,5 +1,5 @@
 <template>
-<div :class="['number-input', { 'input-invalid': invalid, 'input-disabled': props.disabled } ]"
+<div :class="['number-input', { 'input-invalid': invalid, 'input-disabled': !!props.disabled } ]"
     :contenteditable="!props.disabled"
     @keydown.prevent.enter="endEdit"
     @keydown.prevent.esc="cancelEdit"
@@ -16,7 +16,7 @@ const props = defineProps<{
     modelValue: number,
     minValue: number,
     maxValue: number,
-    disabled: boolean
+    disabled?: boolean
 }>()
 const emits = defineEmits<{
     (e: 'update:modelValue', value: number): void
@@ -52,6 +52,7 @@ function checkInput(e: Event) {
 .number-input {
     background-color: transparent;
     border-bottom: 2px solid var(--highlight1);
+    text-align: left;
 }
 .number-input:focus {
     outline: 0px solid transparent;
