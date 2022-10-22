@@ -16,15 +16,8 @@
                 </div>
             </div>
         </div>
-        <div class="active-tab-container scrollable">
-                <ObjectExplorer v-if="activeTab == 0" :search-query="searchQuery"/>
-                <PathExplorer v-else-if="activeTab == 1" :search-query="searchQuery" />
-                <InfoTab v-else-if="activeTab == 3" />
-                <div v-else>
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit a
-                </div>
+        <div class="active-tab-container scrollable">            
+            <component :is="tabIcons[activeTab].tab" :searchQuery="searchQuery"/>
         </div>
     </div>
 </div>
@@ -33,16 +26,17 @@
 <script setup lang="ts">
 import InfoTab from './tabs/InfoTab.vue'
 import ObjectExplorer from './tabs/ObjectExplorer.vue'
+import SettingsTab from './tabs/SettingsTab.vue'
 import PathExplorer from './tabs/PathExplorer.vue'
 import SearchInput from './input/SearchInput.vue'
 import { onBeforeMount, ref } from 'vue'
 const searchQuery = ref('')
 
 const tabIcons = [
-    { icon: 'cube-icon', title: 'Objects' },
-    { icon: 'curve-icon', title: 'Paths' },
-    { icon: 'film-icon', title: 'Render'},
-    { icon: 'info-icon', title: 'Info'}
+    { icon: 'cube-icon', title: 'Objects', tab: ObjectExplorer },
+    { icon: 'curve-icon', title: 'Paths', tab: PathExplorer },
+    { icon: 'wrench-icon', title: 'Settings', tab: SettingsTab },
+    { icon: 'info-icon', title: 'Info', tab: InfoTab }
 ]
 const activeTab = ref(0)
 function onSelectTab(index: number) {
@@ -55,10 +49,6 @@ onBeforeMount(() => {
     const active = localStorage.getItem('activeTab')
     if (active != null)
         activeTab.value = Number(active)
-    //restore show hidden
-    const _showHidden = localStorage.getItem('showHidden')
-    if (_showHidden != null)
-        showHidden.value = _showHidden === 'true'
 })
 </script>
 

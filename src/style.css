@@ -259,6 +259,10 @@ input[type="search"]::-webkit-search-results-decoration {
     mask-image: url(./assets/icons/video.svg);
     -webkit-mask-image: url(./assets/icons/video.svg);
 }
+.wrench-icon {
+    mask-image: url(./assets/icons/wrench.svg);
+    -webkit-mask-image: url(./assets/icons/wrench.svg);
+}
 .xmark-icon {
     mask-image: url(./assets/icons/xmark.svg);
     -webkit-mask-image: url(./assets/icons/xmark.svg);

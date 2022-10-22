@@ -1,5 +1,5 @@
 <template>
-<div class="dial-input-container">
+<div class="dial-input-container" @keydown.stop>
     <div :class="['input-edit', valid ? 'input-valid' : 'input-invalid' ]" v-if="isEditing"
          ref="editDiv" contenteditable
          @keydown.prevent.enter="endEdit"

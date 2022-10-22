@@ -43,9 +43,15 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from "vue"
 import { computed } from '@vue/reactivity';
 import { useProject } from '../../stores/project'
 const project = useProject()
+
+//Common tab api
+const props = defineProps<{
+    searchQuery: string
+}>()
 
 const author = computed(() => getDefault(project.meta?.author, 'No Author'))
 const title = computed(() => getDefault(project.meta?.name, 'No Title'))

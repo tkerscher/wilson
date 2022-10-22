@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <div class="canvas-container" ref="container">
-            <canvas id="render-canvas" ref="canvas"></canvas>
+            <canvas id="render-canvas" ref="canvas"
+                 :style="{ transform: 'translateX(' + transX + 'px) translateY(' + transY + 'px) scale(' + scale + ')' }"></canvas>
         </div>
         <Toolbar
             class="toolbar"
@@ -30,6 +31,7 @@ import { useObjects } from '../../stores/objects'
 import { usePaths } from '../../stores/paths'
 import { usePlayer } from '../../stores/player'
 import { useProject } from '../../stores/project'
+import { useResolution } from '../../stores/resolution'
 import { useTheme } from '../../stores/theme'
 import { MutationType } from 'pinia'
 import { getCurrentTheme } from '../../scene/theme'
@@ -38,6 +40,7 @@ const objects = useObjects()
 const paths = usePaths()
 const player = usePlayer()
 const project = useProject()
+const resolution = useResolution()
 
 const canvas = ref<HTMLCanvasElement|null>(null)
 const container = ref<HTMLDivElement|null>(null)
@@ -141,12 +144,57 @@ paths.$subscribe((mutation, state) => {
 })
 
 // Resize
+let fixed = resolution.fixed
+const scale = ref(1.0)
+const transX = ref(0)
+const transY = ref(0)
 function resizeCanvas() {
-    controller?.resize(
-        container.value!.clientWidth,
-        container.value!.clientHeight)
+    const width = container.value!.clientWidth
+    const height = container.value!.clientHeight
+
+    if (resolution.fixed) {
+        //fixed size
+        controller?.resize(resolution.width, resolution.height)
+
+        //scale canvas accordingly
+        const hScale = width / resolution.width
+        const vScale = height / resolution.height
+        if (hScale < vScale) {
+            scale.value = hScale
+            transX.value = 0
+            transY.value = -(resolution.height * hScale - height) / 2
+        }
+        else {
+            scale.value = vScale
+            transX.value = -(resolution.width * vScale - width) / 2
+            transY.value = 0
+        }
+    }
+    else {
+        //fit to window
+        controller?.resize(width, height)
+        resolution.$patch({
+            width: width,
+            height: height
+        })
+
+        //no scale needed
+        scale.value = 1.0
+        transX.value = 0
+        transY.value = 0
+    }    
 }
 const resizer = new ResizeObserver(resizeCanvas)
+resolution.$subscribe((mutation, state) => {
+    if (state.fixed) {
+        fixed = true
+        resizeCanvas()
+    }
+    else if (fixed != state.fixed) { //Debounce
+        fixed = false
+        resizeCanvas()
+    }
+})
 
 //UI
 var cameraControl: CameraControl
@@ -201,6 +249,7 @@ function toggleTheme() {
     position: absolute;
     left: 0;
     top: 0;
+    transform-origin: 0% 0% 0px;
     touch-action: none;
     outline: none;
 }
