@@ -28,9 +28,6 @@ function messageHandler(ev: MessageEvent<any>) {
     case 'setTheme':
         controller.setTheme(cmd.theme)
         break
-    case 'screenshot':
-        controller.screenshot()
-        break
     case 'select':
         controller.select(cmd.id)
         break
