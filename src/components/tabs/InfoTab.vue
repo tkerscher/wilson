@@ -43,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue"
 import { computed } from '@vue/reactivity';
 import { useProject } from '../../stores/project'
 const project = useProject()
