@@ -24,8 +24,8 @@ const theme = useTheme() //side effect only
 const url = ref('')
 onBeforeMount(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.has('event')) {
-        url.value = decodeURIComponent(params.get('event')!)
+    if (params.has('cat')) {
+        url.value = decodeURIComponent(params.get('cat')!)
     }
 })
 </script>

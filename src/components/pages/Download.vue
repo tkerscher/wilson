@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useProject } from '../../stores/project'
-const project = useProject()
+import { useCatalogue } from '../../stores/catalogue'
+const catalogue = useCatalogue()
 
 const response = ref('')
 const state = ref('working')
@@ -41,14 +41,21 @@ onMounted(() => {
 
         return res.arrayBuffer()
     })
-    .then(buf => {
+    .then(async buf => {
         state.value = 'finished'
-        project.loadProject(new Uint8Array(buf))
+        const prom = catalogue.openCatalogue(buf)
+
+        //load event if specified
+        const params = new URLSearchParams(window.location.search)
+        if (params.has('event')) {
+            await prom
+            catalogue.loadProject(params.get('event')!)
+        }
     })
     .then(() => emits('finished'))
     .catch(err => {
         state.value = 'failed'
-        console.log(state.value)
+        console.log(err)
     })
 })
 </script>

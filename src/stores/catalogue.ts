@@ -48,11 +48,11 @@ export const useCatalogue = defineStore('catalogue', () => {
         currentIndex.value = -1
     }
 
-    function openCatalogue(buffer: ArrayBuffer) {
+    function openCatalogue(buffer: ArrayBuffer): Promise<void> {
         reset()
         data = buffer
         
-        JSZip.loadAsync(buffer).then(zip => {
+        return JSZip.loadAsync(buffer).then(async zip => {
             //store archive
             archive = zip
 
@@ -72,11 +72,11 @@ export const useCatalogue = defineStore('catalogue', () => {
                         
             //if only one file open it right away
             if (proms.length == 1) {
-                proms[0].then(() => loadProject(entries.value[0].filename))
+                await proms[0].then(() => loadProject(entries.value[0].filename))
             }
             else {
                 //Entries are totally random now => sort them by name to be deterministic
-                Promise.all(proms).then(() => entries.value.sort((a, b) => {
+                await Promise.all(proms).then(() => entries.value.sort((a, b) => {
                     //thanks javascript...
                     if (a.filename < b.filename) return -1
                     if (a.filename > b.filename) return 1
