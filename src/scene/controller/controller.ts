@@ -1,6 +1,13 @@
+import { Project } from "../../model/project"
 import { Theme } from "../theme"
 
 export interface SceneController {
+
+    /**
+     * Loads the given project into the scene and replaces any already present
+     * scene 
+     */
+    load(project: Project): void
 
     /**************************** Animation Control ***************************/
 

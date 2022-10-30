@@ -4,6 +4,10 @@ interface _WorkerCommand {
     type: string
 }
 
+export interface LoadCommand extends _WorkerCommand {
+    type: 'load',
+    data: ArrayBufferLike
+}
 export interface PlayCommand extends _WorkerCommand {
     type: 'play',
     loop: boolean
@@ -100,6 +104,7 @@ export interface SetCameraZoomCommand extends _WorkerCommand {
 }
 
 export type WorkerCommand =
+    LoadCommand |
     GoToFrameCommand |
     PanCameraCommand |
     PauseCommand |

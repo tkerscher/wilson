@@ -37,16 +37,13 @@ export class WorkerController implements SceneController {
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
     #onObjectPickedCallbacks: Array<(id: number) => void> = []
 
-    screenshotFilename: string
+    screenshotFilename: string = ""
 
-    constructor(project: Project, canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement) {
         this.#canvas = canvas
         //create scene worker
         const worker = new SceneWorker()
         this.#worker = worker
-
-        //serialize project
-        const serialized = Project.encode(project).finish().buffer
 
         //prepare message handler
         const controller = this
@@ -61,6 +58,7 @@ export class WorkerController implements SceneController {
                 controller.#onFrameChangedCallbacks.forEach(fn => fn(event.currentFrame))
                 break
             case 'onObjectPicked':
+                console.log('picked')
                 controller.#onObjectPickedCallbacks.forEach(fn => fn(event.objectId))
                 break
             }
@@ -85,17 +83,13 @@ export class WorkerController implements SceneController {
             }
             const offscreen = canvas.transferControlToOffscreen()
             worker.postMessage({
-                project: serialized,
                 canvas: offscreen
-            }, [offscreen, serialized])
-        })
-
-        //create file name for screenshots
-        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
+            }, [offscreen])
+        })        
     }
 
-    #sendCommand(cmd: WorkerCommand) {
-        this.#worker.postMessage(cmd)
+    #sendCommand(cmd: WorkerCommand, transfer?: Transferable[]) {
+        this.#worker.postMessage(cmd, transfer)
     }
 
     get currentFrame(): number {
@@ -116,6 +110,14 @@ export class WorkerController implements SceneController {
             type: 'setSpeedRatio',
             value: value
         })
+    }
+    load(project: Project): void {
+        const serialized = Project.encode(project).finish().buffer
+        this.#sendCommand({
+            type: 'load',
+            data: serialized
+        }, [serialized])
+        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
     }
     play(loop: boolean): void {
         this.#isPlaying = true

@@ -17,20 +17,34 @@ import { SceneController } from "./controller";
 
 export class LocalController implements SceneController {
     #canvas: HTMLCanvasElement|OffscreenCanvas
-    #container: SceneContainer
     #engine: Engine
+    #container: SceneContainer|null = null
     
-    #defaultCameraPosition: Vector3
-    #defaultCameraTarget: Vector3
+    #defaultCameraPosition: Vector3 = Vector3.Zero()
+    #defaultCameraTarget: Vector3 = Vector3.Zero()
+
+    //callbacks
+    #onAnimationLoopCallbacks: Array<() => void> = []
+    #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
+    #onObjectPickedCallbacks: Array<(id: number) => void> = []
     
-    screenshotFilename: string
+    screenshotFilename: string = ""
     
-    constructor(project: Project, canvas: HTMLCanvasElement|OffscreenCanvas, allowInput: boolean = false) {
+    constructor(canvas: HTMLCanvasElement|OffscreenCanvas) {
         this.#canvas = canvas
         //create engine
         this.#engine = new Engine(canvas, true, {
             preserveDrawingBuffer: true
         })
+    }
+
+    load(project: Project): void {
+        //remove previous scene
+        if (!!this.#container) {
+            this.#container.indicatorLayer.dispose()
+            this.#container.scene.dispose()
+        }
+
         //create scene
         this.#container = buildScene(project, this.#engine)
         //changing cursors brake on offscreen canvas
@@ -41,73 +55,96 @@ export class LocalController implements SceneController {
         this.#defaultCameraPosition = this.#container.camera.position.clone()
         this.#defaultCameraTarget = this.#container.camera.target.clone()
 
+        //hook up callbacks
+        this.#container.onAnimationTick.add(this.#notifyAnimationTick.bind(this))
+        this.#container.animation.onAnimationGroupLoopObservable.add(
+            this.#notifyAnimationLoop.bind(this))
+        this.#container?.onObjectPicked.add(this.#notifyObjectPicked.bind(this))    
+
         //create file name for screenshots
         this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
+    }
+
+    /******************************* Callbacks ********************************/
+
+    #notifyAnimationTick(e: {currentFrame: number}) {
+        this.#onFrameChangedCallbacks.forEach(
+            callback => callback(e.currentFrame))
+    }
+    #notifyAnimationLoop() {
+        this.#onAnimationLoopCallbacks.forEach(callback => callback())
+    }
+    #notifyObjectPicked(e: {objectId: number}) {
+        this.#onObjectPickedCallbacks.forEach(callback => callback(e.objectId))
     }
 
     /**************************** Animation Control ***************************/
 
     get currentFrame(): number {
-        return this.#container.animation.animatables[0].masterFrame
+        return this.#container?.animation.animatables[0].masterFrame ?? 0.0
     }
     get isStatic(): boolean {
-        return this.#container.isStatic
+        return this.#container?.isStatic ?? true
     }
     get isPlaying(): boolean {
-        return this.#container.animation.isPlaying
+        return this.#container?.animation.isPlaying ?? false
     }
     get speedRatio(): number {
-        return this.#container.animation.speedRatio
+        return this.#container?.animation.speedRatio ?? 1.0
     }
     set speedRatio(value: number) {
+        if (!this.#container)
+            return
         this.#container.animation.speedRatio = value
     }
     play(loop: boolean) {
-        this.#container.animation.play(loop)
+        this.#container?.animation.play(loop)
     }
     pause() {
-        this.#container.animation.pause()
+        this.#container?.animation.pause()
     }
     goToFrame(frame: number) {
-        this.#container.animation.goToFrame(frame)
+        this.#container?.animation.goToFrame(frame)
     }
 
     registerOnFrameChanged(callback: (currentFrame: number) => void): void {
-        this.#container.onAnimationTick.add(e => callback(e.currentFrame))
+        this.#onFrameChangedCallbacks.push(callback)
     }
     registerOnAnimationLoop(callback: () => void): void {
-        this.#container.animation.onAnimationGroupLoopObservable.add(callback)
+        this.#onAnimationLoopCallbacks.push(callback)
     }
 
     /*************************** Scene Interaction ****************************/
 
     select(id: number|null) {
         if (id != null) {
-            const mesh = this.#container.scene.getMeshByUniqueId(id)
+            const mesh = this.#container?.scene.getMeshByUniqueId(id)
             if (mesh && mesh.metadata && isMetadata(mesh.metadata)) {
-                this.#container.description.showDescription(
+                this.#container?.description.showDescription(
                     mesh, mesh.metadata.name, mesh.metadata.description)
             }
         }
     }
     setGroupEnabled(group: string, enabled: boolean) {
-        this.#container.groupMap.get(group)?.setEnabled(enabled)
+        this.#container?.groupMap.get(group)?.setEnabled(enabled)
     }
     setPathEnabled(id: number, enabled: boolean, color: string): void {
-        this.#container.pathVisualizer.setPathEnabled(id, enabled, color)
+        this.#container?.pathVisualizer.setPathEnabled(id, enabled, color)
     }
     resetCamera() {
-        this.#container.camera.setPosition(this.#defaultCameraPosition)
-        this.#container.camera.setTarget(this.#defaultCameraTarget)
+        this.#container?.camera.setPosition(this.#defaultCameraPosition)
+        this.#container?.camera.setTarget(this.#defaultCameraTarget)
     }
 
     registerOnObjectPicked(callback: (objectId: number) => void): void {
-        this.#container.onObjectPicked.add(e => callback(e.objectId))
+        this.#onObjectPickedCallbacks.push(callback)
     }
 
     /****************************** User Input ********************************/
 
     simulatePointerDown(x: number, y: number) {
+        if (!this.#container)
+            return
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERDOWN, {
@@ -135,6 +172,8 @@ export class LocalController implements SceneController {
     }
 
     simulatePointerUp(x: number, y: number) {
+        if (!this.#container)
+            return
         //mesh selection
         const pick = this.#container.scene.pick(x, y)
         if (!!pick && pick.hit && !!pick.pickedMesh) {
@@ -168,6 +207,8 @@ export class LocalController implements SceneController {
     }
 
     simulatePointerMove(x: number, y: number) {
+        if (!this.#container)
+            return
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERMOVE, {
@@ -207,6 +248,8 @@ export class LocalController implements SceneController {
      * @param dy Vertical distance
      */
      panCamera(dx: number, dy: number) {
+        if (!this.#container)
+            return
         //calculate normal
         const cam = this.#container.camera
         cam.target.subtractToRef(cam.position, this.#cameraNormal)
@@ -234,6 +277,8 @@ export class LocalController implements SceneController {
       * @param beta vertical rotation
       */
      rotateCamera(alpha: number, beta: number) {
+        if (!this.#container)
+            return
         //update
         alpha += this.#container.camera.alpha
         beta += this.#container.camera.beta
@@ -252,6 +297,8 @@ export class LocalController implements SceneController {
       * @param delta Amount to zoom
       */
      zoomCamera(delta: number) {
+        if (!this.#container)
+            return
         this.#container.camera.radius += delta
      }
  
@@ -262,6 +309,8 @@ export class LocalController implements SceneController {
       * @param z 
       */
      setCameraTarget(x: number, y: number, z: number) {
+        if (!this.#container)
+            return
         this.#container.camera.setTarget(new Vector3(x, y, z))
      }
  
@@ -271,6 +320,8 @@ export class LocalController implements SceneController {
       * @param beta 
       */
      setCameraRotation(alpha: number, beta: number) {
+        if (!this.#container)
+            return
         this.#container.camera.alpha = alpha
         this.#container.camera.beta = beta
      }
@@ -280,16 +331,18 @@ export class LocalController implements SceneController {
       * @param distance 
       */
      setCameraZoom(distance: number) {
+        if (!this.#container)
+            return
         this.#container.camera.radius = distance
      }
 
     /****************************** Appearance ********************************/
 
     get isGridEnabled(): boolean {
-        return this.#container.grid.isEnabled()
+        return this.#container?.grid.isEnabled() ?? false
     }
     setGridEnabled(enabled: boolean): void {
-        this.#container.grid.setEnabled(enabled)
+        this.#container?.grid.setEnabled(enabled)
     }
 
     resize(width: number, height: number): void {
@@ -299,6 +352,8 @@ export class LocalController implements SceneController {
     }
 
     setTheme(theme: Theme): void {
+        if (!this.#container)
+            return
         this.#container.overlayRoot.color = theme.fontColor
         this.#container.scene.clearColor = Color4.FromColor3(
             Color3.FromHexString(theme.clearColor), 1.0)

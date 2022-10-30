@@ -10,6 +10,14 @@ function messageHandler(ev: MessageEvent<any>) {
     //Wire up messages to controller
     const cmd = ev.data as WorkerCommand
     switch (cmd.type) {
+    case 'load':
+        //decode project
+        const serialized: ArrayBufferLike = cmd.data
+        const data = new Uint8Array(serialized)
+        const project: Project = Project.decode(data)
+        //load it
+        controller.load(project)
+        break
     case 'play':
         controller.play(true)
         break
@@ -73,12 +81,9 @@ function messageHandler(ev: MessageEvent<any>) {
 onmessage = ev => {
     //get data
     const canvas: OffscreenCanvas = ev.data.canvas
-    const serialized: ArrayBufferLike = ev.data.project
-    const data = new Uint8Array(serialized)
-    const project: Project = Project.decode(data)
 
     //create scene
-    controller = new LocalController(project, canvas, true)
+    controller = new LocalController(canvas)
 
     //register callbacks
     controller.registerOnAnimationLoop(() => postMessage({
