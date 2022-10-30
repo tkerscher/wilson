@@ -30,6 +30,9 @@ export const useObjects = defineStore('objects', () => {
             return
         }
 
+        //reset selection
+        selectedObjectIdx.value = null
+
         let id = 0
         let map = new Map<string, Group>()
         function getGroup(name: string): Group {
