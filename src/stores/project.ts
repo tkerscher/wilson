@@ -45,9 +45,8 @@ export const useProject = defineStore('project', {
         }
     },
     actions: {
-        loadProject(buffer: ArrayBuffer) {
-            const array = inflate(new Uint8Array(buffer))
-            const project = Project.decode(array)
+        loadProject(data: Uint8Array) {
+            const project = Project.decode(data)
             console.log(project)
             this.$patch(project)
         },
