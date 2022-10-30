@@ -44,7 +44,7 @@ function init() {
 }
 
 function onKeydown(e: KeyboardEvent) {
-    if (e.code == "KeyF") {
+    if (e.code == "KeyF" && !e.altKey && !e.ctrlKey && !e.shiftKey) {
         fullscreen()
     }
 }
