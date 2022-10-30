@@ -1,3 +1,5 @@
+import "@babylonjs/core/Animations/animatable"
+
 import { Animation } from "@babylonjs/core/Animations/animation"
 import { AnimationGroup } from "@babylonjs/core/Animations/animationGroup"
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera"
