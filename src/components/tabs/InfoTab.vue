@@ -40,10 +40,15 @@
     P1ON is an open source project under the MIT-License.<br />
     Checkout the project's <a href="https://github.com/tkerscher/P1ON">sourcecode</a>.
 </div>
+
+<!--Force vue to update this tab. God knows why this is needed-->
+<div style="visibility:hidden">
+    {{project.meta?.name}}
+</div>
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
+import { ref } from '@vue/reactivity';
 import { useProject } from '../../stores/project'
 const project = useProject()
 
@@ -52,24 +57,37 @@ const props = defineProps<{
     searchQuery: string
 }>()
 
-const author = computed(() => getDefault(project.meta?.author, 'No Author'))
-const title = computed(() => getDefault(project.meta?.name, 'No Title'))
-const description = computed(() => getDefault(project.meta?.description, 'No description'))
-const date = computed(() => new Date(project.meta?.date?.seconds ?? 0).toString())
-const timestamp = computed(() => {
-    const nanos = project.meta?.date?.nanos ?? 0
-    return (nanos + 1e10).toLocaleString('en-US').slice(3)
-})
-const eventStart = computed(() => (project.meta?.startTime ?? 0).toLocaleString('en-US'))
-const eventEnd = computed(() => (project.meta?.endTime ?? 0).toLocaleString('en-US'))
-const duration = computed(() => (
-    (project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US'))
 function getDefault(value: string|undefined, def: string): string {
     if (!value || value.length == 0)
         return def
     else
         return value
 }
+
+//data
+//For whatever reason computed props do not work!?
+const author = ref('')
+const title = ref('')
+const description = ref('')
+const date = ref('')
+const timestamp = ref('')
+const eventStart = ref('')
+const eventEnd = ref('')
+const duration = ref('')
+
+function updateData() {
+    author.value = getDefault(project.meta?.author, 'No Author')
+    title.value = getDefault(project.meta?.name, 'No Title')
+    description.value = getDefault(project.meta?.description, 'No description')
+    date.value = new Date(project.meta?.date?.seconds ?? 0).toString()
+    const nanos = project.meta?.date?.nanos ?? 0
+    timestamp.value = (nanos + 1e10).toLocaleString('en-US').slice(3)
+    eventStart.value = (project.meta?.startTime ?? 0).toLocaleString('en-US')
+    eventEnd.value = (project.meta?.endTime ?? 0).toLocaleString('en-US')
+    duration.value = ((project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US')
+}
+updateData()
+project.$subscribe(updateData)
 </script>
 
 <style scoped>
