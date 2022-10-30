@@ -137,6 +137,7 @@ function openDialog() {
     text-align: left;
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .banner {
