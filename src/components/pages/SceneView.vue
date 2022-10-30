@@ -60,6 +60,9 @@ function buildScene() {
     //build scene
     controller.load(project)    
 
+    //apply theme
+    controller.setTheme(getCurrentTheme())
+
     //start animation
     if (player.isPlaying) {
         controller.play(player.isLooping)
