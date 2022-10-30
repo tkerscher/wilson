@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <img class="banner" src="/p-one_blue_dark.svg" />
+        <img v-if="theme.useDarkTheme" class="banner" src="/p-one_blue_dark.svg" />
+        <img v-else class="banner" src="/p-one_blue.svg" />
         <p class="disclaimer">
             Currently, there is nothing to show! <br />
             Select a file to watch it.
@@ -14,7 +15,9 @@
 
 <script setup lang="ts">
 import { useCatalogue } from '../../stores/catalogue'
+import { useTheme } from '../../stores/theme';
 const catalogue = useCatalogue()
+const theme = useTheme()
 
 function onFileSelected(e: Event) {
     const fileInput = e.target! as HTMLInputElement
