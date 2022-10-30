@@ -1,5 +1,4 @@
 from typing import Dict, Optional, Tuple
-from zlib import decompress
 import numpy as np
 
 from p1on.objects import Line, Sphere, Tube, Overlay
@@ -13,6 +12,11 @@ from p1on.data import (
     VectorProperty )
 from p1on.project import Camera, Project
 import p1on.proto as proto
+
+class ProjectParserException(Exception):
+    """Exception class raised during project parsing errors."""
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
 
 def parseProjectFromBytes(data: bytes) -> Project:
     """
@@ -58,13 +62,6 @@ def parseProjectFromBytes(data: bytes) -> Project:
 
     #done
     return result
-
-def parseProjectFromFile(path: str) -> Project:
-    """
-    Loads a project from the given file and returns it.
-    """
-    with open(path, 'rb') as f:
-        return parseProjectFromFile(decompress(f.read())) #type: ignore[arg-type]
 
 ################################## Data ########################################
 

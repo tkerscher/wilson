@@ -1,8 +1,7 @@
 import numpy as np
 import cmasher as cmr
 import re
-from typing import Any, List, Tuple
-from zlib import compress
+from typing import Any, Tuple
 
 from p1on.color import getColorByName
 from p1on.data import (
@@ -111,13 +110,6 @@ def serializeProject(project: Project) -> bytes:
     
     #ask protobuf to serialize
     return out.SerializeToString() #type: ignore[no-any-return]
-
-def saveProject(project: Project, path: str) -> None:
-    """
-    Saves the project to the given file.
-    """
-    with open(path, 'wb') as f:
-        f.write(compress(serializeProject(project)))
 
 ################################## Data ########################################
 
