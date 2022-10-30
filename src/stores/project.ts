@@ -6,7 +6,6 @@ import { Project } from "../model/project"
 import { Sphere } from "../model/sphere"
 import { Tube } from "../model/tube"
 import { Overlay } from "../model/overlay"
-import { inflate } from "pako"
 
 export type ObjectMeta = Sphere | Line | Tube | Overlay;
 
