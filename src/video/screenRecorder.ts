@@ -1,3 +1,5 @@
+import { createDownload } from '../util/download'
+
 const mime = "video/webm"
 const chunkSize = 3000
 
@@ -50,12 +52,6 @@ export class ScreenRecorder {
     #handleStop() {
         this.stop()
         const blob = new Blob(this.#recordedChunks)
-        //save to disk
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.setAttribute('href', url)
-        link.setAttribute('download', this.#filename)
-        link.click()
-        URL.revokeObjectURL(url)
+        createDownload(blob, this.#filename)
     }
 }
