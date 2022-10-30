@@ -1,11 +1,9 @@
-import { 
-    Mesh, 
-    MeshBuilder, 
-    RawTexture, 
-    Scene, 
-    StandardMaterial, 
-    Vector3 
-} from "@babylonjs/core";
+import { Mesh } from "@babylonjs/core/Meshes/mesh"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder"
+import { Vector3 } from "@babylonjs/core/Maths/math.vector"
+import { Scene } from "@babylonjs/core/scene"
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial"
+import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture"
 import { Tube } from "../../model/tube";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { GraphInterpolator } from "../../interpolation/graphInterpolation";

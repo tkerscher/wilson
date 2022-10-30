@@ -1,4 +1,4 @@
-import { Control } from "@babylonjs/gui";
+import { Control } from "@babylonjs/gui/2D/controls/control";
 
 //Babylon js lazily queries font metrics, but uses document.createElement() to
 //do so. Obviously, this is not possible in web workers, so we register it

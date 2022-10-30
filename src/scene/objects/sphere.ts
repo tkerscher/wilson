@@ -1,4 +1,7 @@
-import { InstancedMesh, Mesh, MeshBuilder } from "@babylonjs/core";
+import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
+import { Mesh } from "@babylonjs/core/Meshes/mesh"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+
 import { ColorProperty } from "../../model/properties";
 import { Sphere } from "../../model/sphere";
 import { toHex } from "../../util/colorToHex";

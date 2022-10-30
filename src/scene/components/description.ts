@@ -1,16 +1,14 @@
-import {
-    AdvancedDynamicTexture,
-    Button,
-    Container,
-    Control,
-    Ellipse,
-    Grid,
-    Line,
-    Rectangle,
-    StackPanel,
-    TextBlock
-} from "@babylonjs/gui"
-import { TransformNode } from "@babylonjs/core"
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture"
+import { Button } from "@babylonjs/gui/2D/controls/button"
+import { Container } from "@babylonjs/gui/2D/controls/container"
+import { Control } from "@babylonjs/gui/2D/controls/control"
+import { Ellipse } from "@babylonjs/gui/2D/controls/ellipse"
+import { Grid } from "@babylonjs/gui/2D/controls/grid"
+import { Line } from "@babylonjs/gui/2D/controls/line"
+import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle"
+import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel"
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock"
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode"
 import { TextEngine } from "../../interpolation/textEngine"
 
 //Some styling constants

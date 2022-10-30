@@ -1,17 +1,17 @@
-import {
-    Animation,
-    AnimationGroup,
-    ArcRotateCamera,
-    Engine,
-    HemisphericLight,
-    Node,
-    Scene,
-    Observable,
-    TransformNode,
-    Vector3,
-    PointerEventTypes
-} from "@babylonjs/core";
-import { AdvancedDynamicTexture, Rectangle } from "@babylonjs/gui";
+import { Animation } from "@babylonjs/core/Animations/animation"
+import { AnimationGroup } from "@babylonjs/core/Animations/animationGroup"
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera"
+import { Engine } from "@babylonjs/core/Engines/engine"
+import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight"
+import { Node } from "@babylonjs/core/node"
+import { Scene } from "@babylonjs/core/scene"
+import { Observable } from "@babylonjs/core/Misc/observable";
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode"
+import { PointerEventTypes } from "@babylonjs/core/Events/pointerEvents";
+
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture"
+import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
+
 import { TextEngine } from "../interpolation/textEngine";
 import { Project } from "../model/project";
 import { Description } from "./components/description";

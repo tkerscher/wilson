@@ -1,9 +1,8 @@
-import {
-    Control,
-    Rectangle,
-    StackPanel,
-    TextBlock
-} from "@babylonjs/gui/2D"
+import { Control } from "@babylonjs/gui/2D/controls/control"
+import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle"
+import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel"
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock"
+
 import { Overlay, TextPosition, textPositionToJSON } from "../../model/overlay";
 import { SceneBuildTool } from "./tools";
 

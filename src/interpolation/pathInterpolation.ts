@@ -1,4 +1,4 @@
-import { Vector3 } from "@babylonjs/core";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Project } from "../model/project";
 import { VectorProperty } from "../model/properties";
 import { getInterpolation } from "./functions"

@@ -1,16 +1,16 @@
-import {
-    Animation,
-    AnimationGroup, 
-    Color3, 
-    Color4, 
-    Engine, 
-    IAnimationKey, 
-    Node, 
-    Scene, 
-    StandardMaterial, 
-    Vector3
-} from "@babylonjs/core";
-import { AdvancedDynamicTexture, Control } from "@babylonjs/gui/2D";
+import { Animation } from "@babylonjs/core/Animations/animation"
+import { AnimationGroup } from "@babylonjs/core/Animations/animationGroup";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color"
+import { Engine } from "@babylonjs/core/Engines/engine"
+import { IAnimationKey } from "@babylonjs/core/Animations/animationKey"
+import { Vector3 } from "@babylonjs/core/Maths/math.vector"
+import { Node } from "@babylonjs/core/node";
+import { Scene } from "@babylonjs/core/scene"
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial"
+
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture"
+import { Control } from "@babylonjs/gui/2D/controls/control"
+
 import { Project } from "../../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../../model/properties";
 import { getInterpolation } from "../../interpolation/functions";

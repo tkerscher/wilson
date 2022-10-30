@@ -1,17 +1,14 @@
-import {
-    Camera,
-    Color3,
-    Engine,
-    Mesh,
-    MeshBuilder,
-    Quaternion,
-    Scene,
-    StandardMaterial,
-    TargetCamera,
-    Texture,
-    TransformNode,
-    Vector3
-} from "@babylonjs/core";
+import { Camera } from "@babylonjs/core/Cameras/camera"
+import { Color3 } from "@babylonjs/core/Maths/math.color"
+import { Engine } from "@babylonjs/core/Engines/engine"
+import { Mesh } from "@babylonjs/core/Meshes/mesh"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder"
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector"
+import { Scene } from "@babylonjs/core/scene"
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial"
+import { TargetCamera } from "@babylonjs/core/Cameras/targetCamera"
+import { Texture } from "@babylonjs/core/Materials/Textures/texture"
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode"
 
 //import assets to get mangled url in production
 import xUrl from '../../assets/textures/x.png'

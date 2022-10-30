@@ -1,11 +1,9 @@
-import {
-    Color3,
-    Mesh,
-    MeshBuilder, 
-    Scene,
-    StandardMaterial,
-    Vector3
-} from "@babylonjs/core"
+import { Color3 } from "@babylonjs/core/Maths/math.color"
+import { Mesh } from "@babylonjs/core/Meshes/mesh"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder"
+import { Scene } from "@babylonjs/core/scene"
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial"
+import { Vector3 } from "@babylonjs/core/Maths/math.vector"
 import { Project } from "../../model/project"
 
 /**

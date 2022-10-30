@@ -1,4 +1,4 @@
-import { IEasingFunction } from "@babylonjs/core"
+import { IEasingFunction } from "@babylonjs/core/Animations/easing"
 import { Interpolation } from "../model/interpolation"
 
 //Easing function corresponding to the interpolation modes of the data model

@@ -1,10 +1,8 @@
-import { 
-    Animation, 
-    IAnimationKey,
-    MeshBuilder, 
-    Quaternion, 
-    Vector3 
-} from "@babylonjs/core"
+import { Animation } from "@babylonjs/core/Animations/animation"
+import { IAnimationKey } from "@babylonjs/core/Animations/animationKey"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder"
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector"
+
 import { Line } from "../../model/line"
 import { PathInterpolator } from "../../interpolation/pathInterpolation"
 import { SceneBuildTool } from "./tools"

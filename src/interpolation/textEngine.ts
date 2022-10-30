@@ -1,5 +1,5 @@
-import { Vector3 } from "@babylonjs/core"
-import { TextBlock } from "@babylonjs/gui"
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock"
 import { sprintf } from "sprintf-js"
 import { Project } from "../model/project"
 import { PathInterpolator } from "./pathInterpolation"

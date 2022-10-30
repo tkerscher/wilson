@@ -1,13 +1,10 @@
-import {
-    Color3,
-    Color4,
-    Engine,
-    PointerEventTypes,
-    PointerInfoPre,
-    PointerInput,
-    Quaternion,
-    Vector3
-} from "@babylonjs/core";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color"
+import { Engine } from "@babylonjs/core/Engines/engine"
+import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents"
+import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums"
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector"
+
+
 import { Project } from "../../model/project";
 import { takeScreenshot } from "../../util/screenshot";
 import { buildScene, SceneContainer } from "../build";

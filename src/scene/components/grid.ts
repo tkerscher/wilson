@@ -1,12 +1,10 @@
-import {
-    Color3,
-    MeshBuilder,
-    Node,
-    Scene,
-    StandardMaterial,
-    Vector3
-} from "@babylonjs/core"
-import { GridMaterial } from '@babylonjs/materials'
+import { Color3 } from "@babylonjs/core/Maths/math.color"
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder"
+import { Node } from "@babylonjs/core/node"
+import { Scene } from "@babylonjs/core/scene"
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial"
+import { Vector3 } from "@babylonjs/core/Maths/math.vector"
+import { GridMaterial } from '@babylonjs/materials/grid/gridMaterial'
 
 const XColor = new Color3(1, 0.255, 0.212)
 const YColor = new Color3(0.18, 0.8, 0.251)
