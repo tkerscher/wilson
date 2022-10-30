@@ -43,7 +43,7 @@ onMounted(() => {
     })
     .then(buf => {
         state.value = 'finished'
-        project.loadProject(buf)
+        project.loadProject(new Uint8Array(buf))
     })
     .then(() => emits('finished'))
     .catch(err => {
