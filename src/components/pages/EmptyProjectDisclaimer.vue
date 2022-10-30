@@ -13,13 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { useProject } from '../../stores/project'
-const project = useProject()
+import { useCatalogue } from '../../stores/catalogue'
+const catalogue = useCatalogue()
 
-async function onFileSelected(e: Event) {
+function onFileSelected(e: Event) {
     const fileInput = e.target! as HTMLInputElement
     if (fileInput.files) {
-        project.loadProject(await fileInput.files[0].arrayBuffer())
+        fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue)
     }
 }
 </script>

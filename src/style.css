@@ -16,6 +16,8 @@
     --toolbox-background: #1a1a1ad5;
 
     --highlight1: #3497ff;
+    --highlight1-light: #5baaff;
+    --highlight1-dark: #2675ca;
     --highlight2: #ffa500;
 
     --error: #e02a2a;
@@ -39,6 +41,8 @@
     --toolbox-background: #616161d5;
 
     --highlight1: #3497ff;
+    --highlight1-light: #5baaff;
+    --highlight1-dark: #2675ca;
     --highlight2: #ffa500;
 
     --error: #e02a2a;
@@ -55,13 +59,16 @@
 body {
     color: var(--primary7);
 }
+#app {
+    background-color: var(--background);
+}
 
 .p-button {
-    background-color: #3497ff;
+    background-color: var(--highlight1);
     color: white;
 
     border-radius: 5px;
-    border: 1px solid #5baaff;
+    border: 1px solid var(--highlight1-light);
     padding: 2px 10px;
 
     display: flex;
@@ -71,11 +78,11 @@ body {
     user-select: none;
 }
 .p-button:hover {
-    background-color: #5baaff;
+    background-color: var(--highlight1-light);
     cursor: pointer;
 }
 .p-button:active {
-    background-color: #2675ca;
+    background-color: var(--highlight1-dark);
 }
 
 .scrollable {
@@ -85,6 +92,7 @@ body {
 }
 .scrollable::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 .scrollable::-webkit-scrollbar-track {
     background-color: var(--primary6);
@@ -117,6 +125,7 @@ input[type=search] {
     border: 1px solid transparent;
     background: transparent;
     color: var(--primary7);
+    font-size: 90%;
 }
 input[type=search]:focus {
     border-bottom: 1px solid var(--highlight1);
@@ -179,6 +188,14 @@ input[type="search"]::-webkit-search-results-decoration {
     mask-image: url(./assets/icons/chevron-right.svg);
     -webkit-mask-image: url(./assets/icons/chevron-right.svg);
 }
+.circle-pause-icon {
+    mask-image: url(./assets/icons/circle-pause.svg);
+    -webkit-mask-image: url(./assets/icons/circle-pause.svg);
+}
+.circle-play-icon {
+    mask-image: url(./assets/icons/circle-play.svg);
+    -webkit-mask-image: url(./assets/icons/circle-play.svg);
+}
 .compress-icon {
     mask-image: url(./assets/icons/compress.svg);
     -webkit-mask-image: url(./assets/icons/compress.svg);
@@ -190,6 +207,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .curve-icon {
     mask-image: url(./assets/icons/curve.svg);
     -webkit-mask-image: url(./assets/icons/curve.svg);
+}
+.download-icon {
+    mask-image: url(./assets/icons/download.svg);
+    -webkit-mask-image: url(./assets/icons/download.svg);
 }
 .exit-icon {
     mask-image: url(./assets/icons/exit.svg);
@@ -231,17 +252,21 @@ input[type="search"]::-webkit-search-results-decoration {
     mask-image: url(./assets/icons/moon.svg);
     -webkit-mask-image: url(./assets/icons/moon.svg);
 }
-.pause-icon {
-    mask-image: url(./assets/icons/circle-pause.svg);
-    -webkit-mask-image: url(./assets/icons/circle-pause.svg);
+.next-icon {
+    mask-image: url(./assets/icons/next.svg);
+    -webkit-mask-image: url(./assets/icons/next.svg);
 }
 .play-icon {
-    mask-image: url(./assets/icons/circle-play.svg);
-    -webkit-mask-image: url(./assets/icons/circle-play.svg);
+    mask-image: url(./assets/icons/play.svg);
+    -webkit-mask-image: url(./assets/icons/play.svg);
 }
 .repeat-icon {
     mask-image: url(./assets/icons/repeat.svg);
     -webkit-mask-image: url(./assets/icons/repeat.svg);
+}
+.previous-icon {
+    mask-image: url(./assets/icons/previous.svg);
+    -webkit-mask-image: url(./assets/icons/previous.svg);
 }
 .sun-icon {
     mask-image: url(./assets/icons/sun.svg);

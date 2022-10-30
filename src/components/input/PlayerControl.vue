@@ -6,10 +6,17 @@
                 <div :class="[player.isRecording ? 'icon-recording' : 'action-button', 'icon-medium', 'video-icon']"
                      role="button" :title="player.isRecording ? 'Stop Recording' : 'Start Recording'"
                      @mouseup="player.toggleRecording"></div>
+                <div class="action-button icon-medium previous-icon"
+                     role="button" title="Previous"
+                     @mouseup="catalogue.loadPreviousProject"></div>
+                <span>{{catalogue.currentIndex + 1}} of {{catalogue.length}}</span>
+                <div class="action-button icon-medium next-icon"
+                     role="button" title="Next"
+                     @mouseup="catalogue.loadNextProject"></div>
             </div>
             <div class="middle-action-group">
                 <div class="action-button icon-medium backward-icon" role="button" title="Rewind 10 sec" @mouseup="player.backward"></div>
-                <div :class="['action-button', 'icon-large', 'play-button', player.isPlaying ? 'pause-icon' : 'play-icon']"
+                <div :class="['action-button', 'icon-large', 'play-button', player.isPlaying ? 'circle-pause-icon' : 'circle-play-icon']"
                      role="button" title="Play/Pause" @mouseup="player.togglePlaying"></div>
                 <div class="action-button icon-medium forward-icon" role="button" title="Forward 10 sec" @mouseup="player.forward"></div>
                 <div :class="['action-button', 'icon-medium', 'repeat-icon', player.isLooping ? 'toggle-active' : '']"
@@ -41,7 +48,9 @@
 <script setup lang="ts">
 import DialInput from './DialInput.vue'
 import Slider from './Slider.vue'
+import { useCatalogue } from '../../stores/catalogue'
 import { usePlayer } from '../../stores/player'
+const catalogue = useCatalogue()
 const player = usePlayer()
 
 const emits = defineEmits<{

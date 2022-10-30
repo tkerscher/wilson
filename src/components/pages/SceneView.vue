@@ -27,6 +27,7 @@ import { CameraControl } from '../../input/cameraControl'
 import { PlayerControl } from '../../input/playerControl'
 import { ScenePointerProxy } from '../../input/scenePointerProxy'
 
+import { useCatalogue } from '../../stores/catalogue'
 import { useObjects } from '../../stores/objects'
 import { usePaths } from '../../stores/paths'
 import { usePlayer } from '../../stores/player'
@@ -35,9 +36,10 @@ import { useResolution } from '../../stores/resolution'
 import { useTheme } from '../../stores/theme'
 import { MutationType } from 'pinia'
 import { getCurrentTheme } from '../../scene/theme'
-import { VideoRecorder } from '@babylonjs/core'
 import { ScreenRecorder } from '../../video/screenRecorder'
+import { CatalogueControl } from '../../input/catalogueControl'
 
+const catalogue = useCatalogue()
 const objects = useObjects()
 const paths = usePaths()
 const player = usePlayer()
@@ -56,40 +58,14 @@ function buildScene() {
     }
 
     //build scene
-    controller = createController(project, canvas.value!)
-    //wire up animation with player control
-    controller.registerOnFrameChanged((currentFrame: number) => {
-        if (!player.isScrubbing && !controller!.isStatic ) {
-            player.$patch({ currentFrame: currentFrame })
-        }
-    })
-    controller.registerOnAnimationLoop(() => {
-        //We need the animation in an endless loop, otherwise it apparently will be
-        //destroyed after it finished. We can however pause the endless loop at the
-        //end of each iteration
-        if (!player.isLooping) {
-            controller!.pause()
-            player.togglePlaying() //pause
-            nextTick(() => controller!.goToFrame(player.endFrame))
-        }
-    })
-
-    //pick interaction
-    controller.registerOnObjectPicked((objectId: number) => {
-        if (objects.selectedObjectIdx == objectId) {
-            objects.selectedObjectIdx = null
-        }
-        else {
-            objects.selectedObjectIdx = objectId
-        }
-    })
+    controller.load(project)    
 
     //start animation
     if (player.isPlaying) {
         controller.play(player.isLooping)
     }
 }
-//project.$subscribe((mutation, state) => buildScene())
+project.$subscribe((mutation, state) => buildScene())
 
 // Player
 let recorder: ScreenRecorder
@@ -210,16 +186,46 @@ resolution.$subscribe((mutation, state) => {
 })
 
 //UI
+var catalogueControl: CatalogueControl
 var cameraControl: CameraControl
 var scenePointerProxy: ScenePointerProxy
 var playerControl: PlayerControl
 
 onMounted(() => {
+    controller = createController(canvas.value!)
     buildScene()
     resizeCanvas()
     resizer.observe(container.value!)
 
+    //wire up animation with player control
+    controller.registerOnFrameChanged((currentFrame: number) => {
+        if (!player.isScrubbing && !controller!.isStatic ) {
+            player.$patch({ currentFrame: currentFrame })
+        }
+    })
+    controller.registerOnAnimationLoop(() => {
+        //We need the animation in an endless loop, otherwise it apparently will be
+        //destroyed after it finished. We can however pause the endless loop at the
+        //end of each iteration
+        if (!player.isLooping) {
+            controller!.pause()
+            player.togglePlaying() //pause
+            nextTick(() => controller!.goToFrame(player.endFrame))
+        }
+    })
+
+    //pick interaction
+    controller.registerOnObjectPicked((objectId: number) => {
+        if (objects.selectedObjectIdx == objectId) {
+            objects.selectedObjectIdx = null
+        }
+        else {
+            objects.selectedObjectIdx = objectId
+        }
+    })
+
     //UI
+    catalogueControl = new CatalogueControl(catalogue)
     cameraControl = new CameraControl(controller, canvas.value!)
     scenePointerProxy = new ScenePointerProxy(canvas.value!, controller)
     playerControl = new PlayerControl(player)
@@ -235,6 +241,7 @@ onBeforeUnmount(() => {
     controller.dispose()
 
     //UI
+    catalogueControl.dispose()
     cameraControl.dispose()
     scenePointerProxy.dispose()
     playerControl.dispose()
