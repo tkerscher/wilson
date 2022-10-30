@@ -14,6 +14,7 @@
     "@babylonjs/core": "^5.30.0",
     "@babylonjs/gui": "^5.30.0",
     "@babylonjs/materials": "^5.30.0",
+    "jszip": "^3.10.1",
     "pako": "^2.0.4",
     "pinia": "^2.0.23",
     "plotly.js-basic-dist": "^2.15.1",
