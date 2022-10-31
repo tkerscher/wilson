@@ -56,8 +56,7 @@ export class LocalController implements SceneController {
         //hook up callbacks
         this.#container.onAnimationTick.add(this.#notifyAnimationTick.bind(this))
         this.#container.animation.onAnimationGroupLoopObservable.add(
-            this.#notifyAnimationLoop.bind(this))
-        this.#container?.onObjectPicked.add(this.#notifyObjectPicked.bind(this))    
+            this.#notifyAnimationLoop.bind(this))   
 
         //create file name for screenshots
         this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
@@ -72,8 +71,8 @@ export class LocalController implements SceneController {
     #notifyAnimationLoop() {
         this.#onAnimationLoopCallbacks.forEach(callback => callback())
     }
-    #notifyObjectPicked(e: {objectId: number}) {
-        this.#onObjectPickedCallbacks.forEach(callback => callback(e.objectId))
+    #notifyObjectPicked(objectId: number) {
+        this.#onObjectPickedCallbacks.forEach(callback => callback(objectId))
     }
 
     /**************************** Animation Control ***************************/
@@ -177,6 +176,7 @@ export class LocalController implements SceneController {
         if (!!pick && pick.hit && !!pick.pickedMesh) {
             const id = pick.pickedMesh.uniqueId
             this.select(id)
+            this.#notifyObjectPicked(id)
         }
         //gui interaction
         this.#container.overlayTexture.pick(x, y,

@@ -45,7 +45,6 @@ export interface SceneContainer {
     description: Description
     
     onAnimationTick: Observable<{currentFrame: number}>
-    onObjectPicked: Observable<{objectId: number}>
 }
 
 export function buildScene(project: Project, engine: Engine): SceneContainer {
@@ -107,17 +106,6 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
     const onAnimationTickObservable = new Observable<{currentFrame: number}>()
     const onObjectPickedObservable = new Observable<{objectId: number}>()
 
-    //object pick observable
-    buildTool.scene.onPointerObservable.add((pi) => {
-        if (pi.type == PointerEventTypes.POINTERUP &&
-            pi.pickInfo?.hit && pi.pickInfo.pickedMesh)
-        {
-            onObjectPickedObservable.notifyObservers({
-                objectId: pi.pickInfo.pickedMesh.uniqueId
-            })
-        }
-    })    
-
     //we handle ui ourselves
     buildTool.scene.detachControl()
 
@@ -135,8 +123,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         overlayTexture: buildTool.overlayTexture,
         textEngine: buildTool.textEngine,
         description: description,
-        onAnimationTick: onAnimationTickObservable,
-        onObjectPicked: onObjectPickedObservable
+        onAnimationTick: onAnimationTickObservable
     }
 
     //render logic
