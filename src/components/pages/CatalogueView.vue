@@ -1,6 +1,11 @@
 <template>
 <div class="root">
     <input type="file" ref="dialog" @change="onFileSelected" />
+    <div class="loading-screen" ref="loadingMessage">
+        <div class="loading-message">
+            <p>Loading...</p>
+        </div>
+    </div>
     <div class="header">
         <div class="banner">
             <img class="logo" v-if="theme.useDarkTheme" src="/p-one_blue_dark.svg" />
@@ -49,7 +54,7 @@
                         <td>{{entry.meta.author}}</td>
                         <td>{{((entry.meta?.endTime ?? 0) - (entry.meta?.startTime ?? 0)).toLocaleString('en-US')}}</td>
                         <td>
-                            <button class="p-button" @click="catalogue.loadProject(entry.filename)">
+                            <button class="p-button" @click="loadProject(entry.filename)">
                                 <div class="icon-button icon-medium play-icon"></div>Show
                             </button>
                         </td>
@@ -99,6 +104,12 @@ function onFileSelected(e: Event) {
 }
 function openDialog() {
     dialog.value?.click()
+}
+
+const loadingMessage = ref<HTMLDivElement|null>(null)
+function loadProject(file: string) {
+    loadingMessage.value!.style.display = 'block'
+    catalogue.loadProject(file)
 }
 </script>
 
@@ -238,5 +249,24 @@ tr:nth-child(4n - 1) {
 .icon-button {
     background-color: white;
     margin-right: 5px;
+}
+
+.loading-screen {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    background-color: var(--overlay-background);
+    display: none;
+}
+.loading-message {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    font-weight: bold;
 }
 </style>

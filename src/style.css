@@ -14,6 +14,7 @@
     --scene-font-color: #ffffff;
 
     --toolbox-background: #1a1a1ad5;
+    --overlay-background: #777777dd;
 
     --highlight1: #3497ff;
     --highlight1-light: #5baaff;
@@ -39,6 +40,7 @@
     --scene-font-color: #000000;
 
     --toolbox-background: #616161d5;
+    --overlay-background: #c3c7cddd;
 
     --highlight1: #3497ff;
     --highlight1-light: #5baaff;
