@@ -85,7 +85,7 @@ export class CameraControl {
                 control.#dragging = true
             }
         }
-        this.#onPointerUp = e => {
+        this.#onPointerUp = () => {
             control.#dragging = false
         }
         this.#onPointerMove = e => {
@@ -121,11 +121,11 @@ export class CameraControl {
         this.#target.removeEventListener('pointermove', this.#onPointerMove)
         this.#target.removeEventListener('wheel', this.#onWheel)
 
-        this.#handlerOnce = () => {}
-        this.#handlerRepeat = () => {}
-        this.#onPointerDown = () => {}
-        this.#onPointerUp = () => {}
-        this.#onPointerMove = () => {}
-        this.#onWheel = () => {}
+        this.#handlerOnce = () => undefined
+        this.#handlerRepeat = () => undefined
+        this.#onPointerDown = () => undefined
+        this.#onPointerUp = () => undefined
+        this.#onPointerMove = () => undefined
+        this.#onWheel = () => undefined
     }
 }

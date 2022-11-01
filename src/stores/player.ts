@@ -22,7 +22,7 @@ export const usePlayer = defineStore('player', {
     }),
     actions: {
         forward() {
-            let step = this.stepSize * this.speedRatio
+            const step = this.stepSize * this.speedRatio
             if (this.endFrame - this.currentFrame > step) {
                 this.currentFrame += step
             }
@@ -31,7 +31,7 @@ export const usePlayer = defineStore('player', {
             }
         },
         backward() {
-            let step = this.stepSize * this.speedRatio
+            const step = this.stepSize * this.speedRatio
             if (this.currentFrame - this.startFrame > step) {
                 this.currentFrame -= step
             }

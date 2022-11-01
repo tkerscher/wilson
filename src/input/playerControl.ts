@@ -56,7 +56,7 @@ export class PlayerControl {
         document.removeEventListener('keydown', this.#handlerOnce)
         document.removeEventListener('keydown', this.#handlerRepeat)
 
-        this.#handlerOnce = () => {}
-        this.#handlerRepeat = () => {}
+        this.#handlerOnce = () => undefined
+        this.#handlerRepeat = () => undefined
     }
 }

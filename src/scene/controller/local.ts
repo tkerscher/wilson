@@ -26,7 +26,7 @@ export class LocalController implements SceneController {
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
     #onObjectPickedCallbacks: Array<(id: number|null) => void> = []
     
-    screenshotFilename: string = ""
+    screenshotFilename = ""
     
     constructor(canvas: HTMLCanvasElement|OffscreenCanvas) {
         this.#canvas = canvas
@@ -38,7 +38,7 @@ export class LocalController implements SceneController {
 
     load(project: Project): void {
         //remove previous scene
-        if (!!this.#container) {
+        if (this.#container) {
             this.#container.indicatorLayer.dispose()
             this.#container.scene.dispose()
         }
@@ -124,9 +124,12 @@ export class LocalController implements SceneController {
         this.#notifyObjectPicked(id)
     }
     target(id: number): void {
-        const mesh = this.#container?.scene.getMeshByUniqueId(id)
+        if (!this.#container)
+            return
+        
+        const mesh = this.#container.scene.getMeshByUniqueId(id)
         if (mesh) {
-            const cam = this.#container!.camera
+            const cam = this.#container.camera
             const d = mesh.position.subtract(cam.target)
             cam.setTarget(mesh.position)
             cam.setPosition(cam.position.add(d))
@@ -157,7 +160,7 @@ export class LocalController implements SceneController {
             new PointerInfoPre(PointerEventTypes.POINTERDOWN, {
                 type: 'pointerdown',
                 target: {},
-                preventDefault: () => {},
+                preventDefault: () => undefined,
                 inputIndex: PointerInput.LeftClick,
                 altKey: false,
                 button: 0,
@@ -192,7 +195,7 @@ export class LocalController implements SceneController {
             new PointerInfoPre(PointerEventTypes.POINTERUP, {
                 type: 'pointerup',
                 target: {},
-                preventDefault: () => {},
+                preventDefault: () => undefined,
                 inputIndex: PointerInput.LeftClick,
                 altKey: false,
                 button: 0,
@@ -221,7 +224,7 @@ export class LocalController implements SceneController {
             new PointerInfoPre(PointerEventTypes.POINTERMOVE, {
                 type: 'pointermove',
                 target: {},
-                preventDefault: () => {},
+                preventDefault: () => undefined,
                 inputIndex: PointerInput.Move,
                 altKey: false,
                 button: -1,

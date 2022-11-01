@@ -22,7 +22,7 @@ export function getCurrentTheme(): Theme {
     const style = getComputedStyle(document.documentElement)
     const color = style.getPropertyValue('--scene-font-color').trim()
     const clear = style.getPropertyValue('--scene-background').trim()
-    const grid  = style.getPropertyValue('--grid-color').trim()
+    //const grid  = style.getPropertyValue('--grid-color').trim()
 
     return {
         clearColor: clear,

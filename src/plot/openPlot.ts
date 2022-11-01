@@ -38,7 +38,7 @@ export async function extractGraphs(): Promise<Graph[]> {
     //read number of graphs
     const count = reader.uint32()
     //read lengths of graphs
-    const lens = Array.from({length:count}, _ => reader.uint32())
+    const lens = Array.from({length:count}, () => reader.uint32())
     //read graphs
     const graphs = lens.map(l => Graph.decode(reader, l))
 

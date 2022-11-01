@@ -29,15 +29,18 @@ export class GraphInterpolator {
         }
 
         switch(prop.source.$case) {
-            case 'constValue':
-                const v = prop.source.constValue
-                this.points = [{ time: 0.0, value: v}]
-                return
-            case 'graphId':
-                const id = prop.source.graphId
-                this.#parseGraph(id, project)
-                return
+        case 'constValue':
+        {
+            const v = prop.source.constValue
+            this.points = [{ time: 0.0, value: v}]
+            return
         }
+        case 'graphId':
+        {
+            const id = prop.source.graphId
+            this.#parseGraph(id, project)
+            return
+        }}
     }
 
     /**
@@ -67,10 +70,10 @@ export class GraphInterpolator {
 
         const t_start = this.points[stopIdx - 1].time
         const t_end = this.points[stopIdx].time
-        var lambda = (t - t_start) / (t_end - t_start)
+        let lambda = (t - t_start) / (t_end - t_start)
 
         //ease if wanted
-        if (!!this.#ease)
+        if (this.#ease)
             lambda = this.#ease(lambda)
 
         const v_start = this.points[stopIdx - 1].value

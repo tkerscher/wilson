@@ -44,7 +44,7 @@ export class SceneBuildTool {
 
     project: Project
     groupMap: Map<string, Node>
-    #nextId: number = 0
+    #nextId = 0
 
     #materialMap: Map<string, StandardMaterial>
     defaultMaterial: StandardMaterial
@@ -93,17 +93,18 @@ export class SceneBuildTool {
      * @returns Group of given name
      */
     getGroup(group: string): Node {
-        if (!this.groupMap.has(group)) {
-            let value = new Node(group + '_group', this.scene)
+        const _group = this.groupMap.get(group)
+        if (_group) {
+            return _group
+        }
+        else {
+            const value = new Node(group + '_group', this.scene)
             //hide hidden group
-            if (!!this.project.hiddenGroups.find(g => g == group))
+            if (this.project.hiddenGroups.find(g => g == group))
                 value.setEnabled(false)
             //store new group in map
             this.groupMap.set(group, value)
             return value
-        }
-        else {
-            return this.groupMap.get(group)!
         }
     }
 
@@ -123,6 +124,7 @@ export class SceneBuildTool {
             case 'constValue':
                 return setProperty(target, property, scalar.source.constValue)
             case 'graphId':
+            {
                 const id = scalar.source.graphId
                 const graph = this.project.graphs.find(g => g.id == id)
                 if (!graph || graph.points.length == 0) {
@@ -140,6 +142,7 @@ export class SceneBuildTool {
                     this.animationGroup.addTargetedAnimation(animation, target)
                     return
                 }
+            }
         }
     }
 
@@ -157,9 +160,12 @@ export class SceneBuildTool {
 
         switch (vector.source.$case) {
             case 'constValue':
+            {
                 const p = vector.source.constValue
                 return setProperty(target, property, new Vector3(p.x, p.y, p.z))
+            }
             case 'pathId':
+            {
                 const id = vector.source.pathId
                 const path = this.project.paths.find(p => p.id == id)
                 if (!path || path.points.length == 0) {
@@ -177,6 +183,7 @@ export class SceneBuildTool {
                     this.animationGroup.addTargetedAnimation(animation, target)
                     return
                 }
+            }
         }
     }
 
@@ -194,12 +201,17 @@ export class SceneBuildTool {
 
         switch (color.source.$case) {
             case 'constValue':
+            {
                 const c = color.source.constValue
                 return this.getStaticMaterial(c.r, c.g, c.b, c.a)
-            case 'scalarValue':
+            }
+            case 'scalarValue':   
+            {
                 const [clr, alpha] = this.mapColor(color.source.scalarValue)
                 return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha)
+            }
             case 'graphId':
+            {
                 const mat = new StandardMaterial(name)
                 const id = color.source.graphId
                 const graph = this.project.graphs.find(g => g.id == id)
@@ -220,9 +232,9 @@ export class SceneBuildTool {
 
                     const clrFrames = Array<IAnimationKey>()
                     const alphaFrames = Array<IAnimationKey>()
-                    var prevKey = graph.points[0].time
-                    var prevVal = graph.points[0].value
-                    for (var i = 1; i < graph.points.length; ++i) {
+                    let prevKey = graph.points[0].time
+                    let prevVal = graph.points[0].value
+                    for (let i = 1; i < graph.points.length; ++i) {
                         //In between frames, the new start is a duplicate of the previous end
                         //-> remove last frame before adding new
                         clrFrames.pop()
@@ -249,6 +261,7 @@ export class SceneBuildTool {
                     this.animationGroup.addTargetedAnimation(alphaAnimation, mat)
                     return mat
                 }
+            }
         }
     }
 
@@ -312,8 +325,9 @@ export class SceneBuildTool {
     getStaticMaterial(r: number, g: number, b: number, a: number): StandardMaterial {
         //color already in use?
         const key = toHex(r, g, b, a)
-        if (this.#materialMap.has(key)) {
-            return this.#materialMap.get(key)!
+        const mat = this.#materialMap.get(key)
+        if (mat) {
+            return mat
         }
         else {
             //create new material
@@ -342,10 +356,11 @@ export class SceneBuildTool {
         case 'scalarValue':
             return true
         case 'graphId':
+        {
             const id = color.source.graphId
             const graph = this.project.graphs.find(g => g.id == id)
             return !graph || graph.points.length <= 0
-        }
+        }}
     }
 
     /**
@@ -357,8 +372,8 @@ export class SceneBuildTool {
      * @returns Two arrays of animation frames for rgb color and alpha to be used in animations
      */
     colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
-        var clrFrames = Array<IAnimationKey>()
-        var alphaFrames = Array<IAnimationKey>()
+        const clrFrames = Array<IAnimationKey>()
+        const alphaFrames = Array<IAnimationKey>()
         if (!this.project.colormap || this.project.colormap.stops.length == 0) {
             return [clrFrames, alphaFrames]
         }
@@ -371,7 +386,7 @@ export class SceneBuildTool {
         if (fromIdx == -1) {
             fromIdx = stops.length - 1
         }
-        var toIdx = stops.findIndex(s => s.value > toVal)
+        let toIdx = stops.findIndex(s => s.value > toVal)
         if (toIdx == -1) {
             //Point one behind last
             toIdx = stops.length
@@ -384,7 +399,7 @@ export class SceneBuildTool {
 
         //add color stops inbetween
         const step = fromIdx <= toIdx ? 1 : -1
-        for (var i = fromIdx; i != toIdx; i += step) {
+        for (let i = fromIdx; i != toIdx; i += step) {
             const stop = stops[i]
             if (!stop.color) {
                 continue

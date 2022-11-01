@@ -15,7 +15,7 @@ export const useTheme = defineStore('theme', () => {
 
     //see if user preference stored in local storage
     const _st = window.localStorage.getItem("theme")
-    if (!!_st) {
+    if (_st) {
         useDarkTheme.value = _st == "dark"
     }
     else {

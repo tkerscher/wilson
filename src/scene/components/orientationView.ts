@@ -30,7 +30,7 @@ import negZHoverUrl from '../../assets/textures/negz_hover.png'
 // Orientation view is a independent scene showing the orientation of a given
 // camera/scene
 
-const CameraSideLength: number = 10
+const CameraSideLength = 10
 const XColor = new Color3(1, 0.255, 0.212)
 const YColor = new Color3(0.18, 0.8, 0.251)
 const ZColor = new Color3(0, 0.42, 0.78)
@@ -108,8 +108,8 @@ class IndicatorBuilder {
         const buttons = this.buttons
         const zero = this.#buttonZeroRotation
         
-        let rotation = new Quaternion()
-        let inverse = new Quaternion()
+        const rotation = new Quaternion()
+        const inverse = new Quaternion()
 
         const update = function() {
             //update rotations

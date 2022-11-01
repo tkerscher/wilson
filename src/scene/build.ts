@@ -9,7 +9,6 @@ import { Node } from "@babylonjs/core/node"
 import { Scene } from "@babylonjs/core/scene"
 import { Observable } from "@babylonjs/core/Misc/observable";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode"
-import { PointerEventTypes } from "@babylonjs/core/Events/pointerEvents";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture"
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
@@ -104,7 +103,6 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
 
     //create observables
     const onAnimationTickObservable = new Observable<{currentFrame: number}>()
-    const onObjectPickedObservable = new Observable<{objectId: number}>()
 
     //we handle ui ourselves
     buildTool.scene.detachControl()
@@ -131,7 +129,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         container.scene.render()
         container.indicatorLayer.render()
     })
-    var lastFrame = NaN
+    let lastFrame = NaN
     buildTool.scene.registerBeforeRender(() => {
         const currentFrame = container.animation.animatables[0].masterFrame
         const dirty = container.animation.isPlaying || lastFrame != currentFrame

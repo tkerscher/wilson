@@ -6,7 +6,7 @@ const chunkSize = 3000
 export class ScreenRecorder {
     #canvas: HTMLCanvasElement
     #recorder: MediaRecorder|null = null
-    #isRecording: boolean = false
+    #isRecording = false
 
     #filename: string
     #recordedChunks = [] as Blob[]
@@ -20,7 +20,7 @@ export class ScreenRecorder {
         return this.#isRecording
     }
 
-    start(fps: number = 30) {
+    start(fps = 30) {
         if (this.#isRecording)
             this.stop()
 
@@ -35,18 +35,18 @@ export class ScreenRecorder {
         this.#recorder.start(chunkSize)
     }
     stop() {
-        if (!this.#isRecording)
+        if (!this.#recorder || !this.#isRecording)
             return
 
         this.#isRecording = false
-        this.#recorder!.stop()
+        this.#recorder.stop()
     }
 
     #handleDataAvailable(e: BlobEvent) {
         if (e.data.size > 0)
             this.#recordedChunks.push(e.data)
     }
-    #handleError(e: MediaRecorderErrorEvent) {
+    #handleError() {
         this.stop()
     }
     #handleStop() {

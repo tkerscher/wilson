@@ -28,6 +28,6 @@ export class CatalogueControl {
     dispose() {
         document.removeEventListener('keydown', this.#handlerOnce)
 
-        this.#handlerOnce = () => {}
+        this.#handlerOnce = () => undefined
     }
 }

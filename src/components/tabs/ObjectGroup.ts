@@ -12,15 +12,16 @@ export interface Object {
 export interface Group {
     name: string
     visible: boolean
-    members: Array<Object>
+    members: Array<Object> //eslint-disable-line @typescript-eslint/ban-types
 }
 
 export function extractGroups(project: Project): Group[] {
     let id = 0
-    let map = new Map<string, Group>()
+    const map = new Map<string, Group>()
     function getGroup(name: string): Group {
-        if (map.has(name))
-            return map.get(name)!
+        const group = map.get(name)
+        if (group)
+            return group
         else {
             const empty: Group = {
                 name: name,

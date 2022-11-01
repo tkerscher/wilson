@@ -51,10 +51,11 @@ export class OverlayBuilder {
         if (position == TextPosition.UNRECOGNIZED)
             position = TextPosition.LOWER_LEFT
         //lazy creation
-        if (this.#panels.has(position))
-            return this.#panels.get(position)!
+        let panel = this.#panels.get(position)
+        if (panel)
+            return panel
 
-        const panel = new StackPanel(textPositionToJSON(position))
+        panel = new StackPanel(textPositionToJSON(position))
         panel.adaptWidthToChildren = true
         panel.spacing = 5
         panel.paddingBottom = "10"

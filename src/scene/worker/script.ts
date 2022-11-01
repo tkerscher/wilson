@@ -4,19 +4,20 @@ import { WorkerCommand } from "./command"
 import { AnimationLoopEvent, FrameChangedEvent, ObjectPickedEvent } from "./event"
 
 import "./font"
-var controller: LocalController
+let controller: LocalController
 
-function messageHandler(ev: MessageEvent<any>) {
+function messageHandler(ev: MessageEvent<WorkerCommand>) {
     //Wire up messages to controller
-    const cmd = ev.data as WorkerCommand
-    switch (cmd.type) {
+    switch (ev.data.type) {
     case 'load':
-        //decode project
-        const serialized: ArrayBufferLike = cmd.data
-        const data = new Uint8Array(serialized)
-        const project: Project = Project.decode(data)
-        //load it
-        controller.load(project)
+        {
+            //decode project
+            const serialized: ArrayBufferLike = ev.data.data
+            const data = new Uint8Array(serialized)
+            const project: Project = Project.decode(data)
+            //load it
+            controller.load(project)
+        }
         break
     case 'play':
         controller.play()
@@ -25,58 +26,58 @@ function messageHandler(ev: MessageEvent<any>) {
         controller.pause()
         break
     case 'goToFrame':
-        controller.goToFrame(cmd.frame)
+        controller.goToFrame(ev.data.frame)
         break
     case 'resetCamera':
         controller.resetCamera()
         break
     case 'resize':
-        controller.resize(cmd.width, cmd.height)
+        controller.resize(ev.data.width, ev.data.height)
         break
     case 'setTheme':
-        controller.setTheme(cmd.theme)
+        controller.setTheme(ev.data.theme)
         break
     case 'select':
-        controller.select(cmd.id)
+        controller.select(ev.data.id)
         break
     case 'target':
-        controller.target(cmd.id)
+        controller.target(ev.data.id)
         break
     case 'setGridEnabled':
-        controller.setGridEnabled(cmd.enabled)
+        controller.setGridEnabled(ev.data.enabled)
         break
     case 'setGroupEnabled':
-        controller.setGroupEnabled(cmd.group, cmd.enabled)
+        controller.setGroupEnabled(ev.data.group, ev.data.enabled)
         break
     case 'setPathEnabled':
-        controller.setPathEnabled(cmd.id, cmd.enabled, cmd.color)
+        controller.setPathEnabled(ev.data.id, ev.data.enabled, ev.data.color)
         break
     case 'pointerDown':
-        controller.simulatePointerDown(cmd.x, cmd.y)
+        controller.simulatePointerDown(ev.data.x, ev.data.y)
         break
     case 'pointerUp':
-        controller.simulatePointerUp(cmd.x, cmd.y)
+        controller.simulatePointerUp(ev.data.x, ev.data.y)
         break
     case 'pointermove':
-        controller.simulatePointerMove(cmd.x, cmd.y)
+        controller.simulatePointerMove(ev.data.x, ev.data.y)
         break
     case 'panCamera':
-        controller.panCamera(cmd.dx, cmd.dy)
+        controller.panCamera(ev.data.dx, ev.data.dy)
         break
     case 'rotateCamera':
-        controller.rotateCamera(cmd.alpha, cmd.beta)
+        controller.rotateCamera(ev.data.alpha, ev.data.beta)
         break
     case 'zoom':
-        controller.zoomCamera(cmd.delta)
+        controller.zoomCamera(ev.data.delta)
         break
     case 'setCameraTarget':
-        controller.setCameraTarget(cmd.x, cmd.y, cmd.z)
+        controller.setCameraTarget(ev.data.x, ev.data.y, ev.data.z)
         break
     case 'setCameraRotation':
-        controller.setCameraRotation(cmd.alpha, cmd.beta)
+        controller.setCameraRotation(ev.data.alpha, ev.data.beta)
         break
     case 'setCameraZoom':
-        controller.setCameraZoom(cmd.distance)
+        controller.setCameraZoom(ev.data.distance)
         break
     }
 }

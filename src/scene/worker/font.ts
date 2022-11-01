@@ -7,6 +7,7 @@ import { Control } from "@babylonjs/gui/2D/controls/control";
 //IMPORTANT: This is not part of the official Babylon js API and is thus very
 //           likely to break in future versions!
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 Control._FontHeightSizes = {
     "  16px Arial": {

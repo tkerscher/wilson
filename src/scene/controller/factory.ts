@@ -1,4 +1,3 @@
-import { Project } from "../../model/project";
 import { getCurrentTheme } from "../theme";
 import { SceneController } from "./controller";
 import { LocalController } from "./local";

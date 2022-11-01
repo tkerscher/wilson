@@ -57,7 +57,7 @@ function alignVector(dir: Vector3): Quaternion {
 }
 
 export function buildLine(tool: SceneBuildTool, line: Line) {
-    var mesh
+    let mesh
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
         mesh = MeshBuilder.CreateCylinder(line.name, { height: 1.0 })        
@@ -100,7 +100,7 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
         //sharply change direction), remove (close) duplicates and create
         //distances by interpolating both
 
-        var times = new Array<number>()
+        let times = new Array<number>()
         if (line.start?.source?.$case == 'pathId') {
             const id = line.start.source.pathId
             const path = tool.project.paths.find(p => p.id == id)

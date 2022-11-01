@@ -139,20 +139,20 @@ export class Description {
         /************************ Message Box Dragging ************************/
 
         //variables needed for dragging
-        var isDragging = false
-        var startX = NaN, startY = NaN
+        let isDragging = false
+        let startX = NaN, startY = NaN
 
-        box.onPointerDownObservable.add((data, state) => {
+        box.onPointerDownObservable.add((data) => {
             startX = parseFloat(box.left as string) - data.x
             startY = parseFloat(box.top as string) - data.y
             isDragging = true
             helper.zIndex = 9000 //bring helper on top
         })
-        box.onPointerUpObservable.add((data, state) => {
+        box.onPointerUpObservable.add(() => {
             isDragging = false
             helper.zIndex = -1 //take helper to the back
         })
-        helper.onPointerMoveObservable.add((data, state) => {
+        helper.onPointerMoveObservable.add((data) => {
             if (!isDragging)
                 return false
             

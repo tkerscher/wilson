@@ -41,9 +41,8 @@ export class ScenePointerProxy {
         this.#canvas.removeEventListener('pointerup', this.#onPointerUp)
         this.#canvas.removeEventListener('pointermove', this.#onPointerMove)
 
-        this.#onPointerDown = () => {}
-        this.#onPointerUp = () => {}
-        this.#onPointerMove = () => {}
-
+        this.#onPointerDown = () => undefined
+        this.#onPointerUp = () => undefined
+        this.#onPointerMove = () => undefined
     }
 }

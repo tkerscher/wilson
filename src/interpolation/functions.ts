@@ -4,11 +4,11 @@ import { Interpolation } from "../model/interpolation"
 //Easing function corresponding to the interpolation modes of the data model
 
 const Hold: IEasingFunction = {
-    ease: (gradient) => 0.0
+    ease: () => 0.0
 }
 
 const Ahead: IEasingFunction = {
-    ease: (gradient) => 1.0
+    ease: () => 1.0
 }
 
 const Step: IEasingFunction = {

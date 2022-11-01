@@ -30,15 +30,18 @@ export class PathInterpolator {
         }
 
         switch(prop.source.$case) {
-            case 'constValue':
-                const p = prop.source.constValue
-                this.path = [{ time: 0.0, position: new Vector3(p.x, p.y, p.z) }]
-                return
-            case 'pathId':
-                const id = prop.source.pathId
-                this.#parsePath(id, project)
-                return
+        case 'constValue':
+        {
+            const p = prop.source.constValue
+            this.path = [{ time: 0.0, position: new Vector3(p.x, p.y, p.z) }]
+            return
         }
+        case 'pathId':
+        {
+            const id = prop.source.pathId
+            this.#parsePath(id, project)
+            return
+        }}
     }
 
     /**
@@ -68,10 +71,10 @@ export class PathInterpolator {
 
         const t_start = this.path[stopIdx - 1].time
         const t_end = this.path[stopIdx].time
-        var lambda = (t - t_start) / (t_end - t_start)
+        let lambda = (t - t_start) / (t_end - t_start)
 
         //ease if wanted
-        if (!!this.#ease)
+        if (this.#ease)
             lambda = this.#ease(lambda)
 
         const p_start = this.path[stopIdx - 1].position

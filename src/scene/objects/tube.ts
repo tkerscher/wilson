@@ -74,9 +74,7 @@ export class TubeController {
         this.#path.push(this.#path[this.#N - 1], this.#path[this.#N - 1])
 
         //create mesh
-        this.#mesh = undefined
-        this.update(tool.project.meta?.startTime ?? 0.0)
-        this.#mesh = this.#mesh! //tell typescript that it's not undefined anymore
+        this.#mesh = this.#createMesh(tool.project.meta?.startTime ?? 0.0)
         tool.applyMetadata(this.#mesh, tube)
 
         //Static color?
@@ -92,9 +90,9 @@ export class TubeController {
                 this.#mesh.material = tool.defaultMaterial
             }
             else {
-                let graphInt = new GraphInterpolator(id, tool.project)
+                const graphInt = new GraphInterpolator(id, tool.project)
                 const startTime = this.#startTime
-                let data = new Uint8Array(function*() {
+                const data = new Uint8Array(function*() {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
                         const t = i / TEXTURE_SIZE * period + startTime
                         const v = graphInt.interpolate(t)
@@ -120,7 +118,7 @@ export class TubeController {
         }
     }
 
-    update(t: number) {        
+    update(t: number) {  
         //safety guard
         if (this.#keys.length < 2) {
             return
@@ -130,36 +128,38 @@ export class TubeController {
         if (!this.#growing && this.#mesh != undefined) {
             return
         }
-        
+
+        //update mesh
+        this.#mesh = this.#createMesh(t)
+    }
+    #createMesh(t: number): Mesh {        
         //Build complete if not growing or t is high enough
         if (!this.#growing || t > this.#endTime) {
-            this.#mesh = MeshBuilder.CreateTube(this.#name, {
+            return MeshBuilder.CreateTube(this.#name, {
                 path: this.#path.slice(0,-2), //remove interpolation points
-                radiusFunction: (i, d) => this.#radii[i],
+                radiusFunction: (i) => this.#radii[i],
                 tessellation: 64,
                 sideOrientation: Mesh.DOUBLESIDE,
                 updatable: true,
                 instance: this.#mesh
             }, this.#scene)
-            return
         }
 
         //Edge case: t earlier than first key frame (plus some slack) -> render empty
         if (t - this.#startTime <= 1e-4) {
-            this.#mesh = MeshBuilder.CreateTube(this.#name, {
+            return MeshBuilder.CreateTube(this.#name, {
                     path: this.#path,
                     radius: 0.0,
                     sideOrientation: Mesh.DOUBLESIDE,
                     updatable: true,
                     instance: this.#mesh
                 }, this.#scene)
-            return
         }
 
         //get last index before t
         const lastIdx = this.#keys.findIndex(key => key >= t)
         //copy path until before t
-        let path = this.#path.slice(0,lastIdx)
+        const path = this.#path.slice(0,lastIdx)
         //interpolate until t if necessary
         if (t - this.#keys[lastIdx] < 1e-7) {
             const grad = this.#path[lastIdx].subtract(this.#path[lastIdx - 1]).normalize()
@@ -170,7 +170,7 @@ export class TubeController {
         //copy rest of path
         path.push(...this.#path.slice(lastIdx,-2))
 
-        let rad = (i: number, d: number): number => {
+        const rad = (i: number): number => {
             if (i < lastIdx) {
                 return this.#radii[i]
             }
@@ -183,7 +183,7 @@ export class TubeController {
         }
 
         //update mesh
-        this.#mesh = MeshBuilder.CreateTube(this.#name, {
+        return MeshBuilder.CreateTube(this.#name, {
             path: path,
             radiusFunction: rad,
             sideOrientation: Mesh.DOUBLESIDE,

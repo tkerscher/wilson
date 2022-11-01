@@ -64,9 +64,10 @@ export class SphereBuilder {
         const key = toHex(clr.r, clr.g, clr.b, mat.alpha)
         
         //check if that color already has a sphere template
-        if (this.#template.has(key)) {
+        const template = this.#template.get(key)
+        if (template) {
             //found template -> return it
-            return this.#template.get(key)!
+            return template
         }
         else {
             //new color -> create new template

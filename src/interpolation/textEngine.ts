@@ -26,13 +26,13 @@ interface _Path {
  */
 export class TextEngine {
     #project: Project
-    #dirty: boolean = false
+    #dirty = false
 
     #graphs: Map<number, _Graph>
-    #graphProxy: {} //Actually proxy of map, but should not look like map
+    #graphProxy: Map<number, _Graph> //Actually proxy of map, but should not look like map
 
     #paths: Map<number, _Path>
-    #pathProxy: {} //Actually proxy of map, but should not look like map
+    #pathProxy: Map<number, _Path> //Actually proxy of map, but should not look like map
 
     #dynamicText: Array<{
         template: string,

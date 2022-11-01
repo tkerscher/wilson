@@ -35,9 +35,9 @@ export class PathVisualizer {
             return //nothing found
 
         //get path
-        const path = this.#activePaths.has(id) ?
-            this.#activePaths.get(id)! :
-            this.#createPath(id)
+        const path = this.#activePaths.get(id) ?? this.#createPath(id)
+        if (!path)
+            return
         
         //set
         path.setEnabled(enabled)
@@ -45,8 +45,10 @@ export class PathVisualizer {
         mat.diffuseColor = Color3.FromHexString(color)
     }
 
-    #createPath(id: number): Mesh {
-        const path = this.#project.paths.find(p => p.id == id)!
+    #createPath(id: number): Mesh|null {
+        const path = this.#project.paths.find(p => p.id == id)
+        if (!path)
+            return null
 
         //Translate path from model -> babylon
         const points = path.points.map(p => new Vector3(

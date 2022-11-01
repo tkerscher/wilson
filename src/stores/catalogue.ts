@@ -57,11 +57,11 @@ export const useCatalogue = defineStore('catalogue', () => {
             archive = zip
 
             //construct entries
-            let proms = [] as Promise<void>[]
+            const proms = [] as Promise<void>[]
             archive.forEach((path, file) => {
                 proms.push(file.async('uint8array').then(data => {
                     const meta = extractMeta(data)
-                    if (!!meta) {
+                    if (meta) {
                         entries.value.push({
                             filename: path,
                             meta: meta

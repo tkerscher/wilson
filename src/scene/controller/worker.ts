@@ -15,6 +15,7 @@ export function isWorkerAvailable(): boolean {
     //      document (which is not available in web workers). Strangely, it works in chrome though
     return !!window.Worker &&
         !!HTMLCanvasElement.prototype.transferControlToOffscreen &&
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore (window.chrome)
         !!window.chrome
 }
@@ -26,18 +27,18 @@ export class WorkerController implements SceneController {
     Ready: Promise<void>
 
     //copy of state on host site
-    #currentFrame: number = NaN
-    #isPlaying: boolean = true
-    #isStatic: boolean = true
-    #speedRatio: number = 1.0
-    #isGridEnabled: boolean = true
+    #currentFrame = NaN
+    #isPlaying = true
+    #isStatic = true
+    #speedRatio = 1.0
+    #isGridEnabled = true
 
     //callbacks
     #onAnimationLoopCallbacks: Array<() => void> = []
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
     #onObjectPickedCallbacks: Array<(id: number|null) => void> = []
 
-    screenshotFilename: string = ""
+    screenshotFilename = ""
 
     constructor(canvas: HTMLCanvasElement) {
         this.#canvas = canvas
@@ -47,8 +48,8 @@ export class WorkerController implements SceneController {
 
         //prepare message handler
         const controller = this
-        function handleMessage(ev: MessageEvent<any>) {
-            const event = ev.data as WorkerEvent
+        function handleMessage(ev: MessageEvent<WorkerEvent>) {
+            const event = ev.data
             switch(event.type) {
             case 'onAnimationLoop':
                 controller.#onAnimationLoopCallbacks.forEach(fn => fn())
@@ -58,7 +59,6 @@ export class WorkerController implements SceneController {
                 controller.#onFrameChangedCallbacks.forEach(fn => fn(event.currentFrame))
                 break
             case 'onObjectPicked':
-                console.log('picked')
                 controller.#onObjectPickedCallbacks.forEach(fn => fn(event.objectId))
                 break
             }
