@@ -1,5 +1,5 @@
 <template>
-    <Download v-if="url.length > 0" :url="url" @finished="url = ''" />
+    <Download v-if="catalogue.isEmpty && url.length > 0" :url="url" />
     <ProjectView v-else-if="!project.isEmpty" />
     <CatalogueView v-else-if="!catalogue.isEmpty" />
     <EmptyProjectDisclaimer v-else />

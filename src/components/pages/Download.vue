@@ -1,8 +1,8 @@
 <template>
-<div class="root" @mouseup="response = 'foo'">
+<div class="root">
     <div v-if="state == 'working'" class="container working">
         <img src="/src/assets/loading.svg" class="image" />
-        <p>Loading Event ...</p>
+        <p>Loading Catalogue {{progress}}...</p>
     </div>
     <div v-else-if="state == 'finished'" class="container finished">
         <div class="icon check-icon"></div>
@@ -10,7 +10,7 @@
     </div>
     <div v-else class="container failed">
         <div class="icon xmark-icon"></div>
-        <p>Could not open event:<br />{{response}}</p>
+        <p>Could not open catalogue!<br />{{response}}</p>
     </div>
 </div>
 </template>
@@ -20,6 +20,7 @@ import { onMounted, ref } from 'vue'
 import { useCatalogue } from '../../stores/catalogue'
 const catalogue = useCatalogue()
 
+const progress = ref('')
 const response = ref('')
 const state = ref('working')
 const props = defineProps<{
@@ -32,14 +33,42 @@ const emits = defineEmits<{
 onMounted(() => {
     //Start download
     fetch(props.url)
-    .then(res => {
-        console.log(res.ok)
-        if (!res.ok) {
+    .then(async res => {
+        if (!res.ok || !res.body) {
             response.value = String(res.status) + ' ' + res.statusText
             throw new Error("Network response was not OK")
         }
 
-        return res.arrayBuffer()
+        //See if progress is possible to calculate
+        const length = +(res.headers.get('Content-Length') ?? -1)
+        if (length == -1)
+            return res.arrayBuffer()
+
+        //read download in chunks
+        const reader = res.body.getReader()
+        let received = 0
+        let chunks = [] as Uint8Array[]
+        while(true) {
+            const { done, value } = await reader.read()
+            if (done)
+                break
+            
+            chunks.push(value)
+            received += value.length
+
+            progress.value = `${(received / length * 100).toFixed()}% `
+        }
+
+        //concat chunks
+        let chunksAll = new Uint8Array(received)
+        let position = 0
+        for(let chunk of chunks) {
+            chunksAll.set(chunk, position)
+            position += chunk.length
+        }
+
+        //return
+        return chunksAll.buffer
     })
     .then(async buf => {
         state.value = 'finished'
