@@ -66,6 +66,11 @@ export interface SceneController {
      */
     select(id: number|null): void
     /**
+     * Pans the camera to target an object specified by its id
+     * @param id Id of object to target
+     */
+    target(id: number): void
+    /**
      * Shows or hides a group of objects via their group name
      * @param group Group name
      * @param enabled True, if the objects in the group should be shown

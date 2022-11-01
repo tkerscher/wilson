@@ -26,6 +26,10 @@ export interface SelectCommand extends _WorkerCommand {
     type: 'select',
     id: number
 }
+export interface TargetCommand extends _WorkerCommand {
+    type: 'target',
+    id: number
+}
 export interface SetGroupEnabledCommand extends _WorkerCommand {
     type: 'setGroupEnabled',
     group: string,
@@ -116,6 +120,7 @@ export type WorkerCommand =
     ResizeCommand |
     RotateCameraCommand |
     SelectCommand |
+    TargetCommand |
     SetCameraRotationCommand |
     SetCameraTargetCommand |
     SetCameraZoomCommand |

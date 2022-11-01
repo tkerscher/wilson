@@ -9,6 +9,7 @@ export class ControllerAdapter {
     #toggleGrid: () => void
     #screenshot: () => void
     #selectObject: (id: number|null) => void
+    #targetObject: (id: number) => void
     #setGroupEnabled: (e: {group: string, enabled: boolean}) => void
     #setPathEnabled: (e: {id: number, enabled: boolean, color: string}) => void
     #setTheme: (theme: Theme) => void
@@ -19,6 +20,7 @@ export class ControllerAdapter {
         this.#toggleGrid = () => controller.setGridEnabled(!controller.isGridEnabled)
         this.#screenshot = () => controller.screenshot()
         this.#selectObject = (id: number|null) => controller.select(id)
+        this.#targetObject = (id: number) => controller.target(id)
         this.#setGroupEnabled = (e: {group: string, enabled: boolean}) =>
             controller.setGroupEnabled(e.group, e.enabled)
         this.#setPathEnabled = (e: {id: number, enabled: boolean, color: string}) =>
@@ -30,6 +32,7 @@ export class ControllerAdapter {
         SceneCommandBus.on('ToggleGrid', this.#toggleGrid)
         SceneCommandBus.on('Screenshot', this.#screenshot)
         SceneCommandBus.on('SelectObject', this.#selectObject)
+        SceneCommandBus.on('TargetObject', this.#targetObject)
         SceneCommandBus.on('SetGroupEnabled', this.#setGroupEnabled)
         SceneCommandBus.on('SetPathEnabled', this.#setPathEnabled)
         SceneCommandBus.on('SetTheme', this.#setTheme)
@@ -45,6 +48,7 @@ export class ControllerAdapter {
         SceneCommandBus.off('ToggleGrid', this.#toggleGrid)
         SceneCommandBus.off('Screenshot', this.#screenshot)
         SceneCommandBus.off('SelectObject', this.#selectObject)
+        SceneCommandBus.off('TargetObject', this.#targetObject)
         SceneCommandBus.off('SetGroupEnabled', this.#setGroupEnabled)
         SceneCommandBus.off('SetPathEnabled', this.#setPathEnabled)
         SceneCommandBus.off('SetTheme', this.#setTheme)

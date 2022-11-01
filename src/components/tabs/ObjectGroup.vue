@@ -21,6 +21,7 @@
              :class="['item', { 'item-selected': selectedId == item.id }]"
              :name="'item'+item.id"
              @mouseup.stop="e => select(e, item.id)"
+             @dblclick="SceneCommander.TargetObject(item.id)"
              @keydown.up.prevent="selectPrevious"
              @keydown.down.prevent="selectNext"
              tabindex="0">

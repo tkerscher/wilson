@@ -39,6 +39,9 @@ function messageHandler(ev: MessageEvent<any>) {
     case 'select':
         controller.select(cmd.id)
         break
+    case 'target':
+        controller.target(cmd.id)
+        break
     case 'setGridEnabled':
         controller.setGridEnabled(cmd.enabled)
         break

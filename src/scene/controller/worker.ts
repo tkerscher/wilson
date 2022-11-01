@@ -155,6 +155,12 @@ export class WorkerController implements SceneController {
             id: id
         })
     }
+    target(id: number): void {
+        this.#sendCommand({
+            type: 'target',
+            id: id
+        })
+    }
     setGroupEnabled(group: string, enabled: boolean): void {
         this.#sendCommand({
             type: 'setGroupEnabled',

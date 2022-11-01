@@ -123,6 +123,15 @@ export class LocalController implements SceneController {
         }
         this.#notifyObjectPicked(id)
     }
+    target(id: number): void {
+        const mesh = this.#container?.scene.getMeshByUniqueId(id)
+        if (mesh) {
+            const cam = this.#container!.camera
+            const d = mesh.position.subtract(cam.target)
+            cam.setTarget(mesh.position)
+            cam.setPosition(cam.position.add(d))
+        }
+    }
     setGroupEnabled(group: string, enabled: boolean) {
         this.#container?.groupMap.get(group)?.setEnabled(enabled)
     }

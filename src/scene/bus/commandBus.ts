@@ -23,6 +23,10 @@ export type CommandMessages = {
      */
     SelectObject: number|null
     /**
+     * Pans the camera to target an object specified by its id
+     */
+    TargetObject: number
+    /**
      * Hide or shows a group of elements
      */
     SetGroupEnabled: { group: string, enabled: boolean }
@@ -63,6 +67,12 @@ export class SceneCommander {
      */
     static SelectObject(id: number|null) {
         SceneCommandBus.emit('SelectObject', id)
+    }
+    /**
+     * Pans the camera to target an object specified by its id
+     */
+    static TargetObject(id: number) {
+        SceneCommandBus.emit('TargetObject', id)
     }
     /**
      * Hide or shows a group of elements
