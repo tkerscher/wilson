@@ -21,7 +21,7 @@ export type CommandMessages = {
     /**
      * Select an object given its id
      */
-    SelectObject: number
+    SelectObject: number|null
     /**
      * Hide or shows a group of elements
      */
@@ -61,7 +61,7 @@ export class SceneCommander {
     /**
      * Select an object given its id
      */
-    static SelectObject(id: number) {
+    static SelectObject(id: number|null) {
         SceneCommandBus.emit('SelectObject', id)
     }
     /**

@@ -35,7 +35,7 @@ export class WorkerController implements SceneController {
     //callbacks
     #onAnimationLoopCallbacks: Array<() => void> = []
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
-    #onObjectPickedCallbacks: Array<(id: number) => void> = []
+    #onObjectPickedCallbacks: Array<(id: number|null) => void> = []
 
     screenshotFilename: string = ""
 
@@ -170,7 +170,7 @@ export class WorkerController implements SceneController {
             color: color
         })
     }
-    registerOnObjectPicked(callback: (objectId: number) => void): void {
+    registerOnObjectPicked(callback: (objectId: number|null) => void): void {
         this.#onObjectPickedCallbacks.push(callback)
     }
     get isGridEnabled(): boolean {

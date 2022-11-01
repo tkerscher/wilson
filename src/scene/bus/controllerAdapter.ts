@@ -8,7 +8,7 @@ export class ControllerAdapter {
     #resetCamera: () => void
     #toggleGrid: () => void
     #screenshot: () => void
-    #selectObject: (id: number) => void
+    #selectObject: (id: number|null) => void
     #setGroupEnabled: (e: {group: string, enabled: boolean}) => void
     #setPathEnabled: (e: {id: number, enabled: boolean, color: string}) => void
     #setTheme: (theme: Theme) => void
@@ -18,7 +18,7 @@ export class ControllerAdapter {
         this.#resetCamera = () => controller.resetCamera()
         this.#toggleGrid = () => controller.setGridEnabled(!controller.isGridEnabled)
         this.#screenshot = () => controller.screenshot()
-        this.#selectObject = (id: number) => controller.select(id)
+        this.#selectObject = (id: number|null) => controller.select(id)
         this.#setGroupEnabled = (e: {group: string, enabled: boolean}) =>
             controller.setGroupEnabled(e.group, e.enabled)
         this.#setPathEnabled = (e: {id: number, enabled: boolean, color: string}) =>
@@ -35,7 +35,7 @@ export class ControllerAdapter {
         SceneCommandBus.on('SetTheme', this.#setTheme)
 
         //register events
-        controller.registerOnObjectPicked((id: number) => 
+        controller.registerOnObjectPicked((id: number|null) => 
             SceneEventBus.emit('ObjectPicked', id))
     }
 

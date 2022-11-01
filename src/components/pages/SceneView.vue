@@ -20,7 +20,6 @@ import { PlayerControl } from '../../input/playerControl'
 import { ScenePointerProxy } from '../../input/scenePointerProxy'
 
 import { useCatalogue } from '../../stores/catalogue'
-import { useObjects } from '../../stores/objects'
 import { usePlayer } from '../../stores/player'
 import { useProject } from '../../stores/project'
 import { useResolution } from '../../stores/resolution'
@@ -31,7 +30,6 @@ import { CatalogueControl } from '../../input/catalogueControl'
 import { ControllerAdapter } from '../../scene/bus/controllerAdapter'
 
 const catalogue = useCatalogue()
-const objects = useObjects()
 const player = usePlayer()
 const project = useProject()
 const resolution = useResolution()
@@ -107,15 +105,6 @@ player.$subscribe((mutation, state) => {
             recorder.stop()
         }
     }
-})
-
-// Objects
-objects.$subscribe((mutation, state) => {
-    const id = objects.selectedObjectIdx
-    if (id != null)
-        controller?.select(id)
-    //TODO: Bit too much to update all groups every time...
-    objects.groups.forEach(g => controller?.setGroupEnabled(g.name, g.visible))
 })
 
 // Resize

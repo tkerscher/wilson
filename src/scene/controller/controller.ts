@@ -61,10 +61,10 @@ export interface SceneController {
      */
     resetCamera(): void
     /**
-     * Selects a given object via its id
+     * Selects a given object via its id or remove selection if null passed.
      * @param id Id of object
      */
-    select(id: number): void
+    select(id: number|null): void
     /**
      * Shows or hides a group of objects via their group name
      * @param group Group name
@@ -83,7 +83,7 @@ export interface SceneController {
      * Registers a callback function to be called when an object was picked by
      * the user. Provides either the objects unique id.
      */
-    registerOnObjectPicked(callback: (objectId: number) => void): void
+    registerOnObjectPicked(callback: (objectId: number|null) => void): void
 
     /****************************** User Input ********************************/
 

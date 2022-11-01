@@ -11,7 +11,7 @@ export interface FrameChangedEvent extends _WorkerEvent {
 }
 export interface ObjectPickedEvent extends _WorkerEvent {
     type: 'onObjectPicked'
-    objectId: number
+    objectId: number|null
 }
 
 export type WorkerEvent = AnimationLoopEvent | FrameChangedEvent | ObjectPickedEvent

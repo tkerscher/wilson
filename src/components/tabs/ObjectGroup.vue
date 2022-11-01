@@ -13,12 +13,12 @@
         <div :class="['button', 'icon-small', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
              :title="props.group.visible ? 'Hide Group' : 'Show Group'"
              role="button"
-             @mouseup.stop="props.group.visible = !props.group.visible">
+             @mouseup.stop="toggleGroup(props.group)">
         </div>
     </div>
     <div v-if="expanded" class="content" ref="contentDiv">
         <div v-for="item in filtered"
-             :class="['item', { 'item-selected': props.modelValue == item.id }]"
+             :class="['item', { 'item-selected': selectedId == item.id }]"
              :name="'item'+item.id"
              @mouseup.stop="e => select(e, item.id)"
              @keydown.up.prevent="selectPrevious"
@@ -31,16 +31,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
-import { Group } from '../../stores/objects'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Group } from './ObjectGroup'
+import { SceneCommander } from '../../scene/bus/commandBus'
+import { SceneEventBus } from '../../scene/bus/eventBus'
 
+const selectedId = ref<number|null>(null)
 const props = defineProps<{
     group: Group,
-    modelValue: number|null,
     searchQuery: string
-}>()
-const emits = defineEmits<{
-    (e: 'update:modelValue', value: number|null): void
 }>()
 
 const expanded = ref(false)
@@ -51,7 +50,7 @@ const empty = computed(() => filtered.value.length == 0)
 function select(e: MouseEvent, id: number) {
     const foo = e.target as HTMLDivElement
     foo.focus()
-    emits('update:modelValue', id)
+    SceneCommander.SelectObject(id)
 }
 function selectNext(e: KeyboardEvent) {
     //repeated is a bit wonky -> disable
@@ -65,7 +64,7 @@ function selectNext(e: KeyboardEvent) {
         //name is of form 'name5053' -> select numbers
         const id = parseInt(name.substring(4))
         //update
-        emits('update:modelValue', id)
+        SceneCommander.SelectObject(id)
     }
 }
 function selectPrevious(e: KeyboardEvent) {
@@ -80,17 +79,24 @@ function selectPrevious(e: KeyboardEvent) {
         //name is of form 'name5053' -> select numbers
         const id = parseInt(name.substring(4))
         //update
-        emits('update:modelValue', id)
+        SceneCommander.SelectObject(id)
     }
 }
 
+function toggleGroup(group: Group) {
+    group.visible = !group.visible
+    SceneCommander.SetGroupEnabled(group.name, group.visible)
+}
+
 const contentDiv = ref<HTMLDivElement|null>(null)
-watch(props, () => {
-    if (props.modelValue == null)
+function handleSelection(id: number|null) {
+    selectedId.value = id
+
+    if (id == null)
         return
     
     //Check if the selected object is in this group
-    if (!filtered.value.find(o => o.id == props.modelValue))
+    if (!filtered.value.find(o => o.id == id))
         return
 
     //Expand if necessary
@@ -100,10 +106,12 @@ watch(props, () => {
     //Get corresponding div (wait for rendering)
     nextTick(() => {
         const div = contentDiv.value!
-        const item = div.querySelector('[name=item'+props.modelValue+']')! as HTMLDivElement
+        const item = div.querySelector('[name=item'+id+']')! as HTMLDivElement
         item.focus()
     })
-})
+}
+onMounted(() => SceneEventBus.on('ObjectPicked', handleSelection))
+onBeforeUnmount(() => SceneEventBus.off('ObjectPicked', handleSelection))
 </script>
 
 <style scoped>

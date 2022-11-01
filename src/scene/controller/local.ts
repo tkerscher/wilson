@@ -24,7 +24,7 @@ export class LocalController implements SceneController {
     //callbacks
     #onAnimationLoopCallbacks: Array<() => void> = []
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
-    #onObjectPickedCallbacks: Array<(id: number) => void> = []
+    #onObjectPickedCallbacks: Array<(id: number|null) => void> = []
     
     screenshotFilename: string = ""
     
@@ -71,7 +71,7 @@ export class LocalController implements SceneController {
     #notifyAnimationLoop() {
         this.#onAnimationLoopCallbacks.forEach(callback => callback())
     }
-    #notifyObjectPicked(objectId: number) {
+    #notifyObjectPicked(objectId: number|null) {
         this.#onObjectPickedCallbacks.forEach(callback => callback(objectId))
     }
 
@@ -121,6 +121,7 @@ export class LocalController implements SceneController {
                     mesh, mesh.metadata.name, mesh.metadata.description)
             }
         }
+        this.#notifyObjectPicked(id)
     }
     setGroupEnabled(group: string, enabled: boolean) {
         this.#container?.groupMap.get(group)?.setEnabled(enabled)
@@ -133,7 +134,7 @@ export class LocalController implements SceneController {
         this.#container?.camera.setTarget(this.#defaultCameraTarget)
     }
 
-    registerOnObjectPicked(callback: (objectId: number) => void): void {
+    registerOnObjectPicked(callback: (objectId: number|null) => void): void {
         this.#onObjectPickedCallbacks.push(callback)
     }
 
@@ -176,7 +177,6 @@ export class LocalController implements SceneController {
         if (!!pick && pick.hit && !!pick.pickedMesh) {
             const id = pick.pickedMesh.uniqueId
             this.select(id)
-            this.#notifyObjectPicked(id)
         }
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
