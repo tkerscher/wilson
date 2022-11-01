@@ -29,6 +29,8 @@ import { ScreenRecorder } from '../../video/screenRecorder'
 import { CatalogueControl } from '../../input/catalogueControl'
 import { ControllerAdapter } from '../../scene/bus/controllerAdapter'
 
+const DefaultTitle = document.title
+
 const catalogue = useCatalogue()
 const player = usePlayer()
 const project = useProject()
@@ -56,6 +58,10 @@ function buildScene() {
     if (player.isPlaying) {
         controller.play()
     }
+
+    //Change title
+    if (project.meta?.name)
+        document.title = project.meta.name + ' | ' + DefaultTitle
 }
 project.$subscribe((mutation, state) => buildScene())
 
@@ -213,6 +219,9 @@ onBeforeUnmount(() => {
     cameraControl.dispose()
     scenePointerProxy.dispose()
     playerControl.dispose()
+
+    //Reset title
+    document.title = DefaultTitle
 })
 </script>
 
