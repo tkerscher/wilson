@@ -191,16 +191,6 @@ onMounted(() => {
         }
     })
 
-    //pick interaction
-    controller.registerOnObjectPicked((objectId: number) => {
-        if (objects.selectedObjectIdx == objectId) {
-            objects.selectedObjectIdx = null
-        }
-        else {
-            objects.selectedObjectIdx = objectId
-        }
-    })
-
     //UI
     catalogueControl = new CatalogueControl(catalogue)
     cameraControl = new CameraControl(controller, canvas.value!)
