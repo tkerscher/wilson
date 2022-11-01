@@ -1,39 +1,64 @@
 <template>
 <div class="root">
     <div
-        v-for="(path, index) in filtered"
+        v-for="path in filtered"
         class="item">
         <div class="header">
             <span class="name"
-                  @mouseup.stop="path.visible = !path.visible">
+                  @mouseup.stop="toggleVisible(path)">
                 {{path.name}}
             </span>
             <input v-if="path.visible"
                    type="color"
                    class="color-picker"
                    :value="path.color"
-                   @change="e => changeColor(e, index)" />
+                   @change="e => changeColor(e, path)" />
         </div>
     </div>
 </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { usePaths } from '../../stores/paths'
-const paths = usePaths()
+import { computed, ref } from 'vue'
+import { SceneCommander } from '../../scene/bus/commandBus'
+import { useProject } from '../../stores/project'
+const project = useProject()
 
 const props = defineProps<{
     searchQuery: string
 }>()
-const filtered = computed(() => paths.paths.filter(
+
+const DefaultColor = '#ff8800' //orange
+interface PathHandle {
+    name: string
+    id: number
+    color: string //hex
+    visible: boolean
+}
+
+var paths = ref<PathHandle[]>([])
+function parseProject() {
+    paths.value = project.paths.map(p => ({
+        name: p.name,
+        id: p.id,
+        color: DefaultColor,
+        visible: false}))
+}
+parseProject()
+project.$subscribe(parseProject)
+
+const filtered = computed(() => paths.value.filter(
     p => p.name.toLowerCase().includes(props.searchQuery.toLowerCase())))
 
-function changeColor(e: Event, index: number) {
+function changeColor(e: Event, path: PathHandle) {
     const picker = e.target as HTMLInputElement;
-    paths.$patch((state) => {
-        state.paths[index].color = picker.value
-    })
+    path.color = picker.value
+    SceneCommander.SetPathEnabled(path.id, path.visible, path.color)
+}
+
+function toggleVisible(path: PathHandle) {
+    path.visible = !path.visible
+    SceneCommander.SetPathEnabled(path.id, path.visible, path.color)
 }
 </script>
 

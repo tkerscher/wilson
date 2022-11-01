@@ -17,7 +17,9 @@
             </div>
         </div>
         <div class="active-tab-container scrollable">            
-            <component :is="tabIcons[activeTab].tab" :searchQuery="searchQuery"/>
+            <KeepAlive>
+                <component :is="tabIcons[activeTab].tab" :searchQuery="searchQuery"/>
+            </KeepAlive>
         </div>
     </div>
 </div>
