@@ -4,21 +4,13 @@
             <canvas id="render-canvas" ref="canvas"
                  :style="{ transform: 'translateX(' + transX + 'px) translateY(' + transY + 'px) scale(' + scale + ')' }"></canvas>
         </div>
-        <Toolbar
-            class="toolbar"
-            @exit="exit"
-            @toggle-grid="toggleGrid"
-            @open-graphs="openGraphs"
-            @reset-camera="resetCamera"
-            @screenshot="screenshot"
-            @toggle-theme="toggleTheme"/>
+        <Toolbar class="toolbar"/>
     </div>
 </template>
 
 <script setup lang="ts">
 import Toolbar from '../input/Toolbar.vue'
 import { nextTick,  onBeforeUnmount, onMounted, ref } from 'vue'
-import { openPlot } from '../../plot/openPlot'
 
 import { SceneController } from '../../scene/controller/controller'
 import { createController } from '../../scene/controller/factory'
@@ -29,19 +21,17 @@ import { ScenePointerProxy } from '../../input/scenePointerProxy'
 
 import { useCatalogue } from '../../stores/catalogue'
 import { useObjects } from '../../stores/objects'
-import { usePaths } from '../../stores/paths'
 import { usePlayer } from '../../stores/player'
 import { useProject } from '../../stores/project'
 import { useResolution } from '../../stores/resolution'
-import { useTheme } from '../../stores/theme'
 import { MutationType } from 'pinia'
 import { getCurrentTheme } from '../../scene/theme'
 import { ScreenRecorder } from '../../video/screenRecorder'
 import { CatalogueControl } from '../../input/catalogueControl'
+import { ControllerAdapter } from '../../scene/bus/controllerAdapter'
 
 const catalogue = useCatalogue()
 const objects = useObjects()
-const paths = usePaths()
 const player = usePlayer()
 const project = useProject()
 const resolution = useResolution()
@@ -49,6 +39,7 @@ const resolution = useResolution()
 const canvas = ref<HTMLCanvasElement|null>(null)
 const container = ref<HTMLDivElement|null>(null)
 var controller: SceneController
+var adapter: ControllerAdapter
 
 // Scene / Project
 function buildScene() {
@@ -127,14 +118,6 @@ objects.$subscribe((mutation, state) => {
     objects.groups.forEach(g => controller?.setGroupEnabled(g.name, g.visible))
 })
 
-// Paths
-paths.$subscribe((mutation, state) => {
-    //TODO: Might be a bit much to update always all paths
-    for (const path of paths.paths) {
-        controller?.setPathEnabled(path.id, path.visible, path.color)
-    }
-})
-
 // Resize
 let fixed = resolution.fixed
 const scale = ref(1.0)
@@ -196,6 +179,8 @@ var playerControl: PlayerControl
 
 onMounted(() => {
     controller = createController(canvas.value!)
+    adapter = new ControllerAdapter(controller)
+
     buildScene()
     resizeCanvas()
     resizer.observe(container.value!)
@@ -241,6 +226,7 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
     resizer.disconnect()
+    adapter.dispose()
     controller.dispose()
 
     //UI
@@ -249,28 +235,6 @@ onBeforeUnmount(() => {
     scenePointerProxy.dispose()
     playerControl.dispose()
 })
-
-//Toolbar functions
-function exit() {
-    project.$reset()
-}
-function toggleGrid() {
-    controller?.setGridEnabled(!controller.isGridEnabled)
-}
-function openGraphs() {
-    openPlot(project.graphs)
-}
-function resetCamera() {
-    controller?.resetCamera()
-}
-function screenshot() {
-    controller?.screenshot()
-}
-const theme = useTheme()
-function toggleTheme() {
-    theme.toggleTheme()
-    controller?.setTheme(getCurrentTheme())
-}
 </script>
 
 <style scoped>

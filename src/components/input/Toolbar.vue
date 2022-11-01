@@ -3,13 +3,13 @@
     <div class="button"
          role="button"
          title="Exit"
-         @mouseup="emits('exit')">
+         @mouseup="project.$reset()">
         <div class="icon-large exit-icon toolbar-icon"></div>
     </div>
     <div class="button"
          role="button"
          title="Toggle Theme (T)"
-         @mouseup="emits('toggleTheme')">
+         @mouseup="toggleTheme()">
         <div :class="[
             'icon-large',
             theme.useDarkTheme ? 'moon-icon' : 'sun-icon',
@@ -18,25 +18,25 @@
     <div class="button"
          role="button"
          title="Toggle Grid (G)"
-         @mouseup="emits('toggleGrid')">
+         @mouseup="toggleGrid">
         <div class="icon-large grid-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Open Graph Explorer (Shift+G)"
-         @mouseup="emits('openGraphs')">
+         @mouseup="openGraphs()">
         <div class="icon-large chart-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Reset Camera (R)"
-         @mouseup="emits('resetCamera')">
+         @mouseup="resetCamera()">
         <div class="icon-large camera-rotate-icon toolbar-icon"></div>     
     </div>
     <div class="button"
          role="button"
          title="Screenshot (P)"
-         @mouseup="emits('screenshot')">
+         @mouseup="screenshot()">
         <div class="icon-large camera-icon toolbar-icon"></div>     
     </div>
 </div>
@@ -44,24 +44,39 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from 'vue';
+
 import { KeyMap } from '../../input/keyMap';
+import { openPlot } from '../../plot/openPlot';
+import { SceneCommander } from '../../scene/bus/commandBus';
+import { getCurrentTheme } from '../../scene/theme';
+
+import { useProject } from '../../stores/project';
 import { useTheme } from '../../stores/theme';
+const project = useProject()
 const theme = useTheme()
 
-const emits = defineEmits<{
-    (e: 'exit'): void,
-    (e: 'resetCamera'): void,
-    (e: 'screenshot'): void
-    (e: 'toggleGrid'): void,
-    (e: 'toggleTheme'): void,
-    (e: 'openGraphs'): void
-}>()
+function openGraphs() {
+    openPlot(project.graphs)
+}
+function resetCamera() {
+    SceneCommander.ResetCamera()
+}
+function screenshot() {
+    SceneCommander.Screenshot()
+}
+function toggleGrid() {
+    SceneCommander.ToggleGrid()
+}
+function toggleTheme() {
+    theme.toggleTheme()
+    SceneCommander.SetTheme(getCurrentTheme())
+}
 
 const hotKeys = new KeyMap([
-    ["KeyT", () => emits('toggleTheme')],
-    ["KeyG", () => emits('toggleGrid')],
-    ["Shift+KeyG", () => emits('openGraphs')],
-    ["KeyP", () => emits('screenshot')]
+    ["KeyT", () => toggleTheme()],
+    ["KeyG", () => toggleGrid],
+    ["Shift+KeyG", () => openGraphs()],
+    ["KeyP", () => screenshot()]
 ])
 function handleHotKey(e: KeyboardEvent) {
     if (!e.repeat)
