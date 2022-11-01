@@ -94,8 +94,8 @@ export class LocalController implements SceneController {
             return
         this.#container.animation.speedRatio = value
     }
-    play(loop: boolean) {
-        this.#container?.animation.play(loop)
+    play() {
+        this.#container?.animation.play(true)
     }
     pause() {
         this.#container?.animation.pause()

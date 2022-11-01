@@ -19,7 +19,7 @@ function messageHandler(ev: MessageEvent<any>) {
         controller.load(project)
         break
     case 'play':
-        controller.play(true)
+        controller.play()
         break
     case 'pause':
         controller.pause()

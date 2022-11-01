@@ -119,11 +119,10 @@ export class WorkerController implements SceneController {
         }, [serialized])
         this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
     }
-    play(loop: boolean): void {
+    play(): void {
         this.#isPlaying = true
         this.#sendCommand({
-            type: 'play',
-            loop: true
+            type: 'play'
         })
     }
     pause(): void {

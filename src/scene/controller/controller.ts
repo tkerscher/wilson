@@ -30,9 +30,8 @@ export interface SceneController {
     set speedRatio(value: number)
     /**
      * Starts or resumes the animation
-     * @param loop True, if the animation should loop
      */
-    play(loop: boolean): void
+    play(): void
     /**
      * Pauses the animation
      */

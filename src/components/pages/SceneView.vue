@@ -54,7 +54,7 @@ function buildScene() {
 
     //start animation
     if (player.isPlaying) {
-        controller.play(player.isLooping)
+        controller.play()
     }
 }
 project.$subscribe((mutation, state) => buildScene())
@@ -85,7 +85,7 @@ player.$subscribe((mutation, state) => {
             //restart if necessary
             if (player.currentFrame == player.endFrame)
                 controller.goToFrame(player.startFrame)
-            controller.play(true)
+            controller.play()
         }
         else {
             controller.pause()

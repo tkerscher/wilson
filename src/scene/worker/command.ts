@@ -9,8 +9,7 @@ export interface LoadCommand extends _WorkerCommand {
     data: ArrayBufferLike
 }
 export interface PlayCommand extends _WorkerCommand {
-    type: 'play',
-    loop: boolean
+    type: 'play'
 }
 export interface PauseCommand extends _WorkerCommand {
     type: 'pause'
