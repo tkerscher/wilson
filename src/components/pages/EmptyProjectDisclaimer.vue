@@ -1,29 +1,48 @@
 <template>
-    <div class="container">
-        <img v-if="theme.useDarkTheme" class="banner" src="/p-one_blue_dark.svg" />
-        <img v-else class="banner" src="/p-one_blue.svg" />
-        <p class="disclaimer">
-            Currently, there is nothing to show! <br />
-            Select a file to watch it.
-        </p>
-        <label for="file-upload" class="p-button">
-            <div class="icon icon-small upload-icon"></div>Open File
-        </label>
-        <input id="file-upload" type="file" accept=".p1on" @change="onFileSelected"/>
-    </div>
+  <div class="container">
+    <img
+      v-if="theme.useDarkTheme"
+      class="banner"
+      src="/p-one_blue_dark.svg"
+    >
+    <img
+      v-else
+      class="banner"
+      src="/p-one_blue.svg"
+    >
+    <p class="disclaimer">
+      Currently, there is nothing to show! <br>
+      Select a file to watch it.
+    </p>
+    <label
+      for="file-upload"
+      class="p-button"
+    >
+      <div class="icon icon-small upload-icon" />Open File
+    </label>
+    <input
+      id="file-upload"
+      type="file"
+      accept=".p1on"
+      @change="onFileSelected"
+    >
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useCatalogue } from '../../stores/catalogue'
+import { useCatalogue } from '../../stores/catalogue';
 import { useTheme } from '../../stores/theme';
-const catalogue = useCatalogue()
-const theme = useTheme()
+const catalogue = useCatalogue();
+const theme = useTheme();
 
 function onFileSelected(e: Event) {
-    const fileInput = e.target! as HTMLInputElement
-    if (fileInput.files) {
-        fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue)
-    }
+  if (!e.target)
+    return;
+  
+  const fileInput = e.target as HTMLInputElement;
+  if (fileInput.files) {
+      fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue);
+  }
 }
 </script>
 

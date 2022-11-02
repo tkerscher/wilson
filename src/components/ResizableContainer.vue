@@ -1,99 +1,106 @@
 <template>
-<div class="resize-container"
-     :style="containerStyle"
-     ref="container">
-    <slot></slot>
-    <div :class="['grip', 'grip-' + props.gripPosition, {'grip-resizing': isResizing}]"
-         @mousedown="startResize"></div>
-</div>
+  <div
+    ref="container"
+    class="resize-container"
+    :style="containerStyle"
+  >
+    <slot />
+    <div
+      :class="['grip', 'grip-' + props.gripPosition, {'grip-resizing': isResizing}]"
+      @mousedown="startResize"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, reactive, ref, Ref } from 'vue'
+import { onBeforeMount, reactive, ref, Ref } from 'vue';
 
-const isResizing = ref(false)
-const container: Ref<HTMLElement|null> = ref(null)
+const isResizing = ref(false);
+const container: Ref<HTMLElement|null> = ref(null);
 const containerStyle = reactive({
     width: '100%',
     height: '100%'
-})
+});
 const props = defineProps<{
     gripPosition: 'top'|'left'|'right'|'bottom',
     storeKey?: string,
     defaultSize?: string
-}>()
+}>();
 
 //retrieve stored size
 onBeforeMount(() => {
     //set default size
     if (props.defaultSize != null) {
         if (props.gripPosition == 'top' || props.gripPosition == 'bottom') {
-            containerStyle.height = props.defaultSize
+            containerStyle.height = props.defaultSize;
         }
         else {
-            containerStyle.width = props.defaultSize
+            containerStyle.width = props.defaultSize;
         }
     }
     //check if persistent
     if (props.storeKey != null) {
         //check if there has been anything stored
-        const size: string | null = localStorage.getItem(props.storeKey)
+        const size: string | null = localStorage.getItem(props.storeKey);
         if (size != null) {
             //store either as width or height
             if (props.gripPosition == 'top' || props.gripPosition == 'bottom') {
-                containerStyle.height = size
+                containerStyle.height = size;
             }
             else {
-                containerStyle.width = size
+                containerStyle.width = size;
             }
         }
     }
-})
+});
 
 function updateSize(event: MouseEvent) {
-    const rect = container.value!.getBoundingClientRect()
-    var size = ""
+    if (!container.value)
+        return;
+    
+    const rect = container.value.getBoundingClientRect();
+    var size = "";
     switch (props.gripPosition) {
         case 'top':
-            size = (rect.bottom - event.clientY) + 'px'
-            containerStyle.height = size
+            size = (rect.bottom - event.clientY) + 'px';
+            containerStyle.height = size;
             break;
         case 'bottom':
-            size = (event.clientY - rect.top) + 'px'
-            containerStyle.height = size
+            size = (event.clientY - rect.top) + 'px';
+            containerStyle.height = size;
             break;
         case 'left':
-            size = (rect.right - event.clientX) + 'px'
-            containerStyle.width = size
+            size = (rect.right - event.clientX) + 'px';
+            containerStyle.width = size;
             break;
         case 'right':
-            size = (event.clientX - rect.left) + 'px'
-            containerStyle.width = size
+            size = (event.clientX - rect.left) + 'px';
+            containerStyle.width = size;
             break;
     }
     //Store size if needed
     if (props.storeKey != null) {
-        localStorage.setItem(props.storeKey, size)
+        localStorage.setItem(props.storeKey, size);
     }
 }
 
-function startResize(event: MouseEvent) {
-    isResizing.value = true
+function startResize() {
+    isResizing.value = true;
 
-    document.addEventListener('mousemove', updateSize)
-    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('mousemove', updateSize);
+    document.addEventListener('mouseup', onMouseUp);
     if (props.gripPosition == 'bottom' || props.gripPosition == 'top') {
-        document.body.style.cursor = 'ns-resize'
+        document.body.style.cursor = 'ns-resize';
     }
     else {
-        document.body.style.cursor = 'ew-resize'
+        document.body.style.cursor = 'ew-resize';
     }
 }
 function onMouseUp() {
-    isResizing.value = false
-    document.removeEventListener('mousemove', updateSize)
-    document.removeEventListener('mouseup', onMouseUp)
-    document.body.style.cursor = ''
+    isResizing.value = false;
+    document.removeEventListener('mousemove', updateSize);
+    document.removeEventListener('mouseup', onMouseUp);
+    document.body.style.cursor = '';
 }
 </script>
 

@@ -1,51 +1,53 @@
 <template>
-<div class="container">
-    <div class="label icon-small magnifying-glass-icon"></div>
+  <div class="container">
+    <div class="label icon-small magnifying-glass-icon" />
     <input
-        ref="input"
-        type="search"
-        class="search-box"
-        placeholder="Filter (Ctrl+Q)"
-        :value="props.modelValue"
-        @input="onInput"
-        @keyup.esc="clear"
-        @keyup.enter="finish"
+      ref="input"
+      type="search"
+      class="search-box"
+      placeholder="Filter (Ctrl+Q)"
+      :value="props.modelValue"
+      @input="onInput"
+      @keyup.esc="clear"
+      @keyup.enter="finish"
+    >
+    <div
+      :style="{'visibility': nonEmpty ? 'visible' : 'hidden'}"
+      class="button icon-small xmark-icon"
+      role="button"
+      @click="clear"
     />
-    <div :style="{'visibility': nonEmpty ? 'visible' : 'hidden'}"
-         class="button icon-small xmark-icon"
-         role="button"
-         @click="clear"></div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-const input = ref<HTMLInputElement|null>(null)
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+const input = ref<HTMLInputElement|null>(null);
 
 const props = defineProps<{
     modelValue: string
-}>()
+}>();
 const emits = defineEmits<{
     (e: 'update:modelValue', value: string): void
-}>()
+}>();
 
-const nonEmpty = computed(() => props.modelValue.length > 0)
+const nonEmpty = computed(() => props.modelValue.length > 0);
 
 function clear() {
     if (props.modelValue.length > 0) {
-        emits('update:modelValue', '')
+        emits('update:modelValue', '');
     }
     else {
-        input.value!.blur()
+        input.value?.blur();
     }
 }
 
 function finish() {
-    input.value!.blur()
+    input.value?.blur();
 }
 
 function onInput(e: Event) {
-    emits('update:modelValue', (e.target as HTMLInputElement).value)
+    emits('update:modelValue', (e.target as HTMLInputElement).value);
 }
 
 //handle global shortcut
@@ -57,17 +59,17 @@ function focus(e: KeyboardEvent) {
         !e.shiftKey &&
         e.key == 'q')
     {
-        e.preventDefault()
+        e.preventDefault();
 
-        input.value!.focus()
+        input.value?.focus();
     }
 }
 onMounted(() => {
-    document.addEventListener('keydown', focus)
-})
+    document.addEventListener('keydown', focus);
+});
 onBeforeUnmount(() => {
-    document.removeEventListener('keydown', focus)
-})
+    document.removeEventListener('keydown', focus);
+});
 </script>
 
 <style scoped>

@@ -1,57 +1,71 @@
 <template>
-<div class="root" @keydown.stop @keyup.stop>
+  <div
+    class="root"
+    @keydown.stop
+    @keyup.stop
+  >
     <div class="header">
-        <SearchInput class="search-box" v-model="searchQuery" />
+      <SearchInput
+        v-model="searchQuery"
+        class="search-box"
+      />
     </div>
     <div class="tab-root">
-        <div class="tab-list">
-            <div
-                v-for="(item, index) in tabIcons"
-                :class="['tab-button', {'active-header' : activeTab == index}]"
-                @mousedown="onSelectTab(index)"
-            >
-                <div :class="['tab-icon', 'icon-medium', item.icon]"></div>
-                <div v-if="activeTab == index" class="tab-title">
-                    {{ item.title }}
-                </div>
-            </div>
+      <div class="tab-list">
+        <div
+          v-for="(item, index) in tabIcons"
+          :key="item.id"
+          :class="['tab-button', {'active-header' : activeTab == index}]"
+          @mousedown="onSelectTab(index)"
+        >
+          <div :class="['tab-icon', 'icon-medium', item.icon]" />
+          <div
+            v-if="activeTab == index"
+            class="tab-title"
+          >
+            {{ item.title }}
+          </div>
         </div>
-        <div class="active-tab-container scrollable">            
-            <KeepAlive>
-                <component :is="tabIcons[activeTab].tab" :searchQuery="searchQuery"/>
-            </KeepAlive>
-        </div>
+      </div>
+      <div class="active-tab-container scrollable">            
+        <KeepAlive>
+          <component
+            :is="tabIcons[activeTab].tab"
+            :search-query="searchQuery"
+          />
+        </KeepAlive>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import InfoTab from './tabs/InfoTab.vue'
-import ObjectExplorer from './tabs/ObjectExplorer.vue'
-import SettingsTab from './tabs/SettingsTab.vue'
-import PathExplorer from './tabs/PathExplorer.vue'
-import SearchInput from './input/SearchInput.vue'
-import { onBeforeMount, ref } from 'vue'
-const searchQuery = ref('')
+import InfoTab from './tabs/InfoTab.vue';
+import ObjectExplorer from './tabs/ObjectExplorer.vue';
+import SettingsTab from './tabs/SettingsTab.vue';
+import PathExplorer from './tabs/PathExplorer.vue';
+import SearchInput from './input/SearchInput.vue';
+import { onBeforeMount, ref } from 'vue';
+const searchQuery = ref('');
 
 const tabIcons = [
-    { icon: 'cube-icon', title: 'Objects', tab: ObjectExplorer },
-    { icon: 'curve-icon', title: 'Paths', tab: PathExplorer },
-    { icon: 'wrench-icon', title: 'Settings', tab: SettingsTab },
-    { icon: 'info-icon', title: 'Info', tab: InfoTab }
-]
-const activeTab = ref(0)
+    { icon: 'cube-icon',   title: 'Objects',  id: 0, tab: ObjectExplorer },
+    { icon: 'curve-icon',  title: 'Paths',    id: 1, tab: PathExplorer },
+    { icon: 'wrench-icon', title: 'Settings', id: 2, tab: SettingsTab },
+    { icon: 'info-icon',   title: 'Info',     id: 3, tab: InfoTab }
+];
+const activeTab = ref(0);
 function onSelectTab(index: number) {
-    activeTab.value = index
-    localStorage.setItem('activeTab', String(index))
+    activeTab.value = index;
+    localStorage.setItem('activeTab', String(index));
 }
 
 onBeforeMount(() => {
     //restore active tab
-    const active = localStorage.getItem('activeTab')
+    const active = localStorage.getItem('activeTab');
     if (active != null)
-        activeTab.value = Number(active)
-})
+        activeTab.value = Number(active);
+});
 </script>
 
 <style scoped>

@@ -1,16 +1,20 @@
 <template>
-<table>
+  <table>
     <tr>
-        <td>FPS:</td>
-        <NumberInput :min-value="5" :max-value="120" v-model="player.recorderFps" />
+      <td>FPS:</td>
+      <NumberInput
+        v-model="player.recorderFps"
+        :min-value="5"
+        :max-value="120"
+      />
     </tr>
-</table>
+  </table>
 </template>
 
 <script setup lang="ts">
-import NumberInput from "../input/NumberInput.vue"
-import { usePlayer } from "../../stores/player"
-const player = usePlayer()
+import NumberInput from "../input/NumberInput.vue";
+import { usePlayer } from "../../stores/player";
+const player = usePlayer();
 </script>
 
 <style scoped>

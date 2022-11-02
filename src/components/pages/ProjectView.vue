@@ -1,79 +1,85 @@
 <template>
-<div class="container">
-    <div class="main-container" ref="mainDiv">
-        <SceneView class="scene-view"/>
-        <PlayerControl class="controller" @toggleFullscreen="fullscreen"/>
+  <div class="container">
+    <div
+      ref="mainDiv"
+      class="main-container"
+    >
+      <SceneView class="scene-view" />
+      <PlayerControl
+        class="controller"
+        @toggle-fullscreen="fullscreen"
+      />
     </div>
     <ResizableContainer
-        grip-position="left"
-        store-key="sidebar-width"
-        default-size="300px"
-        class="sidebar"
+      grip-position="left"
+      store-key="sidebar-width"
+      default-size="300px"
+      class="sidebar"
     >
-        <div class="sidebar-content">
-            <Sidebar />
-        </div>
+      <div class="sidebar-content">
+        <Sidebar />
+      </div>
     </ResizableContainer>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import ResizableContainer from '../ResizableContainer.vue'
-import SceneView from './SceneView.vue'
-import Sidebar from '../Sidebar.vue'
-import PlayerControl from '../input/PlayerControl.vue'
+import ResizableContainer from '../ResizableContainer.vue';
+import SceneView from './SceneView.vue';
+import Sidebar from '../SidebarContainer.vue';
+import PlayerControl from '../input/PlayerControl.vue';
 
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { usePlayer } from '../../stores/player'
-import { useProject } from '../../stores/project'
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { usePlayer } from '../../stores/player';
+import { useProject } from '../../stores/project';
 
-const player = usePlayer()
-const project = useProject()
+const player = usePlayer();
+const project = useProject();
 
-const mainDiv = ref<HTMLDivElement|null>(null)
+const mainDiv = ref<HTMLDivElement|null>(null);
 
 function init() {
-    player.$reset()
+    player.$reset();
     player.$patch({
         startFrame: project.meta?.startTime ?? 0.0,
         endFrame: project.meta?.endTime ?? 0.0,
         speedRatio: project.meta?.speedRatio ?? 1.0,
         isPlaying: true,
         isLooping: true
-    })    
+    });    
 }
 
 function onKeydown(e: KeyboardEvent) {
     if (e.code == "KeyF" && !e.altKey && !e.ctrlKey && !e.shiftKey) {
-        fullscreen()
+        fullscreen();
     }
 }
 function fullscreen() {
     if (!mainDiv.value || !mainDiv.value.requestFullscreen)
-        return
+        return;
     
     if (player.isFullscreen || document.fullscreenElement) {
-        document.exitFullscreen()
+        document.exitFullscreen();
     }
     else {
-        mainDiv.value.requestFullscreen()
+        mainDiv.value.requestFullscreen();
     }
 }
 function onFullscreenChanged() {
     //update gui
-    player.isFullscreen = !!document.fullscreenElement
+    player.isFullscreen = !!document.fullscreenElement;
 }
 
 onMounted(() => {
-    init()
-    addEventListener('fullscreenchange', onFullscreenChanged)
-    document.addEventListener('keydown', onKeydown)
-})
+    init();
+    addEventListener('fullscreenchange', onFullscreenChanged);
+    document.addEventListener('keydown', onKeydown);
+});
 onBeforeUnmount(() => {
-    removeEventListener('fullscreenchange', onFullscreenChanged)
-    document.removeEventListener('keydown', onKeydown)
-})
-project.$subscribe((mutation, state) => init())
+    removeEventListener('fullscreenchange', onFullscreenChanged);
+    document.removeEventListener('keydown', onKeydown);
+});
+project.$subscribe(() => init());
 </script>
 
 <style scoped>

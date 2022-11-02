@@ -1,93 +1,96 @@
 <template>
-<table>
+  <table>
     <tr>
-        <td>Title:</td>
-        <td>{{title}}</td>
+      <td>Title:</td>
+      <td>{{ title }}</td>
     </tr>
     <tr>
-        <td>Author:</td>
-        <td>{{author}}</td>
+      <td>Author:</td>
+      <td>{{ author }}</td>
     </tr>
     <tr>
-        <td>Date:</td>
-        <td>{{date}}</td>
+      <td>Date:</td>
+      <td>{{ date }}</td>
     </tr>
     <tr>
-        <td>Timestamp:</td>
-        <td>{{timestamp}} ns</td>
+      <td>Timestamp:</td>
+      <td>{{ timestamp }} ns</td>
     </tr>
     <tr>
-        <td>Start:</td>
-        <td>{{eventStart}} ns</td>
+      <td>Start:</td>
+      <td>{{ eventStart }} ns</td>
     </tr>
     <tr>
-        <td>End:</td>
-        <td>{{eventEnd}} ns</td>
+      <td>End:</td>
+      <td>{{ eventEnd }} ns</td>
     </tr>
     <tr>
-        <td>Duration:</td>
-        <td>{{duration}} ns</td>
+      <td>Duration:</td>
+      <td>{{ duration }} ns</td>
     </tr>
     <tr>
-        <td>Description:</td>
-        <td></td>
+      <td>Description:</td>
+      <td />
     </tr>
-</table>
+  </table>
 
-<p class="desc">{{ description }}</p>
+  <p class="desc">
+    {{ description }}
+  </p>
 
-<div class="disclaimer">
-    P1ON is an open source project under the MIT-License.<br />
+  <div class="disclaimer">
+    P1ON is an open source project under the MIT-License.<br>
     Checkout the project's <a href="https://github.com/tkerscher/P1ON">sourcecode</a>.
-</div>
+  </div>
 
-<!--Force vue to update this tab. God knows why this is needed-->
-<div style="visibility:hidden">
-    {{project.meta?.name}}
-</div>
+  <!--Force vue to update this tab. God knows why this is needed-->
+  <div style="visibility:hidden">
+    {{ project.meta?.name }}
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from '@vue/reactivity';
-import { useProject } from '../../stores/project'
-const project = useProject()
+import { ref } from 'vue';
+import { useProject } from '../../stores/project';
+const project = useProject();
 
-//Common tab api
+//Common tab api. Needed for component element probability
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
     searchQuery: string
-}>()
+}>();
 
 function getDefault(value: string|undefined, def: string): string {
     if (!value || value.length == 0)
-        return def
+        return def;
     else
-        return value
+        return value;
 }
 
 //data
 //For whatever reason computed props do not work!?
-const author = ref('')
-const title = ref('')
-const description = ref('')
-const date = ref('')
-const timestamp = ref('')
-const eventStart = ref('')
-const eventEnd = ref('')
-const duration = ref('')
+const author = ref('');
+const title = ref('');
+const description = ref('');
+const date = ref('');
+const timestamp = ref('');
+const eventStart = ref('');
+const eventEnd = ref('');
+const duration = ref('');
 
 function updateData() {
-    author.value = getDefault(project.meta?.author, 'No Author')
-    title.value = getDefault(project.meta?.name, 'No Title')
-    description.value = getDefault(project.meta?.description, 'No description')
-    date.value = new Date(project.meta?.date?.seconds ?? 0).toString()
-    const nanos = project.meta?.date?.nanos ?? 0
-    timestamp.value = (nanos + 1e10).toLocaleString('en-US').slice(3)
-    eventStart.value = (project.meta?.startTime ?? 0).toLocaleString('en-US')
-    eventEnd.value = (project.meta?.endTime ?? 0).toLocaleString('en-US')
-    duration.value = ((project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US')
+    author.value = getDefault(project.meta?.author, 'No Author');
+    title.value = getDefault(project.meta?.name, 'No Title');
+    description.value = getDefault(project.meta?.description, 'No description');
+    date.value = new Date(project.meta?.date?.seconds ?? 0).toString();
+    const nanos = project.meta?.date?.nanos ?? 0;
+    timestamp.value = (nanos + 1e10).toLocaleString('en-US').slice(3);
+    eventStart.value = (project.meta?.startTime ?? 0).toLocaleString('en-US');
+    eventEnd.value = (project.meta?.endTime ?? 0).toLocaleString('en-US');
+    duration.value = ((project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US');
 }
-updateData()
-project.$subscribe(updateData)
+updateData();
+project.$subscribe(updateData);
 </script>
 
 <style scoped>

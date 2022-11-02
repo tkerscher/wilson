@@ -1,38 +1,39 @@
 <template>
-<div class="main">
+  <div class="main">
     <GraphPlot />
     <ResizableContainer
-        grip-position="left"
-        store-key="plot-sidebar-width"
-        default-size="300px"
-        class="sidebar"
+      grip-position="left"
+      store-key="plot-sidebar-width"
+      default-size="300px"
+      class="sidebar"
     >
-        <div class="sidebar-container">
-            <GraphExplorer />
-        </div>
+      <div class="sidebar-container">
+        <GraphExplorer />
+      </div>
     </ResizableContainer>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import "./style.css"
+import "./style.css";
 
-import GraphExplorer from './components/tabs/GraphExplorer.vue'
-import GraphPlot from './components/pages/GraphPlot.vue'
-import ResizableContainer from './components/ResizableContainer.vue'
+import GraphExplorer from './components/tabs/GraphExplorer.vue';
+import GraphPlot from './components/pages/GraphPlot.vue';
+import ResizableContainer from './components/ResizableContainer.vue';
 
-import { onMounted } from 'vue'
-import { extractGraphs } from './plot/openPlot'
-import { GraphHandle, useGraphs } from './stores/graphs'
-import { useTheme } from './stores/theme'
-const graphs = useGraphs()
-const theme = useTheme() //sideeffect
+import { onMounted } from 'vue';
+import { extractGraphs } from './plot/openPlot';
+import { GraphHandle, useGraphs } from './stores/graphs';
+import { useTheme } from './stores/theme';
+const graphs = useGraphs();
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+const theme = useTheme(); //sideeffect
 
 onMounted(() => {
     extractGraphs()
         .then(graphs => graphs.map(g => g as GraphHandle))
-        .then(gs => graphs.$patch({ graphs: gs}))
-})
+        .then(gs => graphs.$patch({ graphs: gs}));
+});
 </script>
 
 <style>

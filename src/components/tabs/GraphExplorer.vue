@@ -1,46 +1,60 @@
 <template>
-<div class="root">
+  <div class="root">
     <div class="search-header">
-        <div class="button icon-medium trash-icon"
-            role="button"
-            title="Reset Graphs"
-            @mouseup="reset"></div>
-        <div :class="['button', 'icon-medium', showHidden ? 'eye-slash-icon' : ' eye-icon']"
-             :title="showHidden ? 'Show Hidden Graphs' : 'Hide Graphs'"
-             role="button"
-             @mouseup="showHidden = !showHidden"></div>
-        <SearchInput class="search-box" v-model="searchQuery" />
+      <div
+        class="button icon-medium trash-icon"
+        role="button"
+        title="Reset Graphs"
+        @mouseup="reset"
+      />
+      <div
+        :class="['button', 'icon-medium', showHidden ? 'eye-slash-icon' : ' eye-icon']"
+        :title="showHidden ? 'Show Hidden Graphs' : 'Hide Graphs'"
+        role="button"
+        @mouseup="showHidden = !showHidden"
+      />
+      <SearchInput
+        v-model="searchQuery"
+        class="search-box"
+      />
     </div>
     <div class="list scrollable">
-        <div
+      <div
         v-for="graph in filteredGraphs"
-        class="item">
-        <div class="header"
-             @mouseup.stop="graph.visible = !graph.visible">
-            <span class="name">{{graph.name}}</span>
-            <div v-if="graph.visible" class="icon icon-small eye-icon"></div>
+        :key="graph.id"
+        class="item"
+      >
+        <div
+          class="header"
+          @mouseup.stop="graph.visible = !graph.visible"
+        >
+          <span class="name">{{ graph.name }}</span>
+          <div
+            v-if="graph.visible"
+            class="icon icon-small eye-icon"
+          />
         </div>
+      </div>
     </div>
-    </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import SearchInput from '../input/SearchInput.vue'
+import SearchInput from '../input/SearchInput.vue';
 
-import { computed, ref } from "vue"
-import { useGraphs } from '../../stores/graphs'
-const graphs = useGraphs()
+import { computed, ref } from "vue";
+import { useGraphs } from '../../stores/graphs';
+const graphs = useGraphs();
 
-const showHidden = ref(false)
+const showHidden = ref(false);
 
-const searchQuery = ref('')
+const searchQuery = ref('');
 const filteredGraphs = computed(() =>
     graphs.graphs.filter(g => g.name.includes(searchQuery.value) && //search query
-     (showHidden.value || g.name.charAt(0) != ".")))                //hidden graphs
+     (showHidden.value || g.name.charAt(0) != ".")));                //hidden graphs
 
 function reset() {
-    graphs.graphs.forEach(g => g.visible = false)
+    graphs.graphs.forEach(g => g.visible = false);
 }
 </script>
 

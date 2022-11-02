@@ -1,34 +1,40 @@
 <template>
-<div class="root">
+  <div class="root">
     <div
-        v-for="path in filtered"
-        class="item">
-        <div class="header">
-            <span class="name"
-                  @mouseup.stop="toggleVisible(path)">
-                {{path.name}}
-            </span>
-            <input v-if="path.visible"
-                   type="color"
-                   class="color-picker"
-                   :value="path.color"
-                   @change="e => changeColor(e, path)" />
-        </div>
+      v-for="path in filtered"
+      :key="path.id"
+      class="item"
+    >
+      <div class="header">
+        <span
+          class="name"
+          @mouseup.stop="toggleVisible(path)"
+        >
+          {{ path.name }}
+        </span>
+        <input
+          v-if="path.visible"
+          type="color"
+          class="color-picker"
+          :value="path.color"
+          @change="e => changeColor(e, path)"
+        >
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { SceneCommander } from '../../scene/bus/commandBus'
-import { useProject } from '../../stores/project'
-const project = useProject()
+import { computed, ref } from 'vue';
+import { SceneCommander } from '../../scene/bus/commandBus';
+import { useProject } from '../../stores/project';
+const project = useProject();
 
 const props = defineProps<{
     searchQuery: string
-}>()
+}>();
 
-const DefaultColor = '#ff8800' //orange
+const DefaultColor = '#ff8800'; //orange
 interface PathHandle {
     name: string
     id: number
@@ -36,29 +42,29 @@ interface PathHandle {
     visible: boolean
 }
 
-var paths = ref<PathHandle[]>([])
+var paths = ref<PathHandle[]>([]);
 function parseProject() {
     paths.value = project.paths.map(p => ({
         name: p.name,
         id: p.id,
         color: DefaultColor,
-        visible: false}))
+        visible: false}));
 }
-parseProject()
-project.$subscribe(parseProject)
+parseProject();
+project.$subscribe(parseProject);
 
 const filtered = computed(() => paths.value.filter(
-    p => p.name.toLowerCase().includes(props.searchQuery.toLowerCase())))
+    p => p.name.toLowerCase().includes(props.searchQuery.toLowerCase())));
 
 function changeColor(e: Event, path: PathHandle) {
     const picker = e.target as HTMLInputElement;
-    path.color = picker.value
-    SceneCommander.SetPathEnabled(path.id, path.visible, path.color)
+    path.color = picker.value;
+    SceneCommander.SetPathEnabled(path.id, path.visible, path.color);
 }
 
 function toggleVisible(path: PathHandle) {
-    path.visible = !path.visible
-    SceneCommander.SetPathEnabled(path.id, path.visible, path.color)
+    path.visible = !path.visible;
+    SceneCommander.SetPathEnabled(path.id, path.visible, path.color);
 }
 </script>
 

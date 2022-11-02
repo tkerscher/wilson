@@ -1,31 +1,42 @@
 <template>
-<div class="root">
-    <div class="group-header" v-for="group in groups">
-        <div class="header" @mouseup.stop="group.expanded.value = !group.expanded.value">
-            <div :class="['button', 'icon-small', group.expanded.value ? 'chevron-down-icon' : 'chevron-right-icon']"
-                 :title="group.expanded.value ? 'Collapse Group' : 'Expand Group'"
-                 role="button">
-            </div>
-            <div class="title">
-                <span>{{group.name}}</span>
-            </div>
+  <div class="root">
+    <div
+      v-for="group in groups"
+      :key="group.id"
+      class="group-header"
+    >
+      <div
+        class="header"
+        @mouseup.stop="group.expanded.value = !group.expanded.value"
+      >
+        <div
+          :class="['button', 'icon-small', group.expanded.value ? 'chevron-down-icon' : 'chevron-right-icon']"
+          :title="group.expanded.value ? 'Collapse Group' : 'Expand Group'"
+          role="button"
+        />
+        <div class="title">
+          <span>{{ group.name }}</span>
         </div>
-        <component v-if="group.expanded.value" :is="group.content" />
+      </div>
+      <component
+        :is="group.content"
+        v-if="group.expanded.value"
+      />
     </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import Recorder from '../settings/Recorder.vue'
-import Resolution from '../settings/Resolution.vue'
-import Stage from '../settings/Stage.vue'
-import { ref } from "vue"
+import Recorder from '../settings/RecorderSettings.vue';
+import Resolution from '../settings/ResolutionSettings.vue';
+import Stage from '../settings/StageSettings.vue';
+import { ref } from "vue";
 
 const groups = [
-    { name: 'Resolution', content: Resolution, expanded: ref(false) },
-    { name: 'Recording', content: Recorder, expanded: ref(false) },
-    { name: 'Stage', content: Stage, expanded: ref(false) }
-]
+    { name: 'Resolution', id: 0, content: Resolution, expanded: ref(false) },
+    { name: 'Recording',  id: 1, content: Recorder, expanded: ref(false) },
+    { name: 'Stage',      id: 2, content: Stage, expanded: ref(false) }
+];
 </script>
 
 <style scoped>

@@ -32,7 +32,7 @@ export const useStage = defineStore("stage", () => {
             const reader = res.body.getReader();
             let received = 0;
             const chunks = [] as Uint8Array[];
-            while(true) {
+            for(;;) {
                 const { done, value } = await reader.read();
                 if (done)
                     break;

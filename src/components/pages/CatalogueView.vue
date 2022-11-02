@@ -1,76 +1,116 @@
 <template>
-<div class="root">
-    <input type="file" ref="dialog" @change="onFileSelected" />
-    <div class="loading-screen" ref="loadingMessage">
-        <div class="loading-message">
-            <p>Loading...</p>
-        </div>
+  <div class="root">
+    <input
+      ref="dialog"
+      type="file"
+      @change="onFileSelected"
+    >
+    <div
+      ref="loadingMessage"
+      class="loading-screen"
+    >
+      <div class="loading-message">
+        <p>Loading...</p>
+      </div>
     </div>
     <div class="header">
-        <div class="banner">
-            <img class="logo" v-if="theme.useDarkTheme" src="/p-one_blue_dark.svg" />
-            <img class="logo" v-else src="/p-one_blue.svg" />
+      <div class="banner">
+        <img
+          v-if="theme.useDarkTheme"
+          class="logo"
+          src="/p-one_blue_dark.svg"
+        >
+        <img
+          v-else
+          class="logo"
+          src="/p-one_blue.svg"
+        >
+      </div>
+      <div class="search-box">
+        <SearchInput
+          v-model="searchQuery"
+          class="search-bar"
+        />            
+      </div>
+      <div class="action-bar">
+        <div
+          role="button"
+          @mouseup="catalogue.saveCatalogue"
+        >
+          <div class="icon-action icon-large download-icon" />
+          Save
         </div>
-        <div class="search-box">
-            <SearchInput class="search-bar" v-model="searchQuery"/>            
+        <div
+          role="button"
+          @mouseup="openDialog"
+        >
+          <div class="icon-action icon-large upload-icon" />
+          Open
         </div>
-        <div class="action-bar">
-            <div role="button" @mouseup="catalogue.saveCatalogue">
-                <div class="icon-action icon-large download-icon"></div>
-                Save
-            </div>
-            <div role="button" @mouseup="openDialog">
-                <div class="icon-action icon-large upload-icon"></div>
-                Open
-            </div>
-            <div role="button" @mouseup="theme.toggleTheme">
-                <div :class="['icon-action', 'icon-large', theme.useDarkTheme ? 'moon-icon' : 'sun-icon']"></div>
-                {{ theme.useDarkTheme ? 'Dark' : 'Light'}}
-            </div>
+        <div
+          role="button"
+          @mouseup="theme.toggleTheme"
+        >
+          <div :class="['icon-action', 'icon-large', theme.useDarkTheme ? 'moon-icon' : 'sun-icon']" />
+          {{ theme.useDarkTheme ? 'Dark' : 'Light' }}
         </div>
+      </div>
     </div>
     <div class="table-container">
-        <div class="scroll-container scrollable">
-            <table>
-            <thead>
-                <tr>
-                    <th style="width: 30px"></th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Author</th>
-                    <th>Duration</th>
-                    <th style="width: 100px;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <template v-for="entry in filteredEntries">
-                    <tr>
-                        <td>
-                            <div :class="['expand-button', 'icon-small', entry.expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
-                                 @mouseup="entry.expanded = !entry.expanded"></div>
-                        </td>
-                        <td>{{entry.meta.name}}</td>
-                        <td>{{new Date(entry.meta?.date?.seconds ?? 0).toLocaleString()}}</td>
-                        <td>{{entry.meta.author}}</td>
-                        <td>{{((entry.meta?.endTime ?? 0) - (entry.meta?.startTime ?? 0)).toLocaleString('en-US')}}</td>
-                        <td>
-                            <button class="p-button" @click="loadProject(entry.filename)">
-                                <div class="icon-button icon-medium play-icon"></div>Show
-                            </button>
-                        </td>
-                    </tr>
-                    <tr :style="{visibility: entry.expanded ? 'visible' : 'collapse'}">
-                        <td colspan="6" class="description">{{entry.meta.description}}</td>
-                    </tr>
-                </template>
-            </tbody>
+      <div class="scroll-container scrollable">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30px" />
+              <th>Name</th>
+              <th>Date</th>
+              <th>Author</th>
+              <th>Duration</th>
+              <th style="width: 100px;" />
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              v-for="entry in filteredEntries"
+              :key="entry.id"
+            >
+              <tr>
+                <td>
+                  <div
+                    :class="['expand-button', 'icon-small', entry.expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
+                    @mouseup="entry.expanded = !entry.expanded"
+                  />
+                </td>
+                <td>{{ entry.meta.name }}</td>
+                <td>{{ new Date(entry.meta?.date?.seconds ?? 0).toLocaleString() }}</td>
+                <td>{{ entry.meta.author }}</td>
+                <td>{{ ((entry.meta?.endTime ?? 0) - (entry.meta?.startTime ?? 0)).toLocaleString('en-US') }}</td>
+                <td>
+                  <button
+                    class="p-button"
+                    @click="loadProject(entry.filename)"
+                  >
+                    <div class="icon-button icon-medium play-icon" />Show
+                  </button>
+                </td>
+              </tr>
+              <tr :style="{visibility: entry.expanded ? 'visible' : 'collapse'}">
+                <td
+                  colspan="6"
+                  class="description"
+                >
+                  {{ entry.meta.description }}
+                </td>
+              </tr>
+            </template>
+          </tbody>
         </table>
-        </div>
+      </div>
     </div>
     <div class="footer">
-        <span>{{catalogue.length}} total entries</span>
+      <span>{{ catalogue.length }} total entries</span>
     </div>
-</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -79,37 +119,43 @@ import SearchInput from '../input/SearchInput.vue';
 import { computed, ref } from 'vue';
 import { useCatalogue } from '../../stores/catalogue';
 import { useTheme } from '../../stores/theme';
-const catalogue = useCatalogue()
-const theme = useTheme()
+const catalogue = useCatalogue();
+const theme = useTheme();
 
 function createEntries() {
-    return catalogue.entries.map(e => ({
-        ...e,
-        expanded: false
-    }))    
+  let id = 0;
+  return catalogue.entries.map(e => ({
+      ...e,
+      expanded: false,
+      id: id++
+  }));    
 }
-let entries = ref(createEntries())
-catalogue.$subscribe(() => entries.value = createEntries())
+let entries = ref(createEntries());
+catalogue.$subscribe(() => entries.value = createEntries());
 
-const searchQuery = ref('')
+const searchQuery = ref('');
 const filteredEntries = computed(() => entries.value.filter(
-    e => e.filename.toLowerCase().includes(searchQuery.value.toLowerCase())))
+    e => e.filename.toLowerCase().includes(searchQuery.value.toLowerCase())));
 
-const dialog = ref<HTMLInputElement|null>(null)
+const dialog = ref<HTMLInputElement|null>(null);
 function onFileSelected(e: Event) {
-    const fileInput = e.target! as HTMLInputElement
+    if (!e.target)
+      return;
+    
+    const fileInput = e.target as HTMLInputElement;
     if (fileInput.files) {
-        fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue)
+        fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue);
     }
 }
 function openDialog() {
-    dialog.value?.click()
+    dialog.value?.click();
 }
 
-const loadingMessage = ref<HTMLDivElement|null>(null)
+const loadingMessage = ref<HTMLDivElement|null>(null);
 function loadProject(file: string) {
-    loadingMessage.value!.style.display = 'block'
-    catalogue.loadProject(file)
+    if (loadingMessage.value)
+      loadingMessage.value.style.display = 'block';
+    catalogue.loadProject(file);
 }
 </script>
 
