@@ -177,8 +177,8 @@ var cameraControl: CameraControl
 var scenePointerProxy: ScenePointerProxy
 var playerControl: PlayerControl
 
-onMounted(() => {
-    controller = createController(canvas.value!)
+onMounted(async () => {
+    controller = await createController(canvas.value!)
     adapter = new ControllerAdapter(controller)
 
     buildScene()
