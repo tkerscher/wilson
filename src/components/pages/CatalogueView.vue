@@ -18,12 +18,12 @@
         <img
           v-if="theme.useDarkTheme"
           class="logo"
-          src="/p-one_blue_dark.svg"
+          src="/banner_dark.png"
         >
         <img
           v-else
           class="logo"
-          src="/p-one_blue.svg"
+          src="/banner.png"
         >
       </div>
       <div class="search-box">

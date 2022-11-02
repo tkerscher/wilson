@@ -3,12 +3,12 @@
     <img
       v-if="theme.useDarkTheme"
       class="banner"
-      src="/p-one_blue_dark.svg"
+      src="/banner_dark.png"
     >
     <img
       v-else
       class="banner"
-      src="/p-one_blue.svg"
+      src="/banner.png"
     >
     <p class="disclaimer">
       Currently, there is nothing to show! <br>
@@ -23,7 +23,7 @@
     <input
       id="file-upload"
       type="file"
-      accept=".p1on"
+      accept=".wlsn"
       @change="onFileSelected"
     >
   </div>
