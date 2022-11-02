@@ -119,6 +119,12 @@ export class WorkerController implements SceneController {
         }, [serialized])
         this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
     }
+    loadStage(url: string): void {
+        this.#sendCommand({
+            type: 'loadStage',
+            url: url
+        })
+    }
     play(): void {
         this.#isPlaying = true
         this.#sendCommand({

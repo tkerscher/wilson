@@ -5,8 +5,12 @@ interface _WorkerCommand {
 }
 
 export interface LoadCommand extends _WorkerCommand {
-    type: 'load',
+    type: 'load'
     data: ArrayBufferLike
+}
+export interface LoadStageCommand extends _WorkerCommand {
+    type: 'loadStage'
+    url: string
 }
 export interface PlayCommand extends _WorkerCommand {
     type: 'play'
@@ -108,6 +112,7 @@ export interface SetCameraZoomCommand extends _WorkerCommand {
 
 export type WorkerCommand =
     LoadCommand |
+    LoadStageCommand |
     GoToFrameCommand |
     PanCameraCommand |
     PauseCommand |

@@ -62,6 +62,26 @@ export class LocalController implements SceneController {
         this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
     }
 
+    loadStage(url: string): void {
+        if (!this.#container)
+            return
+        
+        //The loader is a bit heavy, so only load the code if needed
+
+        const scene = this.#container.scene
+        import("@babylonjs/core/Loading/sceneLoader").then(async Loader => {
+            //load glb
+            await import("@babylonjs/loaders/glTF")
+
+            Loader.SceneLoader.AppendAsync(
+                url,
+                undefined,
+                scene,
+                undefined,
+                ".glb")
+        })
+    }
+
     /******************************* Callbacks ********************************/
 
     #notifyAnimationTick(e: {currentFrame: number}) {

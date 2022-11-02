@@ -19,6 +19,9 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
             controller.load(project)
         }
         break
+    case 'loadStage':
+        controller.loadStage(ev.data.url)
+        break
     case 'play':
         controller.play()
         break

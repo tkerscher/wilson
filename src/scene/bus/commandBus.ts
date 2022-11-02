@@ -36,6 +36,11 @@ export type CommandMessages = {
     SetPathEnabled: { id: number, enabled: boolean, color: string }
 
     /**
+     * Loads the stage from the given url.
+     */
+    SetStage: string
+
+    /**
      * Sets the current theme for the scene
      */
     SetTheme: Theme
@@ -92,6 +97,16 @@ export class SceneCommander {
             enabled: enabled,
             color: color
         })
+    }
+
+    /**
+     * Loads the given mesh from the file at the provided url and adds it to
+     * the scene. Expects a .glb file. This will persist through all loaded
+     * projects.
+     * @param url Path to stage file
+     */
+    static SetStage(url: string) {
+        SceneCommandBus.emit('SetStage', url)
     }
 
     /**

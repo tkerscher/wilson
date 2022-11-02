@@ -12,5 +12,8 @@ export default defineConfig({
         plot: resolve(__dirname, 'plot.html')
       }
     }
+  },
+  worker: {
+    format: 'es'
   }
 })

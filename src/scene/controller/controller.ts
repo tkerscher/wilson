@@ -9,6 +9,14 @@ export interface SceneController {
      */
     load(project: Project): void
 
+    /**
+     * Loads the given mesh from the file at the provided url and adds it to
+     * the scene. Expects a .glb file. This will persist through all loaded
+     * projects.
+     * @param url Path to stage file
+     */
+    loadStage(url: string): void
+
     /**************************** Animation Control ***************************/
 
     /**
