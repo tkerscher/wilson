@@ -87,6 +87,7 @@ export class LocalController implements SceneController {
         for (const mesh of this.#stageMeshes) {
             mesh.dispose()
         }
+        this.#stageMeshes = []
     }
 
     /******************************* Callbacks ********************************/
