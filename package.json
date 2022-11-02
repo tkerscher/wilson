@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts,.vue",
     "preview": "vite preview",
     "protoc": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_opt=oneof=unions --ts_proto_opt=useDate=false --ts_proto_out=./src/model --proto_path=./proto ./proto/project.proto",
     "protoc_win": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_opt=esModuleInterop=true --ts_proto_opt=oneof=unions --ts_proto_opt=useDate=false --ts_proto_out=./src/model --proto_path=./proto ./proto/project.proto",
@@ -33,6 +33,7 @@
     "@typescript-eslint/parser": "^5.42.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "eslint": "^8.26.0",
+    "eslint-plugin-vue": "^9.7.0",
     "ts-proto": "^1.110.4",
     "typescript": "^4.8.4",
     "vite": "^3.2.1",
