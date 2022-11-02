@@ -22,6 +22,9 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
     case 'loadStage':
         controller.loadStage(ev.data.url)
         break
+    case 'removeStage':
+        controller.removeStage()
+        break
     case 'play':
         controller.play()
         break

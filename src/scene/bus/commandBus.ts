@@ -39,6 +39,10 @@ export type CommandMessages = {
      * Loads the stage from the given url.
      */
     SetStage: string
+    /**
+     * Removes the current stage.
+     */
+    RemoveStage: void
 
     /**
      * Sets the current theme for the scene
@@ -107,6 +111,12 @@ export class SceneCommander {
      */
     static SetStage(url: string) {
         SceneCommandBus.emit('SetStage', url)
+    }
+    /**
+     * Removes the current stage.
+     */
+    static RemoveStage() {
+        SceneCommandBus.emit('RemoveStage')
     }
 
     /**

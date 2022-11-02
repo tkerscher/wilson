@@ -13,6 +13,7 @@ export class ControllerAdapter {
     #setGroupEnabled: (e: {group: string, enabled: boolean}) => void
     #setPathEnabled: (e: {id: number, enabled: boolean, color: string}) => void
     #setStage: (url: string) => void
+    #removeStage: () => void
     #setTheme: (theme: Theme) => void
 
     constructor(controller: SceneController) {
@@ -27,6 +28,7 @@ export class ControllerAdapter {
         this.#setPathEnabled = (e: {id: number, enabled: boolean, color: string}) =>
             controller.setPathEnabled(e.id, e.enabled, e.color)
         this.#setStage = (url: string) => controller.loadStage(url)
+        this.#removeStage = () => controller.removeStage()
         this.#setTheme = (theme: Theme) => controller.setTheme(theme)
 
         //register handlers
@@ -38,6 +40,7 @@ export class ControllerAdapter {
         SceneCommandBus.on('SetGroupEnabled', this.#setGroupEnabled)
         SceneCommandBus.on('SetPathEnabled', this.#setPathEnabled)
         SceneCommandBus.on('SetStage', this.#setStage)
+        SceneCommandBus.on('RemoveStage', this.#removeStage)
         SceneCommandBus.on('SetTheme', this.#setTheme)
 
         //register events
@@ -55,6 +58,7 @@ export class ControllerAdapter {
         SceneCommandBus.off('SetGroupEnabled', this.#setGroupEnabled)
         SceneCommandBus.off('SetPathEnabled', this.#setPathEnabled)
         SceneCommandBus.off('SetStage', this.#setStage)
+        SceneCommandBus.off('RemoveStage', this.#removeStage)
         SceneCommandBus.off('SetTheme', this.#setTheme)
     }
 }

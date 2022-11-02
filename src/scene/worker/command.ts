@@ -12,6 +12,9 @@ export interface LoadStageCommand extends _WorkerCommand {
     type: 'loadStage'
     url: string
 }
+export interface RemoveStageCommand extends _WorkerCommand {
+    type: 'removeStage'
+}
 export interface PlayCommand extends _WorkerCommand {
     type: 'play'
 }
@@ -113,6 +116,7 @@ export interface SetCameraZoomCommand extends _WorkerCommand {
 export type WorkerCommand =
     LoadCommand |
     LoadStageCommand |
+    RemoveStageCommand |
     GoToFrameCommand |
     PanCameraCommand |
     PauseCommand |

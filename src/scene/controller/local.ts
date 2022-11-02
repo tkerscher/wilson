@@ -5,6 +5,7 @@ import { Engine } from "@babylonjs/core/Engines/engine"
 import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents"
 import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums"
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector"
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh"
 
 import { Project } from "../../model/project";
 import { takeScreenshot } from "../../util/screenshot";
@@ -17,6 +18,8 @@ export class LocalController implements SceneController {
     #canvas: HTMLCanvasElement|OffscreenCanvas
     #engine: Engine
     #container: SceneContainer|null = null
+
+    #stageMeshes: AbstractMesh[] = []
     
     #defaultCameraPosition: Vector3 = Vector3.Zero()
     #defaultCameraTarget: Vector3 = Vector3.Zero()
@@ -66,6 +69,9 @@ export class LocalController implements SceneController {
         if (!this.#container)
             return
         
+        //Remove previous stage
+        this.removeStage()
+        
         //The loader is a bit heavy, so only load the code if needed
 
         const scene = this.#container.scene
@@ -73,13 +79,14 @@ export class LocalController implements SceneController {
             //load glb
             await import("@babylonjs/loaders/glTF")
 
-            Loader.SceneLoader.AppendAsync(
-                url,
-                undefined,
-                scene,
-                undefined,
-                ".glb")
+            Loader.SceneLoader.ImportMeshAsync('', url, undefined, scene, undefined, ".glb")
+            .then(v => this.#stageMeshes = v.meshes)
         })
+    }
+    removeStage(): void {
+        for (const mesh of this.#stageMeshes) {
+            mesh.dispose()
+        }
     }
 
     /******************************* Callbacks ********************************/

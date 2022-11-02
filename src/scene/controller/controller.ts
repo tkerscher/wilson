@@ -16,6 +16,10 @@ export interface SceneController {
      * @param url Path to stage file
      */
     loadStage(url: string): void
+    /**
+     * Removes the current stage.
+     */
+    removeStage(): void
 
     /**************************** Animation Control ***************************/
 
