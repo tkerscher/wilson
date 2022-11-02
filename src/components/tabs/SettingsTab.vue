@@ -18,11 +18,13 @@
 <script setup lang="ts">
 import Recorder from '../settings/Recorder.vue'
 import Resolution from '../settings/Resolution.vue'
+import Stage from '../settings/Stage.vue'
 import { ref } from "vue"
 
 const groups = [
     { name: 'Resolution', content: Resolution, expanded: ref(false) },
-    { name: 'Recording', content: Recorder, expanded: ref(false) }
+    { name: 'Recording', content: Recorder, expanded: ref(false) },
+    { name: 'Stage', content: Stage, expanded: ref(false) }
 ]
 </script>
 

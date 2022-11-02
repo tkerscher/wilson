@@ -70,18 +70,26 @@ onMounted(() => {
         //return
         return chunksAll.buffer
     })
-    .then(async buf => {
+    .then(buf => {
         state.value = 'finished'
-        const prom = catalogue.openCatalogue(buf)
+        const prom = catalogue.openCatalogue(buf).catch(error => {
+            response.value = "File is not a catalogue!"
+            throw error
+        })
 
         //load event if specified
         const params = new URLSearchParams(window.location.search)
-        if (params.has('event')) {
-            await prom
-            catalogue.loadProject(params.get('event')!)
+        const url = params.get('event')
+        if (url) {
+            return prom.then(() => catalogue.loadProject(url))
+        }
+        else {
+            return prom
         }
     })
-    .then(() => emits('finished'))
+    .then(() => {
+        emits('finished')
+    })
     .catch(err => {
         state.value = 'failed'
         console.log(err)

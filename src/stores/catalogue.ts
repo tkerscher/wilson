@@ -72,16 +72,16 @@ export const useCatalogue = defineStore('catalogue', () => {
                         
             //if only one file open it right away
             if (proms.length == 1) {
-                await proms[0].then(() => loadProject(entries.value[0].filename))
+                return proms[0].then(() => loadProject(entries.value[0].filename))
             }
             else {
                 //Entries are totally random now => sort them by name to be deterministic
-                await Promise.all(proms).then(() => entries.value.sort((a, b) => {
+                return Promise.all(proms).then(() => entries.value.sort((a, b) => {
                     //thanks javascript...
                     if (a.filename < b.filename) return -1
                     if (a.filename > b.filename) return 1
                     return 0
-                }))
+                })).then(() => undefined)
             }
         })
     }

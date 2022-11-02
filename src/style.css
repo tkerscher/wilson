@@ -270,6 +270,11 @@ input[type="search"]::-webkit-search-results-decoration {
     mask-image: url(./assets/icons/previous.svg);
     -webkit-mask-image: url(./assets/icons/previous.svg);
 }
+.spinner-icon {
+    mask-image: url(./assets/icons/spinner.svg);
+    -webkit-mask-image: url(./assets/icons/spinner.svg);
+    animation: spin 1s infinite linear;
+}
 .sun-icon {
     mask-image: url(./assets/icons/sun.svg);
     -webkit-mask-image: url(./assets/icons/sun.svg);
@@ -277,6 +282,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .trash-icon {
     mask-image: url(./assets/icons/trash.svg);
     -webkit-mask-image: url(./assets/icons/trash.svg);
+}
+.triangle-exclamation-icon {
+    mask-image: url(./assets/icons/triangle-exclamation.svg);
+    -webkit-mask-image: url(./assets/icons/triangle-exclamation.svg);
 }
 .upload-icon {
     mask-image: url(./assets/icons/upload.svg);
@@ -293,4 +302,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .xmark-icon {
     mask-image: url(./assets/icons/xmark.svg);
     -webkit-mask-image: url(./assets/icons/xmark.svg);
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
 }

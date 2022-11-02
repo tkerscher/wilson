@@ -71,12 +71,16 @@ export const useStage = defineStore("stage", () => {
         url = URL.createObjectURL(blob)
 
         //notify controller
-        SceneCommander.SetStage(url)
+        applyStage()
+    }
+    function applyStage() {
+        if (url)
+            SceneCommander.SetStage(url)
     }
 
     return {
         error, progress, url,
         isDownloading,
-        loadStage, setStage
+        applyStage, loadStage, setStage
     }
 })

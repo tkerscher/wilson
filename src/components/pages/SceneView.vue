@@ -28,6 +28,7 @@ import { getCurrentTheme } from '../../scene/theme'
 import { ScreenRecorder } from '../../video/screenRecorder'
 import { CatalogueControl } from '../../input/catalogueControl'
 import { ControllerAdapter } from '../../scene/bus/controllerAdapter'
+import { useStage } from '../../stores/stage'
 
 const DefaultTitle = document.title
 
@@ -35,6 +36,7 @@ const catalogue = useCatalogue()
 const player = usePlayer()
 const project = useProject()
 const resolution = useResolution()
+const stage = useStage()
 
 const canvas = ref<HTMLCanvasElement|null>(null)
 const container = ref<HTMLDivElement|null>(null)
@@ -58,6 +60,9 @@ function buildScene() {
     if (player.isPlaying) {
         controller.play()
     }
+    
+    //apply stage
+    stage.applyStage()
 
     //Change title
     if (project.meta?.name)
