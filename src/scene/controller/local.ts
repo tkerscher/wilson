@@ -1,16 +1,17 @@
 import "@babylonjs/core/Culling/ray";
 
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { Axis } from "@babylonjs/core/Maths/math.axis";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents";
 import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 
-import { Project } from "../../model/project";
-import { takeScreenshot } from "../../util/screenshot";
 import { buildScene, SceneContainer } from "../build";
 import { isMetadata } from "../objects/tools";
+import { takeScreenshot } from "../../util/screenshot";
+import { Project } from "../../model/project";
 import { Theme } from "../theme";
 import { SceneController } from "./controller";
 
@@ -19,7 +20,7 @@ export class LocalController implements SceneController {
     #engine: Engine;
     #container: SceneContainer|null = null;
 
-    #stageMeshes: AbstractMesh[] = [];
+    #stageNode: AbstractMesh|null = null;
     
     #defaultCameraPosition: Vector3 = Vector3.Zero();
     #defaultCameraTarget: Vector3 = Vector3.Zero();
@@ -79,15 +80,26 @@ export class LocalController implements SceneController {
             //load glb
             await import("@babylonjs/loaders/glTF");
 
-            Loader.SceneLoader.ImportMeshAsync('', url, undefined, scene, undefined, ".glb")
-            .then(v => this.#stageMeshes = v.meshes);
+            Loader.SceneLoader.ImportMeshAsync(
+                '',
+                url,
+                undefined,
+                scene,
+                undefined,
+                ".glb")
+            .then(result => {
+                if (result.meshes[0]) {
+                    //root node is the first one
+                    this.#stageNode = result.meshes[0];
+                    //rotate mesh upward
+                    this.#stageNode.rotate(Axis.X, -Math.PI / 2);
+                }
+            });
         });
     }
     removeStage(): void {
-        for (const mesh of this.#stageMeshes) {
-            mesh.dispose();
-        }
-        this.#stageMeshes = [];
+        this.#stageNode?.dispose();
+        this.#stageNode = null;
     }
 
     /******************************* Callbacks ********************************/
