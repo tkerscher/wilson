@@ -10,7 +10,7 @@ import { Path } from "./path";
 import { Sphere } from "./sphere";
 import { Tube } from "./tube";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Root container for all animation relevant data */
 export interface Project {

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** RGBA color denoted in unit floats */
 export interface Color {

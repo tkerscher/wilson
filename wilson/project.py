@@ -3,8 +3,8 @@ from datetime import datetime
 import string
 from typing import Iterable, List, Optional, Tuple
 
-from p1on.objects import Animatable
-from p1on.data import ColorLike, ColorMap, Graph, Path, VectorProperty
+from wilson.objects import Animatable
+from wilson.data import ColorLike, ColorMap, Graph, Path, VectorProperty
 
 class Camera:
     """A virtual camera representing the view of the animation

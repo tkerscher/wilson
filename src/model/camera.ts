@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Vector } from "./vector";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Virtual camera dictating the point of view rendered in 3D mode */
 export interface Camera {

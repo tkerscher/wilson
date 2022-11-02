@@ -39,8 +39,8 @@
   </p>
 
   <div class="disclaimer">
-    P1ON is an open source project under the MIT-License.<br>
-    Checkout the project's <a href="https://github.com/tkerscher/P1ON">sourcecode</a>.
+    Wilson is an open source project under the MIT-License.<br>
+    Checkout the project's <a href="https://github.com/tkerscher/wilson">sourcecode</a>.
   </div>
 
   <!--Force vue to update this tab. God knows why this is needed-->

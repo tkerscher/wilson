@@ -1,8 +1,8 @@
 from typing import Dict, Optional, Tuple
 import numpy as np
 
-from p1on.objects import Line, Sphere, Tube, Overlay
-from p1on.data import (
+from wilson.objects import Line, Sphere, Tube, Overlay
+from wilson.data import (
     ColorMap,
     ColorProperty,
     Graph,
@@ -10,8 +10,8 @@ from p1on.data import (
     ScalarProperty,
     Path, PathLike,
     VectorProperty )
-from p1on.project import Camera, Project
-import p1on.proto as proto
+from wilson.project import Camera, Project
+import wilson.proto as proto
 
 class ProjectParserException(Exception):
     """Exception class raised during project parsing errors."""

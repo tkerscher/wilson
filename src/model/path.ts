@@ -3,7 +3,7 @@ import _m0 from "protobufjs/minimal";
 import { Interpolation, interpolationFromJSON, interpolationToJSON } from "./interpolation";
 import { Vector } from "./vector";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Path mapping time to a vector in 3D space */
 export interface Path {

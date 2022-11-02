@@ -1,5 +1,5 @@
 syntax = "proto3";
-package p1on;
+package wilson;
 
 import "google/protobuf/timestamp.proto";
 

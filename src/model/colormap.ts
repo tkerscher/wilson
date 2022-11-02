@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Color } from "./color";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Color map converting scalars into colors */
 export interface ColorMap {

@@ -1,6 +1,6 @@
 from abc import ABC
 from typing import List, Iterable, Optional
-from p1on.data import GraphLike, PathLike, TextLike, ScalarProperty, VectorProperty, ColorProperty
+from wilson.data import GraphLike, PathLike, TextLike, ScalarProperty, VectorProperty, ColorProperty
 
 class Animatable(ABC):
     """Base class of all animatable objects

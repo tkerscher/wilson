@@ -1,9 +1,9 @@
 from typing import IO, List, Union
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from p1on.project import Project
-from p1on.serialize import serializeProject
-from p1on.parse import parseProjectFromBytes
+from wilson.project import Project
+from wilson.serialize import serializeProject
+from wilson.parse import parseProjectFromBytes
 
 class Catalogue:
     """Class with methods to read from and write to event catalogues.

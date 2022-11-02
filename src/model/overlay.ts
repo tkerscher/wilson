@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { ScalarProperty } from "./properties";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Text positioning */
 export enum TextPosition {

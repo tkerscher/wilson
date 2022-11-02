@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { ColorProperty, ScalarProperty, VectorProperty } from "./properties";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Animated line in 3D space */
 export interface Line {

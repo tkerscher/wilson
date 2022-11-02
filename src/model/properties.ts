@@ -3,7 +3,7 @@ import _m0 from "protobufjs/minimal";
 import { Color } from "./color";
 import { Vector } from "./vector";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Animatible scalar property */
 export interface ScalarProperty {

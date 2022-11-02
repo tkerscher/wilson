@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Interpolation modes */
 export enum Interpolation {

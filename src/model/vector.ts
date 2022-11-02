@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Simple Vector in 3D space */
 export interface Vector {

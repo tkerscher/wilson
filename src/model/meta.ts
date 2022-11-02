@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** Meta information about a project */
 export interface ProjectMeta {

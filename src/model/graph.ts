@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Interpolation, interpolationFromJSON, interpolationToJSON } from "./interpolation";
 
-export const protobufPackage = "p1on";
+export const protobufPackage = "wilson";
 
 /** 2D function mapping time to a scalar value */
 export interface Graph {

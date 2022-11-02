@@ -3,8 +3,8 @@ import cmasher as cmr
 import re
 from typing import Any, Tuple
 
-from p1on.color import getColorByName
-from p1on.data import (
+from wilson.color import getColorByName
+from wilson.data import (
     ColorMap,
     ColorProperty,
     Graph,
@@ -13,9 +13,9 @@ from p1on.data import (
     Path,
     TextLike,
     VectorProperty )
-from p1on.objects import Animatable, Line, Sphere, Tube, Overlay
-from p1on.project import Camera, Project
-import p1on.proto as proto
+from wilson.objects import Animatable, Line, Sphere, Tube, Overlay
+from wilson.project import Camera, Project
+import wilson.proto as proto
 
 #Mandatory xkcd: https://xkcd.com/1171/
 text_pattern = re.compile("%\(([^\.]+?)(?:\[(\d*?)\])?(\.[x-z])?\)(.*?[a-z])?", re.MULTILINE)
