@@ -27,3 +27,6 @@ dist-ssr
 .mypy_cache
 *.egg-info
 __pycache__
+
+#Docs
+docs/build
