@@ -11,7 +11,7 @@ function isWorkerAvailable(): boolean {
         !!HTMLCanvasElement.prototype.transferControlToOffscreen &&
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore (window.chrome)
-        !!window.chrome
+        !!window.chrome;
 }
 
 export async function createController(canvas: HTMLCanvasElement): Promise<SceneController> {
@@ -19,20 +19,20 @@ export async function createController(canvas: HTMLCanvasElement): Promise<Scene
     return (() => {
         if (isWorkerAvailable()) {
             return import("./local").then(mod => {
-                return new mod.LocalController(canvas)
-            })
+                return new mod.LocalController(canvas);
+            });
         }
         else {
             return import("./worker").then(mod => {
-                return new mod.WorkerController(canvas)
-            })
+                return new mod.WorkerController(canvas);
+            });
     }})()
     .then(controller => {
         //set theme
-        const theme = getCurrentTheme()
-        controller.setTheme(theme)
+        const theme = getCurrentTheme();
+        controller.setTheme(theme);
 
         //finish
-        return controller
-    })
+        return controller;
+    });
 }

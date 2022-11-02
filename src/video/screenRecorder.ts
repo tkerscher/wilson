@@ -1,57 +1,57 @@
-import { createDownload } from '../util/download'
+import { createDownload } from '../util/download';
 
-const mime = "video/webm"
-const chunkSize = 3000
+const mime = "video/webm";
+const chunkSize = 3000;
 
 export class ScreenRecorder {
-    #canvas: HTMLCanvasElement
-    #recorder: MediaRecorder|null = null
-    #isRecording = false
+    #canvas: HTMLCanvasElement;
+    #recorder: MediaRecorder|null = null;
+    #isRecording = false;
 
-    #filename: string
-    #recordedChunks = [] as Blob[]
+    #filename: string;
+    #recordedChunks = [] as Blob[];
 
     constructor(canvas: HTMLCanvasElement, filename: string) {
-        this.#canvas = canvas
-        this.#filename = filename
+        this.#canvas = canvas;
+        this.#filename = filename;
     }
 
     get isRecording(): boolean {
-        return this.#isRecording
+        return this.#isRecording;
     }
 
     start(fps = 30) {
         if (this.#isRecording)
-            this.stop()
+            this.stop();
 
-        const stream = this.#canvas.captureStream(fps)
-        this.#recorder = new MediaRecorder(stream, { mimeType: mime })
-        this.#recorder.ondataavailable = this.#handleDataAvailable.bind(this)
-        this.#recorder.onerror = this.#handleError.bind(this)
-        this.#recorder.onstop = this.#handleStop.bind(this)
+        const stream = this.#canvas.captureStream(fps);
+        this.#recorder = new MediaRecorder(stream, { mimeType: mime });
+        this.#recorder.ondataavailable = this.#handleDataAvailable.bind(this);
+        this.#recorder.onerror = this.#handleError.bind(this);
+        this.#recorder.onstop = this.#handleStop.bind(this);
 
-        this.#recordedChunks = []
-        this.#isRecording = true
-        this.#recorder.start(chunkSize)
+        this.#recordedChunks = [];
+        this.#isRecording = true;
+        this.#recorder.start(chunkSize);
     }
     stop() {
         if (!this.#recorder || !this.#isRecording)
-            return
+            return;
 
-        this.#isRecording = false
-        this.#recorder.stop()
+        this.#isRecording = false;
+        this.#recorder.stop();
     }
 
     #handleDataAvailable(e: BlobEvent) {
         if (e.data.size > 0)
-            this.#recordedChunks.push(e.data)
+            this.#recordedChunks.push(e.data);
     }
     #handleError() {
-        this.stop()
+        this.stop();
     }
     #handleStop() {
-        this.stop()
-        const blob = new Blob(this.#recordedChunks)
-        createDownload(blob, this.#filename)
+        this.stop();
+        const blob = new Blob(this.#recordedChunks);
+        createDownload(blob, this.#filename);
     }
 }

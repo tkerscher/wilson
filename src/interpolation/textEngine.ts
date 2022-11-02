@@ -1,14 +1,14 @@
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock"
-import { sprintf } from "sprintf-js"
-import { Project } from "../model/project"
-import { PathInterpolator } from "./pathInterpolation"
-import { GraphInterpolator } from "./graphInterpolation"
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
+import { sprintf } from "sprintf-js";
+import { Project } from "../model/project";
+import { PathInterpolator } from "./pathInterpolation";
+import { GraphInterpolator } from "./graphInterpolation";
 
 //Pattern to check for dynamic text references
-const DataRefPattern = /%\(.+?\)/m
-const GraphRefPattern = /%\(graphs\[(\d+?)\]\)/gm
-const PathRefPattern = /%\(paths\[(\d+?)\]\.[x-z]\)/gm
+const DataRefPattern = /%\(.+?\)/m;
+const GraphRefPattern = /%\(graphs\[(\d+?)\]\)/gm;
+const PathRefPattern = /%\(paths\[(\d+?)\]\.[x-z]\)/gm;
 
 //util interfaces used by TextEngine
 interface _Graph {
@@ -25,45 +25,45 @@ interface _Path {
  * paths on data in the given project.
  */
 export class TextEngine {
-    #project: Project
-    #dirty = false
+    #project: Project;
+    #dirty = false;
 
-    #graphs: Map<number, _Graph>
-    #graphProxy: Map<number, _Graph> //Actually proxy of map, but should not look like map
+    #graphs: Map<number, _Graph>;
+    #graphProxy: Map<number, _Graph>; //Actually proxy of map, but should not look like map
 
-    #paths: Map<number, _Path>
-    #pathProxy: Map<number, _Path> //Actually proxy of map, but should not look like map
+    #paths: Map<number, _Path>;
+    #pathProxy: Map<number, _Path>; //Actually proxy of map, but should not look like map
 
     #dynamicText: Array<{
         template: string,
         target: TextBlock
-    }>
+    }>;
 
     constructor(project: Project) {
-        this.#project = project
+        this.#project = project;
 
         //We might have a sparse set of graph ids, so we use a map
-        this.#graphs = new Map<number, _Graph>()
+        this.#graphs = new Map<number, _Graph>();
         //map wants us to access items via its get method, but our template
         //references them as an array => mimic an array via proxy
         this.#graphProxy = new Proxy(this.#graphs, {
             get: function (target, idx): number {
-                return target.get(Number(idx))?.currentValue ?? 0.0
+                return target.get(Number(idx))?.currentValue ?? 0.0;
             }
-        })
+        });
 
-        this.#paths = new Map<number, _Path>()
+        this.#paths = new Map<number, _Path>();
         this.#pathProxy = new Proxy(this.#paths, {
             get: function(target, idx): Vector3 {
-                return target.get(Number(idx))?.currentValue ?? Vector3.Zero()
+                return target.get(Number(idx))?.currentValue ?? Vector3.Zero();
             }
-        })
+        });
 
-        this.#dynamicText = []
+        this.#dynamicText = [];
     }
 
     get isDirty(): boolean {
-        return this.#dirty
+        return this.#dirty;
     }
 
     /**
@@ -75,41 +75,41 @@ export class TextEngine {
     addText(target: TextBlock, template: string): boolean {
         //static content?
         if (!DataRefPattern.test(template)) {
-            target.text = template
-            return false
+            target.text = template;
+            return false;
         }
 
         //add text to list
         this.#dynamicText.push({
             template: template,
             target: target
-        })
-        this.#dirty = true
+        });
+        this.#dirty = true;
 
         //check for graph references
         for (const match of template.matchAll(GraphRefPattern)) {
-            const graph_id = Number(match[1])
+            const graph_id = Number(match[1]);
             if (!this.#graphs.has(graph_id)) {
                 this.#graphs.set(graph_id, {
                     interpolation: new GraphInterpolator(graph_id, this.#project),
                     currentValue: NaN
-                })
+                });
             }
         }
 
         //Check for path references
         for (const match of template.matchAll(PathRefPattern)) {
-            const path_id = Number(match[1])
+            const path_id = Number(match[1]);
             if (!this.#paths.has(path_id)) {
                 this.#paths.set(path_id, {
                     interpolation: new PathInterpolator(path_id, this.#project),
                     currentValue: new Vector3()
-                })
+                });
             }
         }
 
         //it's a dynamic text
-        return true
+        return true;
     }
 
     /**
@@ -118,9 +118,9 @@ export class TextEngine {
      * @param target The target to remove
      */
     removeText(target: TextBlock) {
-        const idx = this.#dynamicText.findIndex(e => e.target == target)
+        const idx = this.#dynamicText.findIndex(e => e.target == target);
         if (idx > -1)
-            this.#dynamicText.splice(idx, 1)
+            this.#dynamicText.splice(idx, 1);
     }
 
     /**
@@ -130,11 +130,11 @@ export class TextEngine {
     update(currentFrame: number) {
         //update values
         this.#graphs.forEach((g: _Graph) => {
-            g.currentValue = g.interpolation.interpolate(currentFrame)
-        })
+            g.currentValue = g.interpolation.interpolate(currentFrame);
+        });
         this.#paths.forEach((p: _Path) => {
-            p.currentValue = p.interpolation.interpolate(currentFrame)
-        })
+            p.currentValue = p.interpolation.interpolate(currentFrame);
+        });
 
         //update texts
         this.#dynamicText.forEach(txt => {
@@ -142,9 +142,9 @@ export class TextEngine {
                 //The following names must match the indicator used in the templates
                 graphs: this.#graphProxy,
                 paths: this.#pathProxy
-            })
-        })
+            });
+        });
 
-        this.#dirty = false
+        this.#dirty = false;
     }
 }

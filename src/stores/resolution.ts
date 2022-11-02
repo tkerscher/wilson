@@ -6,4 +6,4 @@ export const useResolution = defineStore('resolution', {
         width: 1920,
         height: 1080
     })
-})
+});

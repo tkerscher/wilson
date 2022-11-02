@@ -1,11 +1,11 @@
-import { defineStore } from "pinia"
-import { Graph } from "../model/graph"
-import { Line } from "../model/line"
-import { Path } from "../model/path"
-import { Project } from "../model/project"
-import { Sphere } from "../model/sphere"
-import { Tube } from "../model/tube"
-import { Overlay } from "../model/overlay"
+import { defineStore } from "pinia";
+import { Graph } from "../model/graph";
+import { Line } from "../model/line";
+import { Path } from "../model/path";
+import { Project } from "../model/project";
+import { Sphere } from "../model/sphere";
+import { Tube } from "../model/tube";
+import { Overlay } from "../model/overlay";
 
 export type ObjectMeta = Sphere | Line | Tube | Overlay;
 
@@ -45,8 +45,8 @@ export const useProject = defineStore('project', {
     },
     actions: {
         loadProject(data: Uint8Array) {
-            const project = Project.decode(data)
-            this.$patch(project)
+            const project = Project.decode(data);
+            this.$patch(project);
         },
         /**
          * Returns the object meta by id
@@ -56,33 +56,33 @@ export const useProject = defineStore('project', {
         getMetaById(id: number): ObjectMeta | null {
             //Is it a sphere?
             if (id < this.$state.spheres.length) {
-                return this.$state.spheres[id]
+                return this.$state.spheres[id];
             }
             else {
                 id -= this.$state.spheres.length;
             }
             //Is it a line?
             if (id < this.$state.lines.length) {
-                return this.$state.lines[id]
+                return this.$state.lines[id];
             }
             else {
-                id -= this.$state.lines.length
+                id -= this.$state.lines.length;
             }
             //Is it a tube?
             if (id < this.$state.tubes.length) {
-                return this.$state.tubes[id]
+                return this.$state.tubes[id];
             }
             else {
-                id -= this.$state.tubes.length
+                id -= this.$state.tubes.length;
             }
             //Is it a label?
             if (id < this.$state.overlays.length) {
-                return this.$state.overlays[id]
+                return this.$state.overlays[id];
             }
             else {
                 //ran out of objects
-                return null
+                return null;
             }
         }
     }
-})
+});

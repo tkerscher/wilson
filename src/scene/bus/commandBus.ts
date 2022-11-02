@@ -1,5 +1,5 @@
-import mitt from "mitt"
-import { Theme } from "../theme"
+import mitt from "mitt";
+import { Theme } from "../theme";
 
 /**
  * Commands send to control scene.
@@ -49,39 +49,39 @@ export type CommandMessages = {
      */
     SetTheme: Theme
 }
-export const SceneCommandBus = mitt<CommandMessages>()
+export const SceneCommandBus = mitt<CommandMessages>();
 
 export class SceneCommander {
     /**
      * Resets the camera
      */
     static ResetCamera() {
-        SceneCommandBus.emit('ResetCamera')
+        SceneCommandBus.emit('ResetCamera');
     }
     /**
      * Toggles the grid visibility
      */
     static ToggleGrid() {
-        SceneCommandBus.emit('ToggleGrid')
+        SceneCommandBus.emit('ToggleGrid');
     }
     /**
      * Issues a screenshot
      */
     static Screenshot() {
-        SceneCommandBus.emit('Screenshot')
+        SceneCommandBus.emit('Screenshot');
     }
 
     /**
      * Select an object given its id
      */
     static SelectObject(id: number|null) {
-        SceneCommandBus.emit('SelectObject', id)
+        SceneCommandBus.emit('SelectObject', id);
     }
     /**
      * Pans the camera to target an object specified by its id
      */
     static TargetObject(id: number) {
-        SceneCommandBus.emit('TargetObject', id)
+        SceneCommandBus.emit('TargetObject', id);
     }
     /**
      * Hide or shows a group of elements
@@ -90,7 +90,7 @@ export class SceneCommander {
         SceneCommandBus.emit('SetGroupEnabled', {
             group: group,
             enabled: enabled
-        })
+        });
     }
     /**
      * Hide, shows or updates a path given its id and color
@@ -100,7 +100,7 @@ export class SceneCommander {
             id: id,
             enabled: enabled,
             color: color
-        })
+        });
     }
 
     /**
@@ -110,19 +110,19 @@ export class SceneCommander {
      * @param url Path to stage file
      */
     static SetStage(url: string) {
-        SceneCommandBus.emit('SetStage', url)
+        SceneCommandBus.emit('SetStage', url);
     }
     /**
      * Removes the current stage.
      */
     static RemoveStage() {
-        SceneCommandBus.emit('RemoveStage')
+        SceneCommandBus.emit('RemoveStage');
     }
 
     /**
      * Set theme
      */
     static SetTheme(theme: Theme) {
-        SceneCommandBus.emit('SetTheme', theme)
+        SceneCommandBus.emit('SetTheme', theme);
     }
 }

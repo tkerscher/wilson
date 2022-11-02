@@ -1,4 +1,4 @@
-import { createDownload } from "./download"
+import { createDownload } from "./download";
 
 /**
  * Takes a screenshot of the current content of the given canvas and starts a
@@ -9,7 +9,7 @@ import { createDownload } from "./download"
 export function takeScreenshot(canvas: HTMLCanvasElement, filename = 'Screenshot.png') {
     canvas.toBlob(blob => {
         if (!blob)
-            return
-        createDownload(blob, filename)
-    })
+            return;
+        createDownload(blob, filename);
+    });
 }

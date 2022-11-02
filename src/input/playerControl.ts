@@ -1,9 +1,9 @@
-import { KeyMap } from "./keyMap"
+import { KeyMap } from "./keyMap";
 
 //Speed settings
-const SpeedStepSmall = 1.0
-const SpeedStepMedium = 10.0
-const SpeedStepLarge = 50.0
+const SpeedStepSmall = 1.0;
+const SpeedStepMedium = 10.0;
+const SpeedStepLarge = 50.0;
 
 export interface Player {
     togglePlaying(): void
@@ -16,8 +16,8 @@ export interface Player {
 }
 
 export class PlayerControl {
-    #handlerOnce: (e: KeyboardEvent) => void
-    #handlerRepeat: (e: KeyboardEvent) => void
+    #handlerOnce: (e: KeyboardEvent) => void;
+    #handlerRepeat: (e: KeyboardEvent) => void;
 
     constructor(p: Player) {
         //create hotkeys
@@ -29,7 +29,7 @@ export class PlayerControl {
             ["KeyL", () => p.forward()],
             ["KeyM", () => p.toggleLooping()],
             ["KeyB", () => p.toggleRecording()]
-        ])
+        ]);
         const hotKeysRepeat = new KeyMap([
             //speed
             ["NumpadAdd", () => p.adjustSpeed(SpeedStepMedium)],
@@ -38,25 +38,25 @@ export class PlayerControl {
             ["NumpadSubtract", () => p.adjustSpeed(-SpeedStepMedium)],
             ["Shift+NumpadSubtract", () => p.adjustSpeed(-SpeedStepLarge)],
             ["Alt+NumpadSubtract", () => p.adjustSpeed(-SpeedStepSmall)],
-        ])
+        ]);
 
         //create handler
-        this.#handlerRepeat = e => hotKeysRepeat.exec(e)
+        this.#handlerRepeat = e => hotKeysRepeat.exec(e);
         this.#handlerOnce = e => {
             if (!e.repeat)
-                hotKeysOnce.exec(e)
-        }
+                hotKeysOnce.exec(e);
+        };
 
         //register handler
-        document.addEventListener('keydown', this.#handlerRepeat)
-        document.addEventListener('keydown', this.#handlerOnce)
+        document.addEventListener('keydown', this.#handlerRepeat);
+        document.addEventListener('keydown', this.#handlerOnce);
     }
 
     dispose() {
-        document.removeEventListener('keydown', this.#handlerOnce)
-        document.removeEventListener('keydown', this.#handlerRepeat)
+        document.removeEventListener('keydown', this.#handlerOnce);
+        document.removeEventListener('keydown', this.#handlerRepeat);
 
-        this.#handlerOnce = () => undefined
-        this.#handlerRepeat = () => undefined
+        this.#handlerOnce = () => undefined;
+        this.#handlerRepeat = () => undefined;
     }
 }

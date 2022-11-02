@@ -35,4 +35,4 @@ Control._FontHeightSizes = {
         "height": 20.5,
         "descent": 4.5
     }
-}
+};

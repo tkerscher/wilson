@@ -1,4 +1,4 @@
-import { Project } from "../../model/project"
+import { Project } from "../../model/project";
 
 export type ObjectType = 'Sphere' | 'Line' | 'Tube' | 'Overlay'
 
@@ -16,20 +16,20 @@ export interface Group {
 }
 
 export function extractGroups(project: Project): Group[] {
-    let id = 0
-    const map = new Map<string, Group>()
+    let id = 0;
+    const map = new Map<string, Group>();
     function getGroup(name: string): Group {
-        const group = map.get(name)
+        const group = map.get(name);
         if (group)
-            return group
+            return group;
         else {
             const empty: Group = {
                 name: name,
                 visible: !project.hiddenGroups.find(g => g == name),
                 members: []
-            }
-            map.set(name, empty)
-            return empty
+            };
+            map.set(name, empty);
+            return empty;
         }
     }
 
@@ -39,28 +39,28 @@ export function extractGroups(project: Project): Group[] {
             description: sphere.description,
             id: id++,
             type: 'Sphere'
-        }))
+        }));
     project.lines.forEach(line =>
         getGroup(line.group).members.push({
             name: line.name,
             description: line.description,
             id: id++,
             type: 'Line'
-        }))
+        }));
     project.tubes.forEach(tube =>
         getGroup(tube.group).members.push({
             name: tube.name,
             description: tube.description,
             id: id++,
             type: 'Tube'
-        }))
+        }));
     project.overlays.forEach(overlay =>
         getGroup(overlay.group).members.push({
             name: overlay.name,
             description: overlay.description,
             id: id++,
             type: 'Overlay'
-        }))
+        }));
 
     return Array.from(map.values()).sort((a, b) => {
         //Ensure the ungrouped ones are last
@@ -69,6 +69,6 @@ export function extractGroups(project: Project): Group[] {
         if (b.name.length == 0)
             return -1;
         
-        return a.name.localeCompare(b.name)
-    })
+        return a.name.localeCompare(b.name);
+    });
 }

@@ -1,4 +1,4 @@
-import { Theme } from "../theme"
+import { Theme } from "../theme";
 
 interface _WorkerCommand {
     type: string

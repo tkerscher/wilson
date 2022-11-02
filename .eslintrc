@@ -12,6 +12,7 @@
     "rules": {
         "@typescript-eslint/no-this-alias": 0,
         "no-alert": 2,
-        "no-console": 1
+        "no-console": 1,
+        "semi": [2, "always"]
     }
 }

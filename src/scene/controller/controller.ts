@@ -1,5 +1,5 @@
-import { Project } from "../../model/project"
-import { Theme } from "../theme"
+import { Project } from "../../model/project";
+import { Theme } from "../theme";
 
 export interface SceneController {
 

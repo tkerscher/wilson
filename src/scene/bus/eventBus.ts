@@ -1,4 +1,4 @@
-import mitt from "mitt"
+import mitt from "mitt";
 
 /**
  * Events issued by scene
@@ -9,4 +9,4 @@ export type EventMessages = {
      */
     ObjectPicked: number|null
 }
-export const SceneEventBus = mitt<EventMessages>()
+export const SceneEventBus = mitt<EventMessages>();

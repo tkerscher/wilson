@@ -3,51 +3,51 @@ import { WorkerCommand } from "../worker/command";
 import { SceneInitializedEvent, WorkerEvent } from "../worker/event";
 import { SceneController } from "./controller";
 
-import SceneWorker from "../worker/script?worker"
+import SceneWorker from "../worker/script?worker";
 import { Theme } from "../theme";
 import { takeScreenshot } from "../../util/screenshot";
 
 export class WorkerController implements SceneController {
-    #canvas: HTMLCanvasElement
+    #canvas: HTMLCanvasElement;
     //Worker related
-    #worker: Worker
-    Ready: Promise<void>
+    #worker: Worker;
+    Ready: Promise<void>;
 
     //copy of state on host site
-    #currentFrame = NaN
-    #isPlaying = true
-    #isStatic = true
-    #speedRatio = 1.0
-    #isGridEnabled = true
+    #currentFrame = NaN;
+    #isPlaying = true;
+    #isStatic = true;
+    #speedRatio = 1.0;
+    #isGridEnabled = true;
 
     //callbacks
-    #onAnimationLoopCallbacks: Array<() => void> = []
-    #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = []
-    #onObjectPickedCallbacks: Array<(id: number|null) => void> = []
+    #onAnimationLoopCallbacks: Array<() => void> = [];
+    #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = [];
+    #onObjectPickedCallbacks: Array<(id: number|null) => void> = [];
 
-    screenshotFilename = ""
+    screenshotFilename = "";
 
     constructor(canvas: HTMLCanvasElement) {
-        this.#canvas = canvas
+        this.#canvas = canvas;
         //create scene worker
-        const worker = new SceneWorker()
-        this.#worker = worker
+        const worker = new SceneWorker();
+        this.#worker = worker;
 
         //prepare message handler
-        const controller = this
+        const controller = this;
         function handleMessage(ev: MessageEvent<WorkerEvent>) {
-            const event = ev.data
+            const event = ev.data;
             switch(event.type) {
             case 'onAnimationLoop':
-                controller.#onAnimationLoopCallbacks.forEach(fn => fn())
-                break
+                controller.#onAnimationLoopCallbacks.forEach(fn => fn());
+                break;
             case 'onFrameChanged':
-                controller.#currentFrame = event.currentFrame
-                controller.#onFrameChangedCallbacks.forEach(fn => fn(event.currentFrame))
-                break
+                controller.#currentFrame = event.currentFrame;
+                controller.#onFrameChangedCallbacks.forEach(fn => fn(event.currentFrame));
+                break;
             case 'onObjectPicked':
-                controller.#onObjectPickedCallbacks.forEach(fn => fn(event.objectId))
-                break
+                controller.#onObjectPickedCallbacks.forEach(fn => fn(event.objectId));
+                break;
             }
         }
 
@@ -55,115 +55,115 @@ export class WorkerController implements SceneController {
         this.Ready = new Promise<void>(resolve => {
             worker.onmessage = ev => {
                 //project is initialized -> switch to normal message handling
-                worker.onmessage = handleMessage
+                worker.onmessage = handleMessage;
 
                 //ev contains the initial state -> patch
-                const state = ev.data as SceneInitializedEvent
-                controller.#currentFrame = state.currentFrame
-                controller.#isPlaying = state.isPlaying
-                controller.#isStatic = state.isStatic
-                controller.#speedRatio = state.speedRatio
-                controller.#isGridEnabled = state.isGridEnabled
+                const state = ev.data as SceneInitializedEvent;
+                controller.#currentFrame = state.currentFrame;
+                controller.#isPlaying = state.isPlaying;
+                controller.#isStatic = state.isStatic;
+                controller.#speedRatio = state.speedRatio;
+                controller.#isGridEnabled = state.isGridEnabled;
 
                 //resolve promise
-                resolve()
-            }
-            const offscreen = canvas.transferControlToOffscreen()
+                resolve();
+            };
+            const offscreen = canvas.transferControlToOffscreen();
             worker.postMessage({
                 canvas: offscreen
-            }, [offscreen])
-        })        
+            }, [offscreen]);
+        });        
     }
 
     #sendCommand(cmd: WorkerCommand, transfer?: Transferable[]) {
-        this.#worker.postMessage(cmd, transfer)
+        this.#worker.postMessage(cmd, transfer);
     }
 
     get currentFrame(): number {
-        return this.#currentFrame
+        return this.#currentFrame;
     }
     get isPlaying(): boolean {
-        return this.#isPlaying
+        return this.#isPlaying;
     }
     get isStatic(): boolean {
-        return this.#isStatic
+        return this.#isStatic;
     }
     get speedRatio(): number {
-        return this.#speedRatio
+        return this.#speedRatio;
     }
     set speedRatio(value: number) {
-        this.#speedRatio = value
+        this.#speedRatio = value;
         this.#sendCommand({
             type: 'setSpeedRatio',
             value: value
-        })
+        });
     }
     load(project: Project): void {
-        const serialized = Project.encode(project).finish().buffer
+        const serialized = Project.encode(project).finish().buffer;
         this.#sendCommand({
             type: 'load',
             data: serialized
-        }, [serialized])
-        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png'
+        }, [serialized]);
+        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png';
     }
     loadStage(url: string): void {
         this.#sendCommand({
             type: 'loadStage',
             url: url
-        })
+        });
     }
     removeStage(): void {
         this.#sendCommand({
             type: 'removeStage'
-        })
+        });
     }
     play(): void {
-        this.#isPlaying = true
+        this.#isPlaying = true;
         this.#sendCommand({
             type: 'play'
-        })
+        });
     }
     pause(): void {
-        this.#isPlaying = false
+        this.#isPlaying = false;
         this.#sendCommand({
             type: 'pause'
-        })
+        });
     }
     goToFrame(frame: number): void {
         this.#sendCommand({
             type: 'goToFrame',
             frame: frame
-        })
+        });
     }
     registerOnFrameChanged(callback: (currentFrame: number) => void): void {
-        this.#onFrameChangedCallbacks.push(callback)
+        this.#onFrameChangedCallbacks.push(callback);
     }
     registerOnAnimationLoop(callback: () => void): void {
-        this.#onAnimationLoopCallbacks.push(callback)
+        this.#onAnimationLoopCallbacks.push(callback);
     }
     resetCamera(): void {
         this.#sendCommand({
             type: 'resetCamera'
-        })
+        });
     }
     select(id: number): void {
         this.#sendCommand({
             type: 'select',
             id: id
-        })
+        });
     }
     target(id: number): void {
         this.#sendCommand({
             type: 'target',
             id: id
-        })
+        });
     }
     setGroupEnabled(group: string, enabled: boolean): void {
         this.#sendCommand({
             type: 'setGroupEnabled',
             group: group,
             enabled: enabled
-        })
+        });
     }
     setPathEnabled(id: number, enabled: boolean, color: string): void {
         this.#sendCommand({
@@ -171,40 +171,40 @@ export class WorkerController implements SceneController {
             id: id,
             enabled: enabled,
             color: color
-        })
+        });
     }
     registerOnObjectPicked(callback: (objectId: number|null) => void): void {
-        this.#onObjectPickedCallbacks.push(callback)
+        this.#onObjectPickedCallbacks.push(callback);
     }
     get isGridEnabled(): boolean {
-        return this.#isGridEnabled
+        return this.#isGridEnabled;
     }
     setGridEnabled(enabled: boolean): void {
-        this.#isGridEnabled = enabled
+        this.#isGridEnabled = enabled;
         this.#sendCommand({
             type: 'setGridEnabled',
             enabled: enabled
-        })
+        });
     }
     resize(width: number, height: number): void {
         this.#sendCommand({
             type: 'resize',
             width: width,
             height: height
-        })
+        });
     }
     setTheme(theme: Theme): void {
         this.#sendCommand({
             type: 'setTheme',
             theme: theme
-        })
+        });
     }
     dispose(): void {
         //TODO: send dispose command to worker for scene clean up
-        this.#worker.terminate()
+        this.#worker.terminate();
     }
     screenshot(): void {
-        takeScreenshot(this.#canvas, this.screenshotFilename)
+        takeScreenshot(this.#canvas, this.screenshotFilename);
     }
 
     simulatePointerDown(x: number, y: number): void {
@@ -212,7 +212,7 @@ export class WorkerController implements SceneController {
             type: 'pointerDown',
             x: x,
             y: y
-        })
+        });
     }
 
     simulatePointerUp(x: number, y: number): void {
@@ -220,7 +220,7 @@ export class WorkerController implements SceneController {
             type: 'pointerUp',
             x: x,
             y: y
-        })
+        });
     }
 
     simulatePointerMove(x: number, y: number): void {
@@ -228,7 +228,7 @@ export class WorkerController implements SceneController {
             type: 'pointermove',
             x: x,
             y: y
-        })
+        });
     }
 
     panCamera(dx: number, dy: number): void {
@@ -236,20 +236,20 @@ export class WorkerController implements SceneController {
             type: 'panCamera',
             dx: dx,
             dy: dy
-        })
+        });
     }
     rotateCamera(alpha: number, beta: number): void {
         this.#sendCommand({
             type: 'rotateCamera',
             alpha: alpha,
             beta: beta
-        })
+        });
     }
     zoomCamera(delta: number): void {
         this.#sendCommand({
             type: 'zoom',
             delta: delta
-        })
+        });
     }
     setCameraTarget(x: number, y: number, z: number): void {
         this.#sendCommand({
@@ -257,19 +257,19 @@ export class WorkerController implements SceneController {
             x: x,
             y: y,
             z: z
-        })
+        });
     }
     setCameraRotation(alpha: number, beta: number): void {
         this.#sendCommand({
             type: 'setCameraRotation',
             alpha: alpha,
             beta: beta
-        })
+        });
     }
     setCameraZoom(distance: number): void {
         this.#sendCommand({
             type: 'setCameraZoom',
             distance: distance
-        })
+        });
     }
 }

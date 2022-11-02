@@ -5,13 +5,13 @@ import { Interpolation } from "../model/interpolation";
 function getShapeFromInterpolation(int: Interpolation): string {
     switch (int) {
         case Interpolation.AHEAD:
-            return 'vh'
+            return 'vh';
         case Interpolation.HOLD:
-            return 'hv'
+            return 'hv';
         case Interpolation.LINEAR:
         case Interpolation.UNRECOGNIZED:
         default:
-            return 'linear'
+            return 'linear';
     }
 }
 
@@ -24,7 +24,7 @@ export function createPlotData(graphs: Graph[]): Data[] {
         line: {
             shape: getShapeFromInterpolation(graph.interpolation)
         }
-    }))
+    }));
 }
 
 export const PlotConfig: Partial<Config> = {
@@ -32,7 +32,7 @@ export const PlotConfig: Partial<Config> = {
     responsive: true,
     scrollZoom: true,
     displayModeBar: true,
-}
+};
 
 export function createPlotLayout(useDarkTheme: boolean): Partial<Layout> {
     return {
@@ -59,5 +59,5 @@ export function createPlotLayout(useDarkTheme: boolean): Partial<Layout> {
             zerolinecolor: useDarkTheme ? 'white' : 'black',
             zerolinewidth: 2
         }
-    }
+    };
 }

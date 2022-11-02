@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-const MinSpeed = 0.01
-const MaxSpeed = 999.99
+const MinSpeed = 0.01;
+const MaxSpeed = 999.99;
 
 export const usePlayer = defineStore('player', {
     state: () => ({
@@ -22,35 +22,35 @@ export const usePlayer = defineStore('player', {
     }),
     actions: {
         forward() {
-            const step = this.stepSize * this.speedRatio
+            const step = this.stepSize * this.speedRatio;
             if (this.endFrame - this.currentFrame > step) {
-                this.currentFrame += step
+                this.currentFrame += step;
             }
             else {
-                this.currentFrame = this.endFrame
+                this.currentFrame = this.endFrame;
             }
         },
         backward() {
-            const step = this.stepSize * this.speedRatio
+            const step = this.stepSize * this.speedRatio;
             if (this.currentFrame - this.startFrame > step) {
-                this.currentFrame -= step
+                this.currentFrame -= step;
             }
             else {
-                this.currentFrame = this.startFrame
+                this.currentFrame = this.startFrame;
             }
         },
         togglePlaying() {
-            this.isPlaying = !this.isPlaying
+            this.isPlaying = !this.isPlaying;
         },
         toggleLooping() {
-            this.isLooping = !this.isLooping
+            this.isLooping = !this.isLooping;
         },
         toggleRecording() {
-            this.isRecording = !this.isRecording
+            this.isRecording = !this.isRecording;
         },
         adjustSpeed(delta: number) {
-            const _speed = this.speedRatio + delta
-            this.speedRatio = _speed < MinSpeed ? MinSpeed : (_speed > MaxSpeed ? MaxSpeed : _speed)
+            const _speed = this.speedRatio + delta;
+            this.speedRatio = _speed < MinSpeed ? MinSpeed : (_speed > MaxSpeed ? MaxSpeed : _speed);
         }
     }
-})
+});
