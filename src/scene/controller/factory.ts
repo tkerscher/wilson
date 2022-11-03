@@ -18,13 +18,13 @@ export async function createController(canvas: HTMLCanvasElement): Promise<Scene
     //create offscreen renderer for enhanced performance or fall back to local renderer
     return (() => {
         if (isWorkerAvailable()) {
-            return import("./local").then(mod => {
-                return new mod.LocalController(canvas);
+            return import("./worker").then(mod => {
+                return new mod.WorkerController(canvas);
             });
         }
         else {
-            return import("./worker").then(mod => {
-                return new mod.WorkerController(canvas);
+            return import("./local").then(mod => {
+                return new mod.LocalController(canvas);
             });
     }})()
     .then(controller => {
