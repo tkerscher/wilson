@@ -5,9 +5,18 @@ The data model is defined using Google's [Protocol Buffers](https://developers.g
 ## Compile
 
 To compile the `.proto` files into the typescript files needed you can simply run
+
+```bash
+yarn protoc #unix
+yarn protoc_win #windows
 ```
-yarn protoc
+
+To compile them instead into python files run
+
+```bash
+yarn protopy
 ```
+
 You need to have `protoc` installed and accessible through the path variable.
 Since the data model should not change very much, we will include the compiled
 files in the repository to speed things up and make installation easier.
@@ -56,7 +65,7 @@ There are three types of properties:
 
 | Property       | Scalar               | Table   |
 |----------------|----------------------|---------|
-| ScalarProperty | `double`             | `Graph` | 
+| ScalarProperty | `double`             | `Graph` |
 | VectorProperty | `Vector`             | `Path`  |
 | ColorProperty  | `Color` or `double`  | `Graph` |
 
@@ -65,11 +74,28 @@ table's it's referencing. The conversion between the `double` given or
 calculated from the referenced `Graph` and the expected `Color` is done using
 the color map stored in the project root object.
 
-<!-- ### Scripts
+### Text
 
-Additionally, a project can contain script files which cannot be used for manipulating the animation
-while running but creating the data used during a animation. They are basically a named string, i.e.
-a string containing the code with a name, that is shown in the explorer. -->
+The `Text` type is a string that may contain template expressions. A template
+expression can reference data in the project, namely `Graph` and `Path`, by
+their ids. Such an expression looks like the following:
+
+`%(paths[0].x).2e`
+
+It consists of `%()` containing the data to be referenced, i.e. either `graphs`
+or `paths` followed by the corresponding id in square brackets and additionally
+for paths the dimension (e.g. here `.x`). Optionally, the reference can be
+followed by a formatting instruction. Here it is `.2e`, i.e scientific notation
+with 2 decimal places.
+
+Multiple references can be embedded into any string to form a valid text
+property:
+
+`Current height: %(paths[0].z).2f m after %(graphs[4]).3f ms`
+
+Of course, a plain string with no references is also a valid Text:
+
+`Test #042`
 
 ## Objects
 
@@ -82,7 +108,7 @@ All objects have a common set of properties:
 |-------------|----|----------|-------------|
 | name        | 01 | `string` | Name to be shown in the explorer. |
 | group       | 02 | `string` | Name of the group the objects belong to. |
-| description | 03 | `string` | Text to be shown when the object is selected in the scene. |
+| description | 03 | `Text`   | Text to be shown when the object is selected in the scene. |
 | color       | 04 | `ColorProperty` | Color of the object. |
 |             | 05 - 10 | | *Reserved* |
 
@@ -127,54 +153,66 @@ determined using the by `pathId` referenced `Path`. The corresponding time is us
 other properties. I.e. at a time t, the position of the current tube segment is determined by the
 referenced `Path`, while the other properties are evaluated using the same time t.
 
-### Label
+### Overlay
 
-Labels always show their description no matter if they're selected or not.
+Overlay show text drawn on top of the scene. If multiple overlays share the same
+position they'll be stacked.
 
-| Property | Type             | Description |
-|----------|------------------|-------------|
-| position | `VectorProperty` | Upper left corner of the text. |
-| fontSize | `ScalarProperty` | Size of the text. |
-| background | `ColorProperty`| Color of the background. |
+| Property | Type             | Description                     |
+|----------|------------------|---------------------------------|
+| text     | `Text`           | Text to be drawn on scene.      |
+| position | `TextPosition`   | Position of the text.           |
+| fontSize | `ScalarProperty` | Size of the text.               |
+| bold     | `bool`           | True, if text should be bold.   |
+| italic   | `bool`           | True, if text should be italic. |
+
+The `TextPosition` type is a simple enumeration of all possible positions:
+
+ |             |             |             |
+ |-------------|-------------|-------------|
+ | Upper Left  | Top         | Upper Right |
+ | Left        | Center      | Right       |
+ | Lower Left  | Bottom      | Lower Right |
 
 ## Project Description
 
 The root message for serialization is `Project` and is foremost a container for the tables and
 objects. Thus it contains arrays of the following types:
 
- - Data
-    - `Graph`
-    - `Path`
-    - `ColorMap`
- - Objects
-    - `Sphere`
-    - `Line`
-    - `Tube`
-    - `Label`
+- Data
+  - `Graph`
+  - `Path`
+  - `ColorMap`
+- Objects
+  - `Sphere`
+  - `Line`
+  - `Tube`
+  - `Overlay`
 
 ### Meta information
 
-The project also contains a message `ProjectMeta` which holds additional information for the end
-user about the animated event:
+The project also contains a message `ProjectMeta` at tag 0 which holds additional
+information for the end user about the animated event:
 
-| Property  | Type        | Description |
-|-----------|-------------|-------------|
-| name      | `string`    | Name of the event |
-| author    | `string`    | Name of the author, e.g. the experiments name. |
-| data      | `Timestamp` | Date of the event. |
-| startTime | `double`    | Time value the animation should start with. |
-| endTime   | `double`    | Time value at which the animation should end. |
-| speedRatio| `double`    | Speed of animation in time units per second. |
+| Property   | Type        | Description |
+|------------|-------------|-------------|
+| name       | `string`    | Name of the event |
+| author     | `string`    | Name of the author, e.g. the experiments name. |
+| data       | `Timestamp` | Date of the event. |
+| startTime  | `double`    | Time value the animation should start with. |
+| endTime    | `double`    | Time value at which the animation should end. |
+| speedRatio | `double`    | Speed of animation in time units per second. |
+| description| `string`    | Additional description about the event. |
 
 ### Scene Settings
 
-Finally, there are some properties in `Project` providing additional information on how to render
-the scene:
+Finally, there are some properties in `Project` providing additional information
+on how to render the scene:
 
-| Property       | Type        | Description |
-|----------------|-------------|-------------|
-| clearColor     | `Color`     | The background color of the scene. |
-| camera         | `Camera`    | An optional camera. A default one is used if not provided. |
+| Property       | Type       | Description |
+|----------------|------------|-------------|
+| camera         | `Camera`   | An optional camera. A default one is used if not provided. |
+| hiddenGroups   | `string[]` | List of groups that should be hidden at default. |
 
 The `Camera` is a rather simple structure, which can also be animated:
 
