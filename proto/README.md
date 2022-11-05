@@ -50,6 +50,16 @@ discrete points in time a value of its corresponding scalar type.
 Each table also has a unique `id` stored as `uint32`, which can be used to
 reference it by other objects, as well as a human readable `name` string.
 
+Additionally, the interpolation used to infer values between data points can be
+one of the following:
+
+| Interpolation    | Description                                          |
+|------------------|------------------------------------------------------|
+| Linear (default) | Linear interpolate between consecutive data points   |
+| Hold             | Hold the last value until next data point is reached |
+| Ahead            | Hold the next value until next data point is reached |
+| Step             | Hold for the first, ahead for the second half        |
+
 ### Color Map
 
 There is also a global `ColorMap` which is used to translate scalars used in
