@@ -15,6 +15,8 @@ import { Project } from "../../model/project";
 import { Theme } from "../theme";
 import { SceneController } from "./controller";
 
+import { patchEngine } from "../worker/font";
+
 export class LocalController implements SceneController {
     #canvas: HTMLCanvasElement|OffscreenCanvas;
     #engine: Engine;
@@ -38,6 +40,12 @@ export class LocalController implements SceneController {
         this.#engine = new Engine(canvas, true, {
             preserveDrawingBuffer: true
         });
+
+        //patch engine for offscreen canvas
+        if (canvas instanceof OffscreenCanvas) {
+            console.log('Patched!');
+            patchEngine(this.#engine);
+        }
     }
 
     load(project: Project): void {

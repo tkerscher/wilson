@@ -3,7 +3,6 @@ import { LocalController } from "../controller/local";
 import { WorkerCommand } from "./command";
 import { AnimationLoopEvent, FrameChangedEvent, ObjectPickedEvent } from "./event";
 
-import "./font";
 let controller: LocalController;
 
 function messageHandler(ev: MessageEvent<WorkerCommand>) {

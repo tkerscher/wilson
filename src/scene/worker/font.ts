@@ -1,38 +1,36 @@
-import { Control } from "@babylonjs/gui/2D/controls/control";
+import { Engine } from "@babylonjs/core/Engines/engine";
 
-//Babylon js lazily queries font metrics, but uses document.createElement() to
-//do so. Obviously, this is not possible in web workers, so we register it
-//eagerly beforehand inside web workers.
-//
-//IMPORTANT: This is not part of the official Babylon js API and is thus very
-//           likely to break in future versions!
+//Babylon js creates anonymous dom elements to estimate font metrics.
+//This will fail in web worker, as they have no access to document.
+//We will provide an alternate version using the 2d context on an offscreen
+//canvas, and provide a function to patch the engine to use our method.
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-Control._FontHeightSizes = {
-    "  16px Arial": {
-        "ascent": 14,
-        "height": 18,
-        "descent": 4
-    },
-    " 800 18px Arial": {
-        "ascent": 20,
-        "height": 26,
-        "descent": 6
-    },
-    "16px Arial": {
-        "ascent": 14,
-        "height": 17.5,
-        "descent": 3.5
-    },
-    "800 18px Arial": {
-        "ascent": 20,
-        "height": 26,
-        "descent": 6
-    },
-    "18px Arial": {
-        "ascent": 16,
-        "height": 20.5,
-        "descent": 4.5
+let canvas: OffscreenCanvas|null = null;
+let ctx: OffscreenCanvasRenderingContext2D|null = null;
+
+interface FontOffset {
+    ascent: number
+    height: number
+    descent: number
+}
+
+function getFontOffset(font: string): FontOffset {
+    if (!canvas || !ctx) {
+        canvas = new OffscreenCanvas(64,64);
+        ctx = canvas.getContext('2d'); 
+        if (!ctx) {
+            throw Error('2D context in offscreen not available!')
+        }
     }
-};
+
+    ctx.font = font;
+    ctx.textBaseline = "alphabetic";
+    const descent = ctx.measureText('Hg').actualBoundingBoxDescent;
+    ctx.textBaseline = "bottom";
+    const ascent = ctx.measureText('Hg').actualBoundingBoxAscent;
+    return { ascent: ascent, height: ascent + descent, descent: descent };
+}
+
+export function patchEngine(engine: Engine) {
+    engine.getFontOffset = getFontOffset;
+}
