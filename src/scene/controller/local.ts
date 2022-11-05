@@ -43,7 +43,6 @@ export class LocalController implements SceneController {
 
         //patch engine for offscreen canvas
         if (canvas instanceof OffscreenCanvas) {
-            console.log('Patched!');
             patchEngine(this.#engine);
         }
     }

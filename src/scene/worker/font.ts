@@ -19,7 +19,7 @@ function getFontOffset(font: string): FontOffset {
         canvas = new OffscreenCanvas(64,64);
         ctx = canvas.getContext('2d'); 
         if (!ctx) {
-            throw Error('2D context in offscreen not available!')
+            throw Error('2D context in offscreen not available!');
         }
     }
 
