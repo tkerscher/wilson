@@ -84,6 +84,9 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
     case 'setCameraZoom':
         controller.setCameraZoom(ev.data.distance);
         break;
+    case 'setSpeedRatio':
+        controller.speedRatio = ev.data.value;
+        break;
     }
 }
 
