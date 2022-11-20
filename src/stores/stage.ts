@@ -60,8 +60,8 @@ export const useStage = defineStore("stage", () => {
     }
     function setStage(data: Blob) {
         //revoke earlier data
-        if (url)
-            URL.revokeObjectURL(url);
+        removeStage();
+
         //reset state
         progress.value = -1;
         error.value = "";
@@ -77,10 +77,17 @@ export const useStage = defineStore("stage", () => {
         if (url)
             SceneCommander.SetStage(url);
     }
+    function removeStage() {
+        if (url) {
+            SceneCommander.RemoveStage();
+            URL.revokeObjectURL(url);
+            url = "";
+        }
+    }
 
     return {
         error, progress, url,
         isDownloading,
-        applyStage, loadStage, setStage
+        applyStage, loadStage, setStage, removeStage
     };
 });

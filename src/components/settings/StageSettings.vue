@@ -14,7 +14,7 @@
     </label>
     <div
       class="p-button"
-      @mouseup="SceneCommander.RemoveStage()"
+      @mouseup="stage.removeStage()"
     >
       <div class="icon icon-small trash-icon" />
       Remove Stage
@@ -37,7 +37,6 @@
 </template>
 
 <script setup lang="ts">
-import { SceneCommander } from '../../scene/bus/commandBus';
 import { useStage } from '../../stores/stage';
 const stage = useStage();
 
