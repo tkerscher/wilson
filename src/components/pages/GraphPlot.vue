@@ -15,7 +15,7 @@ import { useTheme } from '../../stores/theme';
 const graphs = useGraphs();
 const theme = useTheme();
 
-const config = createConfig(theme.toggleTheme);
+const config = createConfig(theme.toggleTheme, handleScale);
 function handleThemeHotkey(e: KeyboardEvent) {
     if (e.altKey || e.ctrlKey || e.shiftKey)
         return;    
@@ -23,6 +23,12 @@ function handleThemeHotkey(e: KeyboardEvent) {
         return;
     if (e.code == 'KeyT')
         theme.toggleTheme();
+}
+
+function handleScale() {
+    plotLayout = createPlotLayout(theme.useDarkTheme);
+    if (plotDiv.value)
+        relayout(plotDiv.value, plotLayout);
 }
 
 let plotLayout = createPlotLayout(theme.useDarkTheme);
