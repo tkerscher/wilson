@@ -62,7 +62,6 @@ import { onBeforeUnmount, onMounted } from 'vue';
 import { KeyMap } from '../../input/keyMap';
 import { openPlot } from '../../plot/openPlot';
 import { SceneCommander } from '../../scene/bus/commandBus';
-import { getCurrentTheme } from '../../scene/theme';
 
 import { useProject } from '../../stores/project';
 import { useTheme } from '../../stores/theme';
@@ -83,7 +82,6 @@ function toggleGrid() {
 }
 function toggleTheme() {
     theme.toggleTheme();
-    SceneCommander.SetTheme(getCurrentTheme());
 }
 
 const hotKeys = new KeyMap([

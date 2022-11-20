@@ -35,6 +35,7 @@ import { ScreenRecorder } from '../../video/screenRecorder';
 import { CatalogueControl } from '../../input/catalogueControl';
 import { ControllerAdapter } from '../../scene/bus/controllerAdapter';
 import { useStage } from '../../stores/stage';
+import { useTheme } from '../../stores/theme';
 
 const DefaultTitle = document.title;
 
@@ -43,6 +44,7 @@ const player = usePlayer();
 const project = useProject();
 const resolution = useResolution();
 const stage = useStage();
+const theme = useTheme();
 
 const canvas = ref<HTMLCanvasElement|null>(null);
 const container = ref<HTMLDivElement|null>(null);
@@ -178,6 +180,11 @@ resolution.$subscribe((mutation, state) => {
         fixed = false;
         resizeCanvas();
     }
+});
+
+//theme
+theme.$subscribe(() => {
+    controller.setTheme(getCurrentTheme());
 });
 
 //UI

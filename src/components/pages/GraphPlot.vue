@@ -6,14 +6,24 @@
 </template>
 
 <script setup lang="ts">
-import { PlotConfig, createPlotData, createPlotLayout } from '../../plot/plot';
+import { createConfig, createPlotData, createPlotLayout } from '../../plot/plot';
 import { newPlot, react, relayout } from "plotly.js-basic-dist";
 
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref, nextTick, onBeforeUnmount } from "vue";
 import { useGraphs } from '../../stores/graphs';
 import { useTheme } from '../../stores/theme';
 const graphs = useGraphs();
 const theme = useTheme();
+
+const config = createConfig(theme.toggleTheme);
+function handleThemeHotkey(e: KeyboardEvent) {
+    if (e.altKey || e.ctrlKey || e.shiftKey)
+        return;    
+    if (e.repeat)
+        return;
+    if (e.code == 'KeyT')
+        theme.toggleTheme();
+}
 
 let plotLayout = createPlotLayout(theme.useDarkTheme);
 theme.$subscribe((mutation, state) => {
@@ -28,7 +38,7 @@ function redraw() {
         return;
 
     issueRedraw = false;
-    react(plotDiv.value, createPlotData(graphs.visible), plotLayout, PlotConfig);
+    react(plotDiv.value, createPlotData(graphs.visible), plotLayout, config);
 }
 const resizer = new ResizeObserver(() => {
     if (!plotDiv.value)
@@ -43,7 +53,7 @@ onMounted(() => {
         throw Error("Plot div not present!");
 
     //Start with empty 
-    newPlot(plotDiv.value, [], plotLayout, PlotConfig);
+    newPlot(plotDiv.value, [], plotLayout, config);
 
     //watch for changes in graphs
     graphs.$subscribe(() => {
@@ -54,6 +64,12 @@ onMounted(() => {
     });
     //watch for size changes
     resizer.observe(plotDiv.value);
+
+    //register theme toggle hot key
+    document.addEventListener('keydown', handleThemeHotkey);
+});
+onBeforeUnmount(() => {
+    document.removeEventListener('keydown', handleThemeHotkey);
 });
 </script>
 
