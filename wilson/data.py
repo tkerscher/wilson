@@ -4,59 +4,61 @@ from enum import Enum
 from numpy.typing import ArrayLike
 from typing import Iterable, List, Tuple, Union
 
+
 class Interpolation(Enum):
     """Data Interpolation modes"""
 
-    LINEAR = 0,
+    LINEAR = (0,)
     """Linear interpolate between consecutive data points"""
-    HOLD = 1,
+    HOLD = (1,)
     """Hold the last value until next data point is reached"""
-    AHEAD = 2,
+    AHEAD = (2,)
     """Hold the next value until next data point is reached"""
-    STEP = 3,
+    STEP = (3,)
     """Hold last value until exactly in between two consecutive data points
     when it will hold the next value"""
+
 
 class Graph:
     """2D function mapping time to a scalar value by interpolating between
     control points. Columns of the underlying array are: time, value.
-    
+
     Attributes
     ----------
     array: ArrayLike of shape(N, 2)
         Array of the control points
-    
+
     name: str, default=''
         Name of the graph
-    
+
     interpolation: Interpolation, default=LINEAR
         Interpolation mode to use to get values in between data points
     """
+
     def __init__(
-        self,
-        array: ArrayLike,
-        name:str = '',
-        interpolation: Interpolation = Interpolation.LINEAR
+        self, array: ArrayLike, name: str = "", interpolation: Interpolation = Interpolation.LINEAR
     ):
         self.array = array
         self.name = name
         self.interpolation = interpolation
-    
+
     @property
     def array(self) -> ArrayLike:
         """The array holding the control points."""
         return self._array
+
     @array.setter
     def array(self, value: ArrayLike) -> None:
         shape = np.shape(value)
-        if (len(shape) != 2 or shape[1] != 2):
+        if len(shape) != 2 or shape[1] != 2:
             raise ValueError("The array must be of shape (N,2)!")
         self._array = value
-    
+
     @property
     def name(self) -> str:
         """The name of the graph."""
         return self._name
+
     @name.setter
     def name(self, value: str) -> None:
         self._name = str(value)
@@ -65,126 +67,138 @@ class Graph:
     def interpolation(self) -> Interpolation:
         """Interpolation mode to use to get values in between data points"""
         return self._interpolation
+
     @interpolation.setter
     def interpolation(self, value: Interpolation) -> None:
         self._interpolation = value
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, Graph) \
-            and other.name == self.name \
+        return (
+            isinstance(other, Graph)
+            and other.name == self.name
             and bool(np.equal(other.array, self.array).all())
+        )
+
 
 GraphLike = Union[ArrayLike, Graph]
 """
 Data types that can be used like a graph.
 """
 
+
 class Path:
     """3D function mapping time to a vector value by interpolating between
     control points. Columns of the underlying array are: time, x, y, z.
-    
+
     Attributes
     ----------
     array: ArrayLike of shape(N, 4)
         Array of the control points
-    
+
     name: str, default=''
         Name of the graph
 
     interpolation: Interpolation, default=LINEAR
         Interpolation mode to use to get values in between data points
     """
+
     def __init__(
-        self,
-        array: ArrayLike,
-        name:str = '',
-        interpolation: Interpolation = Interpolation.LINEAR
+        self, array: ArrayLike, name: str = "", interpolation: Interpolation = Interpolation.LINEAR
     ):
         self.array = array
         self.name = name
         self.interpolation = interpolation
-    
+
     @property
     def array(self) -> ArrayLike:
         """The array holding the control points."""
         return self._array
+
     @array.setter
     def array(self, value: ArrayLike) -> None:
         shape = np.shape(value)
-        if (len(shape) != 2 or shape[1] != 4):
+        if len(shape) != 2 or shape[1] != 4:
             raise ValueError("The array must be of shape (N,4)!")
         self._array = value
-    
+
     @property
     def name(self) -> str:
         """The name of the graph."""
         return self._name
+
     @name.setter
     def name(self, value: str) -> None:
         self._name = str(value)
-    
+
     @property
     def interpolation(self) -> Interpolation:
         """Interpolation mode to use to get values in between data points"""
         return self._interpolation
+
     @interpolation.setter
     def interpolation(self, value: Interpolation) -> None:
         self._interpolation = value
-    
+
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, Path) \
-            and other.name == self.name \
+        return (
+            isinstance(other, Path)
+            and other.name == self.name
             and bool(np.equal(other.array, self.array).all())
+        )
+
 
 PathLike = Union[ArrayLike, Path]
 """
 Data types that can be used like a path.
 """
 
+
 class Text:
     """Container for animated text, holding the template string alongside
     referenced data objects.
-    
+
     Attributes
     ----------
-    
+
     content: str, default=''
         The template string
-    
+
     graphs: Iterable[GraphLike], default=[]
         List of graphs referenced in the text
 
     paths: Iterable[PathLike], default=[]
         List of paths referenced in the text
     """
-    def __init__(self,
-        content: str = "",
-        *,
-        graphs: Iterable[GraphLike] = [],
-        paths: Iterable[PathLike] = []
+
+    def __init__(
+        self, content: str = "", *, graphs: Iterable[GraphLike] = [], paths: Iterable[PathLike] = []
     ):
         self.content = content
         self.graphs = graphs
         self.paths = paths
-    
+
     @property
     def content(self) -> str:
         """The template string"""
         return self._content
+
     @content.setter
     def content(self, value: str) -> None:
         self._content = value
+
     @content.deleter
     def content(self) -> None:
         self._content = ""
-    
+
     @property
     def graphs(self) -> List[GraphLike]:
         """List of graphs referenced in the text"""
         return self._graphs
+
     @graphs.setter
     def graphs(self, value: Iterable[GraphLike]) -> None:
         self._graphs = list(value)
+
     @graphs.deleter
     def graphs(self) -> None:
         self._graphs = []
@@ -193,12 +207,15 @@ class Text:
     def paths(self) -> List[PathLike]:
         """List of paths referenced in the text"""
         return self._paths
+
     @paths.setter
     def paths(self, value: Iterable[PathLike]) -> None:
         self._paths = list(value)
+
     @paths.deleter
     def paths(self) -> None:
         self._paths = []
+
 
 TextLike = Union[str, Text]
 """
