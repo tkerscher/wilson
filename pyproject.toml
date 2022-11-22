@@ -20,3 +20,9 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["wilson"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+include = '\.py$'
+exclude = '_pb2\.py$'
