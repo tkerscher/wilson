@@ -174,8 +174,8 @@ class Text:
         self, content: str = "", *, graphs: Iterable[GraphLike] = [], paths: Iterable[PathLike] = []
     ):
         self.content = content
-        self.graphs = graphs
-        self.paths = paths
+        self.graphs = graphs  # type: ignore[assignment]
+        self.paths = paths  # type: ignore[assignment]
 
     @property
     def content(self) -> str:

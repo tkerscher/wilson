@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple
+from typing import overload, Dict, Literal, Optional, Tuple
 import numpy as np
 
 from wilson.objects import Line, Sphere, Tube, Overlay
@@ -29,13 +29,13 @@ def parseProjectFromBytes(data: bytes) -> Project:
     """
     # ask protobuf to parse string
     project = proto.Project()
-    project.parseFromString(data)
+    project.ParseFromString(data)
     result = Project()
 
     # load meta (fills blank values with default values)
     result.name = project.meta.name
     result.author = project.meta.author
-    result.date = project.meta.date.ToDateTime() if project.meta.HasField("date") else None
+    result.date = project.meta.date.ToDatetime() if project.meta.HasField("date") else None
     result.description = project.meta.description
 
     # load time stuff
@@ -57,7 +57,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.addAnimatables(_parseOverlay(o, _graphs, _paths) for o in project.overlays)
 
     # hidden groups
-    result.hiddenGroups = project.hiddenGroups
+    result.hiddenGroups = project.hiddenGroups  # type: ignore[assignment]
 
     # additional properties
     if project.HasField("camera"):
@@ -72,7 +72,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
 ################################## Data ########################################
 
 
-def _parseInterpolation(intpol: proto.Interpolation) -> Interpolation:
+def _parseInterpolation(intpol: proto.Interpolation.ValueType) -> Interpolation:
     if intpol == proto.Interpolation.HOLD:
         return Interpolation.HOLD
     if intpol == proto.Interpolation.AHEAD:
@@ -102,7 +102,8 @@ def _parsePath(path: proto.Path) -> Tuple[int, Path]:
     # data
     array = np.empty((len(path.points), 4))
     for i, point in enumerate(path.points):
-        array[i] = point.time, point.x, point.y, point.z
+        p = point.position
+        array[i] = point.time, p.x, p.y, p.z
     # done -> return id value tuple to allow constructing a dict
     return (path.id, Path(array, name, interpolation))
 
@@ -120,28 +121,45 @@ def _parseCamera(camera: proto.Camera, pathDict: Dict[int, Path]) -> Camera:
     return Camera(position=position, target=target)
 
 
-def _parseTextPosition(position: proto.TextPosition) -> str:
+def _parseTextPosition(position: proto.TextPosition.ValueType) -> str:
     if position == proto.TextPosition.CENTER:
-        position = "center"
+        return "center"
     elif position == proto.TextPosition.UPPER_RIGHT:
-        position = "upper right"
+        return "upper right"
     elif position == proto.TextPosition.TOP:
-        position = "top"
+        return "top"
     elif position == proto.TextPosition.UPPER_LEFT:
-        position = "upper left"
+        return "upper left"
     elif position == proto.TextPosition.LEFT:
-        position = "left"
+        return "left"
     elif position == proto.TextPosition.LOWER_LEFT:
-        position = "lower left"
+        return "lower left"
     elif position == proto.TextPosition.BOTTOM:
-        position = "bottom"
+        return "bottom"
     elif position == proto.TextPosition.LOWER_RIGHT:
-        position = "lower right"
+        return "lower right"
     elif position == proto.TextPosition.RIGHT:
-        position = "right"
+        return "right"
+    else:
+        # default
+        return "lower left"
 
 
 ################################ Properties ####################################
+
+
+@overload
+def _parseScalarProperty(
+    p: proto.ScalarProperty, graphDict: Dict[int, Graph], optional: Literal[True]
+) -> ScalarProperty:
+    ...
+
+
+@overload
+def _parseScalarProperty(
+    p: proto.ScalarProperty, graphDict: Dict[int, Graph], optional: Literal[False]
+) -> Optional[ScalarProperty]:
+    ...
 
 
 def _parseScalarProperty(
@@ -155,13 +173,27 @@ def _parseScalarProperty(
             # referenced graph does not exist -> return empty one
             return np.empty((0, 2))
     elif p.HasField("constValue"):
-        return p.constValue  # type: ignore[no-any-return]
+        return p.constValue
     elif optional:
         # not set and optional -> return None
         return None
     else:
         # not set but not optional -> return default
         return 0.0
+
+
+@overload
+def _parseVectorProperty(
+    p: proto.VectorProperty, pathDict: Dict[int, Path], optional: Literal[True]
+) -> VectorProperty:
+    ...
+
+
+@overload
+def _parseVectorProperty(
+    p: proto.VectorProperty, pathDict: Dict[int, Path], optional: Literal[False]
+) -> Optional[VectorProperty]:
+    ...
 
 
 def _parseVectorProperty(
@@ -267,7 +299,7 @@ def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int
     # properties
     start = _parseVectorProperty(line.start, pathDict, True)
     end = _parseVectorProperty(line.end, pathDict, True)
-    lineWidth = _parseScalarProperty(line.headWidth, graphDict, False)
+    lineWidth = _parseScalarProperty(line.lineWidth, graphDict, False)
     assert lineWidth is not None
     pointForward = line.pointForward
     pointBackward = line.pointBackward
@@ -295,7 +327,7 @@ def _parseOverlay(
     # properties
     text = overlay.text  # TODO: fetch referenced graphs and paths
     position = _parseTextPosition(overlay.position)
-    fontSize = _parseScalarProperty(overlay.fontSize, graphDict, False)
+    fontSize = _parseScalarProperty(overlay.fontSize, graphDict, True)
     bold = overlay.bold
     italic = overlay.italic
     # done

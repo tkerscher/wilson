@@ -472,7 +472,7 @@ class Overlay(Animatable):
         self._bold = value
 
     @property
-    def italic(self) -> bold:
+    def italic(self) -> bool:
         """`True` if the text should be drawn in italic"""
         return self._italic
 

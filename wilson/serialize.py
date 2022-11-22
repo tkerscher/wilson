@@ -1,5 +1,5 @@
 import numpy as np
-import cmasher as cmr
+import cmasher as cmr  # type: ignore[import]
 import re
 from typing import Any, Tuple
 
@@ -111,13 +111,13 @@ def serializeProject(project: Project) -> bytes:
     out.meta.speedRatio = project.speedRatio
 
     # ask protobuf to serialize
-    return out.SerializeToString()  # type: ignore[no-any-return]
+    return out.SerializeToString()
 
 
 ################################## Data ########################################
 
 
-def _serializeInterpolation(intpol: Interpolation) -> proto.Interpolation:
+def _serializeInterpolation(intpol: Interpolation) -> proto.Interpolation.ValueType:
     if intpol == Interpolation.LINEAR:
         return proto.Interpolation.LINEAR
     if intpol == Interpolation.HOLD:

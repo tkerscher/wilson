@@ -1,4 +1,5 @@
-from typing import IO, List, Union
+from __future__ import annotations
+from typing import IO, List, Literal, Union
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from wilson.project import Project
@@ -13,21 +14,23 @@ class Catalogue:
     ----------
     file: { str, IO[bytes]}
         Either the path to catalogue file, or a file-like object.
-    mode: str, default=r
+    mode: Literal['r', 'w', 'x', 'a'], default='r'
         The mode can be either read 'r', write 'w', exclusive create 'x',
         or append 'a'.
     """
 
-    def __init__(self, file: Union[str, IO[bytes]], mode: str = "r") -> None:
+    def __init__(
+        self, file: Union[str, IO[bytes]], mode: Literal["r", "w", "x", "a"] = "r"
+    ) -> None:
         self._archive = ZipFile(file, mode, ZIP_DEFLATED)
 
-    def __enter__(self):
+    def __enter__(self) -> Catalogue:
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback) -> None:  # type: ignore[no-untyped-def]
         self.close()
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
 
     def namelist(self) -> List[str]:
