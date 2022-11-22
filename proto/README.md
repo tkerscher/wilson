@@ -11,7 +11,7 @@ yarn protoc #unix
 yarn protoc_win #windows
 ```
 
-To compile them instead into python files run
+To compile them instead into python files run (requires `mypy-protobuf`)
 
 ```bash
 yarn protopy
