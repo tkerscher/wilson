@@ -17,14 +17,14 @@
 <script setup lang="ts">
 import "./style.css";
 
-import GraphExplorer from './components/tabs/GraphExplorer.vue';
-import GraphPlot from './components/pages/GraphPlot.vue';
-import ResizableContainer from './components/ResizableContainer.vue';
+import GraphExplorer from "./components/tabs/GraphExplorer.vue";
+import GraphPlot from "./components/pages/GraphPlot.vue";
+import ResizableContainer from "./components/ResizableContainer.vue";
 
-import { onMounted } from 'vue';
-import { extractGraphs } from './plot/openPlot';
-import { GraphHandle, useGraphs } from './stores/graphs';
-import { useTheme } from './stores/theme';
+import { onMounted } from "vue";
+import { extractGraphs } from "./plot/openPlot";
+import { GraphHandle, useGraphs } from "./stores/graphs";
+import { useTheme } from "./stores/theme";
 const graphs = useGraphs();
 //eslint-disable-next-line @typescript-eslint/no-unused-vars
 const theme = useTheme(); //sideeffect
@@ -32,7 +32,7 @@ const theme = useTheme(); //sideeffect
 onMounted(() => {
     extractGraphs()
         .then(graphs => graphs.map(g => g as GraphHandle))
-        .then(gs => graphs.$patch({ graphs: gs}));
+        .then(gs => graphs.$patch({ graphs: gs }));
 });
 </script>
 
@@ -42,7 +42,7 @@ onMounted(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  
+
   position: fixed;
   top: 0;
   bottom: 0;

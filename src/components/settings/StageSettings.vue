@@ -37,17 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { useStage } from '../../stores/stage';
+import { useStage } from "../../stores/stage";
 const stage = useStage();
 
 async function openFile(e: Event) {
-  if (!e.target)
-    return;
-  
-  const fileInput = e.target as HTMLInputElement;
-  if (fileInput.files) {
-      stage.setStage(fileInput.files[0]);
-  }
+    if (!e.target)
+        return;
+
+    const fileInput = e.target as HTMLInputElement;
+    if (fileInput.files) {
+        stage.setStage(fileInput.files[0]);
+    }
 }
 </script>
 

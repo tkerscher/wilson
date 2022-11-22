@@ -40,15 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import SearchInput from '../input/SearchInput.vue';
+import SearchInput from "../input/SearchInput.vue";
 
 import { computed, ref } from "vue";
-import { useGraphs } from '../../stores/graphs';
+import { useGraphs } from "../../stores/graphs";
 const graphs = useGraphs();
 
 const showHidden = ref(false);
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const filteredGraphs = computed(() =>
     graphs.graphs.filter(g => g.name.includes(searchQuery.value) && //search query
      (showHidden.value || g.name.charAt(0) != ".")));                //hidden graphs

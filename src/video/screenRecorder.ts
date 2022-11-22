@@ -1,4 +1,4 @@
-import { createDownload } from '../util/download';
+import { createDownload } from "../util/download";
 
 const mime = "video/webm";
 const chunkSize = 3000;

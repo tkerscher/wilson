@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
 const props = defineProps<{
     modelValue: number
@@ -26,29 +26,29 @@ const props = defineProps<{
     maxValue: number
 }>();
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: number): void
-    (e: 'scrubbingStart'): void
-    (e: 'scrubbingEnd'): void
+    (e: "update:modelValue", value: number): void
+    (e: "scrubbingStart"): void
+    (e: "scrubbingEnd"): void
 }>();
 
 const timeline = ref<HTMLDivElement|null>(null);
-const ratio = computed(() => (props.modelValue - props.minValue) / (props.maxValue - props.minValue) * 100 + '%');
+const ratio = computed(() => (props.modelValue - props.minValue) / (props.maxValue - props.minValue) * 100 + "%");
 
 function timelineDown(e: MouseEvent) {
     if (!timeline.value)
         return;
 
-    emits('scrubbingStart');
-    
+    emits("scrubbingStart");
+
     const newRatio = e.offsetX / timeline.value.clientWidth;
     const newValue = newRatio * (props.maxValue - props.minValue) + props.minValue;
-    emits('update:modelValue', newValue);
+    emits("update:modelValue", newValue);
 
     document.addEventListener("mousemove", timelineMove);
     document.addEventListener("mouseup", timelineUp);
 }
 function timelineUp() {
-    emits('scrubbingEnd');
+    emits("scrubbingEnd");
 
     document.removeEventListener("mousemove", timelineMove);
     document.removeEventListener("mouseup", timelineUp);
@@ -56,22 +56,22 @@ function timelineUp() {
 function timelineMove(e: MouseEvent) {
     if (!timeline.value)
         return;
-    
+
     //We're listening on the document -> reconstruct x relative to timeline div
     const rect = timeline.value.getBoundingClientRect();
     const offsetX = e.pageX - rect.left;
-    
+
     //Mouse might be outside the timeline -> clamp value
     if (offsetX < 0) {
-        emits('update:modelValue', props.minValue);
+        emits("update:modelValue", props.minValue);
     }
     else if(offsetX > rect.width) {
-        emits('update:modelValue', props.maxValue);
+        emits("update:modelValue", props.maxValue);
     }
     else {
         const newRatio = offsetX / rect.width;
         const newValue = newRatio * (props.maxValue - props.minValue) + props.minValue;
-        emits('update:modelValue', newValue);
+        emits("update:modelValue", newValue);
     }
 }
 </script>

@@ -36,7 +36,7 @@ function alignVector(dir: Vector3): Quaternion {
     let axis = EY.cross(dir);
     //get rotation angle
     let theta = Math.acos(Vector3.Dot(EY, dir));
-    
+
     //Check if parallel, it might be actually 180 degree
     // -> check y component (pos -> 0, neg -> 180)
     //also the rotation axis will be degenerate
@@ -60,16 +60,16 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
     let mesh;
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
-        mesh = MeshBuilder.CreateCylinder(line.name, { height: 1.0 });        
+        mesh = MeshBuilder.CreateCylinder(line.name, { height: 1.0 });
     }
     else if(line.pointForward && !line.pointBackward) {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: forwardArrowShape, tessellation: 24});
+        mesh = MeshBuilder.CreateLathe(line.name, { shape: forwardArrowShape, tessellation: 24 });
     }
     else if(!line.pointForward && line.pointBackward) {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: backwardArrowShape, tessellation: 24});
+        mesh = MeshBuilder.CreateLathe(line.name, { shape: backwardArrowShape, tessellation: 24 });
     }
     else {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: doubleArrowShape, tessellation: 24});
+        mesh = MeshBuilder.CreateLathe(line.name, { shape: doubleArrowShape, tessellation: 24 });
     }
     tool.applyMetadata(mesh, line);
 
@@ -82,9 +82,9 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
 
     //Short cut: Check if we need the lengthy calculation
     //We dont if there is nothing to animate
-    if (line.start?.source?.$case != 'pathId' && line.end?.source?.$case != 'pathId') {
-        const start = line.start?.source?.constValue ?? { x:0, y:0, z:0 };
-        const end = line.end?.source?.constValue ?? { x:0, y:0, z:0 };
+    if (line.start?.source?.$case != "pathId" && line.end?.source?.$case != "pathId") {
+        const start = line.start?.source?.constValue ?? { x: 0, y: 0, z: 0 };
+        const end = line.end?.source?.constValue ?? { x: 0, y: 0, z: 0 };
         const dir = new Vector3(end.x - start.x , end.y - start.y, end.z - start.z);
 
         mesh.scaling.y = dir.length();
@@ -101,12 +101,12 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
         //distances by interpolating both
 
         let times = new Array<number>();
-        if (line.start?.source?.$case == 'pathId') {
+        if (line.start?.source?.$case == "pathId") {
             const id = line.start.source.pathId;
             const path = tool.project.paths.find(p => p.id == id);
             path?.points.forEach(p => times.push(p.time));
         }
-        if (line.end?.source?.$case == 'pathId') {
+        if (line.end?.source?.$case == "pathId") {
             const id = line.end.source.pathId;
             const path = tool.project.paths.find(p => p.id == id);
             path?.points.forEach(p => times.push(p.time));
@@ -131,11 +131,11 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
         const endInt = new PathInterpolator(line.end, tool.project);
 
         //alloc animations
-        const lengthAnimation = new Animation(line.name + '_length', "scaling.y",
+        const lengthAnimation = new Animation(line.name + "_length", "scaling.y",
             1.0, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-        const rotAnimation = new Animation(line.name + '_rot', "rotationQuaternion",
+        const rotAnimation = new Animation(line.name + "_rot", "rotationQuaternion",
             1.0, Animation.ANIMATIONTYPE_QUATERNION, Animation.ANIMATIONLOOPMODE_CYCLE);
-        
+
         //We can finally create the animation
         const lengthKeys = new Array<IAnimationKey>();
         const rotKeys = new Array<IAnimationKey>();

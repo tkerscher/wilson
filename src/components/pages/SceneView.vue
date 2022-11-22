@@ -15,27 +15,27 @@
 </template>
 
 <script setup lang="ts">
-import Toolbar from '../input/ToolbarInput.vue';
-import { nextTick,  onBeforeUnmount, onMounted, ref } from 'vue';
+import Toolbar from "../input/ToolbarInput.vue";
+import { nextTick,  onBeforeUnmount, onMounted, ref } from "vue";
 
-import { SceneController } from '../../scene/controller/controller';
-import { createController } from '../../scene/controller/factory';
+import { SceneController } from "../../scene/controller/controller";
+import { createController } from "../../scene/controller/factory";
 
-import { CameraControl } from '../../input/cameraControl';
-import { PlayerControl } from '../../input/playerControl';
-import { ScenePointerProxy } from '../../input/scenePointerProxy';
+import { CameraControl } from "../../input/cameraControl";
+import { PlayerControl } from "../../input/playerControl";
+import { ScenePointerProxy } from "../../input/scenePointerProxy";
 
-import { useCatalogue } from '../../stores/catalogue';
-import { usePlayer } from '../../stores/player';
-import { useProject } from '../../stores/project';
-import { useResolution } from '../../stores/resolution';
-import { MutationType } from 'pinia';
-import { getCurrentTheme } from '../../scene/theme';
-import { ScreenRecorder } from '../../video/screenRecorder';
-import { CatalogueControl } from '../../input/catalogueControl';
-import { ControllerAdapter } from '../../scene/bus/controllerAdapter';
-import { useStage } from '../../stores/stage';
-import { useTheme } from '../../stores/theme';
+import { useCatalogue } from "../../stores/catalogue";
+import { usePlayer } from "../../stores/player";
+import { useProject } from "../../stores/project";
+import { useResolution } from "../../stores/resolution";
+import { MutationType } from "pinia";
+import { getCurrentTheme } from "../../scene/theme";
+import { ScreenRecorder } from "../../video/screenRecorder";
+import { CatalogueControl } from "../../input/catalogueControl";
+import { ControllerAdapter } from "../../scene/bus/controllerAdapter";
+import { useStage } from "../../stores/stage";
+import { useTheme } from "../../stores/theme";
 
 const DefaultTitle = document.title;
 
@@ -59,7 +59,7 @@ function buildScene() {
     }
 
     //build scene
-    controller.load(project);    
+    controller.load(project);
 
     //apply theme
     controller.setTheme(getCurrentTheme());
@@ -68,13 +68,13 @@ function buildScene() {
     if (player.isPlaying) {
         controller.play();
     }
-    
+
     //apply stage
     stage.applyStage();
 
     //Change title
     if (project.meta?.name)
-        document.title = project.meta.name + ' | ' + DefaultTitle;
+        document.title = project.meta.name + " | " + DefaultTitle;
 }
 project.$subscribe(() => buildScene());
 
@@ -168,7 +168,7 @@ function resizeCanvas() {
         scale.value = 1.0;
         transX.value = 0;
         transY.value = 0;
-    }    
+    }
 }
 const resizer = new ResizeObserver(resizeCanvas);
 resolution.$subscribe((mutation, state) => {
@@ -230,10 +230,10 @@ onMounted(async () => {
     playerControl = new PlayerControl(player);
 
     //Recorder
-    let videoName = project.meta?.name ?? '';
+    let videoName = project.meta?.name ?? "";
     if (videoName.length == 0)
         videoName = "event";
-    recorder = new ScreenRecorder(canvas.value, videoName + '.webm');
+    recorder = new ScreenRecorder(canvas.value, videoName + ".webm");
 });
 onBeforeUnmount(() => {
     resizer.disconnect();

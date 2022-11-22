@@ -25,16 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { SceneCommander } from '../../scene/bus/commandBus';
-import { useProject } from '../../stores/project';
+import { computed, ref } from "vue";
+import { SceneCommander } from "../../scene/bus/commandBus";
+import { useProject } from "../../stores/project";
 const project = useProject();
 
 const props = defineProps<{
     searchQuery: string
 }>();
 
-const DefaultColor = '#ff8800'; //orange
+const DefaultColor = "#ff8800"; //orange
 interface PathHandle {
     name: string
     id: number
@@ -48,7 +48,7 @@ function parseProject() {
         name: p.name,
         id: p.id,
         color: DefaultColor,
-        visible: false}));
+        visible: false }));
 }
 parseProject();
 project.$subscribe(parseProject);

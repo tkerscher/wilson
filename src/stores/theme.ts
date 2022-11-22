@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useTheme = defineStore('theme', () => {
+export const useTheme = defineStore("theme", () => {
     const useDarkTheme = ref(false);
     function toggleTheme() {
         useDarkTheme.value = !useDarkTheme.value;
         //set data attribute
-        document.documentElement.setAttribute('theme',
+        document.documentElement.setAttribute("theme",
             useDarkTheme.value ? "dark" : "light");
         //save setting
         window.localStorage.setItem("theme",
@@ -21,15 +21,15 @@ export const useTheme = defineStore('theme', () => {
     else {
         //query browser what to use
         useDarkTheme.value = window.matchMedia(
-            '(prefers-color-scheme: dark)').matches;
+            "(prefers-color-scheme: dark)").matches;
     }
 
     //tell css about the theme
-    document.documentElement.setAttribute('theme',
-            useDarkTheme.value ? "dark" : "light");
+    document.documentElement.setAttribute("theme",
+        useDarkTheme.value ? "dark" : "light");
 
     //listen to storage event to keep this sync across windows
-    addEventListener('storage', (ev: StorageEvent) => {
+    addEventListener("storage", (ev: StorageEvent) => {
         if (ev.key == "theme" &&
             (ev.newValue == "dark") != useDarkTheme.value)
         {

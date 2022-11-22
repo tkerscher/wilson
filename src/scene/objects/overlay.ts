@@ -9,13 +9,13 @@ import { SceneBuildTool } from "./tools";
 export class OverlayBuilder {
     #tool: SceneBuildTool;
     #panels: Map<number, StackPanel>;
-    
+
     rootContainer: Rectangle;
 
     constructor(tool: SceneBuildTool) {
         this.#tool = tool;
         this.#panels = new Map<number, StackPanel>();
-        
+
         //build root container
         this.rootContainer = new Rectangle("textRoot");
         this.rootContainer.width = 1.0;
@@ -32,7 +32,7 @@ export class OverlayBuilder {
 
         //meta
         this.#tool.applyMetadata(block, overlay);
-        
+
         //set params
         this.#tool.textEngine.addText(block, overlay.text);
         this.#tool.parseScalar(overlay.fontSize, block, "fontSize");
@@ -41,7 +41,7 @@ export class OverlayBuilder {
             block.fontWeight = "800";
         if (overlay.italic)
             block.fontStyle = "italic";
-        
+
         //position
         this.#getPanel(overlay.position).addControl(block);
     }

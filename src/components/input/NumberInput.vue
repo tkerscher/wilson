@@ -21,7 +21,7 @@ const props = defineProps<{
     disabled?: boolean
 }>();
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: number): void
+    (e: "update:modelValue", value: number): void
 }>();
 
 const invalid = ref(false);
@@ -35,7 +35,7 @@ function cancelEdit() {
 function endEdit() {
     //emit only if valid
     if (!invalid.value)
-        emits('update:modelValue', value.value);
+        emits("update:modelValue", value.value);
 }
 
 function checkInput(e: Event) {

@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
+import { nextTick, ref } from "vue";
 
 //Speeds for dragging units per pixel
 const normalSpeed = 1.0;
@@ -40,7 +40,7 @@ const props = defineProps<{
     prefix: string,
 }>();
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: number): void
+    (e: "update:modelValue", value: number): void
 }>();
 
 const isEditing = ref(false);
@@ -70,7 +70,7 @@ function endEdit() {
     }
 
     if (valid.value) {
-        emits('update:modelValue', Number(editDiv.value.textContent));
+        emits("update:modelValue", Number(editDiv.value.textContent));
     }
 
     isEditing.value = false;
@@ -80,7 +80,7 @@ const numberExp = /^\d*(?:\.\d+)?$/;
 function checkInput() {
     if (!editDiv.value)
         return;
-    
+
     const content = editDiv.value.innerHTML;
     valid.value = !!content.trim().match(numberExp);
 }
@@ -101,16 +101,16 @@ function onWheel(e: WheelEvent) {
     else if (newValue > props.maxValue) {
         newValue = props.maxValue;
     }
-    emits('update:modelValue', newValue);
+    emits("update:modelValue", newValue);
 }
 
 function startDrag() {
-    document.addEventListener('mousemove', dragging);
-    document.addEventListener('mouseup', endDrag);
+    document.addEventListener("mousemove", dragging);
+    document.addEventListener("mouseup", endDrag);
 }
 function endDrag() {
-    document.removeEventListener('mousemove', dragging);
-    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener("mousemove", dragging);
+    document.removeEventListener("mouseup", endDrag);
 }
 function dragging(e: MouseEvent) {
     const delta = e.movementX * (e.altKey ? fineSpeed : normalSpeed);
@@ -121,7 +121,7 @@ function dragging(e: MouseEvent) {
     else if (newValue > props.maxValue) {
         newValue = props.maxValue;
     }
-    emits('update:modelValue', newValue);
+    emits("update:modelValue", newValue);
 }
 </script>
 
@@ -130,7 +130,7 @@ function dragging(e: MouseEvent) {
     user-select: none;
 }
 .dial-input:hover {
-    cursor: ew-resize;    
+    cursor: ew-resize;
 }
 .dial-input:focus {
     border-bottom: 2px solid var(--highlight1);
@@ -144,7 +144,7 @@ function dragging(e: MouseEvent) {
     margin-bottom: -2px;
     overflow: hidden;
 }
-.input-edit:focus {    
+.input-edit:focus {
     outline: 0px solid transparent;
 }
 .input-valid {

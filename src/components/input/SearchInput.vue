@@ -21,21 +21,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 const input = ref<HTMLInputElement|null>(null);
 
 const props = defineProps<{
     modelValue: string
 }>();
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: string): void
+    (e: "update:modelValue", value: string): void
 }>();
 
 const nonEmpty = computed(() => props.modelValue.length > 0);
 
 function clear() {
     if (props.modelValue.length > 0) {
-        emits('update:modelValue', '');
+        emits("update:modelValue", "");
     }
     else {
         input.value?.blur();
@@ -47,7 +47,7 @@ function finish() {
 }
 
 function onInput(e: Event) {
-    emits('update:modelValue', (e.target as HTMLInputElement).value);
+    emits("update:modelValue", (e.target as HTMLInputElement).value);
 }
 
 //handle global shortcut
@@ -57,7 +57,7 @@ function focus(e: KeyboardEvent) {
         !e.altKey &&
         !e.metaKey &&
         !e.shiftKey &&
-        e.key == 'q')
+        e.key == "q")
     {
         e.preventDefault();
 
@@ -65,10 +65,10 @@ function focus(e: KeyboardEvent) {
     }
 }
 onMounted(() => {
-    document.addEventListener('keydown', focus);
+    document.addEventListener("keydown", focus);
 });
 onBeforeUnmount(() => {
-    document.removeEventListener('keydown', focus);
+    document.removeEventListener("keydown", focus);
 });
 </script>
 

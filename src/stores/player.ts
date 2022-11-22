@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 const MinSpeed = 0.01;
 const MaxSpeed = 999.99;
 
-export const usePlayer = defineStore('player', {
+export const usePlayer = defineStore("player", {
     state: () => ({
         currentFrame: 0.0,
         startFrame: 0.0,

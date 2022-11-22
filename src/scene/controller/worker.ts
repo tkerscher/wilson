@@ -38,14 +38,14 @@ export class WorkerController implements SceneController {
         function handleMessage(ev: MessageEvent<WorkerEvent>) {
             const event = ev.data;
             switch(event.type) {
-            case 'onAnimationLoop':
+            case "onAnimationLoop":
                 controller.#onAnimationLoopCallbacks.forEach(fn => fn());
                 break;
-            case 'onFrameChanged':
+            case "onFrameChanged":
                 controller.#currentFrame = event.currentFrame;
                 controller.#onFrameChangedCallbacks.forEach(fn => fn(event.currentFrame));
                 break;
-            case 'onObjectPicked':
+            case "onObjectPicked":
                 controller.#onObjectPickedCallbacks.forEach(fn => fn(event.objectId));
                 break;
             }
@@ -72,7 +72,7 @@ export class WorkerController implements SceneController {
             worker.postMessage({
                 canvas: offscreen
             }, [offscreen]);
-        });        
+        });
     }
 
     #sendCommand(cmd: WorkerCommand, transfer?: Transferable[]) {
@@ -94,44 +94,44 @@ export class WorkerController implements SceneController {
     set speedRatio(value: number) {
         this.#speedRatio = value;
         this.#sendCommand({
-            type: 'setSpeedRatio',
+            type: "setSpeedRatio",
             value: value
         });
     }
     load(project: Project): void {
         const serialized = Project.encode(project).finish().buffer;
         this.#sendCommand({
-            type: 'load',
+            type: "load",
             data: serialized
         }, [serialized]);
-        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png';
+        this.screenshotFilename = (project.meta?.name ?? "Screenshot") + ".png";
     }
     loadStage(url: string): void {
         this.#sendCommand({
-            type: 'loadStage',
+            type: "loadStage",
             url: url
         });
     }
     removeStage(): void {
         this.#sendCommand({
-            type: 'removeStage'
+            type: "removeStage"
         });
     }
     play(): void {
         this.#isPlaying = true;
         this.#sendCommand({
-            type: 'play'
+            type: "play"
         });
     }
     pause(): void {
         this.#isPlaying = false;
         this.#sendCommand({
-            type: 'pause'
+            type: "pause"
         });
     }
     goToFrame(frame: number): void {
         this.#sendCommand({
-            type: 'goToFrame',
+            type: "goToFrame",
             frame: frame
         });
     }
@@ -143,31 +143,31 @@ export class WorkerController implements SceneController {
     }
     resetCamera(): void {
         this.#sendCommand({
-            type: 'resetCamera'
+            type: "resetCamera"
         });
     }
     select(id: number): void {
         this.#sendCommand({
-            type: 'select',
+            type: "select",
             id: id
         });
     }
     target(id: number): void {
         this.#sendCommand({
-            type: 'target',
+            type: "target",
             id: id
         });
     }
     setGroupEnabled(group: string, enabled: boolean): void {
         this.#sendCommand({
-            type: 'setGroupEnabled',
+            type: "setGroupEnabled",
             group: group,
             enabled: enabled
         });
     }
     setPathEnabled(id: number, enabled: boolean, color: string): void {
         this.#sendCommand({
-            type: 'setPathEnabled',
+            type: "setPathEnabled",
             id: id,
             enabled: enabled,
             color: color
@@ -182,20 +182,20 @@ export class WorkerController implements SceneController {
     setGridEnabled(enabled: boolean): void {
         this.#isGridEnabled = enabled;
         this.#sendCommand({
-            type: 'setGridEnabled',
+            type: "setGridEnabled",
             enabled: enabled
         });
     }
     resize(width: number, height: number): void {
         this.#sendCommand({
-            type: 'resize',
+            type: "resize",
             width: width,
             height: height
         });
     }
     setTheme(theme: Theme): void {
         this.#sendCommand({
-            type: 'setTheme',
+            type: "setTheme",
             theme: theme
         });
     }
@@ -209,7 +209,7 @@ export class WorkerController implements SceneController {
 
     simulatePointerDown(x: number, y: number): void {
         this.#sendCommand({
-            type: 'pointerDown',
+            type: "pointerDown",
             x: x,
             y: y
         });
@@ -217,7 +217,7 @@ export class WorkerController implements SceneController {
 
     simulatePointerUp(x: number, y: number): void {
         this.#sendCommand({
-            type: 'pointerUp',
+            type: "pointerUp",
             x: x,
             y: y
         });
@@ -225,7 +225,7 @@ export class WorkerController implements SceneController {
 
     simulatePointerMove(x: number, y: number): void {
         this.#sendCommand({
-            type: 'pointermove',
+            type: "pointermove",
             x: x,
             y: y
         });
@@ -233,27 +233,27 @@ export class WorkerController implements SceneController {
 
     panCamera(dx: number, dy: number): void {
         this.#sendCommand({
-            type: 'panCamera',
+            type: "panCamera",
             dx: dx,
             dy: dy
         });
     }
     rotateCamera(alpha: number, beta: number): void {
         this.#sendCommand({
-            type: 'rotateCamera',
+            type: "rotateCamera",
             alpha: alpha,
             beta: beta
         });
     }
     zoomCamera(delta: number): void {
         this.#sendCommand({
-            type: 'zoom',
+            type: "zoom",
             delta: delta
         });
     }
     setCameraTarget(x: number, y: number, z: number): void {
         this.#sendCommand({
-            type: 'setCameraTarget',
+            type: "setCameraTarget",
             x: x,
             y: y,
             z: z
@@ -261,14 +261,14 @@ export class WorkerController implements SceneController {
     }
     setCameraRotation(alpha: number, beta: number): void {
         this.#sendCommand({
-            type: 'setCameraRotation',
+            type: "setCameraRotation",
             alpha: alpha,
             beta: beta
         });
     }
     setCameraZoom(distance: number): void {
         this.#sendCommand({
-            type: 'setCameraZoom',
+            type: "setCameraZoom",
             distance: distance
         });
     }

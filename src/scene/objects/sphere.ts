@@ -45,8 +45,8 @@ export class SphereBuilder {
         this.#tool.parseVector(sphere.position, obj, "position");
 
         //See if static object
-        if (sphere.radius?.source?.$case != 'graphId' &&
-            sphere.position?.source?.$case != 'pathId')
+        if (sphere.radius?.source?.$case != "graphId" &&
+            sphere.position?.source?.$case != "pathId")
         {
             obj.freezeWorldMatrix();
         }
@@ -56,13 +56,13 @@ export class SphereBuilder {
         //! You must externally ensure that color is indeed static
         //  Only then we can safely assume, that the next call will
         //  NOT create a new material, but return a static one
-        
+
         //ask builder for color (material)
-        const mat = this.#tool.parseColor(color, '');
+        const mat = this.#tool.parseColor(color, "");
         const clr = mat.diffuseColor;
         //create key from color
         const key = toHex(clr.r, clr.g, clr.b, mat.alpha);
-        
+
         //check if that color already has a sphere template
         const template = this.#template.get(key);
         if (template) {
@@ -71,7 +71,7 @@ export class SphereBuilder {
         }
         else {
             //new color -> create new template
-            const mesh = MeshBuilder.CreateSphere('sphereTemplate_#' + key, {}, this.#tool.scene);
+            const mesh = MeshBuilder.CreateSphere("sphereTemplate_#" + key, {}, this.#tool.scene);
             mesh.isVisible = false;
             mesh.material = this.#tool.parseColor(color, "");
             //register template

@@ -20,8 +20,8 @@ export interface Theme {
 export function getCurrentTheme(): Theme {
     //retrieve colors from css
     const style = getComputedStyle(document.documentElement);
-    const color = style.getPropertyValue('--scene-font-color').trim();
-    const clear = style.getPropertyValue('--scene-background').trim();
+    const color = style.getPropertyValue("--scene-font-color").trim();
+    const clear = style.getPropertyValue("--scene-background").trim();
     //const grid  = style.getPropertyValue('--grid-color').trim()
 
     return {

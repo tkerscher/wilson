@@ -48,13 +48,13 @@ export class PlayerControl {
         };
 
         //register handler
-        document.addEventListener('keydown', this.#handlerRepeat);
-        document.addEventListener('keydown', this.#handlerOnce);
+        document.addEventListener("keydown", this.#handlerRepeat);
+        document.addEventListener("keydown", this.#handlerOnce);
     }
 
     dispose() {
-        document.removeEventListener('keydown', this.#handlerOnce);
-        document.removeEventListener('keydown', this.#handlerRepeat);
+        document.removeEventListener("keydown", this.#handlerOnce);
+        document.removeEventListener("keydown", this.#handlerRepeat);
 
         this.#handlerOnce = () => undefined;
         this.#handlerRepeat = () => undefined;

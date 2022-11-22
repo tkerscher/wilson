@@ -11,8 +11,8 @@ export class CatalogueControl {
     constructor(c: Catalogue) {
         //create hotkeys
         const hotKeysOnce = new KeyMap([
-            ['KeyI', () => c.loadPreviousProject()],
-            ['KeyO', () => c.loadNextProject()]
+            ["KeyI", () => c.loadPreviousProject()],
+            ["KeyO", () => c.loadNextProject()]
         ]);
 
         //create handler
@@ -22,11 +22,11 @@ export class CatalogueControl {
         };
 
         //register handler
-        document.addEventListener('keydown', this.#handlerOnce);
+        document.addEventListener("keydown", this.#handlerOnce);
     }
 
     dispose() {
-        document.removeEventListener('keydown', this.#handlerOnce);
+        document.removeEventListener("keydown", this.#handlerOnce);
 
         this.#handlerOnce = () => undefined;
     }

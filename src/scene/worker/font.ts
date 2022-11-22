@@ -17,17 +17,17 @@ interface FontOffset {
 function getFontOffset(font: string): FontOffset {
     if (!canvas || !ctx) {
         canvas = new OffscreenCanvas(64,64);
-        ctx = canvas.getContext('2d'); 
+        ctx = canvas.getContext("2d");
         if (!ctx) {
-            throw Error('2D context in offscreen not available!');
+            throw Error("2D context in offscreen not available!");
         }
     }
 
     ctx.font = font;
     ctx.textBaseline = "alphabetic";
-    const descent = ctx.measureText('Hg').actualBoundingBoxDescent;
+    const descent = ctx.measureText("Hg").actualBoundingBoxDescent;
     ctx.textBaseline = "bottom";
-    const ascent = ctx.measureText('Hg').actualBoundingBoxAscent;
+    const ascent = ctx.measureText("Hg").actualBoundingBoxAscent;
     return { ascent: ascent, height: ascent + descent, descent: descent };
 }
 

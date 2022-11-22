@@ -47,10 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
-import { Group } from './ObjectGroup';
-import { SceneCommander } from '../../scene/bus/commandBus';
-import { SceneEventBus } from '../../scene/bus/eventBus';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { Group } from "./ObjectGroup";
+import { SceneCommander } from "../../scene/bus/commandBus";
+import { SceneEventBus } from "../../scene/bus/eventBus";
 
 const selectedId = ref<number|null>(null);
 const props = defineProps<{
@@ -72,18 +72,18 @@ function selectNext(e: KeyboardEvent) {
     //repeated is a bit wonky -> disable
     if (e.repeat)
         return;
-    
+
     const div = e.target as HTMLDivElement;
     if (div.nextElementSibling) {
-      const next = div.nextElementSibling as HTMLDivElement;
-      const name = next.getAttribute('name');
-      if (name) {
-          //name is of form 'name5053' -> select numbers
-          const id = parseInt(name.substring(4));
-          //update
-          SceneCommander.SelectObject(id);
-      }
-    }   
+        const next = div.nextElementSibling as HTMLDivElement;
+        const name = next.getAttribute("name");
+        if (name) {
+            //name is of form 'name5053' -> select numbers
+            const id = parseInt(name.substring(4));
+            //update
+            SceneCommander.SelectObject(id);
+        }
+    }
 }
 function selectPrevious(e: KeyboardEvent) {
     //repeated is a bit wonky -> disable
@@ -92,15 +92,15 @@ function selectPrevious(e: KeyboardEvent) {
 
     const div = e.target as HTMLDivElement;
     if (div.previousElementSibling) {
-      const prev = div.previousElementSibling as HTMLDivElement;
-      const name = prev.getAttribute('name');
-      if (name) {
-          //name is of form 'name5053' -> select numbers
-          const id = parseInt(name.substring(4));
-          //update
-          SceneCommander.SelectObject(id);
-      }
-    } 
+        const prev = div.previousElementSibling as HTMLDivElement;
+        const name = prev.getAttribute("name");
+        if (name) {
+            //name is of form 'name5053' -> select numbers
+            const id = parseInt(name.substring(4));
+            //update
+            SceneCommander.SelectObject(id);
+        }
+    }
 }
 
 function toggleGroup(group: Group) {
@@ -114,7 +114,7 @@ function handleSelection(id: number|null) {
 
     if (id == null)
         return;
-    
+
     //Check if the selected object is in this group
     if (!filtered.value.find(o => o.id == id))
         return;
@@ -122,18 +122,18 @@ function handleSelection(id: number|null) {
     //Expand if necessary
     if (!expanded.value)
         expanded.value = true;
-    
+
     //Get corresponding div (wait for rendering)
     nextTick(() => {
-        const item = contentDiv.value?.querySelector('[name=item'+id+']');
+        const item = contentDiv.value?.querySelector("[name=item"+id+"]");
         if (item) {
-          const div = item as HTMLDivElement;
-          div.focus();
+            const div = item as HTMLDivElement;
+            div.focus();
         }
     });
 }
-onMounted(() => SceneEventBus.on('ObjectPicked', handleSelection));
-onBeforeUnmount(() => SceneEventBus.off('ObjectPicked', handleSelection));
+onMounted(() => SceneEventBus.on("ObjectPicked", handleSelection));
+onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
 </script>
 
 <style scoped>

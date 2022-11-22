@@ -38,7 +38,7 @@ export class PathVisualizer {
         const path = this.#activePaths.get(id) ?? this.#createPath(id);
         if (!path)
             return;
-        
+
         //set
         path.setEnabled(enabled);
         const mat = path.material as StandardMaterial;
@@ -60,9 +60,9 @@ export class PathVisualizer {
         //Create Tube
         const tube = MeshBuilder.CreateTube(path.name, {
             path: points,
-            radius: 0.05},
-            this.#scene);
-        tube.material = new StandardMaterial(path.name + '_material', this.#scene);
+            radius: 0.05 },
+        this.#scene);
+        tube.material = new StandardMaterial(path.name + "_material", this.#scene);
 
         //Done
         this.#activePaths.set(id, tube);

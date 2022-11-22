@@ -23,7 +23,7 @@ export class LocalController implements SceneController {
     #container: SceneContainer|null = null;
 
     #stageNode: AbstractMesh|null = null;
-    
+
     #defaultCameraPosition: Vector3 = Vector3.Zero();
     #defaultCameraTarget: Vector3 = Vector3.Zero();
 
@@ -31,9 +31,9 @@ export class LocalController implements SceneController {
     #onAnimationLoopCallbacks: Array<() => void> = [];
     #onFrameChangedCallbacks: Array<(currentFrame: number) => void> = [];
     #onObjectPickedCallbacks: Array<(id: number|null) => void> = [];
-    
+
     screenshotFilename = "";
-    
+
     constructor(canvas: HTMLCanvasElement|OffscreenCanvas) {
         this.#canvas = canvas;
         //create engine
@@ -67,19 +67,19 @@ export class LocalController implements SceneController {
         //hook up callbacks
         this.#container.onAnimationTick.add(this.#notifyAnimationTick.bind(this));
         this.#container.animation.onAnimationGroupLoopObservable.add(
-            this.#notifyAnimationLoop.bind(this));   
+            this.#notifyAnimationLoop.bind(this));
 
         //create file name for screenshots
-        this.screenshotFilename = (project.meta?.name ?? 'Screenshot') + '.png';
+        this.screenshotFilename = (project.meta?.name ?? "Screenshot") + ".png";
     }
 
     loadStage(url: string): void {
         if (!this.#container)
             return;
-        
+
         //Remove previous stage
         this.removeStage();
-        
+
         //The loader is a bit heavy, so only load the code if needed
 
         const scene = this.#container.scene;
@@ -88,20 +88,20 @@ export class LocalController implements SceneController {
             await import("@babylonjs/loaders/glTF");
 
             Loader.SceneLoader.ImportMeshAsync(
-                '',
+                "",
                 url,
                 undefined,
                 scene,
                 undefined,
                 ".glb")
-            .then(result => {
-                if (result.meshes[0]) {
+                .then(result => {
+                    if (result.meshes[0]) {
                     //root node is the first one
-                    this.#stageNode = result.meshes[0];
-                    //rotate mesh upward
-                    this.#stageNode.rotate(Axis.X, -Math.PI / 2);
-                }
-            });
+                        this.#stageNode = result.meshes[0];
+                        //rotate mesh upward
+                        this.#stageNode.rotate(Axis.X, -Math.PI / 2);
+                    }
+                });
         });
     }
     removeStage(): void {
@@ -173,7 +173,7 @@ export class LocalController implements SceneController {
     target(id: number): void {
         if (!this.#container)
             return;
-        
+
         const mesh = this.#container.scene.getMeshByUniqueId(id);
         if (mesh) {
             const cam = this.#container.camera;
@@ -205,7 +205,7 @@ export class LocalController implements SceneController {
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERDOWN, {
-                type: 'pointerdown',
+                type: "pointerdown",
                 target: {},
                 preventDefault: () => undefined,
                 inputIndex: PointerInput.LeftClick,
@@ -240,7 +240,7 @@ export class LocalController implements SceneController {
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERUP, {
-                type: 'pointerup',
+                type: "pointerup",
                 target: {},
                 preventDefault: () => undefined,
                 inputIndex: PointerInput.LeftClick,
@@ -269,7 +269,7 @@ export class LocalController implements SceneController {
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERMOVE, {
-                type: 'pointermove',
+                type: "pointermove",
                 target: {},
                 preventDefault: () => undefined,
                 inputIndex: PointerInput.Move,
@@ -304,18 +304,18 @@ export class LocalController implements SceneController {
      * @param dx Horizontal distance
      * @param dy Vertical distance
      */
-     panCamera(dx: number, dy: number) {
+    panCamera(dx: number, dy: number) {
         if (!this.#container)
             return;
         //calculate normal
         const cam = this.#container.camera;
         cam.target.subtractToRef(cam.position, this.#cameraNormal);
         const scale = this.#cameraNormal.length();
-        
+
         //normalize distances
         dx = -dx / this.#engine.getRenderWidth() * scale;
         dy = dy / this.#engine.getRenderHeight() * scale;
-        
+
         //create delta
         this.#delta.copyFromFloats(dx, dy, 0);
         //rotate according to camera normal
@@ -326,14 +326,14 @@ export class LocalController implements SceneController {
         //pan camera
         cam.setTarget(cam.target.add(this.#delta));
         cam.setPosition(cam.position.add(this.#delta));
-     }
-     /**
+    }
+    /**
       * Rotates the camera around the current target relative to current
       * orientation
       * @param alpha horizontal rotation
       * @param beta vertical rotation
       */
-     rotateCamera(alpha: number, beta: number) {
+    rotateCamera(alpha: number, beta: number) {
         if (!this.#container)
             return;
         //update
@@ -347,51 +347,51 @@ export class LocalController implements SceneController {
         //assign
         this.#container.camera.alpha = alpha;
         this.#container.camera.beta = beta;
-     }
- 
-     /**
+    }
+
+    /**
       * Zooms the camera either in or out depending on the sign of delta
       * @param delta Amount to zoom
       */
-     zoomCamera(delta: number) {
+    zoomCamera(delta: number) {
         if (!this.#container)
             return;
         this.#container.camera.radius += delta;
-     }
- 
-     /**
+    }
+
+    /**
       * Sets the camera target, i.e. origin of rotation
-      * @param x 
-      * @param y 
-      * @param z 
+      * @param x
+      * @param y
+      * @param z
       */
-     setCameraTarget(x: number, y: number, z: number) {
+    setCameraTarget(x: number, y: number, z: number) {
         if (!this.#container)
             return;
         this.#container.camera.setTarget(new Vector3(x, y, z));
-     }
- 
-     /**
+    }
+
+    /**
       * Sets the camera rotation
-      * @param alpha 
-      * @param beta 
+      * @param alpha
+      * @param beta
       */
-     setCameraRotation(alpha: number, beta: number) {
+    setCameraRotation(alpha: number, beta: number) {
         if (!this.#container)
             return;
         this.#container.camera.alpha = alpha;
         this.#container.camera.beta = beta;
-     }
- 
-     /**
+    }
+
+    /**
       * Sets the camera zoom
-      * @param distance 
+      * @param distance
       */
-     setCameraZoom(distance: number) {
+    setCameraZoom(distance: number) {
         if (!this.#container)
             return;
         this.#container.camera.radius = distance;
-     }
+    }
 
     /****************************** Appearance ********************************/
 

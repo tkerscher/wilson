@@ -9,7 +9,7 @@ import { Overlay } from "../model/overlay";
 
 export type ObjectMeta = Sphere | Line | Tube | Overlay;
 
-export const useProject = defineStore('project', {
+export const useProject = defineStore("project", {
     state: (): Project => ({
         //Init empty project. See model/project
         meta: {

@@ -3,14 +3,14 @@ interface _WorkerEvent {
 }
 
 export interface AnimationLoopEvent extends _WorkerEvent {
-    type: 'onAnimationLoop'
+    type: "onAnimationLoop"
 }
 export interface FrameChangedEvent extends _WorkerEvent {
-    type: 'onFrameChanged'
+    type: "onFrameChanged"
     currentFrame: number
 }
 export interface ObjectPickedEvent extends _WorkerEvent {
-    type: 'onObjectPicked'
+    type: "onObjectPicked"
     objectId: number|null
 }
 

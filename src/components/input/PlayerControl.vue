@@ -81,17 +81,17 @@
 </template>
 
 <script setup lang="ts">
-import DialInput from './DialInput.vue';
-import SliderInput from './SliderInput.vue';
-import { useCatalogue } from '../../stores/catalogue';
-import { usePlayer } from '../../stores/player';
+import DialInput from "./DialInput.vue";
+import SliderInput from "./SliderInput.vue";
+import { useCatalogue } from "../../stores/catalogue";
+import { usePlayer } from "../../stores/player";
 const catalogue = useCatalogue();
 const player = usePlayer();
 
 const emits = defineEmits<{
-    (e: 'scrubbingStart'): void,
-    (e: 'scrubbingEnd'): void
-    (e: 'toggleFullscreen'): void
+    (e: "scrubbingStart"): void,
+    (e: "scrubbingEnd"): void
+    (e: "toggleFullscreen"): void
 }>();
 </script>
 
@@ -162,7 +162,7 @@ const emits = defineEmits<{
 
 .icon-recording {
     background-color: red;
-    animation: blink 2s infinite;  
+    animation: blink 2s infinite;
     animation-timing-function: steps(1, end);
 }
 .icon-recording:hover {

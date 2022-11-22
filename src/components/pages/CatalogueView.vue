@@ -30,7 +30,7 @@
         <SearchInput
           v-model="searchQuery"
           class="search-bar"
-        />            
+        />
       </div>
       <div class="action-bar">
         <div
@@ -114,34 +114,34 @@
 </template>
 
 <script setup lang="ts">
-import SearchInput from '../input/SearchInput.vue';
+import SearchInput from "../input/SearchInput.vue";
 
-import { computed, ref } from 'vue';
-import { useCatalogue } from '../../stores/catalogue';
-import { useTheme } from '../../stores/theme';
+import { computed, ref } from "vue";
+import { useCatalogue } from "../../stores/catalogue";
+import { useTheme } from "../../stores/theme";
 const catalogue = useCatalogue();
 const theme = useTheme();
 
 function createEntries() {
-  let id = 0;
-  return catalogue.entries.map(e => ({
-      ...e,
-      expanded: false,
-      id: id++
-  }));    
+    let id = 0;
+    return catalogue.entries.map(e => ({
+        ...e,
+        expanded: false,
+        id: id++
+    }));
 }
 let entries = ref(createEntries());
 catalogue.$subscribe(() => entries.value = createEntries());
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const filteredEntries = computed(() => entries.value.filter(
     e => e.filename.toLowerCase().includes(searchQuery.value.toLowerCase())));
 
 const dialog = ref<HTMLInputElement|null>(null);
 function onFileSelected(e: Event) {
     if (!e.target)
-      return;
-    
+        return;
+
     const fileInput = e.target as HTMLInputElement;
     if (fileInput.files) {
         fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue);
@@ -154,7 +154,7 @@ function openDialog() {
 const loadingMessage = ref<HTMLDivElement|null>(null);
 function loadProject(file: string) {
     if (loadingMessage.value)
-      loadingMessage.value.style.display = 'block';
+        loadingMessage.value.style.display = "block";
     catalogue.loadProject(file);
 }
 </script>

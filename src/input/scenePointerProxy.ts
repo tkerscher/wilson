@@ -31,15 +31,15 @@ export class ScenePointerProxy {
         };
 
         //register functions
-        canvas.addEventListener('pointerdown', this.#onPointerDown);
-        canvas.addEventListener('pointerup', this.#onPointerUp);
-        canvas.addEventListener('pointermove', this.#onPointerMove);
+        canvas.addEventListener("pointerdown", this.#onPointerDown);
+        canvas.addEventListener("pointerup", this.#onPointerUp);
+        canvas.addEventListener("pointermove", this.#onPointerMove);
     }
 
     dispose() {
-        this.#canvas.removeEventListener('pointerdown', this.#onPointerDown);
-        this.#canvas.removeEventListener('pointerup', this.#onPointerUp);
-        this.#canvas.removeEventListener('pointermove', this.#onPointerMove);
+        this.#canvas.removeEventListener("pointerdown", this.#onPointerDown);
+        this.#canvas.removeEventListener("pointerup", this.#onPointerUp);
+        this.#canvas.removeEventListener("pointermove", this.#onPointerMove);
 
         this.#onPointerDown = () => undefined;
         this.#onPointerUp = () => undefined;

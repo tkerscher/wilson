@@ -155,7 +155,7 @@ export class Description {
         helper.onPointerMoveObservable.add((data) => {
             if (!isDragging)
                 return false;
-            
+
             box.left = startX + data.x;
             box.top = startY + data.y;
         });

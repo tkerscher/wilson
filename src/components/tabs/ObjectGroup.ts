@@ -1,6 +1,6 @@
 import { Project } from "../../model/project";
 
-export type ObjectType = 'Sphere' | 'Line' | 'Tube' | 'Overlay'
+export type ObjectType = "Sphere" | "Line" | "Tube" | "Overlay"
 
 export interface Object {
     name: string //! NOTE: Copy of the name -> Not synced with project store
@@ -38,28 +38,28 @@ export function extractGroups(project: Project): Group[] {
             name: sphere.name,
             description: sphere.description,
             id: id++,
-            type: 'Sphere'
+            type: "Sphere"
         }));
     project.lines.forEach(line =>
         getGroup(line.group).members.push({
             name: line.name,
             description: line.description,
             id: id++,
-            type: 'Line'
+            type: "Line"
         }));
     project.tubes.forEach(tube =>
         getGroup(tube.group).members.push({
             name: tube.name,
             description: tube.description,
             id: id++,
-            type: 'Tube'
+            type: "Tube"
         }));
     project.overlays.forEach(overlay =>
         getGroup(overlay.group).members.push({
             name: overlay.name,
             description: overlay.description,
             id: id++,
-            type: 'Overlay'
+            type: "Overlay"
         }));
 
     return Array.from(map.values()).sort((a, b) => {
@@ -68,7 +68,7 @@ export function extractGroups(project: Project): Group[] {
             return 1;
         if (b.name.length == 0)
             return -1;
-        
+
         return a.name.localeCompare(b.name);
     });
 }

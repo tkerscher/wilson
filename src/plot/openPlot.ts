@@ -25,7 +25,7 @@ export function openPlot(graphs: Graph[]): void {
 export async function extractGraphs(): Promise<Graph[]> {
     //get blob uri
     const params = new URLSearchParams(window.location.search);
-    const dataUri = params.get('data');
+    const dataUri = params.get("data");
     if (!dataUri)
         return []; //no data passed
     const decodedUri = decodeURIComponent(dataUri);
@@ -38,7 +38,7 @@ export async function extractGraphs(): Promise<Graph[]> {
     //read number of graphs
     const count = reader.uint32();
     //read lengths of graphs
-    const lens = Array.from({length:count}, () => reader.uint32());
+    const lens = Array.from({ length: count }, () => reader.uint32());
     //read graphs
     const graphs = lens.map(l => Graph.decode(reader, l));
 

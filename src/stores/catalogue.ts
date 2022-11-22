@@ -33,7 +33,7 @@ export interface CatalogueEntry {
     meta: ProjectMeta
 }
 
-export const useCatalogue = defineStore('catalogue', () => {
+export const useCatalogue = defineStore("catalogue", () => {
     const project = useProject();
     let archive = new JSZip();  //start with empty catalogue
     let data: ArrayBuffer; //keep binary for download
@@ -51,7 +51,7 @@ export const useCatalogue = defineStore('catalogue', () => {
     function openCatalogue(buffer: ArrayBuffer): Promise<void> {
         reset();
         data = buffer;
-        
+
         return JSZip.loadAsync(buffer).then(async zip => {
             //store archive
             archive = zip;
@@ -59,7 +59,7 @@ export const useCatalogue = defineStore('catalogue', () => {
             //construct entries
             const proms = [] as Promise<void>[];
             archive.forEach((path, file) => {
-                proms.push(file.async('uint8array').then(data => {
+                proms.push(file.async("uint8array").then(data => {
                     const meta = extractMeta(data);
                     if (meta) {
                         entries.value.push({
@@ -69,7 +69,7 @@ export const useCatalogue = defineStore('catalogue', () => {
                     }
                 }));
             });
-                        
+
             //if only one file open it right away
             if (proms.length == 1) {
                 return proms[0].then(() => loadProject(entries.value[0].filename));
@@ -91,11 +91,11 @@ export const useCatalogue = defineStore('catalogue', () => {
         const file = archive.file(filename);
         if (!file)
             return;
-        
+
         currentIndex.value = entries.value.findIndex(v => v.filename == filename);
 
         //load project
-        file.async('uint8array').then(project.loadProject);
+        file.async("uint8array").then(project.loadProject);
     }
     function loadPreviousProject() {
         currentIndex.value = currentIndex.value > 0 ?
@@ -113,12 +113,19 @@ export const useCatalogue = defineStore('catalogue', () => {
 
     function saveCatalogue() {
         const blob = new Blob([new Uint8Array(data)]);
-        createDownload(blob, 'catalogue.cat');
+        createDownload(blob, "catalogue.cat");
     }
 
-    return { 
-        entries, isEmpty, length, currentIndex,
-        openCatalogue, saveCatalogue, reset,
-        loadProject, loadPreviousProject, loadNextProject
+    return {
+        entries,
+        isEmpty,
+        length,
+        currentIndex,
+        openCatalogue,
+        saveCatalogue,
+        reset,
+        loadProject,
+        loadPreviousProject,
+        loadNextProject
     };
 });

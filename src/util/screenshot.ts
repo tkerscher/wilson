@@ -6,7 +6,7 @@ import { createDownload } from "./download";
  * @param canvas Canvas to take screenshot from
  * @param filename Name of the screenshot
  */
-export function takeScreenshot(canvas: HTMLCanvasElement, filename = 'Screenshot.png') {
+export function takeScreenshot(canvas: HTMLCanvasElement, filename = "Screenshot.png") {
     canvas.toBlob(blob => {
         if (!blob)
             return;

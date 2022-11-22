@@ -25,7 +25,7 @@
         <td>Width:</td>
         <td>
           <NumberInput
-            v-model="resolution.width" 
+            v-model="resolution.width"
             :disabled="!resolution.fixed"
             :min-value="300"
             :max-value="8000"
@@ -36,7 +36,7 @@
         <td>Height:</td>
         <td>
           <NumberInput
-            v-model="resolution.height" 
+            v-model="resolution.height"
             :disabled="!resolution.fixed"
             :min-value="300"
             :max-value="8000"
@@ -53,8 +53,8 @@ import { ref, watch } from "vue";
 import { useResolution } from "../../stores/resolution";
 const resolution = useResolution();
 
-const radioValue = ref(resolution.fixed ? 'fixed' : 'fit');
-watch(radioValue, v => resolution.fixed = v == 'fixed');
+const radioValue = ref(resolution.fixed ? "fixed" : "fit");
+watch(radioValue, v => resolution.fixed = v == "fixed");
 </script>
 
 <style scoped>

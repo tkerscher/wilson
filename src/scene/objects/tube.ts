@@ -36,7 +36,7 @@ export class TubeController {
         //copy meta
         this.#name = tube.name;
         this.#growing = tube.isGrowing;
-        this.#scene = tool.scene;    
+        this.#scene = tool.scene;
 
         //create interpolators
         this.#pathInt = new PathInterpolator(tube.pathId, tool.project);
@@ -65,7 +65,7 @@ export class TubeController {
         this.#startTime = this.#keys[0];
         this.#endTime = this.#keys[this.#N - 1];
         const period = this.#endTime - this.#startTime;
-        
+
         //fill control points
         this.#path = this.#keys.map(t => this.#pathInt.interpolate(t));
         this.#radii = this.#keys.map(t => this.#radInt.interpolate(t));
@@ -78,8 +78,8 @@ export class TubeController {
         tool.applyMetadata(this.#mesh, tube);
 
         //Static color?
-        if (!tube.color || !tube.color.source || tube.color.source.$case != 'graphId') {
-            this.#mesh.material = tool.parseColor(tube.color, tube.name + '_color');
+        if (!tube.color || !tube.color.source || tube.color.source.$case != "graphId") {
+            this.#mesh.material = tool.parseColor(tube.color, tube.name + "_color");
         }
         else {
             //graph as color source -> check if id is valid
@@ -109,21 +109,21 @@ export class TubeController {
                 const texture = RawTexture.CreateRGBATexture(
                     data, 1, TEXTURE_SIZE,
                     tool.scene);
-                
+
                 //assign texture
-                const mat = new StandardMaterial(tube.name + '_mat', tool.scene);
+                const mat = new StandardMaterial(tube.name + "_mat", tool.scene);
                 mat.diffuseTexture = texture;
                 this.#mesh.material = mat;
             }
         }
     }
 
-    update(t: number) {  
+    update(t: number) {
         //safety guard
         if (this.#keys.length < 2) {
             return;
         }
-        
+
         //shortcut: static tubes do not need to be updated
         if (!this.#growing && this.#mesh != undefined) {
             return;
@@ -132,7 +132,7 @@ export class TubeController {
         //update mesh
         this.#mesh = this.#createMesh(t);
     }
-    #createMesh(t: number): Mesh {        
+    #createMesh(t: number): Mesh {
         //Build complete if not growing or t is high enough
         if (!this.#growing || t > this.#endTime) {
             return MeshBuilder.CreateTube(this.#name, {
@@ -148,12 +148,12 @@ export class TubeController {
         //Edge case: t earlier than first key frame (plus some slack) -> render empty
         if (t - this.#startTime <= 1e-4) {
             return MeshBuilder.CreateTube(this.#name, {
-                    path: this.#path,
-                    radius: 0.0,
-                    sideOrientation: Mesh.DOUBLESIDE,
-                    updatable: true,
-                    instance: this.#mesh
-                }, this.#scene);
+                path: this.#path,
+                radius: 0.0,
+                sideOrientation: Mesh.DOUBLESIDE,
+                updatable: true,
+                instance: this.#mesh
+            }, this.#scene);
         }
 
         //get last index before t

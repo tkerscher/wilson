@@ -28,7 +28,7 @@ export interface Metadata {
 
 export function isMetadata(obj: any): obj is Metadata {
     //TODO: should I check types?
-    return 'name' in obj && 'description' in obj;
+    return "name" in obj && "description" in obj;
 }
 
 /**
@@ -98,7 +98,7 @@ export class SceneBuildTool {
             return _group;
         }
         else {
-            const value = new Node(group + '_group', this.scene);
+            const value = new Node(group + "_group", this.scene);
             //hide hidden group
             if (this.project.hiddenGroups.find(g => g == group))
                 value.setEnabled(false);
@@ -121,28 +121,28 @@ export class SceneBuildTool {
         }
 
         switch (scalar.source.$case) {
-            case 'constValue':
-                return setProperty(target, property, scalar.source.constValue);
-            case 'graphId':
-            {
-                const id = scalar.source.graphId;
-                const graph = this.project.graphs.find(g => g.id == id);
-                if (!graph || graph.points.length == 0) {
-                    //Referenced graph not found -> return default
-                    return setProperty(target, property, 0.0);
-                }
-                else {
-                    //create animation based on graph
-                    const animation = new Animation(graph.name, property, 1.0,
-                        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-                    const keyFrames = graph.points.map(p =>
-                        ({ frame: p.time, value: p.value}));
-                    animation.setKeys(keyFrames);
-                    animation.setEasingFunction(getInterpolation(graph.interpolation));
-                    this.animationGroup.addTargetedAnimation(animation, target);
-                    return;
-                }
+        case "constValue":
+            return setProperty(target, property, scalar.source.constValue);
+        case "graphId":
+        {
+            const id = scalar.source.graphId;
+            const graph = this.project.graphs.find(g => g.id == id);
+            if (!graph || graph.points.length == 0) {
+                //Referenced graph not found -> return default
+                return setProperty(target, property, 0.0);
             }
+            else {
+                //create animation based on graph
+                const animation = new Animation(graph.name, property, 1.0,
+                    Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+                const keyFrames = graph.points.map(p =>
+                    ({ frame: p.time, value: p.value }));
+                animation.setKeys(keyFrames);
+                animation.setEasingFunction(getInterpolation(graph.interpolation));
+                this.animationGroup.addTargetedAnimation(animation, target);
+                return;
+            }
+        }
         }
     }
 
@@ -159,31 +159,31 @@ export class SceneBuildTool {
         }
 
         switch (vector.source.$case) {
-            case 'constValue':
-            {
-                const p = vector.source.constValue;
-                return setProperty(target, property, new Vector3(p.x, p.y, p.z));
+        case "constValue":
+        {
+            const p = vector.source.constValue;
+            return setProperty(target, property, new Vector3(p.x, p.y, p.z));
+        }
+        case "pathId":
+        {
+            const id = vector.source.pathId;
+            const path = this.project.paths.find(p => p.id == id);
+            if (!path || path.points.length == 0) {
+                //Referenced path not found -> return default
+                return setProperty(target, property, new Vector3());
             }
-            case 'pathId':
-            {
-                const id = vector.source.pathId;
-                const path = this.project.paths.find(p => p.id == id);
-                if (!path || path.points.length == 0) {
-                    //Referenced path not found -> return default
-                    return setProperty(target, property, new Vector3());
-                }
-                else {
-                    //create animation based on the referenced path
-                    const animation = new Animation(path.name, property, 1.0,
-                        Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
-                    const keyFrames = path.points.map(p => ({ frame: p.time,
-                        value: new Vector3(p.position?.x, p.position?.y, p.position?.z)}));
-                    animation.setKeys(keyFrames);
-                    animation.setEasingFunction(getInterpolation(path.interpolation));
-                    this.animationGroup.addTargetedAnimation(animation, target);
-                    return;
-                }
+            else {
+                //create animation based on the referenced path
+                const animation = new Animation(path.name, property, 1.0,
+                    Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
+                const keyFrames = path.points.map(p => ({ frame: p.time,
+                    value: new Vector3(p.position?.x, p.position?.y, p.position?.z) }));
+                animation.setKeys(keyFrames);
+                animation.setEasingFunction(getInterpolation(path.interpolation));
+                this.animationGroup.addTargetedAnimation(animation, target);
+                return;
             }
+        }
         }
     }
 
@@ -200,68 +200,68 @@ export class SceneBuildTool {
         }
 
         switch (color.source.$case) {
-            case 'constValue':
-            {
-                const c = color.source.constValue;
-                return this.getStaticMaterial(c.r, c.g, c.b, c.a);
+        case "constValue":
+        {
+            const c = color.source.constValue;
+            return this.getStaticMaterial(c.r, c.g, c.b, c.a);
+        }
+        case "scalarValue":
+        {
+            const [clr, alpha] = this.mapColor(color.source.scalarValue);
+            return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
+        }
+        case "graphId":
+        {
+            const mat = new StandardMaterial(name);
+            const id = color.source.graphId;
+            const graph = this.project.graphs.find(g => g.id == id);
+            if (!graph || graph.points.length == 0) {
+                //Referenced graph not found -> return default
+                return this.defaultMaterial;
             }
-            case 'scalarValue':   
-            {
-                const [clr, alpha] = this.mapColor(color.source.scalarValue);
+            else if (graph.points.length == 1) {
+                const scalar = graph.points[0].value;
+                const [clr, alpha] = this.mapColor(scalar);
                 return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
             }
-            case 'graphId':
-            {
-                const mat = new StandardMaterial(name);
-                const id = color.source.graphId;
-                const graph = this.project.graphs.find(g => g.id == id);
-                if (!graph || graph.points.length == 0) {
-                    //Referenced graph not found -> return default
-                    return this.defaultMaterial;
+            else {
+                const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
+                    Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
+                const alphaAnimation = new Animation(graph.name, "alpha", 1.0,
+                    Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+
+                const clrFrames = Array<IAnimationKey>();
+                const alphaFrames = Array<IAnimationKey>();
+                let prevKey = graph.points[0].time;
+                let prevVal = graph.points[0].value;
+                for (let i = 1; i < graph.points.length; ++i) {
+                    //In between frames, the new start is a duplicate of the previous end
+                    //-> remove last frame before adding new
+                    clrFrames.pop();
+                    alphaFrames.pop();
+
+                    const toKey = graph.points[i].time;
+                    const toVal = graph.points[i].value;
+                    const [clr, alpha] = this.colorFrames(prevKey, prevVal, toKey, toVal);
+                    clrFrames.push(...clr);
+                    alphaFrames.push(...alpha);
+
+                    prevKey = toKey;
+                    prevVal = toVal;
                 }
-                else if (graph.points.length == 1) {
-                    const scalar = graph.points[0].value;
-                    const [clr, alpha] = this.mapColor(scalar);
-                    return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
-                }
-                else {
-                    const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
-                        Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
-                    const alphaAnimation = new Animation(graph.name, "alpha", 1.0,
-                        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
 
-                    const clrFrames = Array<IAnimationKey>();
-                    const alphaFrames = Array<IAnimationKey>();
-                    let prevKey = graph.points[0].time;
-                    let prevVal = graph.points[0].value;
-                    for (let i = 1; i < graph.points.length; ++i) {
-                        //In between frames, the new start is a duplicate of the previous end
-                        //-> remove last frame before adding new
-                        clrFrames.pop();
-                        alphaFrames.pop();
+                colorAnimation.setKeys(clrFrames);
+                alphaAnimation.setKeys(alphaFrames);
 
-                        const toKey = graph.points[i].time;
-                        const toVal = graph.points[i].value;
-                        const [clr, alpha] = this.colorFrames(prevKey, prevVal, toKey, toVal);
-                        clrFrames.push(...clr);
-                        alphaFrames.push(...alpha);
+                const interpolation = getInterpolation(graph.interpolation);
+                colorAnimation.setEasingFunction(interpolation);
+                alphaAnimation.setEasingFunction(interpolation);
 
-                        prevKey = toKey;
-                        prevVal = toVal;
-                    }
-
-                    colorAnimation.setKeys(clrFrames);
-                    alphaAnimation.setKeys(alphaFrames);
-
-                    const interpolation = getInterpolation(graph.interpolation);
-                    colorAnimation.setEasingFunction(interpolation);
-                    alphaAnimation.setEasingFunction(interpolation);
-
-                    this.animationGroup.addTargetedAnimation(colorAnimation, mat);
-                    this.animationGroup.addTargetedAnimation(alphaAnimation, mat);
-                    return mat;
-                }
+                this.animationGroup.addTargetedAnimation(colorAnimation, mat);
+                this.animationGroup.addTargetedAnimation(alphaAnimation, mat);
+                return mat;
             }
+        }
         }
     }
 
@@ -350,12 +350,12 @@ export class SceneBuildTool {
     isStaticMaterial(color: ColorProperty|undefined): boolean {
         if (!color || !color.source)
             return true;
-        
+
         switch (color.source.$case) {
-        case 'constValue':
-        case 'scalarValue':
+        case "constValue":
+        case "scalarValue":
             return true;
-        case 'graphId':
+        case "graphId":
         {
             const id = color.source.graphId;
             const graph = this.project.graphs.find(g => g.id == id);
@@ -406,8 +406,8 @@ export class SceneBuildTool {
             }
             const lambda = (stop.value - fromVal) / valRange;
             const key = fromKey + lambda * keyRange;
-            clrFrames.push({frame: key, value: new Color3(stop.color.r, stop.color.g, stop.color.b)});
-            alphaFrames.push({frame: key, value: stop.color.a});
+            clrFrames.push({ frame: key, value: new Color3(stop.color.r, stop.color.g, stop.color.b) });
+            alphaFrames.push({ frame: key, value: stop.color.a });
         }
 
         //add last key

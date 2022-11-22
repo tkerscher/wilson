@@ -19,15 +19,15 @@ const Step: IEasingFunction = {
 
 export function getInterpolation(int: Interpolation): IEasingFunction|null {
     switch (int) {
-        case Interpolation.AHEAD:
-            return Ahead;
-        case Interpolation.HOLD:
-            return Hold;
-        case Interpolation.STEP:
-            return Step;
-        case Interpolation.LINEAR:
-        case Interpolation.UNRECOGNIZED:
-        default:
-            return null;
+    case Interpolation.AHEAD:
+        return Ahead;
+    case Interpolation.HOLD:
+        return Hold;
+    case Interpolation.STEP:
+        return Step;
+    case Interpolation.LINEAR:
+    case Interpolation.UNRECOGNIZED:
+    default:
+        return null;
     }
 }

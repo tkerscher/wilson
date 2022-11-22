@@ -18,7 +18,7 @@ export class PathInterpolator {
     #ease: ((t:number) => number)|null = null;
 
     constructor(prop: VectorProperty | number | undefined, project: Project) {
-        if (typeof prop == 'number') {
+        if (typeof prop == "number") {
             this.#parsePath(prop, project);
             return;
         }
@@ -30,13 +30,13 @@ export class PathInterpolator {
         }
 
         switch(prop.source.$case) {
-        case 'constValue':
+        case "constValue":
         {
             const p = prop.source.constValue;
             this.path = [{ time: 0.0, position: new Vector3(p.x, p.y, p.z) }];
             return;
         }
-        case 'pathId':
+        case "pathId":
         {
             const id = prop.source.pathId;
             this.#parsePath(id, project);
@@ -91,7 +91,7 @@ export class PathInterpolator {
         }
         else {
             this.path = path.points.map(p => ({ time: p.time,
-                position: new Vector3(p.position?.x, p.position?.y, p.position?.z)}));
+                position: new Vector3(p.position?.x, p.position?.y, p.position?.z) }));
             this.#ease = getInterpolation(path.interpolation)?.ease ?? null;
         }
     }

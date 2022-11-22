@@ -105,21 +105,21 @@ export class CameraControl {
         };
 
         //register handler
-        document.addEventListener('keydown', this.#handlerRepeat);
-        document.addEventListener('keydown', this.#handlerOnce);
-        target.addEventListener('pointerdown', this.#onPointerDown);
-        target.addEventListener('pointerup', this.#onPointerUp);
-        target.addEventListener('pointermove', this.#onPointerMove);
-        target.addEventListener('wheel', this.#onWheel);
+        document.addEventListener("keydown", this.#handlerRepeat);
+        document.addEventListener("keydown", this.#handlerOnce);
+        target.addEventListener("pointerdown", this.#onPointerDown);
+        target.addEventListener("pointerup", this.#onPointerUp);
+        target.addEventListener("pointermove", this.#onPointerMove);
+        target.addEventListener("wheel", this.#onWheel);
     }
 
     dispose() {
-        document.removeEventListener('keydown', this.#handlerOnce);
-        document.removeEventListener('keydown', this.#handlerRepeat);
-        this.#target.removeEventListener('pointerdown', this.#onPointerDown);
-        this.#target.removeEventListener('pointerup', this.#onPointerUp);
-        this.#target.removeEventListener('pointermove', this.#onPointerMove);
-        this.#target.removeEventListener('wheel', this.#onWheel);
+        document.removeEventListener("keydown", this.#handlerOnce);
+        document.removeEventListener("keydown", this.#handlerRepeat);
+        this.#target.removeEventListener("pointerdown", this.#onPointerDown);
+        this.#target.removeEventListener("pointerup", this.#onPointerUp);
+        this.#target.removeEventListener("pointermove", this.#onPointerMove);
+        this.#target.removeEventListener("wheel", this.#onWheel);
 
         this.#handlerOnce = () => undefined;
         this.#handlerRepeat = () => undefined;

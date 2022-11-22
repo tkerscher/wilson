@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="active-tab-container scrollable">            
+      <div class="active-tab-container scrollable">
         <KeepAlive>
           <component
             :is="tabIcons[activeTab].tab"
@@ -40,29 +40,29 @@
 </template>
 
 <script setup lang="ts">
-import InfoTab from './tabs/InfoTab.vue';
-import ObjectExplorer from './tabs/ObjectExplorer.vue';
-import SettingsTab from './tabs/SettingsTab.vue';
-import PathExplorer from './tabs/PathExplorer.vue';
-import SearchInput from './input/SearchInput.vue';
-import { onBeforeMount, ref } from 'vue';
-const searchQuery = ref('');
+import InfoTab from "./tabs/InfoTab.vue";
+import ObjectExplorer from "./tabs/ObjectExplorer.vue";
+import SettingsTab from "./tabs/SettingsTab.vue";
+import PathExplorer from "./tabs/PathExplorer.vue";
+import SearchInput from "./input/SearchInput.vue";
+import { onBeforeMount, ref } from "vue";
+const searchQuery = ref("");
 
 const tabIcons = [
-    { icon: 'cube-icon',   title: 'Objects',  id: 0, tab: ObjectExplorer },
-    { icon: 'curve-icon',  title: 'Paths',    id: 1, tab: PathExplorer },
-    { icon: 'wrench-icon', title: 'Settings', id: 2, tab: SettingsTab },
-    { icon: 'info-icon',   title: 'Info',     id: 3, tab: InfoTab }
+    { icon: "cube-icon",   title: "Objects",  id: 0, tab: ObjectExplorer },
+    { icon: "curve-icon",  title: "Paths",    id: 1, tab: PathExplorer },
+    { icon: "wrench-icon", title: "Settings", id: 2, tab: SettingsTab },
+    { icon: "info-icon",   title: "Info",     id: 3, tab: InfoTab }
 ];
 const activeTab = ref(0);
 function onSelectTab(index: number) {
     activeTab.value = index;
-    localStorage.setItem('activeTab', String(index));
+    localStorage.setItem("activeTab", String(index));
 }
 
 onBeforeMount(() => {
     //restore active tab
-    const active = localStorage.getItem('activeTab');
+    const active = localStorage.getItem("activeTab");
     if (active != null)
         activeTab.value = Number(active);
 });

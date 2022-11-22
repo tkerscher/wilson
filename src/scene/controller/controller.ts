@@ -5,7 +5,7 @@ export interface SceneController {
 
     /**
      * Loads the given project into the scene and replaces any already present
-     * scene 
+     * scene
      */
     load(project: Project): void
 
@@ -147,22 +147,22 @@ export interface SceneController {
 
     /**
      * Sets the camera target, i.e. origin of rotation
-     * @param x 
-     * @param y 
-     * @param z 
+     * @param x
+     * @param y
+     * @param z
      */
     setCameraTarget(x: number, y: number, z: number): void
 
     /**
      * Sets the camera rotation
-     * @param alpha 
-     * @param beta 
+     * @param alpha
+     * @param beta
      */
     setCameraRotation(alpha: number, beta: number): void
 
     /**
      * Sets the camera zoom
-     * @param distance 
+     * @param distance
      */
     setCameraZoom(distance: number): void
 
@@ -179,8 +179,8 @@ export interface SceneController {
     setGridEnabled(enabled: boolean):void
     /**
      * Resizes the underlying canvas
-     * @param width 
-     * @param height 
+     * @param width
+     * @param height
      */
     resize(width: number, height: number): void
     /**

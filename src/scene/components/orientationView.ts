@@ -11,21 +11,21 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 //import assets to get mangled url in production
-import xUrl from '../../assets/textures/x.png';
-import yUrl from '../../assets/textures/y.png';
-import zUrl from '../../assets/textures/z.png';
+import xUrl from "../../assets/textures/x.png";
+import yUrl from "../../assets/textures/y.png";
+import zUrl from "../../assets/textures/z.png";
 
-import xHoverUrl from '../../assets/textures/x_hover.png';
-import yHoverUrl from '../../assets/textures/y_hover.png';
-import zHoverUrl from '../../assets/textures/z_hover.png';
+import xHoverUrl from "../../assets/textures/x_hover.png";
+import yHoverUrl from "../../assets/textures/y_hover.png";
+import zHoverUrl from "../../assets/textures/z_hover.png";
 
-import negXUrl from '../../assets/textures/negx.png';
-import negYUrl from '../../assets/textures/negy.png';
-import negZUrl from '../../assets/textures/negz.png';
+import negXUrl from "../../assets/textures/negx.png";
+import negYUrl from "../../assets/textures/negy.png";
+import negZUrl from "../../assets/textures/negz.png";
 
-import negXHoverUrl from '../../assets/textures/negx_hover.png';
-import negYHoverUrl from '../../assets/textures/negy_hover.png';
-import negZHoverUrl from '../../assets/textures/negz_hover.png';
+import negXHoverUrl from "../../assets/textures/negx_hover.png";
+import negYHoverUrl from "../../assets/textures/negy_hover.png";
+import negZHoverUrl from "../../assets/textures/negz_hover.png";
 
 // Orientation view is a independent scene showing the orientation of a given
 // camera/scene
@@ -96,7 +96,7 @@ class IndicatorBuilder {
             //update position
             root.position.x = ratio - 1.2;
         };
-        
+
         update();
         this.engine.onResizeObservable.add(update);
     }
@@ -107,7 +107,7 @@ class IndicatorBuilder {
         const root = this.root;
         const buttons = this.buttons;
         const zero = this.#buttonZeroRotation;
-        
+
         const rotation = new Quaternion();
         const inverse = new Quaternion();
 
@@ -127,23 +127,23 @@ class IndicatorBuilder {
         this.source.onViewMatrixChangedObservable.add(update);
     }
 
-    createIndicatorObject() {    
+    createIndicatorObject() {
         //x axis
-        this.createButton('x', new Vector3(4,0,0), xUrl, xHoverUrl);
-        this.createButton('nx', new Vector3(-4,0,0), negXUrl, negXHoverUrl);
-    
+        this.createButton("x", new Vector3(4,0,0), xUrl, xHoverUrl);
+        this.createButton("nx", new Vector3(-4,0,0), negXUrl, negXHoverUrl);
+
         //y axis
-        this.createButton('y', new Vector3(0,4,0), yUrl, yHoverUrl);
-        this.createButton('ny', new Vector3(0,-4,0), negYUrl, negYHoverUrl);
-    
+        this.createButton("y", new Vector3(0,4,0), yUrl, yHoverUrl);
+        this.createButton("ny", new Vector3(0,-4,0), negYUrl, negYHoverUrl);
+
         //z axis
-        this.createButton('z', new Vector3(0,0,4), zUrl, zHoverUrl);
-        this.createButton('nz', new Vector3(0,0,-4), negZUrl, negZHoverUrl);
-    
+        this.createButton("z", new Vector3(0,0,4), zUrl, zHoverUrl);
+        this.createButton("nz", new Vector3(0,0,-4), negZUrl, negZHoverUrl);
+
         //axis lines
-        this.createAxis('xAxis', new Vector3(3.5,0,0), XColor);
-        this.createAxis('yAxis', new Vector3(0,3.5,0), YColor);
-        this.createAxis('zAxis', new Vector3(0,0,3.5), ZColor);  
+        this.createAxis("xAxis", new Vector3(3.5,0,0), XColor);
+        this.createAxis("yAxis", new Vector3(0,3.5,0), YColor);
+        this.createAxis("zAxis", new Vector3(0,0,3.5), ZColor);
     }
 
     createButton(
@@ -165,15 +165,15 @@ class IndicatorBuilder {
         button.rotationQuaternion = this.#buttonZeroRotation;
 
         this.buttons.push(button);
-    
+
         //TODO: Interactive stuff
     }
 
     createAxis(name: string, to: Vector3, color: Color3) {
-        const mat = new StandardMaterial(name + '_mat');
+        const mat = new StandardMaterial(name + "_mat");
         mat.emissiveColor = color;
         mat.freeze();
-    
+
         const axis = MeshBuilder.CreateTube(name, {
             path: [ Vector3.Zero(), to],
             tessellation: 3,
@@ -190,7 +190,7 @@ function loadTexture(path: string, scene: Scene): StandardMaterial {
     tex.hasAlpha = true;
 
     //create material
-    const mat = new StandardMaterial('', scene);
+    const mat = new StandardMaterial("", scene);
     mat.emissiveTexture = tex;
     mat.diffuseTexture = tex;
     mat.freeze();

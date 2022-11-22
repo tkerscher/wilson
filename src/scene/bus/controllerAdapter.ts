@@ -32,33 +32,33 @@ export class ControllerAdapter {
         this.#setTheme = (theme: Theme) => controller.setTheme(theme);
 
         //register handlers
-        SceneCommandBus.on('ResetCamera', this.#resetCamera);
-        SceneCommandBus.on('ToggleGrid', this.#toggleGrid);
-        SceneCommandBus.on('Screenshot', this.#screenshot);
-        SceneCommandBus.on('SelectObject', this.#selectObject);
-        SceneCommandBus.on('TargetObject', this.#targetObject);
-        SceneCommandBus.on('SetGroupEnabled', this.#setGroupEnabled);
-        SceneCommandBus.on('SetPathEnabled', this.#setPathEnabled);
-        SceneCommandBus.on('SetStage', this.#setStage);
-        SceneCommandBus.on('RemoveStage', this.#removeStage);
-        SceneCommandBus.on('SetTheme', this.#setTheme);
+        SceneCommandBus.on("ResetCamera", this.#resetCamera);
+        SceneCommandBus.on("ToggleGrid", this.#toggleGrid);
+        SceneCommandBus.on("Screenshot", this.#screenshot);
+        SceneCommandBus.on("SelectObject", this.#selectObject);
+        SceneCommandBus.on("TargetObject", this.#targetObject);
+        SceneCommandBus.on("SetGroupEnabled", this.#setGroupEnabled);
+        SceneCommandBus.on("SetPathEnabled", this.#setPathEnabled);
+        SceneCommandBus.on("SetStage", this.#setStage);
+        SceneCommandBus.on("RemoveStage", this.#removeStage);
+        SceneCommandBus.on("SetTheme", this.#setTheme);
 
         //register events
-        controller.registerOnObjectPicked((id: number|null) => 
-            SceneEventBus.emit('ObjectPicked', id));
+        controller.registerOnObjectPicked((id: number|null) =>
+            SceneEventBus.emit("ObjectPicked", id));
     }
 
     dispose() {
         //deregister handlers
-        SceneCommandBus.off('ResetCamera', this.#resetCamera);
-        SceneCommandBus.off('ToggleGrid', this.#toggleGrid);
-        SceneCommandBus.off('Screenshot', this.#screenshot);
-        SceneCommandBus.off('SelectObject', this.#selectObject);
-        SceneCommandBus.off('TargetObject', this.#targetObject);
-        SceneCommandBus.off('SetGroupEnabled', this.#setGroupEnabled);
-        SceneCommandBus.off('SetPathEnabled', this.#setPathEnabled);
-        SceneCommandBus.off('SetStage', this.#setStage);
-        SceneCommandBus.off('RemoveStage', this.#removeStage);
-        SceneCommandBus.off('SetTheme', this.#setTheme);
+        SceneCommandBus.off("ResetCamera", this.#resetCamera);
+        SceneCommandBus.off("ToggleGrid", this.#toggleGrid);
+        SceneCommandBus.off("Screenshot", this.#screenshot);
+        SceneCommandBus.off("SelectObject", this.#selectObject);
+        SceneCommandBus.off("TargetObject", this.#targetObject);
+        SceneCommandBus.off("SetGroupEnabled", this.#setGroupEnabled);
+        SceneCommandBus.off("SetPathEnabled", this.#setPathEnabled);
+        SceneCommandBus.off("SetStage", this.#setStage);
+        SceneCommandBus.off("RemoveStage", this.#removeStage);
+        SceneCommandBus.off("SetTheme", this.#setTheme);
     }
 }

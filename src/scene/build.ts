@@ -29,10 +29,10 @@ import { TubeController } from "./objects/tube";
 export interface SceneContainer {
     animation: AnimationGroup
     isStatic: boolean
-    
+
     scene: Scene
     camera: ArcRotateCamera
-    
+
     indicatorLayer: Scene
     grid: Node
     pathVisualizer: PathVisualizer
@@ -42,7 +42,7 @@ export interface SceneContainer {
     overlayTexture: AdvancedDynamicTexture
     textEngine: TextEngine
     description: Description
-    
+
     onAnimationTick: Observable<{currentFrame: number}>
 }
 
@@ -87,8 +87,8 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
     {//For now always add empty animation...
         const node = new TransformNode("master", buildTool.scene);
         const anim = new Animation("masterAnimation", "scalingDeterminant", 1.0,
-        Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-        anim.setKeys([{ frame: 0.0, value: 0.0}, { frame: 1.0, value: 0.0}]);
+            Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+        anim.setKeys([{ frame: 0.0, value: 0.0 }, { frame: 1.0, value: 0.0 }]);
         buildTool.animationGroup.addTargetedAnimation(anim, node);
     }
 
@@ -135,7 +135,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         const dirty = container.animation.isPlaying || lastFrame != currentFrame;
         //update needed?
         if (dirty) {
-            //update tubes       
+            //update tubes
             tubes.forEach(tube => {
                 if (tube.isEnabled)
                     tube.update(currentFrame);

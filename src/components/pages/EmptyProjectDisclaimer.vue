@@ -30,19 +30,19 @@
 </template>
 
 <script setup lang="ts">
-import { useCatalogue } from '../../stores/catalogue';
-import { useTheme } from '../../stores/theme';
+import { useCatalogue } from "../../stores/catalogue";
+import { useTheme } from "../../stores/theme";
 const catalogue = useCatalogue();
 const theme = useTheme();
 
 function onFileSelected(e: Event) {
-  if (!e.target)
-    return;
-  
-  const fileInput = e.target as HTMLInputElement;
-  if (fileInput.files) {
-      fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue);
-  }
+    if (!e.target)
+        return;
+
+    const fileInput = e.target as HTMLInputElement;
+    if (fileInput.files) {
+        fileInput.files[0].arrayBuffer().then(catalogue.openCatalogue);
+    }
 }
 </script>
 

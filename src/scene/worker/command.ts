@@ -5,111 +5,111 @@ interface _WorkerCommand {
 }
 
 export interface LoadCommand extends _WorkerCommand {
-    type: 'load'
+    type: "load"
     data: ArrayBufferLike
 }
 export interface LoadStageCommand extends _WorkerCommand {
-    type: 'loadStage'
+    type: "loadStage"
     url: string
 }
 export interface RemoveStageCommand extends _WorkerCommand {
-    type: 'removeStage'
+    type: "removeStage"
 }
 export interface PlayCommand extends _WorkerCommand {
-    type: 'play'
+    type: "play"
 }
 export interface PauseCommand extends _WorkerCommand {
-    type: 'pause'
+    type: "pause"
 }
 export interface GoToFrameCommand extends _WorkerCommand {
-    type: 'goToFrame',
+    type: "goToFrame",
     frame: number
 }
 export interface ResetCameraCommand extends _WorkerCommand {
-    type: 'resetCamera'
+    type: "resetCamera"
 }
 export interface SelectCommand extends _WorkerCommand {
-    type: 'select',
+    type: "select",
     id: number
 }
 export interface TargetCommand extends _WorkerCommand {
-    type: 'target',
+    type: "target",
     id: number
 }
 export interface SetGroupEnabledCommand extends _WorkerCommand {
-    type: 'setGroupEnabled',
+    type: "setGroupEnabled",
     group: string,
     enabled: boolean
 }
 export interface SetPathEnabledCommand extends _WorkerCommand {
-    type: 'setPathEnabled',
+    type: "setPathEnabled",
     id: number,
     enabled: boolean,
     color: string
 }
 export interface SetGridEnabledCommand extends _WorkerCommand {
-    type: 'setGridEnabled',
+    type: "setGridEnabled",
     enabled: boolean
 }
 export interface SetSpeedRatioCommand extends _WorkerCommand {
-    type: 'setSpeedRatio',
+    type: "setSpeedRatio",
     value: number
 }
 export interface ResizeCommand extends _WorkerCommand {
-    type: 'resize',
+    type: "resize",
     width: number,
     height: number
 }
 export interface SetThemeCommand extends _WorkerCommand {
-    type: 'setTheme',
+    type: "setTheme",
     theme: Theme
 }
 
 export interface PointerDownCommand extends _WorkerCommand {
-    type: 'pointerDown',
+    type: "pointerDown",
     x: number,
     y: number
 }
 
 export interface PointerUpCommand extends _WorkerCommand {
-    type: 'pointerUp',
+    type: "pointerUp",
     x: number,
     y: number
 }
 
 export interface PointerMoveCommand extends _WorkerCommand {
-    type: 'pointermove',
+    type: "pointermove",
     x: number,
     y: number
 }
 
 export interface PanCameraCommand extends _WorkerCommand {
-    type: 'panCamera',
+    type: "panCamera",
     dx: number,
     dy: number
 }
 export interface RotateCameraCommand extends _WorkerCommand {
-    type: 'rotateCamera',
+    type: "rotateCamera",
     alpha: number,
     beta: number
 }
 export interface ZoomCameraCommand extends _WorkerCommand {
-    type: 'zoom',
+    type: "zoom",
     delta: number
 }
 export interface SetCameraTargetCommand extends _WorkerCommand {
-    type: 'setCameraTarget',
+    type: "setCameraTarget",
     x: number,
     y: number,
     z: number
 }
 export interface SetCameraRotationCommand extends _WorkerCommand {
-    type: 'setCameraRotation',
+    type: "setCameraRotation",
     alpha: number,
     beta: number
 }
 export interface SetCameraZoomCommand extends _WorkerCommand {
-    type: 'setCameraZoom',
+    type: "setCameraZoom",
     distance: number
 }
 

@@ -50,8 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useProject } from '../../stores/project';
+import { ref } from "vue";
+import { useProject } from "../../stores/project";
 const project = useProject();
 
 //Common tab api. Needed for component element probability
@@ -69,25 +69,25 @@ function getDefault(value: string|undefined, def: string): string {
 
 //data
 //For whatever reason computed props do not work!?
-const author = ref('');
-const title = ref('');
-const description = ref('');
-const date = ref('');
-const timestamp = ref('');
-const eventStart = ref('');
-const eventEnd = ref('');
-const duration = ref('');
+const author = ref("");
+const title = ref("");
+const description = ref("");
+const date = ref("");
+const timestamp = ref("");
+const eventStart = ref("");
+const eventEnd = ref("");
+const duration = ref("");
 
 function updateData() {
-    author.value = getDefault(project.meta?.author, 'No Author');
-    title.value = getDefault(project.meta?.name, 'No Title');
-    description.value = getDefault(project.meta?.description, 'No description');
+    author.value = getDefault(project.meta?.author, "No Author");
+    title.value = getDefault(project.meta?.name, "No Title");
+    description.value = getDefault(project.meta?.description, "No description");
     date.value = new Date(project.meta?.date?.seconds ?? 0).toString();
     const nanos = project.meta?.date?.nanos ?? 0;
-    timestamp.value = (nanos + 1e10).toLocaleString('en-US').slice(3);
-    eventStart.value = (project.meta?.startTime ?? 0).toLocaleString('en-US');
-    eventEnd.value = (project.meta?.endTime ?? 0).toLocaleString('en-US');
-    duration.value = ((project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString('en-US');
+    timestamp.value = (nanos + 1e10).toLocaleString("en-US").slice(3);
+    eventStart.value = (project.meta?.startTime ?? 0).toLocaleString("en-US");
+    eventEnd.value = (project.meta?.endTime ?? 0).toLocaleString("en-US");
+    duration.value = ((project.meta?.endTime ?? 0) - (project.meta?.startTime ?? 0)).toLocaleString("en-US");
 }
 updateData();
 project.$subscribe(updateData);

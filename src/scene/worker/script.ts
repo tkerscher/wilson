@@ -8,7 +8,7 @@ let controller: LocalController;
 function messageHandler(ev: MessageEvent<WorkerCommand>) {
     //Wire up messages to controller
     switch (ev.data.type) {
-    case 'load':
+    case "load":
         {
             //decode project
             const serialized: ArrayBufferLike = ev.data.data;
@@ -18,73 +18,73 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
             controller.load(project);
         }
         break;
-    case 'loadStage':
+    case "loadStage":
         controller.loadStage(ev.data.url);
         break;
-    case 'removeStage':
+    case "removeStage":
         controller.removeStage();
         break;
-    case 'play':
+    case "play":
         controller.play();
         break;
-    case 'pause':
+    case "pause":
         controller.pause();
         break;
-    case 'goToFrame':
+    case "goToFrame":
         controller.goToFrame(ev.data.frame);
         break;
-    case 'resetCamera':
+    case "resetCamera":
         controller.resetCamera();
         break;
-    case 'resize':
+    case "resize":
         controller.resize(ev.data.width, ev.data.height);
         break;
-    case 'setTheme':
+    case "setTheme":
         controller.setTheme(ev.data.theme);
         break;
-    case 'select':
+    case "select":
         controller.select(ev.data.id);
         break;
-    case 'target':
+    case "target":
         controller.target(ev.data.id);
         break;
-    case 'setGridEnabled':
+    case "setGridEnabled":
         controller.setGridEnabled(ev.data.enabled);
         break;
-    case 'setGroupEnabled':
+    case "setGroupEnabled":
         controller.setGroupEnabled(ev.data.group, ev.data.enabled);
         break;
-    case 'setPathEnabled':
+    case "setPathEnabled":
         controller.setPathEnabled(ev.data.id, ev.data.enabled, ev.data.color);
         break;
-    case 'pointerDown':
+    case "pointerDown":
         controller.simulatePointerDown(ev.data.x, ev.data.y);
         break;
-    case 'pointerUp':
+    case "pointerUp":
         controller.simulatePointerUp(ev.data.x, ev.data.y);
         break;
-    case 'pointermove':
+    case "pointermove":
         controller.simulatePointerMove(ev.data.x, ev.data.y);
         break;
-    case 'panCamera':
+    case "panCamera":
         controller.panCamera(ev.data.dx, ev.data.dy);
         break;
-    case 'rotateCamera':
+    case "rotateCamera":
         controller.rotateCamera(ev.data.alpha, ev.data.beta);
         break;
-    case 'zoom':
+    case "zoom":
         controller.zoomCamera(ev.data.delta);
         break;
-    case 'setCameraTarget':
+    case "setCameraTarget":
         controller.setCameraTarget(ev.data.x, ev.data.y, ev.data.z);
         break;
-    case 'setCameraRotation':
+    case "setCameraRotation":
         controller.setCameraRotation(ev.data.alpha, ev.data.beta);
         break;
-    case 'setCameraZoom':
+    case "setCameraZoom":
         controller.setCameraZoom(ev.data.distance);
         break;
-    case 'setSpeedRatio':
+    case "setSpeedRatio":
         controller.speedRatio = ev.data.value;
         break;
     }
@@ -99,19 +99,19 @@ onmessage = ev => {
 
     //register callbacks
     controller.registerOnAnimationLoop(() => postMessage({
-        type: 'onAnimationLoop'
+        type: "onAnimationLoop"
     } as AnimationLoopEvent));
     controller.registerOnFrameChanged(frame => postMessage({
-        type: 'onFrameChanged',
+        type: "onFrameChanged",
         currentFrame: frame
     } as FrameChangedEvent));
     controller.registerOnObjectPicked(id => postMessage({
-        type: 'onObjectPicked',
+        type: "onObjectPicked",
         objectId: id
     } as ObjectPickedEvent));
 
     //tell we're finished building
-    postMessage('done');
+    postMessage("done");
     //Project is loaded -> switch to interactive message handler
     onmessage = messageHandler;
 };

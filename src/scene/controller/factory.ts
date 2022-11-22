@@ -26,13 +26,13 @@ export async function createController(canvas: HTMLCanvasElement): Promise<Scene
             return import("./local").then(mod => {
                 return new mod.LocalController(canvas);
             });
-    }})()
-    .then(controller => {
+        }})()
+        .then(controller => {
         //set theme
-        const theme = getCurrentTheme();
-        controller.setTheme(theme);
+            const theme = getCurrentTheme();
+            controller.setTheme(theme);
 
-        //finish
-        return controller;
-    });
+            //finish
+            return controller;
+        });
 }

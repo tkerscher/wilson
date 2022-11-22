@@ -24,14 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import ResizableContainer from '../ResizableContainer.vue';
-import SceneView from './SceneView.vue';
-import Sidebar from '../SidebarContainer.vue';
-import PlayerControl from '../input/PlayerControl.vue';
+import ResizableContainer from "../ResizableContainer.vue";
+import SceneView from "./SceneView.vue";
+import Sidebar from "../SidebarContainer.vue";
+import PlayerControl from "../input/PlayerControl.vue";
 
-import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { usePlayer } from '../../stores/player';
-import { useProject } from '../../stores/project';
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { usePlayer } from "../../stores/player";
+import { useProject } from "../../stores/project";
 
 const player = usePlayer();
 const project = useProject();
@@ -46,7 +46,7 @@ function init() {
         speedRatio: project.meta?.speedRatio ?? 1.0,
         isPlaying: true,
         isLooping: true
-    });    
+    });
 }
 
 function onKeydown(e: KeyboardEvent) {
@@ -57,7 +57,7 @@ function onKeydown(e: KeyboardEvent) {
 function fullscreen() {
     if (!mainDiv.value || !mainDiv.value.requestFullscreen)
         return;
-    
+
     if (player.isFullscreen || document.fullscreenElement) {
         document.exitFullscreen();
     }
@@ -72,12 +72,12 @@ function onFullscreenChanged() {
 
 onMounted(() => {
     init();
-    addEventListener('fullscreenchange', onFullscreenChanged);
-    document.addEventListener('keydown', onKeydown);
+    addEventListener("fullscreenchange", onFullscreenChanged);
+    document.addEventListener("keydown", onKeydown);
 });
 onBeforeUnmount(() => {
-    removeEventListener('fullscreenchange', onFullscreenChanged);
-    document.removeEventListener('keydown', onKeydown);
+    removeEventListener("fullscreenchange", onFullscreenChanged);
+    document.removeEventListener("keydown", onKeydown);
 });
 project.$subscribe(() => init());
 </script>

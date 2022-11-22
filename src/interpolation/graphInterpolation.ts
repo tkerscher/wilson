@@ -17,25 +17,25 @@ export class GraphInterpolator {
     #ease: ((t:number) => number)|null = null;
 
     constructor(prop: ScalarProperty | number | undefined, project: Project) {
-        if (typeof prop == 'number') {
+        if (typeof prop == "number") {
             this.#parseGraph(prop, project);
             return;
         }
 
         //fall back
         if (!prop || !prop.source) {
-            this.points = [{time: 0.0, value: 0.0}];
+            this.points = [{ time: 0.0, value: 0.0 }];
             return;
         }
 
         switch(prop.source.$case) {
-        case 'constValue':
+        case "constValue":
         {
             const v = prop.source.constValue;
-            this.points = [{ time: 0.0, value: v}];
+            this.points = [{ time: 0.0, value: v }];
             return;
         }
-        case 'graphId':
+        case "graphId":
         {
             const id = prop.source.graphId;
             this.#parseGraph(id, project);
@@ -86,11 +86,11 @@ export class GraphInterpolator {
         const graph = project.graphs.find(g => g.id == id);
         if (!graph || graph.points.length == 0) {
             //static graph
-            this.points = [{ time: 0.0, value: 0.0}];
+            this.points = [{ time: 0.0, value: 0.0 }];
         }
         else {
             this.points = graph.points.map(p => ({ time: p.time, value: p.value }));
             this.#ease = getInterpolation(graph.interpolation)?.ease ?? null;
         }
-    }    
+    }
 }

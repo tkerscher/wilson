@@ -13,12 +13,12 @@
 </template>
 
 <script setup lang="ts">
-import GroupEntry from './ObjectGroup.vue';
+import GroupEntry from "./ObjectGroup.vue";
 
 import { ref } from "vue";
 import { extractGroups, Group } from "./ObjectGroup";
-import { SceneCommander } from '../../scene/bus/commandBus';
-import { useProject } from '../../stores/project';
+import { SceneCommander } from "../../scene/bus/commandBus";
+import { useProject } from "../../stores/project";
 const project = useProject();
 
 const props = defineProps<{

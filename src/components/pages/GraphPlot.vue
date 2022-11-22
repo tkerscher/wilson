@@ -6,22 +6,22 @@
 </template>
 
 <script setup lang="ts">
-import { createConfig, createPlotData, createPlotLayout } from '../../plot/plot';
+import { createConfig, createPlotData, createPlotLayout } from "../../plot/plot";
 import { newPlot, react, relayout } from "plotly.js-basic-dist";
 
 import { onMounted, ref, nextTick, onBeforeUnmount } from "vue";
-import { useGraphs } from '../../stores/graphs';
-import { useTheme } from '../../stores/theme';
+import { useGraphs } from "../../stores/graphs";
+import { useTheme } from "../../stores/theme";
 const graphs = useGraphs();
 const theme = useTheme();
 
 const config = createConfig(theme.toggleTheme, handleScale);
 function handleThemeHotkey(e: KeyboardEvent) {
     if (e.altKey || e.ctrlKey || e.shiftKey)
-        return;    
+        return;
     if (e.repeat)
         return;
-    if (e.code == 'KeyT')
+    if (e.code == "KeyT")
         theme.toggleTheme();
 }
 
@@ -58,7 +58,7 @@ onMounted(() => {
     if (!plotDiv.value)
         throw Error("Plot div not present!");
 
-    //Start with empty 
+    //Start with empty
     newPlot(plotDiv.value, [], plotLayout, config);
 
     //watch for changes in graphs
@@ -72,10 +72,10 @@ onMounted(() => {
     resizer.observe(plotDiv.value);
 
     //register theme toggle hot key
-    document.addEventListener('keydown', handleThemeHotkey);
+    document.addEventListener("keydown", handleThemeHotkey);
 });
 onBeforeUnmount(() => {
-    document.removeEventListener('keydown', handleThemeHotkey);
+    document.removeEventListener("keydown", handleThemeHotkey);
 });
 </script>
 
