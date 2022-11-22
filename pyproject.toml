@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wilson"
+description = "Tool to create animation files for Wilson"
+version = "0.1.0"
+authors = [
+    { name = "Tobias Kerscher", email = "88444139+tkerscher@users.noreply.github.com" }
+]
+readme = "wilson/README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+dependencies = [
+    "cmasher",
+    "numpy>=1.2.0",
+    "protobuf>=3.20.1"
+]
+
+[tool.setuptools]
+packages = ["wilson"]
