@@ -7,8 +7,8 @@ import "properties.proto";
 message Sphere {
     //Name as shown in explorer
     string name = 1;
-    //Name of group this belongs to
-    string group = 2;
+    //Name of groups this belongs to
+    repeated string groups = 2;
     //Additional text shown when selected
     string description = 3;
     //Color

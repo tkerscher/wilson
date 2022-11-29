@@ -117,10 +117,19 @@ All objects have a common set of properties:
 | Property    | ID | Type     | Description |
 |-------------|----|----------|-------------|
 | name        | 01 | `string` | Name to be shown in the explorer. |
-| group       | 02 | `string` | Name of the group the objects belong to. |
+| groups      | 02 |`string[]`| List of group names the objects belong to. |
 | description | 03 | `Text`   | Text to be shown when the object is selected in the scene. |
 | color       | 04 | `ColorProperty` | Color of the object. |
 |             | 05 - 10 | | *Reserved* |
+
+Groups can be understood as an analogue to a filesystem's directory structure. Each group can be
+part of a bigger super group. The relationships are encoded in the group names itself, e.g. the
+group name `Super Group/Minor A/This Group 1.5` defines actually three groups: `Super Group`,
+`Minor A` and `This Group 1.5`, with each group having the next one as child. The first two ones
+are implicitly defined by this and do not need to be explicitly defined elsewhere.
+
+Unlike filesystems, objects here can be part of more than one group or none at all. In the latter
+case, the viewer software should assign them to a default group but is not required to.
 
 There are five types of objects:
 
