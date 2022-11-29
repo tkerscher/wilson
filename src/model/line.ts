@@ -8,8 +8,8 @@ export const protobufPackage = "wilson";
 export interface Line {
   /** Name as shown in explorer */
   name: string;
-  /** Name of group this belongs to */
-  group: string;
+  /** Name of groups this belongs to */
+  groups: string[];
   /** Additional text shown when selected */
   description: string;
   /** Color */
@@ -37,7 +37,7 @@ export interface Line {
 function createBaseLine(): Line {
   return {
     name: "",
-    group: "",
+    groups: [],
     description: "",
     color: undefined,
     start: undefined,
@@ -53,8 +53,8 @@ export const Line = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.group !== "") {
-      writer.uint32(18).string(message.group);
+    for (const v of message.groups) {
+      writer.uint32(18).string(v!);
     }
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
@@ -91,7 +91,7 @@ export const Line = {
           message.name = reader.string();
           break;
         case 2:
-          message.group = reader.string();
+          message.groups.push(reader.string());
           break;
         case 3:
           message.description = reader.string();
@@ -125,7 +125,7 @@ export const Line = {
   fromJSON(object: any): Line {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      group: isSet(object.group) ? String(object.group) : "",
+      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
       description: isSet(object.description) ? String(object.description) : "",
       color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       start: isSet(object.start) ? VectorProperty.fromJSON(object.start) : undefined,
@@ -139,7 +139,11 @@ export const Line = {
   toJSON(message: Line): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.group !== undefined && (obj.group = message.group);
+    if (message.groups) {
+      obj.groups = message.groups.map((e) => e);
+    } else {
+      obj.groups = [];
+    }
     message.description !== undefined && (obj.description = message.description);
     message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.start !== undefined && (obj.start = message.start ? VectorProperty.toJSON(message.start) : undefined);
@@ -154,7 +158,7 @@ export const Line = {
   fromPartial<I extends Exact<DeepPartial<Line>, I>>(object: I): Line {
     const message = createBaseLine();
     message.name = object.name ?? "";
-    message.group = object.group ?? "";
+    message.groups = object.groups?.map((e) => e) || [];
     message.description = object.description ?? "";
     message.color = (object.color !== undefined && object.color !== null)
       ? ColorProperty.fromPartial(object.color)

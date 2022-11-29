@@ -93,8 +93,8 @@ export function textPositionToJSON(object: TextPosition): string {
 export interface Overlay {
   /** Name as shown in explorer */
   name: string;
-  /** Name of group this belongs to */
-  group: string;
+  /** Name of groups this belongs to */
+  groups: string[];
   /** Additional text shown when selected */
   description: string;
   /** Text to be drawn on the scene */
@@ -110,7 +110,7 @@ export interface Overlay {
 function createBaseOverlay(): Overlay {
   return {
     name: "",
-    group: "",
+    groups: [],
     description: "",
     text: "",
     position: 0,
@@ -125,8 +125,8 @@ export const Overlay = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.group !== "") {
-      writer.uint32(18).string(message.group);
+    for (const v of message.groups) {
+      writer.uint32(18).string(v!);
     }
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
@@ -160,7 +160,7 @@ export const Overlay = {
           message.name = reader.string();
           break;
         case 2:
-          message.group = reader.string();
+          message.groups.push(reader.string());
           break;
         case 3:
           message.description = reader.string();
@@ -191,7 +191,7 @@ export const Overlay = {
   fromJSON(object: any): Overlay {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      group: isSet(object.group) ? String(object.group) : "",
+      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
       description: isSet(object.description) ? String(object.description) : "",
       text: isSet(object.text) ? String(object.text) : "",
       position: isSet(object.position) ? textPositionFromJSON(object.position) : 0,
@@ -204,7 +204,11 @@ export const Overlay = {
   toJSON(message: Overlay): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.group !== undefined && (obj.group = message.group);
+    if (message.groups) {
+      obj.groups = message.groups.map((e) => e);
+    } else {
+      obj.groups = [];
+    }
     message.description !== undefined && (obj.description = message.description);
     message.text !== undefined && (obj.text = message.text);
     message.position !== undefined && (obj.position = textPositionToJSON(message.position));
@@ -218,7 +222,7 @@ export const Overlay = {
   fromPartial<I extends Exact<DeepPartial<Overlay>, I>>(object: I): Overlay {
     const message = createBaseOverlay();
     message.name = object.name ?? "";
-    message.group = object.group ?? "";
+    message.groups = object.groups?.map((e) => e) || [];
     message.description = object.description ?? "";
     message.text = object.text ?? "";
     message.position = object.position ?? 0;

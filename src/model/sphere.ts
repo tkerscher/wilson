@@ -8,8 +8,8 @@ export const protobufPackage = "wilson";
 export interface Sphere {
   /** Name as shown in explorer */
   name: string;
-  /** Name of group this belongs to */
-  group: string;
+  /** Name of groups this belongs to */
+  groups: string[];
   /** Additional text shown when selected */
   description: string;
   /** Color */
@@ -25,7 +25,7 @@ export interface Sphere {
 }
 
 function createBaseSphere(): Sphere {
-  return { name: "", group: "", description: "", color: undefined, position: undefined, radius: undefined };
+  return { name: "", groups: [], description: "", color: undefined, position: undefined, radius: undefined };
 }
 
 export const Sphere = {
@@ -33,8 +33,8 @@ export const Sphere = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.group !== "") {
-      writer.uint32(18).string(message.group);
+    for (const v of message.groups) {
+      writer.uint32(18).string(v!);
     }
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
@@ -62,7 +62,7 @@ export const Sphere = {
           message.name = reader.string();
           break;
         case 2:
-          message.group = reader.string();
+          message.groups.push(reader.string());
           break;
         case 3:
           message.description = reader.string();
@@ -87,7 +87,7 @@ export const Sphere = {
   fromJSON(object: any): Sphere {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      group: isSet(object.group) ? String(object.group) : "",
+      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
       description: isSet(object.description) ? String(object.description) : "",
       color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       position: isSet(object.position) ? VectorProperty.fromJSON(object.position) : undefined,
@@ -98,7 +98,11 @@ export const Sphere = {
   toJSON(message: Sphere): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.group !== undefined && (obj.group = message.group);
+    if (message.groups) {
+      obj.groups = message.groups.map((e) => e);
+    } else {
+      obj.groups = [];
+    }
     message.description !== undefined && (obj.description = message.description);
     message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.position !== undefined &&
@@ -110,7 +114,7 @@ export const Sphere = {
   fromPartial<I extends Exact<DeepPartial<Sphere>, I>>(object: I): Sphere {
     const message = createBaseSphere();
     message.name = object.name ?? "";
-    message.group = object.group ?? "";
+    message.groups = object.groups?.map((e) => e) || [];
     message.description = object.description ?? "";
     message.color = (object.color !== undefined && object.color !== null)
       ? ColorProperty.fromPartial(object.color)
