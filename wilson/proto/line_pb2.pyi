@@ -3,7 +3,9 @@
 isort:skip_file
 """
 import builtins
+import collections.abc
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
 from wilson.proto import properties_pb2
@@ -22,7 +24,7 @@ class Line(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     NAME_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
+    GROUPS_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
     COLOR_FIELD_NUMBER: builtins.int
     START_FIELD_NUMBER: builtins.int
@@ -32,8 +34,9 @@ class Line(google.protobuf.message.Message):
     POINTBACKWARD_FIELD_NUMBER: builtins.int
     name: builtins.str
     """Name as shown in explorer"""
-    group: builtins.str
-    """Name of group this belongs to"""
+    @property
+    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Name of groups this belongs to"""
     description: builtins.str
     """Additional text shown when selected"""
     @property
@@ -56,7 +59,7 @@ class Line(google.protobuf.message.Message):
         self,
         *,
         name: builtins.str = ...,
-        group: builtins.str = ...,
+        groups: collections.abc.Iterable[builtins.str] | None = ...,
         description: builtins.str = ...,
         color: properties_pb2.ColorProperty | None = ...,
         start: properties_pb2.VectorProperty | None = ...,
@@ -66,6 +69,6 @@ class Line(google.protobuf.message.Message):
         pointBackward: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["color", b"color", "end", b"end", "lineWidth", b"lineWidth", "start", b"start"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "end", b"end", "group", b"group", "lineWidth", b"lineWidth", "name", b"name", "pointBackward", b"pointBackward", "pointForward", b"pointForward", "start", b"start"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "end", b"end", "groups", b"groups", "lineWidth", b"lineWidth", "name", b"name", "pointBackward", b"pointBackward", "pointForward", b"pointForward", "start", b"start"]) -> None: ...
 
 global___Line = Line

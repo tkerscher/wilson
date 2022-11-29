@@ -3,7 +3,9 @@
 isort:skip_file
 """
 import builtins
+import collections.abc
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
@@ -72,7 +74,7 @@ class Overlay(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     NAME_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
+    GROUPS_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
     TEXT_FIELD_NUMBER: builtins.int
     POSITION_FIELD_NUMBER: builtins.int
@@ -81,8 +83,9 @@ class Overlay(google.protobuf.message.Message):
     ITALIC_FIELD_NUMBER: builtins.int
     name: builtins.str
     """Name as shown in explorer"""
-    group: builtins.str
-    """Name of group this belongs to"""
+    @property
+    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Name of groups this belongs to"""
     description: builtins.str
     """Additional text shown when selected"""
     text: builtins.str
@@ -102,7 +105,7 @@ class Overlay(google.protobuf.message.Message):
         self,
         *,
         name: builtins.str = ...,
-        group: builtins.str = ...,
+        groups: collections.abc.Iterable[builtins.str] | None = ...,
         description: builtins.str = ...,
         text: builtins.str = ...,
         position: global___TextPosition.ValueType = ...,
@@ -111,6 +114,6 @@ class Overlay(google.protobuf.message.Message):
         italic: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["fontSize", b"fontSize"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bold", b"bold", "description", b"description", "fontSize", b"fontSize", "group", b"group", "italic", b"italic", "name", b"name", "position", b"position", "text", b"text"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["bold", b"bold", "description", b"description", "fontSize", b"fontSize", "groups", b"groups", "italic", b"italic", "name", b"name", "position", b"position", "text", b"text"]) -> None: ...
 
 global___Overlay = Overlay

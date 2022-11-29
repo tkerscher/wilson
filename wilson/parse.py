@@ -251,7 +251,7 @@ def _parseSphere(
 ) -> Sphere:
     # meta
     name = sphere.name
-    group = sphere.group
+    groups = sphere.groups
     description = sphere.description
     # properties
     position = _parseVectorProperty(sphere.position, pathDict, True)
@@ -261,14 +261,14 @@ def _parseSphere(
     assert color is not None
     # done
     return Sphere(
-        name, group=group, description=description, color=color, position=position, radius=radius
+        name, groups=groups, description=description, color=color, position=position, radius=radius
     )
 
 
 def _parseTube(tube: proto.Tube, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]) -> Tube:
     # meta
     name = tube.name
-    group = tube.group
+    groups = tube.groups
     description = tube.description
     # properties
     path: PathLike = graphDict[tube.pathId] if tube.pathId in graphDict else np.empty((0, 4))  # type: ignore[assignment]
@@ -281,7 +281,7 @@ def _parseTube(tube: proto.Tube, graphDict: Dict[int, Graph], pathDict: Dict[int
     return Tube(
         path,
         name,
-        group=group,
+        groups=groups,
         description=description,
         isGrowing=isGrowing,
         radius=radius,
@@ -292,7 +292,7 @@ def _parseTube(tube: proto.Tube, graphDict: Dict[int, Graph], pathDict: Dict[int
 def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]) -> Line:
     # meta
     name = line.name
-    group = line.group
+    groups = line.groups
     description = line.description
     color = _parseColorProperty(line.color, graphDict, False)
     assert color is not None
@@ -306,7 +306,7 @@ def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int
     # Done
     return Line(
         name,
-        group=group,
+        groups=groups,
         description=description,
         color=color,
         start=start,
@@ -322,7 +322,7 @@ def _parseOverlay(
 ) -> Overlay:
     # meta
     name = overlay.name
-    group = overlay.group
+    groups = overlay.groups
     description = overlay.description
     # properties
     text = overlay.text  # TODO: fetch referenced graphs and paths
@@ -334,7 +334,7 @@ def _parseOverlay(
     return Overlay(
         text,
         name,
-        group=group,
+        groups=groups,
         description=description,
         position=position,
         fontSize=fontSize,

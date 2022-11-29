@@ -11,8 +11,8 @@ class Animatable(ABC):
     name: {str, None}, default=None
         Name of this object
 
-    group: {str, None}, default=None
-        Name of group the animatable belongs to.
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
 
     description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
@@ -22,12 +22,12 @@ class Animatable(ABC):
         self,
         name: Optional[str] = None,
         *,
-        group: Optional[str] = None,
+        groups: Iterable[str] = [],
         description: Optional[TextLike] = None,
     ):
-        self._name = name
-        self._group = group
-        self._description = description
+        self.name = name
+        self.groups = groups  # type: ignore[assignment]
+        self.description = description
 
     @property
     def name(self) -> Optional[str]:
@@ -43,17 +43,17 @@ class Animatable(ABC):
         self._name = None
 
     @property
-    def group(self) -> Optional[str]:
-        """Name of group the animatable belongs to."""
+    def groups(self) -> List[str]:
+        """Name of groups the animatable belongs to."""
         return self._group
 
-    @group.setter
-    def group(self, value: Optional[str]) -> None:
-        self._group = value
+    @groups.setter
+    def groups(self, value: Iterable[str]) -> None:
+        self._group = list(value)
 
-    @group.deleter
-    def group(self) -> None:
-        self._group = None
+    @groups.deleter
+    def groups(self) -> None:
+        self._group = []
 
     @property
     def description(self) -> Optional[TextLike]:
@@ -77,8 +77,8 @@ class Sphere(Animatable):
     name: {str, None}, default=None
         Name of this object
 
-    group: {str, None}, default=None
-        Name of group the sphere belongs to.
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
 
     description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
@@ -98,13 +98,13 @@ class Sphere(Animatable):
         self,
         name: Optional[str] = None,
         *,
-        group: Optional[str] = None,
+        groups: Iterable[str] = [],
         description: Optional[TextLike] = None,
         position: Optional[VectorProperty] = None,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = "black",
     ):
-        super().__init__(name=name, group=group, description=description)
+        super().__init__(name=name, groups=groups, description=description)
         self.position = position
         self.radius = radius
         self.color = color
@@ -157,8 +157,8 @@ class Tube(Animatable):
     name: {str, None}, default=None
         Name of this object
 
-    group: {str, None}, default=None
-        Name of group the tube belongs to.
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
 
     description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
@@ -181,13 +181,13 @@ class Tube(Animatable):
         path: PathLike,
         name: Optional[str] = None,
         *,
-        group: Optional[str] = None,
+        groups: Iterable[str] = [],
         description: Optional[TextLike] = None,
         isGrowing: bool = True,
         radius: ScalarProperty = 1.0,
         color: ColorProperty = "black",
     ):
-        super().__init__(name=name, group=group, description=description)
+        super().__init__(name=name, groups=groups, description=description)
         self.path = path
         self.isGrowing = isGrowing
         self.radius = radius
@@ -245,8 +245,8 @@ class Line(Animatable):
     name: {str, None}, default=None
         Name of this object
 
-    group: {str, None}, default=None
-        Name of group the line belongs to.
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
 
     description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
@@ -274,7 +274,7 @@ class Line(Animatable):
         self,
         name: Optional[str] = None,
         *,
-        group: Optional[str] = None,
+        groups: Iterable[str] = [],
         description: Optional[TextLike] = None,
         color: ColorProperty = "black",
         start: Optional[VectorProperty] = None,
@@ -283,7 +283,7 @@ class Line(Animatable):
         pointForward: bool = False,
         pointBackward: bool = False,
     ):
-        super().__init__(name=name, group=group, description=description)
+        super().__init__(name=name, groups=groups, description=description)
         self.start = start
         self.end = end
         self.lineWidth = lineWidth
@@ -369,8 +369,8 @@ class Overlay(Animatable):
     name: {str, None}, default=None
         Name of this object
 
-    group: {str, None}, default=None
-        Name of group the line belongs to.
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
 
     description: {TextLike, None}, default=None
         Additional description shown while this object is highlighted
@@ -393,7 +393,7 @@ class Overlay(Animatable):
         text: TextLike = "",
         name: Optional[str] = None,
         *,
-        group: Optional[str] = None,
+        groups: Iterable[str] = [],
         description: Optional[TextLike] = None,
         position: str = "lower left",
         fontSize: ScalarProperty = 16,
@@ -402,7 +402,7 @@ class Overlay(Animatable):
         graphs: Iterable[GraphLike] = [],
         paths: Iterable[PathLike] = [],
     ):
-        super().__init__(name=name, group=group, description=description)
+        super().__init__(name=name, groups=groups, description=description)
         self.text = text
         self.position = position
         self.fontSize = fontSize

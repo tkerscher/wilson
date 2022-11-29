@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 import wilson.proto.properties_pb2 as properties__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nline.proto\x12\x06wilson\x1a\x10properties.proto\"\x82\x02\n\x04Line\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05group\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12$\n\x05\x63olor\x18\x04 \x01(\x0b\x32\x15.wilson.ColorProperty\x12%\n\x05start\x18\n \x01(\x0b\x32\x16.wilson.VectorProperty\x12#\n\x03\x65nd\x18\x0b \x01(\x0b\x32\x16.wilson.VectorProperty\x12)\n\tlineWidth\x18\x0c \x01(\x0b\x32\x16.wilson.ScalarProperty\x12\x14\n\x0cpointForward\x18\r \x01(\x08\x12\x15\n\rpointBackward\x18\x0e \x01(\x08\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nline.proto\x12\x06wilson\x1a\x10properties.proto\"\x83\x02\n\x04Line\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06groups\x18\x02 \x03(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12$\n\x05\x63olor\x18\x04 \x01(\x0b\x32\x15.wilson.ColorProperty\x12%\n\x05start\x18\n \x01(\x0b\x32\x16.wilson.VectorProperty\x12#\n\x03\x65nd\x18\x0b \x01(\x0b\x32\x16.wilson.VectorProperty\x12)\n\tlineWidth\x18\x0c \x01(\x0b\x32\x16.wilson.ScalarProperty\x12\x14\n\x0cpointForward\x18\r \x01(\x08\x12\x15\n\rpointBackward\x18\x0e \x01(\x08\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'line_pb2', globals())
@@ -22,5 +22,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _LINE._serialized_start=41
-  _LINE._serialized_end=299
+  _LINE._serialized_end=300
 # @@protoc_insertion_point(module_scope)

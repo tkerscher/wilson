@@ -3,7 +3,9 @@
 isort:skip_file
 """
 import builtins
+import collections.abc
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
 from wilson.proto import properties_pb2
@@ -22,15 +24,16 @@ class Sphere(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     NAME_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
+    GROUPS_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
     COLOR_FIELD_NUMBER: builtins.int
     POSITION_FIELD_NUMBER: builtins.int
     RADIUS_FIELD_NUMBER: builtins.int
     name: builtins.str
     """Name as shown in explorer"""
-    group: builtins.str
-    """Name of group this belongs to"""
+    @property
+    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """Name of groups this belongs to"""
     description: builtins.str
     """Additional text shown when selected"""
     @property
@@ -46,13 +49,13 @@ class Sphere(google.protobuf.message.Message):
         self,
         *,
         name: builtins.str = ...,
-        group: builtins.str = ...,
+        groups: collections.abc.Iterable[builtins.str] | None = ...,
         description: builtins.str = ...,
         color: properties_pb2.ColorProperty | None = ...,
         position: properties_pb2.VectorProperty | None = ...,
         radius: properties_pb2.ScalarProperty | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["color", b"color", "position", b"position", "radius", b"radius"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "group", b"group", "name", b"name", "position", b"position", "radius", b"radius"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "groups", b"groups", "name", b"name", "position", b"position", "radius", b"radius"]) -> None: ...
 
 global___Sphere = Sphere

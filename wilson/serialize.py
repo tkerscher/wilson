@@ -448,8 +448,8 @@ def _writeObjectMeta(target, meta: Animatable, project: Project) -> None:  # typ
     target.name = meta.name
     if meta.description is not None:
         target.description = _serializeText(meta.description, target.name, project)
-    if meta.group is not None:
-        target.group = meta.group
+    if len(meta.groups) > 0:
+        target.groups[:] = meta.groups
 
 
 def _serializeSphere(sphere: Sphere, project: Project) -> proto.Sphere:
