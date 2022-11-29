@@ -27,6 +27,7 @@ export function buildGrid(scene: Scene): Node {
     const plane = MeshBuilder.CreatePlane("grid", { size: 1000 }, scene);
     plane.material = material;
     plane.parent = node;
+    plane.isPickable = false;
 
     //x axis
     const xMat = new StandardMaterial("xAxis_mat", scene);
@@ -37,6 +38,7 @@ export function buildGrid(scene: Scene): Node {
     }, scene);
     xAxis.material = xMat;
     xAxis.parent = node;
+    xAxis.isPickable = false;
 
     //y axis
     const yMat = new StandardMaterial("xAxis_mat", scene);
@@ -47,6 +49,7 @@ export function buildGrid(scene: Scene): Node {
     }, scene);
     yAxis.material = yMat;
     yAxis.parent = node;
+    yAxis.isPickable = false;
 
     return node;
 }
