@@ -4,6 +4,7 @@ import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Axis } from "@babylonjs/core/Maths/math.axis";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
+import { Node } from "@babylonjs/core/node";
 import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents";
 import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -182,8 +183,38 @@ export class LocalController implements SceneController {
             cam.setPosition(cam.position.add(d));
         }
     }
-    setGroupEnabled(group: string, enabled: boolean) {
-        this.#container?.groupMap.get(group)?.setEnabled(enabled);
+    setObjectsEnabled(objectIds: number[]|null, enabled: boolean) {
+        if (!this.#container?.scene)
+            return;
+
+        //alias for more readability
+        const map = this.#container.objectMap;
+
+        //set whole project?
+        if (!objectIds) {
+            for (const obj of map.values()) {
+                if (obj instanceof Node) {
+                    obj.setEnabled(enabled);
+                }
+                else {
+                    obj.isVisible = enabled;
+                }
+            }
+        }
+        else {
+            objectIds.forEach(id => {
+                const obj = map.get(id);
+                if (!obj)
+                    return;
+
+                if (obj instanceof Node) {
+                    obj.setEnabled(enabled);
+                }
+                else {
+                    obj.isVisible = enabled;
+                }
+            });
+        }
     }
     setPathEnabled(id: number, enabled: boolean, color: string): void {
         this.#container?.pathVisualizer.setPathEnabled(id, enabled, color);

@@ -11,6 +11,7 @@ import { Observable } from "@babylonjs/core/Misc/observable";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { Control } from "@babylonjs/gui/2D/controls/control";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
 
 import { TextEngine } from "../interpolation/textEngine";
@@ -32,11 +33,11 @@ export interface SceneContainer {
 
     scene: Scene
     camera: ArcRotateCamera
+    objectMap: Map<number, Node|Control>
 
     indicatorLayer: Scene
     grid: Node
     pathVisualizer: PathVisualizer
-    groupMap: Map<string, Node>
 
     overlayRoot: Rectangle
     overlayTexture: AdvancedDynamicTexture
@@ -113,10 +114,10 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         isStatic: isStatic,
         scene: buildTool.scene,
         camera: camera,
+        objectMap: buildTool.objectMap,
         indicatorLayer: indicator,
         grid: grid,
         pathVisualizer: new PathVisualizer(buildTool.scene, project),
-        groupMap: buildTool.groupMap,
         overlayRoot: overlayBuilder.rootContainer,
         overlayTexture: buildTool.overlayTexture,
         textEngine: buildTool.textEngine,

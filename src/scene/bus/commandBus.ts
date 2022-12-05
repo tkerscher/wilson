@@ -27,9 +27,9 @@ export type CommandMessages = {
      */
     TargetObject: number
     /**
-     * Hide or shows a group of elements
+     * Hide or shows a list of elements
      */
-    SetGroupEnabled: { group: string, enabled: boolean }
+    SetObjectsEnabled: { objectIds: number[]|null, enabled: boolean }
     /**
      * Hide, shows or updates a path given its id and color
      */
@@ -86,9 +86,9 @@ export class SceneCommander {
     /**
      * Hide or shows a group of elements
      */
-    static SetGroupEnabled(group: string, enabled: boolean) {
-        SceneCommandBus.emit("SetGroupEnabled", {
-            group: group,
+    static SetObjectsEnabled(objectIds: number[]|null, enabled: boolean) {
+        SceneCommandBus.emit("SetObjectsEnabled", {
+            objectIds: objectIds,
             enabled: enabled
         });
     }

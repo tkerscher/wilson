@@ -83,10 +83,10 @@ export interface SceneController {
     target(id: number): void
     /**
      * Shows or hides a group of objects via their group name
-     * @param group Group name
+     * @param objectIds List of ids identifying objects to manipulate or null if all should be affected.
      * @param enabled True, if the objects in the group should be shown
      */
-    setGroupEnabled(group: string, enabled: boolean): void
+    setObjectsEnabled(objectIds: number[]|null, enabled: boolean): void
     /**
      * Shows or hides a visualization of the path given by its id
      * @param id Id of path

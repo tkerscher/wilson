@@ -22,7 +22,6 @@ const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
 
 export interface Metadata {
     name: string
-    group: string
     description: string
 }
 
@@ -43,8 +42,8 @@ export class SceneBuildTool {
     textEngine: TextEngine;
 
     project: Project;
-    groupMap: Map<string, Node>;
     #nextId = 0;
+    objectMap: Map<number, Node|Control>;
 
     #materialMap: Map<string, StandardMaterial>;
     defaultMaterial: StandardMaterial;
@@ -54,7 +53,7 @@ export class SceneBuildTool {
         this.scene = new Scene(engine);
         this.animationGroup = new AnimationGroup("animationGroup", this.scene);
 
-        this.groupMap = new Map<string, Node>();
+        this.objectMap = new Map<number,Node|Control>();
 
         this.#materialMap = new Map<string, StandardMaterial>();
         this.defaultMaterial = new StandardMaterial("default");
@@ -75,37 +74,8 @@ export class SceneBuildTool {
     applyMetadata(obj: Node|Control, meta: Metadata) {
         obj.uniqueId = this.#nextId++;
         obj.metadata = meta;
-        const parent = this.getGroup(meta.group);
-        if (obj instanceof Node) {
-            obj.parent = parent;
-        }
-        else {
-            //virtually link visibility, since controls are orthogonal to nodes
-            obj.isVisible = parent.isEnabled();
-            parent.onEnabledStateChangedObservable.add(
-                () => obj.isVisible = parent.isEnabled());
-        }
-    }
 
-    /**
-     * Returns the group specified by name or creates it lazily
-     * @param group Name of the group
-     * @returns Group of given name
-     */
-    getGroup(group: string): Node {
-        const _group = this.groupMap.get(group);
-        if (_group) {
-            return _group;
-        }
-        else {
-            const value = new Node(group + "_group", this.scene);
-            //hide hidden group
-            if (this.project.hiddenGroups.find(g => g == group))
-                value.setEnabled(false);
-            //store new group in map
-            this.groupMap.set(group, value);
-            return value;
-        }
+        this.objectMap.set(obj.uniqueId, obj);
     }
 
     /**

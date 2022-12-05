@@ -10,7 +10,7 @@ export class ControllerAdapter {
     #screenshot: () => void;
     #selectObject: (id: number|null) => void;
     #targetObject: (id: number) => void;
-    #setGroupEnabled: (e: {group: string, enabled: boolean}) => void;
+    #setObjectsEnabled: (e: {objectIds: number[]|null, enabled: boolean}) => void;
     #setPathEnabled: (e: {id: number, enabled: boolean, color: string}) => void;
     #setStage: (url: string) => void;
     #removeStage: () => void;
@@ -23,8 +23,8 @@ export class ControllerAdapter {
         this.#screenshot = () => controller.screenshot();
         this.#selectObject = (id: number|null) => controller.select(id);
         this.#targetObject = (id: number) => controller.target(id);
-        this.#setGroupEnabled = (e: {group: string, enabled: boolean}) =>
-            controller.setGroupEnabled(e.group, e.enabled);
+        this.#setObjectsEnabled = (e: {objectIds: number[]|null, enabled: boolean}) =>
+            controller.setObjectsEnabled(e.objectIds, e.enabled);
         this.#setPathEnabled = (e: {id: number, enabled: boolean, color: string}) =>
             controller.setPathEnabled(e.id, e.enabled, e.color);
         this.#setStage = (url: string) => controller.loadStage(url);
@@ -37,7 +37,7 @@ export class ControllerAdapter {
         SceneCommandBus.on("Screenshot", this.#screenshot);
         SceneCommandBus.on("SelectObject", this.#selectObject);
         SceneCommandBus.on("TargetObject", this.#targetObject);
-        SceneCommandBus.on("SetGroupEnabled", this.#setGroupEnabled);
+        SceneCommandBus.on("SetObjectsEnabled", this.#setObjectsEnabled);
         SceneCommandBus.on("SetPathEnabled", this.#setPathEnabled);
         SceneCommandBus.on("SetStage", this.#setStage);
         SceneCommandBus.on("RemoveStage", this.#removeStage);
@@ -55,7 +55,7 @@ export class ControllerAdapter {
         SceneCommandBus.off("Screenshot", this.#screenshot);
         SceneCommandBus.off("SelectObject", this.#selectObject);
         SceneCommandBus.off("TargetObject", this.#targetObject);
-        SceneCommandBus.off("SetGroupEnabled", this.#setGroupEnabled);
+        SceneCommandBus.off("SetObjectsEnabled", this.#setObjectsEnabled);
         SceneCommandBus.off("SetPathEnabled", this.#setPathEnabled);
         SceneCommandBus.off("SetStage", this.#setStage);
         SceneCommandBus.off("RemoveStage", this.#removeStage);

@@ -36,9 +36,9 @@ export interface TargetCommand extends _WorkerCommand {
     type: "target",
     id: number
 }
-export interface SetGroupEnabledCommand extends _WorkerCommand {
-    type: "setGroupEnabled",
-    group: string,
+export interface SetObjectsEnabledCommand extends _WorkerCommand {
+    type: "setObjectsEnabled",
+    objectIds: number[]|null,
     enabled: boolean
 }
 export interface SetPathEnabledCommand extends _WorkerCommand {
@@ -134,7 +134,7 @@ export type WorkerCommand =
     SetCameraZoomCommand |
     SetGridEnabledCommand |
     SetGridEnabledCommand |
-    SetGroupEnabledCommand |
+    SetObjectsEnabledCommand |
     SetPathEnabledCommand |
     SetSpeedRatioCommand |
     SetThemeCommand |

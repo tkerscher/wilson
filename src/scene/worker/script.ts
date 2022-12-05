@@ -51,8 +51,8 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
     case "setGridEnabled":
         controller.setGridEnabled(ev.data.enabled);
         break;
-    case "setGroupEnabled":
-        controller.setGroupEnabled(ev.data.group, ev.data.enabled);
+    case "setObjectsEnabled":
+        controller.setObjectsEnabled(ev.data.objectIds, ev.data.enabled);
         break;
     case "setPathEnabled":
         controller.setPathEnabled(ev.data.id, ev.data.enabled, ev.data.color);
