@@ -68,7 +68,7 @@ import { SceneGroup, SceneObject } from "./ObjectGroup";
 
 const props = defineProps<{
     group: SceneGroup,
-    expanded: boolean
+    expanded?: boolean
 }>();
 const emits = defineEmits<{
     (e: "expand"): void
