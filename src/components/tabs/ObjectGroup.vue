@@ -1,71 +1,115 @@
 <template>
-  <div
-    v-if="!empty"
-    class="root"
-  >
+  <div class="root">
     <div class="header">
       <div
         :class="['button', 'icon-small', expanded ? 'chevron-down-icon' : 'chevron-right-icon']"
         :title="expanded ? 'Collapse Group' : 'Expand Group'"
         role="button"
-        @mouseup.stop="expanded = !expanded"
+        @pointerup.stop="expanded = !expanded"
       />
       <div class="title">
-        <span v-if="props.group.name.length > 0">{{ props.group.name }}</span>
-        <span
-          v-else
-          class="empty-label"
-        >Ungrouped</span>
+        <span>{{ props.group.name }}</span>
       </div>
       <div
         :class="['button', 'icon-small', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
         :title="props.group.visible ? 'Hide Group' : 'Show Group'"
         role="button"
-        @mouseup.stop="toggleGroup(props.group)"
+        @pointerup.stop="toggleGroup(props.group)"
       />
     </div>
     <div
-      v-if="expanded"
-      ref="contentDiv"
+      v-show="expanded"
       class="content"
     >
+      <div class="subgroup-div">
+        <ObjectGroup
+          v-for="sub in props.group.subgroups"
+          :key="sub.name"
+          :group="sub"
+          @expand="expand"
+        />
+      </div>
       <div
-        v-for="item in filtered"
-        :key="item.id"
-        :class="['item', { 'item-selected': selectedId == item.id }]"
-        :name="'item'+item.id"
-        tabindex="0"
-        @mouseup.stop="e => select(e, item.id)"
-        @dblclick="SceneCommander.TargetObject(item.id)"
-        @keydown.up.prevent="selectPrevious"
-        @keydown.down.prevent="selectNext"
+        ref="itemsDiv"
+        class="items-div"
       >
-        <span>{{ item.name }}</span>
+        <div
+          v-for="item in props.group.objects"
+          :key="item.id"
+          :class="['item', { 'item-selected': selectedId == item.id}]"
+          :name="'item'+item.id"
+          tabindex="0"
+          @pointerup.stop="e => select(e, item.id)"
+          @dblclick="SceneCommander.TargetObject(item.id)"
+          @keydown.up.prevent="selectPrevious"
+          @keydown.down.prevent="selectNext"
+        >
+          <div class="title">
+            <span>{{ item.name }}</span>
+          </div>
+          <div
+            :class="['button', 'icon-small', item.visible ? 'eye-icon' : 'eye-slash-icon']"
+            :title="item.visible ? 'Hide Object' : 'Show Object'"
+            role="button"
+            @pointerup.stop="toggleItem(item)"
+            @dblclick.stop
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import { Group } from "./ObjectGroup";
+import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { SceneCommander } from "../../scene/bus/commandBus";
 import { SceneEventBus } from "../../scene/bus/eventBus";
+import { SceneGroup, SceneObject } from "./ObjectGroup";
 
-const selectedId = ref<number|null>(null);
 const props = defineProps<{
-    group: Group,
-    searchQuery: string
+    group: SceneGroup,
+    expanded: boolean
 }>();
+const emits = defineEmits<{
+    (e: "expand"): void
+}>();
+const expanded = ref(props.expanded);
+const selectedId = ref<number|null>(null);
 
-const expanded = ref(false);
-const filtered = computed(() => props.group.members.filter(
-    m => m.name.toLowerCase().includes(props.searchQuery.toLowerCase())));
-const empty = computed(() => filtered.value.length == 0);
+function expand() {
+    expanded.value = true;
+    emits("expand");
+}
+
+function toggleGroup(group: SceneGroup) {
+    let ids: number[] = [];
+    const enabled = !group.visible;
+
+    //Collect all items to issue only one command
+    function flattenGroup(group: SceneGroup) {
+        ids.push(...group.objects.map(o => o.id));
+        group.subgroups.forEach(sub => flattenGroup(sub));
+    }
+    flattenGroup(group);
+    //Update scene
+    SceneCommander.SetObjectsEnabled(ids, enabled);
+
+    //update ui after scene, so we might have some multithreading bonus
+    function updateRecursive(group: SceneGroup) {
+        group.visible = enabled;
+        group.objects.forEach(obj => obj.visible = enabled);
+        group.subgroups.forEach(sub => updateRecursive(sub));
+    }
+    updateRecursive(group);
+}
+function toggleItem(item: SceneObject) {
+    SceneCommander.SetObjectsEnabled([item.id], !item.visible);
+    item.visible = !item.visible;
+}
 
 function select(e: MouseEvent, id: number) {
-    const foo = e.target as HTMLDivElement;
-    foo.focus();
+    const div = e.target as HTMLDivElement;
+    div.focus();
     SceneCommander.SelectObject(id);
 }
 function selectNext(e: KeyboardEvent) {
@@ -103,12 +147,7 @@ function selectPrevious(e: KeyboardEvent) {
     }
 }
 
-function toggleGroup(group: Group) {
-    group.visible = !group.visible;
-    SceneCommander.SetGroupEnabled(group.name, group.visible);
-}
-
-const contentDiv = ref<HTMLDivElement|null>(null);
+const itemsDiv = ref<HTMLDivElement|null>(null);
 function handleSelection(id: number|null) {
     selectedId.value = id;
 
@@ -116,16 +155,15 @@ function handleSelection(id: number|null) {
         return;
 
     //Check if the selected object is in this group
-    if (!filtered.value.find(o => o.id == id))
+    if (!props.group.objects.find(o => o.id == id))
         return;
 
-    //Expand if necessary
-    if (!expanded.value)
-        expanded.value = true;
+    //Expand
+    expand();
 
     //Get corresponding div (wait for rendering)
     nextTick(() => {
-        const item = contentDiv.value?.querySelector("[name=item"+id+"]");
+        const item = itemsDiv.value?.querySelector("[name=item"+id+"]");
         if (item) {
             const div = item as HTMLDivElement;
             div.focus();
@@ -139,7 +177,7 @@ onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
 <style scoped>
 .root {
     width: 100%;
-    font-size: 0.8em;
+    font-size: 10pt;
 }
 .header {
     width: 100%;
@@ -153,9 +191,6 @@ onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
     flex: 1;
     text-align: left;
 }
-.empty-label {
-    font-style: italic;
-}
 
 .button {
     margin-right: 10px;
@@ -165,12 +200,23 @@ onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
     cursor: pointer;
 }
 
-.item {
+.content {
     margin-left: 10px;
-    padding: 5px 0px 5px 20px;
+    padding: 5px 0px 0px 5px;
     border-left: 1px var(--primary6) solid;
+}
+
+.subgroup-div > div {
+    padding-top: 2px;
+}
+
+.item {
+    padding: 4px 0px 4px 10px;
     text-align: left;
     outline: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 .item:hover {
     cursor: pointer;
