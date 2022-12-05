@@ -11,6 +11,12 @@
         <span>{{ props.group.name }}</span>
       </div>
       <div
+        class="button icon-small chart-icon"
+        title="Show Graphs"
+        role="button"
+        @pointerup.stop="showGraphs(props.group.name)"
+      />
+      <div
         :class="['button', 'icon-small', props.group.visible ? 'eye-icon' : 'eye-slash-icon']"
         :title="props.group.visible ? 'Hide Group' : 'Show Group'"
         role="button"
@@ -48,6 +54,13 @@
             <span>{{ item.name }}</span>
           </div>
           <div
+            class="button icon-small chart-icon"
+            title="Show Graphs"
+            role="button"
+            @pointerup.stop="showGraphs(item.name)"
+            @dblclick.stop
+          />
+          <div
             :class="['button', 'icon-small', item.visible ? 'eye-icon' : 'eye-slash-icon']"
             :title="item.visible ? 'Hide Object' : 'Show Object'"
             role="button"
@@ -62,9 +75,13 @@
 
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { openPlot } from "../../plot/openPlot";
 import { SceneCommander } from "../../scene/bus/commandBus";
 import { SceneEventBus } from "../../scene/bus/eventBus";
 import { SceneGroup, SceneObject } from "./ObjectGroup";
+
+import { useProject } from "../../stores/project";
+const project = useProject();
 
 const props = defineProps<{
     group: SceneGroup,
@@ -79,6 +96,10 @@ const selectedId = ref<number|null>(null);
 function expand() {
     expanded.value = true;
     emits("expand");
+}
+
+function showGraphs(filter: string) {
+    openPlot(project.graphs, filter);
 }
 
 function toggleGroup(group: SceneGroup) {

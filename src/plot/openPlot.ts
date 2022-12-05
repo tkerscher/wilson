@@ -1,7 +1,7 @@
 import { Graph } from "../model/graph";
 import { Reader, Writer } from "protobufjs/index";
 
-export function openPlot(graphs: Graph[]): void {
+export function openPlot(graphs: Graph[], filter?: string): void {
     //encode graphs and pack into blob
     const dataWriter = Writer.create();
     const lenWriter = Writer.create();
@@ -17,7 +17,10 @@ export function openPlot(graphs: Graph[]): void {
     const url = encodeURIComponent(window.URL.createObjectURL(blob));
 
     //open plot page and pass data uri
-    const link = `plot.html?data=${url}`;
+    let link = `plot.html?data=${url}`;
+    //add filter if present
+    if (filter)
+        link += "&filter=" + encodeURIComponent(filter);
 
     window.open(link);
 }

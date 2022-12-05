@@ -48,10 +48,31 @@ const graphs = useGraphs();
 
 const showHidden = ref(false);
 
-const searchQuery = ref("");
-const filteredGraphs = computed(() =>
-    graphs.graphs.filter(g => g.name.includes(searchQuery.value) && //search query
-     (showHidden.value || g.name.charAt(0) != ".")));                //hidden graphs
+let isFilterSet = false;
+function getFilter(): string {
+    const params = new URLSearchParams(window.location.search);
+    const filter = params.get("filter");
+    if (!filter)
+        return "";
+    else {
+        isFilterSet = true;
+        return decodeURIComponent(filter);
+    }
+}
+const searchQuery = ref(getFilter());
+const filteredGraphs = computed(() => {
+    const result = graphs.graphs.filter(
+        g => g.name.includes(searchQuery.value) &&     //search query
+        (showHidden.value || g.name.charAt(0) != "."));//hidden graphs
+
+    //On start up the graphs store is not ready yet so check for that
+    if (isFilterSet && graphs.graphs.length > 0) {
+        result.forEach(graph => graph.visible = true);
+        isFilterSet = false;
+    }
+
+    return result;
+});
 
 function reset() {
     graphs.graphs.forEach(g => g.visible = false);
