@@ -33,7 +33,9 @@ jobs:
         with:
           docs-folder: "docs/"
       - name: Move Docs
-        run: mv ./docs/build/html/ ./dist/docs/
+        run: |
+          mkdir dist/docs
+          cp -a docs/build/html/. dist/docs/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
