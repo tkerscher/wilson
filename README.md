@@ -7,6 +7,13 @@ Wilson is a 3D visualization tool aimed for (astro) particle physics. It
 provides a python package for creating event files / catalogues and a static web
 based app for viewing them in your browser written using TypeScript.
 
+[Live Demo](https://tkerscher.github.io/wilson/)
+
+[Documentation](https://tkerscher.github.io/wilson/docs/)
+
+GitHub has a quota, so please don't use the demo productively. Otherwise I might
+have to remove it.
+
 ## Installation
 
 ### Python Package
