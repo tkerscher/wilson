@@ -36,6 +36,9 @@ jobs:
         run: |
           mkdir dist/docs
           cp -a docs/build/html/. dist/docs/
+      - name: Copy Example Events
+        run: |
+          cp examples/tutorial.wlsn dist/tutorial.wlsn
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
