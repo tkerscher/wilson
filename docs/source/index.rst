@@ -16,6 +16,7 @@ Welcome to Wilson's documentation!
    settings
    proto
    format
+   dev
    api
 
 Indices and tables
