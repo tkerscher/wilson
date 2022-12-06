@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scene Control &mdash; Wilson 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sidebar" href="sidebar.html" />
+    <link rel="prev" title="Sharing Animations" href="sharing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Wilson
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sharing.html">Sharing Animations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scene Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#camera">Camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#player">Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tool-bar">Tool Bar</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sidebar.html">Sidebar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proto.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">File format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Wilson</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Scene Control</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/control.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="scene-control">
+<h1>Scene Control<a class="headerlink" href="#scene-control" title="Permalink to this heading"></a></h1>
+<p>Wilson provides several ways to interact with the scene besides clicking on
+buttons, including several hot keys. The following lists them grouped in several
+categories.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You need to have the scene or the player selected for the hot keys to work.</p>
+</div>
+<div class="section" id="camera">
+<h2>Camera<a class="headerlink" href="#camera" title="Permalink to this heading"></a></h2>
+<p>You can use the mouse to control the camera by pressing the middle mouse button
+<kbd class="kbd docutils literal notranslate">MMB</kbd> or the left mouse button <kbd class="kbd docutils literal notranslate">LMB</kbd> + <kbd class="kbd docutils literal notranslate">Ctrl</kbd> if you don’t have
+or don’t want to use the middle mouse button. Moving the mouse while pressing
+those buttons will rotate the camera. If additionally <kbd class="kbd docutils literal notranslate">Shift</kbd> is pressed
+the camera will pan instead.</p>
+<p>There are also several key bindings as listed below:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Fixed Camera Position</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Alt Key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Numpad1</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">1</kbd></p></td>
+<td><p>Look in y direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">Numpad3</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">3</kbd></p></td>
+<td><p>Look in x direction</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Numpad7</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">7</kbd></p></td>
+<td><p>Look in z direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">Numpad1</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">1</kbd></p></td>
+<td><p>Look in -y direction</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">Numpad3</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">3</kbd></p></td>
+<td><p>Look in -x direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">Numpad7</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">Alt</kbd> + <kbd class="kbd docutils literal notranslate">7</kbd></p></td>
+<td><p>Look in -z direction</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Numpad9</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">9</kbd></p></td>
+<td><p>Reverse horizontally</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">R</kbd></p></td>
+<td></td>
+<td><p>Reset camera position</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Camera Rotating</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Alt Key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Numpad2</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">2</kbd></p></td>
+<td><p>Rotate upward</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">Numpad8</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">8</kbd></p></td>
+<td><p>Rotate downward</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Numpad4</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">4</kbd></p></td>
+<td><p>Rotate left</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">Numpad6</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">6</kbd></p></td>
+<td><p>Rotate right</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Camera Panning</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Alt Key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">W</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">ArrowUp</kbd></p></td>
+<td><p>Pan up</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">W</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">ArrowLeft</kbd></p></td>
+<td><p>Pan left</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">S</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">ArrowDown</kbd></p></td>
+<td><p>Pan down</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">D</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">ArrowRight</kbd></p></td>
+<td><p>Pan right</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="player">
+<h2>Player<a class="headerlink" href="#player" title="Permalink to this heading"></a></h2>
+<p>These binding refer to the player control below the scene:</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Player</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Alt Key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">K</kbd></p></td>
+<td><p><kbd class="kbd docutils literal notranslate">Space</kbd></p></td>
+<td><p>Toggle Play / Pause</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">J</kbd></p></td>
+<td></td>
+<td><p>Rewind</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">L</kbd></p></td>
+<td></td>
+<td><p>Forward</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">M</kbd></p></td>
+<td></td>
+<td><p>Toggle Looping</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">B</kbd></p></td>
+<td></td>
+<td><p>Start / Stop Recording</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">I</kbd></p></td>
+<td></td>
+<td><p>Load Previous Project</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">O</kbd></p></td>
+<td></td>
+<td><p>Load Next Project</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can also use <kbd class="kbd docutils literal notranslate">Numpad+</kbd> to slow down and <kbd class="kbd docutils literal notranslate">Numpad-</kbd> to speed up the
+animation. Additionally pressing <kbd class="kbd docutils literal notranslate">Shift</kbd> increases, pressing <kbd class="kbd docutils literal notranslate">Alt</kbd>
+decreases the step size.</p>
+</div>
+<div class="section" id="tool-bar">
+<h2>Tool Bar<a class="headerlink" href="#tool-bar" title="Permalink to this heading"></a></h2>
+<p>The tool bar in the upper left corner of the scene also provides key bindings:</p>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Tool Bar</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">T</kbd></p></td>
+<td><p>Toggle Theme (Dark / Light)</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">G</kbd></p></td>
+<td><p>Toggle Grid</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">Shift</kbd> + <kbd class="kbd docutils literal notranslate">G</kbd></p></td>
+<td><p>Open Graph Plots</p></td>
+</tr>
+<tr class="row-odd"><td><p><kbd class="kbd docutils literal notranslate">R</kbd></p></td>
+<td><p>Reset Camera Position</p></td>
+</tr>
+<tr class="row-even"><td><p><kbd class="kbd docutils literal notranslate">P</kbd></p></td>
+<td><p>Screenshot</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sharing.html" class="btn btn-neutral float-left" title="Sharing Animations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sidebar.html" class="btn btn-neutral float-right" title="Sidebar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Tobias Kerscher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

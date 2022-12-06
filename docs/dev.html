@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Guide &mdash; Wilson 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python Package" href="api.html" />
+    <link rel="prev" title="File format" href="format.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Wilson
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sharing.html">Sharing Animations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html">Scene Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sidebar.html">Sidebar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proto.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">File format</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#file-format">File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-package">Python Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-app">Web App</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#d-rendering">3D Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-interface">User Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#style-guide">Style Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Wilson</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Developer Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dev.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="developer-guide">
+<h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Permalink to this heading"></a></h1>
+<p>Here are some things listed to give you an entry point for contributing to
+Wilson.</p>
+<div class="section" id="file-format">
+<h2>File Format<a class="headerlink" href="#file-format" title="Permalink to this heading"></a></h2>
+<p>For changing the file format you should at least be familiar with
+[Protocol Buffer](<a class="reference external" href="https://developers.google.com/protocol-buffers">https://developers.google.com/protocol-buffers</a>). Since changes
+in the file format require changes in the Python package and Web App, you’ll
+most likely also need to be familiar with those, too.</p>
+<p>A core design goal of the file format is the forward and backward compatibility.
+To achieve this, you are allowed to add or delete entries in the file format as
+long as you do not change existing or preexisting entries, i.e. changing the
+format of a particular entry specified by its id.
+Furthermore, both the Python package and Web App need to be able to tolerate
+missing or default values. It must also be safe to ignore future entries.</p>
+</div>
+<div class="section" id="python-package">
+<h2>Python Package<a class="headerlink" href="#python-package" title="Permalink to this heading"></a></h2>
+<p>The python package is just a simple utility library providing some quality of
+life features like numpy support. Thus, it should just reflect the file format.</p>
+<p>Read the API to get an idea of the code design.</p>
+</div>
+<div class="section" id="web-app">
+<h2>Web App<a class="headerlink" href="#web-app" title="Permalink to this heading"></a></h2>
+<p>The Web App has two (three) big components: The 3D rendering logic and the UI.
+The third is the data model and gets (mostly) auto generated from the proto
+files.</p>
+<div class="section" id="d-rendering">
+<h3>3D Rendering<a class="headerlink" href="#d-rendering" title="Permalink to this heading"></a></h3>
+<p>The 3D rendering logic is contained in the <code class="docutils literal notranslate"><span class="pre">src/scene</span></code> directory. The actual
+implementation is coded against the <code class="docutils literal notranslate"><span class="pre">Controller</span></code> interface to allow loosely
+coupling, with the concrete instances being registered in the factory function.
+Currently, <a class="reference external" href="https://www.babylonjs.com/">Babylon JS</a> is used as the rendering
+engine, but changing or extracting the code should be straight forward.</p>
+<p>Scene creation is orchestrated from within the <code class="docutils literal notranslate"><span class="pre">buildScene()</span></code> function,
+delegating control to builder functions inside <code class="docutils literal notranslate"><span class="pre">objects</span></code> for file format
+specific objects (e.g. spheres or overlays) or <code class="docutils literal notranslate"><span class="pre">components</span></code> for UI relevant
+objects (e.g. axis orientation or grid). Additions to the scene should be
+organized accordingly.</p>
+<p>There is also some code the animation depends on inside <code class="docutils literal notranslate"><span class="pre">src/interpolation</span></code>.
+Since this works without the concept of a 3D rendering engine, the code got
+separated.</p>
+</div>
+<div class="section" id="user-interface">
+<h3>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this heading"></a></h3>
+<p>The User Interface uses the <a class="reference external" href="https://vuejs.org/">Vue JS</a> framework, which
+introduces its own file format for creating HTML components, ending in <code class="docutils literal notranslate"><span class="pre">.vue</span></code>.
+It’s rather intuitive, so a good look in to some of these files should give you
+already a pretty good idea of it.</p>
+</div>
+</div>
+<div class="section" id="style-guide">
+<h2>Style Guide<a class="headerlink" href="#style-guide" title="Permalink to this heading"></a></h2>
+<p>We are using linters to keep the styling consistent. They can be run via a yarn
+script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">yarn lint # typescript</span>
+<span class="go">yarn black # python</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="format.html" class="btn btn-neutral float-left" title="File format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Python Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Tobias Kerscher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Package &mdash; Wilson 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Developer Guide" href="dev.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Wilson
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sharing.html">Sharing Animations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html">Scene Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sidebar.html">Sidebar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proto.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">File format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wilson.color">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wilson.color.getColorByName"><code class="docutils literal notranslate"><span class="pre">getColorByName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wilson.color.getColorByRGBA"><code class="docutils literal notranslate"><span class="pre">getColorByRGBA()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Wilson</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Python Package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="python-package">
+<h1>Python Package<a class="headerlink" href="#python-package" title="Permalink to this heading"></a></h1>
+<p>Wilson provides a python package that takes care of dealing with the
+serialization into the binary format and allows to handle the data on a higher
+level, e.g. by simply passing numpy arrays.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="n">import</span> <span class="n">numpy</span> <span class="n">as</span> <span class="n">np</span>
+<span class="linenos"> 2</span> <span class="n">import</span> <span class="n">wilson</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">5</span><span class="o">.</span><span class="mi">0</span>
+<span class="linenos"> 5</span> <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="linenos"> 6</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 7</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 8</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span> <span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+<span class="linenos">11</span> <span class="n">orbit</span> <span class="o">=</span> <span class="n">wilson</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">name</span><span class="o">=</span><span class="s1">&#39;Moon Orbit&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span> <span class="n">earth</span> <span class="o">=</span> <span class="n">wilson</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="s1">&#39;Earth&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;That&#39;s our planet!&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="linenos">14</span> <span class="n">moon</span> <span class="o">=</span> <span class="n">wilson</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="s1">&#39;Moon&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Our oldest pal!&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">0</span><span class="o">.</span><span class="mi">27</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+<span class="linenos">15</span> <span class="n">moon</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">orbit</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span> <span class="n">project</span> <span class="o">=</span> <span class="n">wilson</span><span class="o">.</span><span class="n">Project</span><span class="p">(</span><span class="s1">&#39;Earth Moon&#39;</span><span class="p">,</span>
+<span class="linenos">18</span>     <span class="n">author</span><span class="o">=</span><span class="s1">&#39;wilson&#39;</span><span class="p">,</span>
+<span class="linenos">19</span>     <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The Moon orbiting around the Earth.&#39;</span><span class="p">,</span>
+<span class="linenos">20</span>     <span class="n">animationSpeed</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">5</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">21</span>     <span class="n">animatables</span><span class="o">=[</span><span class="n">earth</span><span class="p">,</span> <span class="n">moon</span><span class="o">]</span><span class="p">)</span>
+<span class="linenos">22</span> <span class="n">project</span><span class="o">.</span><span class="n">clearColor</span> <span class="o">=</span> <span class="s1">&#39;light yellow&#39;</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span> <span class="n">wilson</span><span class="o">.</span><span class="n">saveProject</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="s1">&#39;../examples/earth_moon.wlsn&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See notebooks for a detailed instructions.</p>
+</div>
+<div class="section" id="module-wilson.color">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-wilson.color" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wilson.color.getColorByName">
+<span class="sig-name descname"><span class="pre">getColorByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#wilson.color.getColorByName" title="Permalink to this definition"></a></dt>
+<dd><p>”
+Returns a color specified by its name.
+Uses the xkcd color names.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wilson.color.getColorByRGBA">
+<span class="sig-name descname"><span class="pre">getColorByRGBA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">red</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">green</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#wilson.color.getColorByRGBA" title="Permalink to this definition"></a></dt>
+<dd><p>Converts color specified by integers in the range 0-255 to the expected float tuple.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev.html" class="btn btn-neutral float-left" title="Developer Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Tobias Kerscher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
