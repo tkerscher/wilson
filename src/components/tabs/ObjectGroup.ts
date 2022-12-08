@@ -17,7 +17,17 @@ export interface SceneGroup {
     subgroups: Array<SceneGroup>
 }
 
-export function extractGroups(project: Project): SceneGroup {
+export const EmptyGroup: SceneGroup = {
+    name: "",
+    visible: false,
+    objects: [],
+    subgroups: []
+};
+
+export function extractGroups(project: Project): {
+    group: SceneGroup,
+    objects: SceneObject[]
+} {
     let id = 0;
     const name = project.meta?.name ?? "";
 
@@ -70,6 +80,8 @@ export function extractGroups(project: Project): SceneGroup {
     // For the id to match we have to make sure that the order of object
     // creation are identical to the scene builder.
 
+    const objects: SceneObject[] = [];
+
     project.spheres.forEach(sphere => {
         const obj: SceneObject = {
             name: sphere.name,
@@ -79,6 +91,7 @@ export function extractGroups(project: Project): SceneGroup {
             type: "Sphere"
         };
         groupObject(obj, sphere.groups);
+        objects.push(obj);
     });
     project.lines.forEach(line => {
         const obj: SceneObject = {
@@ -89,6 +102,7 @@ export function extractGroups(project: Project): SceneGroup {
             type: "Line"
         };
         groupObject(obj, line.groups);
+        objects.push(obj);
     });
     project.tubes.forEach(tube => {
         const obj: SceneObject = {
@@ -99,6 +113,7 @@ export function extractGroups(project: Project): SceneGroup {
             type: "Tube"
         };
         groupObject(obj, tube.groups);
+        objects.push(obj);
     });
     project.overlays.forEach(overlay => {
         const obj: SceneObject = {
@@ -109,6 +124,7 @@ export function extractGroups(project: Project): SceneGroup {
             type: "Overlay"
         };
         groupObject(obj, overlay.groups);
+        objects.push(obj);
     });
 
     // Check which group are invisible
@@ -130,5 +146,8 @@ export function extractGroups(project: Project): SceneGroup {
                 .sort((a, b) => a.name.localeCompare(b.name))
         };
     }
-    return processNode(root);
+    return {
+        group: processNode(root),
+        objects: objects
+    };
 }

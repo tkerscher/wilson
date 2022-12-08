@@ -19,8 +19,8 @@
 <script setup lang="ts">
 import GroupEntry from "./ObjectGroup.vue";
 
-import { ref, watch } from "vue";
-import { extractGroups, SceneGroup, SceneObject } from "./ObjectGroup";
+import { onMounted, ref, watch } from "vue";
+import { EmptyGroup, extractGroups, SceneGroup, SceneObject } from "./ObjectGroup";
 import { SceneCommander } from "../../scene/bus/commandBus";
 import { useProject } from "../../stores/project";
 const project = useProject();
@@ -29,19 +29,16 @@ const props = defineProps<{
     searchQuery: string
 }>();
 
-const rootGroup = ref<SceneGroup>(extractGroups(project));
-let flatObjectMap: SceneObject[] = [];
-function flattenGroup(group: SceneGroup) {
-    flatObjectMap.push(...group.objects);
-    group.subgroups.forEach(sub => flattenGroup(sub));
+const rootGroup = ref<SceneGroup>(EmptyGroup);
+let objects: SceneObject[] = [];
+function processGroups() {
+    const result = extractGroups(project);
+    rootGroup.value = result.group;
+    objects = result.objects;
 }
-flattenGroup(rootGroup.value);
 
-project.$subscribe(() => {
-    rootGroup.value = extractGroups(project);
-    flatObjectMap = [];
-    flattenGroup(rootGroup.value);
-});
+project.$subscribe(processGroups);
+onMounted(() => processGroups());
 
 const searchResult = ref<SceneGroup>({
     name: "Search Result",
@@ -51,7 +48,7 @@ const searchResult = ref<SceneGroup>({
 });
 watch(() => props.searchQuery, () => {
     searchResult.value.visible = true;
-    searchResult.value.objects = flatObjectMap.filter(
+    searchResult.value.objects = objects.filter(
         o => o.name.toLowerCase().includes(props.searchQuery.toLowerCase()));
 });
 </script>
