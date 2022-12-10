@@ -6,16 +6,6 @@ export const protobufPackage = "wilson";
 
 /** Animated line in 3D space */
 export interface Line {
-  /** Name as shown in explorer */
-  name: string;
-  /** Name of groups this belongs to */
-  groups: string[];
-  /** Additional text shown when selected */
-  description: string;
-  /** Color */
-  color:
-    | ColorProperty
-    | undefined;
   /** start position */
   start:
     | VectorProperty
@@ -28,6 +18,10 @@ export interface Line {
   lineWidth:
     | ScalarProperty
     | undefined;
+  /** Line color */
+  color:
+    | ColorProperty
+    | undefined;
   /** true, if there should be a cone pointing toward the start point */
   pointForward: boolean;
   /** true, if there should be a cone pointing toward the end point */
@@ -36,13 +30,10 @@ export interface Line {
 
 function createBaseLine(): Line {
   return {
-    name: "",
-    groups: [],
-    description: "",
-    color: undefined,
     start: undefined,
     end: undefined,
     lineWidth: undefined,
+    color: undefined,
     pointForward: false,
     pointBackward: false,
   };
@@ -50,32 +41,23 @@ function createBaseLine(): Line {
 
 export const Line = {
   encode(message: Line, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.start !== undefined) {
+      VectorProperty.encode(message.start, writer.uint32(10).fork()).ldelim();
     }
-    for (const v of message.groups) {
-      writer.uint32(18).string(v!);
+    if (message.end !== undefined) {
+      VectorProperty.encode(message.end, writer.uint32(18).fork()).ldelim();
     }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
+    if (message.lineWidth !== undefined) {
+      ScalarProperty.encode(message.lineWidth, writer.uint32(26).fork()).ldelim();
     }
     if (message.color !== undefined) {
       ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
     }
-    if (message.start !== undefined) {
-      VectorProperty.encode(message.start, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.end !== undefined) {
-      VectorProperty.encode(message.end, writer.uint32(90).fork()).ldelim();
-    }
-    if (message.lineWidth !== undefined) {
-      ScalarProperty.encode(message.lineWidth, writer.uint32(98).fork()).ldelim();
-    }
     if (message.pointForward === true) {
-      writer.uint32(104).bool(message.pointForward);
+      writer.uint32(40).bool(message.pointForward);
     }
     if (message.pointBackward === true) {
-      writer.uint32(112).bool(message.pointBackward);
+      writer.uint32(48).bool(message.pointBackward);
     }
     return writer;
   },
@@ -88,30 +70,21 @@ export const Line = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.name = reader.string();
+          message.start = VectorProperty.decode(reader, reader.uint32());
           break;
         case 2:
-          message.groups.push(reader.string());
+          message.end = VectorProperty.decode(reader, reader.uint32());
           break;
         case 3:
-          message.description = reader.string();
+          message.lineWidth = ScalarProperty.decode(reader, reader.uint32());
           break;
         case 4:
           message.color = ColorProperty.decode(reader, reader.uint32());
           break;
-        case 10:
-          message.start = VectorProperty.decode(reader, reader.uint32());
-          break;
-        case 11:
-          message.end = VectorProperty.decode(reader, reader.uint32());
-          break;
-        case 12:
-          message.lineWidth = ScalarProperty.decode(reader, reader.uint32());
-          break;
-        case 13:
+        case 5:
           message.pointForward = reader.bool();
           break;
-        case 14:
+        case 6:
           message.pointBackward = reader.bool();
           break;
         default:
@@ -124,13 +97,10 @@ export const Line = {
 
   fromJSON(object: any): Line {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
-      description: isSet(object.description) ? String(object.description) : "",
-      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       start: isSet(object.start) ? VectorProperty.fromJSON(object.start) : undefined,
       end: isSet(object.end) ? VectorProperty.fromJSON(object.end) : undefined,
       lineWidth: isSet(object.lineWidth) ? ScalarProperty.fromJSON(object.lineWidth) : undefined,
+      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       pointForward: isSet(object.pointForward) ? Boolean(object.pointForward) : false,
       pointBackward: isSet(object.pointBackward) ? Boolean(object.pointBackward) : false,
     };
@@ -138,18 +108,11 @@ export const Line = {
 
   toJSON(message: Line): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
-    } else {
-      obj.groups = [];
-    }
-    message.description !== undefined && (obj.description = message.description);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.start !== undefined && (obj.start = message.start ? VectorProperty.toJSON(message.start) : undefined);
     message.end !== undefined && (obj.end = message.end ? VectorProperty.toJSON(message.end) : undefined);
     message.lineWidth !== undefined &&
       (obj.lineWidth = message.lineWidth ? ScalarProperty.toJSON(message.lineWidth) : undefined);
+    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.pointForward !== undefined && (obj.pointForward = message.pointForward);
     message.pointBackward !== undefined && (obj.pointBackward = message.pointBackward);
     return obj;
@@ -157,12 +120,6 @@ export const Line = {
 
   fromPartial<I extends Exact<DeepPartial<Line>, I>>(object: I): Line {
     const message = createBaseLine();
-    message.name = object.name ?? "";
-    message.groups = object.groups?.map((e) => e) || [];
-    message.description = object.description ?? "";
-    message.color = (object.color !== undefined && object.color !== null)
-      ? ColorProperty.fromPartial(object.color)
-      : undefined;
     message.start = (object.start !== undefined && object.start !== null)
       ? VectorProperty.fromPartial(object.start)
       : undefined;
@@ -171,6 +128,9 @@ export const Line = {
       : undefined;
     message.lineWidth = (object.lineWidth !== undefined && object.lineWidth !== null)
       ? ScalarProperty.fromPartial(object.lineWidth)
+      : undefined;
+    message.color = (object.color !== undefined && object.color !== null)
+      ? ColorProperty.fromPartial(object.color)
       : undefined;
     message.pointForward = object.pointForward ?? false;
     message.pointBackward = object.pointBackward ?? false;

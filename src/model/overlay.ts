@@ -91,12 +91,6 @@ export function textPositionToJSON(object: TextPosition): string {
 
 /** Overlay text drawn on the scene surface */
 export interface Overlay {
-  /** Name as shown in explorer */
-  name: string;
-  /** Name of groups this belongs to */
-  groups: string[];
-  /** Additional text shown when selected */
-  description: string;
   /** Text to be drawn on the scene */
   text: string;
   /** Position of the text */
@@ -108,43 +102,25 @@ export interface Overlay {
 }
 
 function createBaseOverlay(): Overlay {
-  return {
-    name: "",
-    groups: [],
-    description: "",
-    text: "",
-    position: 0,
-    fontSize: undefined,
-    bold: false,
-    italic: false,
-  };
+  return { text: "", position: 0, fontSize: undefined, bold: false, italic: false };
 }
 
 export const Overlay = {
   encode(message: Overlay, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    for (const v of message.groups) {
-      writer.uint32(18).string(v!);
-    }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
-    }
     if (message.text !== "") {
-      writer.uint32(82).string(message.text);
+      writer.uint32(10).string(message.text);
     }
     if (message.position !== 0) {
-      writer.uint32(88).int32(message.position);
+      writer.uint32(16).int32(message.position);
     }
     if (message.fontSize !== undefined) {
-      ScalarProperty.encode(message.fontSize, writer.uint32(98).fork()).ldelim();
+      ScalarProperty.encode(message.fontSize, writer.uint32(26).fork()).ldelim();
     }
     if (message.bold === true) {
-      writer.uint32(104).bool(message.bold);
+      writer.uint32(32).bool(message.bold);
     }
     if (message.italic === true) {
-      writer.uint32(112).bool(message.italic);
+      writer.uint32(40).bool(message.italic);
     }
     return writer;
   },
@@ -157,27 +133,18 @@ export const Overlay = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.name = reader.string();
-          break;
-        case 2:
-          message.groups.push(reader.string());
-          break;
-        case 3:
-          message.description = reader.string();
-          break;
-        case 10:
           message.text = reader.string();
           break;
-        case 11:
+        case 2:
           message.position = reader.int32() as any;
           break;
-        case 12:
+        case 3:
           message.fontSize = ScalarProperty.decode(reader, reader.uint32());
           break;
-        case 13:
+        case 4:
           message.bold = reader.bool();
           break;
-        case 14:
+        case 5:
           message.italic = reader.bool();
           break;
         default:
@@ -190,9 +157,6 @@ export const Overlay = {
 
   fromJSON(object: any): Overlay {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
-      description: isSet(object.description) ? String(object.description) : "",
       text: isSet(object.text) ? String(object.text) : "",
       position: isSet(object.position) ? textPositionFromJSON(object.position) : 0,
       fontSize: isSet(object.fontSize) ? ScalarProperty.fromJSON(object.fontSize) : undefined,
@@ -203,13 +167,6 @@ export const Overlay = {
 
   toJSON(message: Overlay): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
-    } else {
-      obj.groups = [];
-    }
-    message.description !== undefined && (obj.description = message.description);
     message.text !== undefined && (obj.text = message.text);
     message.position !== undefined && (obj.position = textPositionToJSON(message.position));
     message.fontSize !== undefined &&
@@ -221,9 +178,6 @@ export const Overlay = {
 
   fromPartial<I extends Exact<DeepPartial<Overlay>, I>>(object: I): Overlay {
     const message = createBaseOverlay();
-    message.name = object.name ?? "";
-    message.groups = object.groups?.map((e) => e) || [];
-    message.description = object.description ?? "";
     message.text = object.text ?? "";
     message.position = object.position ?? 0;
     message.fontSize = (object.fontSize !== undefined && object.fontSize !== null)

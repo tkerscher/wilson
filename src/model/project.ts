@@ -1,14 +1,11 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { Animatible } from "./animatible";
 import { Camera } from "./camera";
 import { ColorMap } from "./colormap";
 import { Graph } from "./graph";
-import { Line } from "./line";
 import { ProjectMeta } from "./meta";
-import { Overlay } from "./overlay";
 import { Path } from "./path";
-import { Sphere } from "./sphere";
-import { Tube } from "./tube";
 
 export const protobufPackage = "wilson";
 
@@ -32,14 +29,8 @@ export interface Project {
     | undefined;
   /** list of groups hidden by default */
   hiddenGroups: string[];
-  /** list of animated spheres */
-  spheres: Sphere[];
-  /** list of animated lines */
-  lines: Line[];
-  /** list of animated tubes */
-  tubes: Tube[];
-  /** list of animated overlay text */
-  overlays: Overlay[];
+  /** list of animatibles */
+  animatibles: Animatible[];
 }
 
 function createBaseProject(): Project {
@@ -50,10 +41,7 @@ function createBaseProject(): Project {
     colormap: undefined,
     camera: undefined,
     hiddenGroups: [],
-    spheres: [],
-    lines: [],
-    tubes: [],
-    overlays: [],
+    animatibles: [],
   };
 }
 
@@ -77,17 +65,8 @@ export const Project = {
     for (const v of message.hiddenGroups) {
       writer.uint32(122).string(v!);
     }
-    for (const v of message.spheres) {
-      Sphere.encode(v!, writer.uint32(130).fork()).ldelim();
-    }
-    for (const v of message.lines) {
-      Line.encode(v!, writer.uint32(138).fork()).ldelim();
-    }
-    for (const v of message.tubes) {
-      Tube.encode(v!, writer.uint32(146).fork()).ldelim();
-    }
-    for (const v of message.overlays) {
-      Overlay.encode(v!, writer.uint32(154).fork()).ldelim();
+    for (const v of message.animatibles) {
+      Animatible.encode(v!, writer.uint32(130).fork()).ldelim();
     }
     return writer;
   },
@@ -118,16 +97,7 @@ export const Project = {
           message.hiddenGroups.push(reader.string());
           break;
         case 16:
-          message.spheres.push(Sphere.decode(reader, reader.uint32()));
-          break;
-        case 17:
-          message.lines.push(Line.decode(reader, reader.uint32()));
-          break;
-        case 18:
-          message.tubes.push(Tube.decode(reader, reader.uint32()));
-          break;
-        case 19:
-          message.overlays.push(Overlay.decode(reader, reader.uint32()));
+          message.animatibles.push(Animatible.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -145,10 +115,7 @@ export const Project = {
       colormap: isSet(object.colormap) ? ColorMap.fromJSON(object.colormap) : undefined,
       camera: isSet(object.camera) ? Camera.fromJSON(object.camera) : undefined,
       hiddenGroups: Array.isArray(object?.hiddenGroups) ? object.hiddenGroups.map((e: any) => String(e)) : [],
-      spheres: Array.isArray(object?.spheres) ? object.spheres.map((e: any) => Sphere.fromJSON(e)) : [],
-      lines: Array.isArray(object?.lines) ? object.lines.map((e: any) => Line.fromJSON(e)) : [],
-      tubes: Array.isArray(object?.tubes) ? object.tubes.map((e: any) => Tube.fromJSON(e)) : [],
-      overlays: Array.isArray(object?.overlays) ? object.overlays.map((e: any) => Overlay.fromJSON(e)) : [],
+      animatibles: Array.isArray(object?.animatibles) ? object.animatibles.map((e: any) => Animatible.fromJSON(e)) : [],
     };
   },
 
@@ -172,25 +139,10 @@ export const Project = {
     } else {
       obj.hiddenGroups = [];
     }
-    if (message.spheres) {
-      obj.spheres = message.spheres.map((e) => e ? Sphere.toJSON(e) : undefined);
+    if (message.animatibles) {
+      obj.animatibles = message.animatibles.map((e) => e ? Animatible.toJSON(e) : undefined);
     } else {
-      obj.spheres = [];
-    }
-    if (message.lines) {
-      obj.lines = message.lines.map((e) => e ? Line.toJSON(e) : undefined);
-    } else {
-      obj.lines = [];
-    }
-    if (message.tubes) {
-      obj.tubes = message.tubes.map((e) => e ? Tube.toJSON(e) : undefined);
-    } else {
-      obj.tubes = [];
-    }
-    if (message.overlays) {
-      obj.overlays = message.overlays.map((e) => e ? Overlay.toJSON(e) : undefined);
-    } else {
-      obj.overlays = [];
+      obj.animatibles = [];
     }
     return obj;
   },
@@ -209,10 +161,7 @@ export const Project = {
       ? Camera.fromPartial(object.camera)
       : undefined;
     message.hiddenGroups = object.hiddenGroups?.map((e) => e) || [];
-    message.spheres = object.spheres?.map((e) => Sphere.fromPartial(e)) || [];
-    message.lines = object.lines?.map((e) => Line.fromPartial(e)) || [];
-    message.tubes = object.tubes?.map((e) => Tube.fromPartial(e)) || [];
-    message.overlays = object.overlays?.map((e) => Overlay.fromPartial(e)) || [];
+    message.animatibles = object.animatibles?.map((e) => Animatible.fromPartial(e)) || [];
     return message;
   },
 };

@@ -6,16 +6,6 @@ export const protobufPackage = "wilson";
 
 /** Tube in 3D space */
 export interface Tube {
-  /** Name as shown in explorer */
-  name: string;
-  /** Name of groups this belongs to */
-  groups: string[];
-  /** Additional text shown when selected */
-  description: string;
-  /** Color of the tube at a certain point identified by time */
-  color:
-    | ColorProperty
-    | undefined;
   /** Index of path to follow */
   pathId: number;
   /**
@@ -24,35 +14,30 @@ export interface Tube {
    */
   isGrowing: boolean;
   /** Radius of the tube at a certain point identified by time */
-  radius: ScalarProperty | undefined;
+  radius:
+    | ScalarProperty
+    | undefined;
+  /** Color of the tube at a certain point identified by time */
+  color: ColorProperty | undefined;
 }
 
 function createBaseTube(): Tube {
-  return { name: "", groups: [], description: "", color: undefined, pathId: 0, isGrowing: false, radius: undefined };
+  return { pathId: 0, isGrowing: false, radius: undefined, color: undefined };
 }
 
 export const Tube = {
   encode(message: Tube, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.pathId !== 0) {
+      writer.uint32(8).uint32(message.pathId);
     }
-    for (const v of message.groups) {
-      writer.uint32(18).string(v!);
+    if (message.isGrowing === true) {
+      writer.uint32(16).bool(message.isGrowing);
     }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
+    if (message.radius !== undefined) {
+      ScalarProperty.encode(message.radius, writer.uint32(26).fork()).ldelim();
     }
     if (message.color !== undefined) {
       ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.pathId !== 0) {
-      writer.uint32(80).uint32(message.pathId);
-    }
-    if (message.isGrowing === true) {
-      writer.uint32(88).bool(message.isGrowing);
-    }
-    if (message.radius !== undefined) {
-      ScalarProperty.encode(message.radius, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -65,25 +50,16 @@ export const Tube = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.name = reader.string();
+          message.pathId = reader.uint32();
           break;
         case 2:
-          message.groups.push(reader.string());
+          message.isGrowing = reader.bool();
           break;
         case 3:
-          message.description = reader.string();
+          message.radius = ScalarProperty.decode(reader, reader.uint32());
           break;
         case 4:
           message.color = ColorProperty.decode(reader, reader.uint32());
-          break;
-        case 10:
-          message.pathId = reader.uint32();
-          break;
-        case 11:
-          message.isGrowing = reader.bool();
-          break;
-        case 12:
-          message.radius = ScalarProperty.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -95,44 +71,31 @@ export const Tube = {
 
   fromJSON(object: any): Tube {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
-      description: isSet(object.description) ? String(object.description) : "",
-      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       pathId: isSet(object.pathId) ? Number(object.pathId) : 0,
       isGrowing: isSet(object.isGrowing) ? Boolean(object.isGrowing) : false,
       radius: isSet(object.radius) ? ScalarProperty.fromJSON(object.radius) : undefined,
+      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
     };
   },
 
   toJSON(message: Tube): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
-    } else {
-      obj.groups = [];
-    }
-    message.description !== undefined && (obj.description = message.description);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.pathId !== undefined && (obj.pathId = Math.round(message.pathId));
     message.isGrowing !== undefined && (obj.isGrowing = message.isGrowing);
     message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
+    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Tube>, I>>(object: I): Tube {
     const message = createBaseTube();
-    message.name = object.name ?? "";
-    message.groups = object.groups?.map((e) => e) || [];
-    message.description = object.description ?? "";
-    message.color = (object.color !== undefined && object.color !== null)
-      ? ColorProperty.fromPartial(object.color)
-      : undefined;
     message.pathId = object.pathId ?? 0;
     message.isGrowing = object.isGrowing ?? false;
     message.radius = (object.radius !== undefined && object.radius !== null)
       ? ScalarProperty.fromPartial(object.radius)
+      : undefined;
+    message.color = (object.color !== undefined && object.color !== null)
+      ? ColorProperty.fromPartial(object.color)
       : undefined;
     return message;
   },

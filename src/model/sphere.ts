@@ -6,47 +6,32 @@ export const protobufPackage = "wilson";
 
 /** Animatible sphere in 3D space */
 export interface Sphere {
-  /** Name as shown in explorer */
-  name: string;
-  /** Name of groups this belongs to */
-  groups: string[];
-  /** Additional text shown when selected */
-  description: string;
-  /** Color */
-  color:
-    | ColorProperty
-    | undefined;
   /** center of sphere */
   position:
     | VectorProperty
     | undefined;
   /** Radius */
-  radius: ScalarProperty | undefined;
+  radius:
+    | ScalarProperty
+    | undefined;
+  /** Color */
+  color: ColorProperty | undefined;
 }
 
 function createBaseSphere(): Sphere {
-  return { name: "", groups: [], description: "", color: undefined, position: undefined, radius: undefined };
+  return { position: undefined, radius: undefined, color: undefined };
 }
 
 export const Sphere = {
   encode(message: Sphere, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    for (const v of message.groups) {
-      writer.uint32(18).string(v!);
-    }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
-    }
-    if (message.color !== undefined) {
-      ColorProperty.encode(message.color, writer.uint32(34).fork()).ldelim();
-    }
     if (message.position !== undefined) {
-      VectorProperty.encode(message.position, writer.uint32(82).fork()).ldelim();
+      VectorProperty.encode(message.position, writer.uint32(10).fork()).ldelim();
     }
     if (message.radius !== undefined) {
-      ScalarProperty.encode(message.radius, writer.uint32(90).fork()).ldelim();
+      ScalarProperty.encode(message.radius, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.color !== undefined) {
+      ColorProperty.encode(message.color, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -59,22 +44,13 @@ export const Sphere = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.name = reader.string();
-          break;
-        case 2:
-          message.groups.push(reader.string());
-          break;
-        case 3:
-          message.description = reader.string();
-          break;
-        case 4:
-          message.color = ColorProperty.decode(reader, reader.uint32());
-          break;
-        case 10:
           message.position = VectorProperty.decode(reader, reader.uint32());
           break;
-        case 11:
+        case 2:
           message.radius = ScalarProperty.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.color = ColorProperty.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -86,44 +62,31 @@ export const Sphere = {
 
   fromJSON(object: any): Sphere {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
-      description: isSet(object.description) ? String(object.description) : "",
-      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
       position: isSet(object.position) ? VectorProperty.fromJSON(object.position) : undefined,
       radius: isSet(object.radius) ? ScalarProperty.fromJSON(object.radius) : undefined,
+      color: isSet(object.color) ? ColorProperty.fromJSON(object.color) : undefined,
     };
   },
 
   toJSON(message: Sphere): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
-    } else {
-      obj.groups = [];
-    }
-    message.description !== undefined && (obj.description = message.description);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     message.position !== undefined &&
       (obj.position = message.position ? VectorProperty.toJSON(message.position) : undefined);
     message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
+    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Sphere>, I>>(object: I): Sphere {
     const message = createBaseSphere();
-    message.name = object.name ?? "";
-    message.groups = object.groups?.map((e) => e) || [];
-    message.description = object.description ?? "";
-    message.color = (object.color !== undefined && object.color !== null)
-      ? ColorProperty.fromPartial(object.color)
-      : undefined;
     message.position = (object.position !== undefined && object.position !== null)
       ? VectorProperty.fromPartial(object.position)
       : undefined;
     message.radius = (object.radius !== undefined && object.radius !== null)
       ? ScalarProperty.fromPartial(object.radius)
+      : undefined;
+    message.color = (object.color !== undefined && object.color !== null)
+      ? ColorProperty.fromPartial(object.color)
       : undefined;
     return message;
   },
