@@ -1,6 +1,7 @@
+import { Animatible } from "../../model/animatible";
 import { Project } from "../../model/project";
 
-export type SceneObjectType = "Sphere" | "Line" | "Tube" | "Overlay"
+export type SceneObjectType = "Sphere" | "Line" | "Tube" | "Overlay" | "Unknown"
 
 export interface SceneObject {
     name: string //! NOTE: Copy of the name -> Not synced with project store
@@ -30,7 +31,6 @@ export function extractGroups(project: Project): {
 } {
     let id = 0;
     const name = project.meta?.name ?? "";
-
 
     interface Node {
         name: string
@@ -82,48 +82,32 @@ export function extractGroups(project: Project): {
 
     const objects: SceneObject[] = [];
 
-    project.spheres.forEach(sphere => {
+    function getType(animatible: Animatible): SceneObjectType {
+        if (!animatible.instance) {
+            return "Unknown";
+        }
+
+        switch (animatible.instance.$case) {
+        case "sphere":
+            return "Sphere";
+        case "line":
+            return "Line";
+        case "tube":
+            return "Tube";
+        case "overlay":
+            return "Overlay";
+        }
+    }
+
+    project.animatibles.forEach(animatible => {
         const obj: SceneObject = {
-            name: sphere.name,
-            description: sphere.description,
+            name: animatible.name,
+            description: animatible.description,
             visible: true,
             id: id++,
-            type: "Sphere"
+            type: getType(animatible)
         };
-        groupObject(obj, sphere.groups);
-        objects.push(obj);
-    });
-    project.lines.forEach(line => {
-        const obj: SceneObject = {
-            name: line.name,
-            description: line.description,
-            visible: true,
-            id: id++,
-            type: "Line"
-        };
-        groupObject(obj, line.groups);
-        objects.push(obj);
-    });
-    project.tubes.forEach(tube => {
-        const obj: SceneObject = {
-            name: tube.name,
-            description: tube.description,
-            visible: true,
-            id: id++,
-            type: "Tube"
-        };
-        groupObject(obj, tube.groups);
-        objects.push(obj);
-    });
-    project.overlays.forEach(overlay => {
-        const obj: SceneObject = {
-            name: overlay.name,
-            description: overlay.description,
-            visible: true,
-            id: id++,
-            type: "Overlay"
-        };
-        groupObject(obj, overlay.groups);
+        groupObject(obj, animatible.groups);
         objects.push(obj);
     });
 
