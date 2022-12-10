@@ -67,11 +67,31 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
 
     const sphereBuilder = new SphereBuilder(buildTool);
     const overlayBuilder = new OverlayBuilder(buildTool);
+    const tubes: TubeController[] = [];
 
-    project.spheres.forEach(sphere => sphereBuilder.build(sphere));
-    project.lines.forEach(line => buildLine(buildTool, line));
-    const tubes = project.tubes.map(tube => new TubeController(buildTool, tube));
-    project.overlays.forEach(overlay => overlayBuilder.build(overlay));
+    project.animatibles.forEach(animatible => {
+        // Unknown type of animatible -> ignore
+        if (!animatible.instance) {
+            buildTool.skipObject();
+            return;
+        }
+
+        //check instance type
+        switch(animatible.instance.$case) {
+        case "sphere":
+            sphereBuilder.build(animatible.instance.sphere, animatible);
+            break;
+        case "line":
+            buildLine(buildTool, animatible.instance.line, animatible);
+            break;
+        case "tube":
+            tubes.push(new TubeController(buildTool, animatible.instance.tube, animatible));
+            break;
+        case "overlay":
+            overlayBuilder.build(animatible.instance.overlay, animatible);
+            break;
+        }
+    });
 
     //set animation speed
     let ratio = project.meta?.speedRatio ?? 1.0;

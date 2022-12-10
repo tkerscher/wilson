@@ -5,7 +5,7 @@ import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 import { Line } from "../../model/line";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
-import { SceneBuildTool } from "./tools";
+import { Metadata, SceneBuildTool } from "./tools";
 
 const EY = new Vector3(0.0,1.0,0.0);
 
@@ -56,22 +56,22 @@ function alignVector(dir: Vector3): Quaternion {
     return Quaternion.RotationAxis(axis, theta);
 }
 
-export function buildLine(tool: SceneBuildTool, line: Line) {
+export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
     let mesh;
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
-        mesh = MeshBuilder.CreateCylinder(line.name, { height: 1.0 });
+        mesh = MeshBuilder.CreateCylinder(meta.name, { height: 1.0 });
     }
     else if(line.pointForward && !line.pointBackward) {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: forwardArrowShape, tessellation: 24 });
+        mesh = MeshBuilder.CreateLathe(meta.name, { shape: forwardArrowShape, tessellation: 24 });
     }
     else if(!line.pointForward && line.pointBackward) {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: backwardArrowShape, tessellation: 24 });
+        mesh = MeshBuilder.CreateLathe(meta.name, { shape: backwardArrowShape, tessellation: 24 });
     }
     else {
-        mesh = MeshBuilder.CreateLathe(line.name, { shape: doubleArrowShape, tessellation: 24 });
+        mesh = MeshBuilder.CreateLathe(meta.name, { shape: doubleArrowShape, tessellation: 24 });
     }
-    tool.applyMetadata(mesh, line);
+    tool.applyMetadata(mesh, meta);
 
     const mat = tool.parseColor(line.color, "material");
     mesh.material = mat;
@@ -131,9 +131,9 @@ export function buildLine(tool: SceneBuildTool, line: Line) {
         const endInt = new PathInterpolator(line.end, tool.project);
 
         //alloc animations
-        const lengthAnimation = new Animation(line.name + "_length", "scaling.y",
+        const lengthAnimation = new Animation(meta.name + "_length", "scaling.y",
             1.0, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-        const rotAnimation = new Animation(line.name + "_rot", "rotationQuaternion",
+        const rotAnimation = new Animation(meta.name + "_rot", "rotationQuaternion",
             1.0, Animation.ANIMATIONTYPE_QUATERNION, Animation.ANIMATIONLOOPMODE_CYCLE);
 
         //We can finally create the animation

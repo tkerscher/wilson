@@ -7,7 +7,7 @@ import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
 import { Tube } from "../../model/tube";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { GraphInterpolator } from "../../interpolation/graphInterpolation";
-import { SceneBuildTool } from "./tools";
+import { Metadata, SceneBuildTool } from "./tools";
 
 const TEXTURE_SIZE = 2048;
 
@@ -32,9 +32,9 @@ export class TubeController {
     #radii: Array<number>;
     #N: number;
 
-    constructor(tool: SceneBuildTool, tube: Tube) {
+    constructor(tool: SceneBuildTool, tube: Tube, meta: Metadata) {
         //copy meta
-        this.#name = tube.name;
+        this.#name = meta.name;
         this.#growing = tube.isGrowing;
         this.#scene = tool.scene;
 
@@ -75,11 +75,11 @@ export class TubeController {
 
         //create mesh
         this.#mesh = this.#createMesh(tool.project.meta?.startTime ?? 0.0);
-        tool.applyMetadata(this.#mesh, tube);
+        tool.applyMetadata(this.#mesh, meta);
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != "graphId") {
-            this.#mesh.material = tool.parseColor(tube.color, tube.name + "_color");
+            this.#mesh.material = tool.parseColor(tube.color, meta.name + "_color");
         }
         else {
             //graph as color source -> check if id is valid
@@ -111,7 +111,7 @@ export class TubeController {
                     tool.scene);
 
                 //assign texture
-                const mat = new StandardMaterial(tube.name + "_mat", tool.scene);
+                const mat = new StandardMaterial(meta.name + "_mat", tool.scene);
                 mat.diffuseTexture = texture;
                 this.#mesh.material = mat;
             }

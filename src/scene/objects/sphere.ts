@@ -5,7 +5,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { ColorProperty } from "../../model/properties";
 import { Sphere } from "../../model/sphere";
 import { toHex } from "../../util/colorToHex";
-import { SceneBuildTool } from "./tools";
+import { Metadata, SceneBuildTool } from "./tools";
 
 export class SphereBuilder {
     #tool: SceneBuildTool;
@@ -22,23 +22,23 @@ export class SphereBuilder {
         this.#template = new Map<string, Mesh>();
     }
 
-    build(sphere: Sphere) {
+    build(sphere: Sphere, meta: Metadata) {
         //Either instance static template or create new sphere
         let obj: Mesh|InstancedMesh;
         if (this.#tool.isStaticMaterial(sphere.color)) {
             //instance template
             const template = this.#getTemplate(sphere.color);
-            obj = template.createInstance(sphere.name);
+            obj = template.createInstance(meta.name);
         }
         else {
             //not static -> create new sphere ...
-            obj = MeshBuilder.CreateSphere(sphere.name, {}, this.#tool.scene);
+            obj = MeshBuilder.CreateSphere(meta.name, {}, this.#tool.scene);
             // ... with its own material
-            obj.material = this.#tool.parseColor(sphere.color, sphere.name + "_mat");
+            obj.material = this.#tool.parseColor(sphere.color, meta.name + "_mat");
         }
 
         //set meta
-        this.#tool.applyMetadata(obj, sphere);
+        this.#tool.applyMetadata(obj, meta);
 
         //set params
         this.#tool.parseScalar(sphere.radius, obj, "scalingDeterminant");

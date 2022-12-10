@@ -79,6 +79,14 @@ export class SceneBuildTool {
     }
 
     /**
+     * Changes the state as if an object has been processed, e.g. skip the
+     * current id.
+     */
+    skipObject(): void {
+        this.#nextId++;
+    }
+
+    /**
      * Processes a given scalar property and either creates a corresponding
      * animation if needed or sets the static value encoded into it.
      * @param scalar Scalar property to parse

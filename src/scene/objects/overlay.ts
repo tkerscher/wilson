@@ -4,7 +4,7 @@ import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 
 import { Overlay, TextPosition, textPositionToJSON } from "../../model/overlay";
-import { SceneBuildTool } from "./tools";
+import { Metadata, SceneBuildTool } from "./tools";
 
 export class OverlayBuilder {
     #tool: SceneBuildTool;
@@ -25,13 +25,13 @@ export class OverlayBuilder {
         this.#tool.overlayTexture.addControl(this.rootContainer);
     }
 
-    build(overlay: Overlay) {
+    build(overlay: Overlay, meta: Metadata) {
         //create new text block
-        const block = new TextBlock(overlay.name);
+        const block = new TextBlock(meta.name);
         block.resizeToFit = true;
 
         //meta
-        this.#tool.applyMetadata(block, overlay);
+        this.#tool.applyMetadata(block, meta);
 
         //set params
         this.#tool.textEngine.addText(block, overlay.text);
