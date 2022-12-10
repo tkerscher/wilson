@@ -269,7 +269,8 @@ property:</p>
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this heading"></a></h2>
 <p>The data as defined before can be used to animate objects which will be drawn in
 a 3D scene.</p>
-<p>All objects have a common set of properties:</p>
+<p>Each object is stored in a <code class="docutils literal notranslate"><span class="pre">Animatible</span></code> message, which points to actual
+instances of an object as well as the following common meta information.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 25%" />
@@ -300,16 +301,6 @@ a 3D scene.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">Text</span></code></p></td>
 <td><p>Text to be shown when the object is selected in the scene.</p></td>
 </tr>
-<tr class="row-odd"><td><p>color</p></td>
-<td><p>04</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ColorProperty</span></code></p></td>
-<td><p>Color of the object.</p></td>
-</tr>
-<tr class="row-even"><td></td>
-<td><p>05 - 10</p></td>
-<td></td>
-<td><p><em>Reserved</em></p></td>
-</tr>
 </tbody>
 </table>
 <p>Groups can be understood as an analogue to a filesystem’s directory structure. Each group can be
@@ -319,7 +310,8 @@ group name <code class="docutils literal notranslate"><span class="pre">Super</s
 are implicitly defined by this and do not need to be explicitly defined elsewhere.</p>
 <p>Unlike filesystems, objects here can be part of more than one group or none at all. In the latter
 case, the viewer software should assign them to a default group but is not required to.</p>
-<p>There are five types of objects:</p>
+<p>The actual object is stored in the oneof field <code class="docutils literal notranslate"><span class="pre">instance</span></code>. If this field is empty, assume that it’s
+actually an instance of unknown type. Currently there are five types of objects:</p>
 <div class="section" id="sphere">
 <h3>Sphere<a class="headerlink" href="#sphere" title="Permalink to this heading"></a></h3>
 <p>A simple Sphere.</p>
@@ -343,6 +335,10 @@ case, the viewer software should assign them to a default group but is not requi
 <tr class="row-odd"><td><p>radius</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ScalarProperty</span></code></p></td>
 <td><p>Radius of the sphere.</p></td>
+</tr>
+<tr class="row-even"><td><p>color</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ColorProperty</span></code></p></td>
+<td><p>Color of the sphere.</p></td>
 </tr>
 </tbody>
 </table>
@@ -375,11 +371,15 @@ case, the viewer software should assign them to a default group but is not requi
 <td><p><code class="docutils literal notranslate"><span class="pre">ScalarProperty</span></code></p></td>
 <td><p>Diameter of the line.</p></td>
 </tr>
-<tr class="row-odd"><td><p>pointForward</p></td>
+<tr class="row-odd"><td><p>color</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ColorProperty</span></code></p></td>
+<td><p>Color of the line.</p></td>
+</tr>
+<tr class="row-even"><td><p>pointForward</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>True, if it should point toward start.</p></td>
 </tr>
-<tr class="row-even"><td><p>pointBackward</p></td>
+<tr class="row-odd"><td><p>pointBackward</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>True, if it should point toward end.</p></td>
 </tr>
@@ -415,6 +415,10 @@ both direction.</p>
 <tr class="row-even"><td><p>radius</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ScalarProperty</span></code></p></td>
 <td><p>The radius of the tube.</p></td>
+</tr>
+<tr class="row-odd"><td><p>color</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ColorProperty</span></code></p></td>
+<td><p>Color of the tube as function of time (translates to distance via path).</p></td>
 </tr>
 </tbody>
 </table>
@@ -495,23 +499,12 @@ position they’ll be stacked.</p>
 <div class="section" id="project-description">
 <h2>Project Description<a class="headerlink" href="#project-description" title="Permalink to this heading"></a></h2>
 <p>The root message for serialization is <code class="docutils literal notranslate"><span class="pre">Project</span></code> and is foremost a container for the tables and
-objects. Thus it contains arrays of the following types:</p>
+objects. Thus it contains the following types:</p>
 <ul class="simple">
-<li><p>Data</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">Graph</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Graph[]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Path[]</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ColorMap</span></code></p></li>
-</ul>
-</li>
-<li><p>Objects</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">Sphere</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Line</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Tube</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Overlay</span></code></p></li>
-</ul>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Animatible[]</span></code></p></li>
 </ul>
 <div class="section" id="meta-information">
 <h3>Meta information<a class="headerlink" href="#meta-information" title="Permalink to this heading"></a></h3>
