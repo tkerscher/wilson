@@ -112,15 +112,14 @@ Of course, a plain string with no references is also a valid Text:
 The data as defined before can be used to animate objects which will be drawn in
 a 3D scene.
 
-All objects have a common set of properties:
+Each object is stored in a `Animatible` message, which points to actual
+instances of an object as well as the following common meta information.
 
 | Property    | ID | Type     | Description |
 |-------------|----|----------|-------------|
 | name        | 01 | `string` | Name to be shown in the explorer. |
 | groups      | 02 |`string[]`| List of group names the objects belong to. |
 | description | 03 | `Text`   | Text to be shown when the object is selected in the scene. |
-| color       | 04 | `ColorProperty` | Color of the object. |
-|             | 05 - 10 | | *Reserved* |
 
 Groups can be understood as an analogue to a filesystem's directory structure. Each group can be
 part of a bigger super group. The relationships are encoded in the group names itself, e.g. the
@@ -131,7 +130,8 @@ are implicitly defined by this and do not need to be explicitly defined elsewher
 Unlike filesystems, objects here can be part of more than one group or none at all. In the latter
 case, the viewer software should assign them to a default group but is not required to.
 
-There are five types of objects:
+The actual object is stored in the oneof field `instance`. If this field is empty, assume that it's
+actually an instance of unknown type. Currently there are five types of objects:
 
 ### Sphere
 
@@ -141,6 +141,7 @@ A simple Sphere.
 |----------|------------------|-------------|
 | position | `VectorProperty` | Center of the sphere. |
 | radius   | `ScalarProperty` | Radius of the sphere. |
+| color    | `ColorProperty`  | Color of the sphere. |
 
 ### Line
 
@@ -151,6 +152,7 @@ A line connection two points.
 | start    | `VectorProperty` | Start point of the line. |
 | end      | `VectorProperty` | End point of the line. |
 | lineWidth| `ScalarProperty` | Diameter of the line. |
+| color    | `ColorProperty`  | Color of the line. |
 | pointForward | `bool`       | True, if it should point toward start. |
 | pointBackward| `bool`       | True, if it should point toward end. |
 
@@ -166,6 +168,7 @@ A Tube following a path with variable coloring and diameter.
 | pathId   | `uint32`         | Id of the `Path` the tube should follow. |
 | isGrowing| `bool`           | `true`, if the tube should grow in time, or `false` if the whole path should be drawn at all times. |
 | radius   | `ScalarProperty` | The radius of the tube. |
+| color    | `ColorProperty`  | Color of the tube as function of time (translates to distance via path). |
 
 Tubes are special as their properties are not function of time, but of position. The position is
 determined using the by `pathId` referenced `Path`. The corresponding time is used to evaluate the
@@ -196,17 +199,12 @@ The `TextPosition` type is a simple enumeration of all possible positions:
 ## Project Description
 
 The root message for serialization is `Project` and is foremost a container for the tables and
-objects. Thus it contains arrays of the following types:
+objects. Thus it contains the following types:
 
-- Data
-  - `Graph`
-  - `Path`
-  - `ColorMap`
-- Objects
-  - `Sphere`
-  - `Line`
-  - `Tube`
-  - `Overlay`
+- `Graph[]`
+- `Path[]`
+- `ColorMap`
+- `Animatible[]`
 
 ### Meta information
 
