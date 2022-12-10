@@ -1,3 +1,4 @@
+from wilson.proto.animatible_pb2 import Animatible
 from wilson.proto.camera_pb2 import Camera
 from wilson.proto.color_pb2 import Color
 from wilson.proto.colormap_pb2 import ColorMap

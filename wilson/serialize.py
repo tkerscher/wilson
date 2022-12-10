@@ -60,22 +60,23 @@ def serializeProject(project: Project) -> bytes:
             if a.name is None:
                 a.name = "Sphere " + str(nextSphereId)
                 nextSphereId += 1
-            out.spheres.append(_serializeSphere(a, project))
+            out.animatibles.append(_serializeSphere(a, project))
         elif isinstance(a, Line):
             if a.name is None:
                 a.name = "Line " + str(nextLineId)
                 nextLineId += 1
-            out.lines.append(_serializeLine(a, project))
+            out.animatibles.append(_serializeLine(a, project))
         elif isinstance(a, Tube):
             if a.name is None:
                 a.name = "Tube " + str(nextTubeId)
                 nextTubeId += 1
-            out.tubes.append(_serializeTube(a, project))
+            out.animatibles.append(_serializeTube(a, project))
         elif isinstance(a, Overlay):
             if a.name is None:
                 a.name = "Label " + str(nextTextId)
                 nextTextId += 1
-            out.overlays.append(_serializeOverlay(a, project))
+            out.animatibles.append(_serializeOverlay(a, project))
+        # skip UnknownAnimatible
 
     # hidden groups
     out.hiddenGroups.extend(project.hiddenGroups)
@@ -443,93 +444,92 @@ def _serializeTextPosition(target: proto.Overlay, position: str) -> None:
 ################################## Objects #####################################
 
 
-def _writeObjectMeta(target, meta: Animatable, project: Project) -> None:  # type: ignore[no-untyped-def]
+def _createAnimatable(meta: Animatable, project: Project) -> proto.Animatible:
+    result = proto.Animatible()
     assert meta.name is not None
-    target.name = meta.name
+    result.name = meta.name
     if meta.description is not None:
-        target.description = _serializeText(meta.description, target.name, project)
+        result.description = _serializeText(meta.description, result.name, project)
     if len(meta.groups) > 0:
-        target.groups[:] = meta.groups
+        result.groups[:] = meta.groups
+    return result
 
 
-def _serializeSphere(sphere: Sphere, project: Project) -> proto.Sphere:
-    result = proto.Sphere()
-    assert sphere.name is not None
-    _writeObjectMeta(result, sphere, project)
-    result.color.CopyFrom(_serializeColorProperty(sphere.color, f".{sphere.name}_color", project))
+def _serializeSphere(sphere: Sphere, project: Project) -> proto.Animatible:
+    result = _createAnimatable(sphere, project)
     # properties
+    result.sphere.color.CopyFrom(
+        _serializeColorProperty(sphere.color, f".{sphere.name}_color", project)
+    )
     if sphere.position is not None:
-        result.position.CopyFrom(
+        result.sphere.position.CopyFrom(
             _serializeVectorProperty(sphere.position, f".{sphere.name}_position", project)
         )
-    result.radius.CopyFrom(
+    result.sphere.radius.CopyFrom(
         _serializeScalarProperty(sphere.radius, f".{sphere.name}_radius", project)
     )
     # done
     return result
 
 
-def _serializeTube(tube: Tube, project: Project) -> proto.Tube:
-    result = proto.Tube()
-    # meta
-    assert tube.name is not None
-    _writeObjectMeta(result, tube, project)
-    result.color.CopyFrom(_serializeColorProperty(tube.color, f".{tube.name}_color", project))
+def _serializeTube(tube: Tube, project: Project) -> proto.Animatible:
+    result = _createAnimatable(tube, project)
     # properties
-    result.radius.CopyFrom(_serializeScalarProperty(tube.radius, f".{tube.name}_radius", project))
-    result.isGrowing = tube.isGrowing
+    result.tube.color.CopyFrom(_serializeColorProperty(tube.color, f".{tube.name}_color", project))
+    result.tube.radius.CopyFrom(
+        _serializeScalarProperty(tube.radius, f".{tube.name}_radius", project)
+    )
+    result.tube.isGrowing = tube.isGrowing
     # path
     if isinstance(tube.path, Path):
         # Check if already present in project
         # -> Either fetch path id or add path
         if tube.path in project.paths:
             id = project.paths.index(tube.path)
-            result.pathId = id
+            result.tube.pathId = id
         else:
             id = len(project.paths)
             project.paths.append(tube.path)
-            result.pathId = id
+            result.tube.pathId = id
     else:
         # path like, but not a path -> create new path
         id = len(project.paths)
         project.paths.append(Path(tube.path, f".{tube.name}_path"))
-        result.pathId = id
+        result.tube.pathId = id
     # done
     return result
 
 
-def _serializeLine(line: Line, project: Project) -> proto.Line:
-    result = proto.Line()
-    assert line.name is not None
-    _writeObjectMeta(result, line, project)
-    result.color.CopyFrom(_serializeColorProperty(line.color, f".{line.name}_color", project))
+def _serializeLine(line: Line, project: Project) -> proto.Animatible:
+    result = _createAnimatable(line, project)
     # properties
+    result.line.color.CopyFrom(_serializeColorProperty(line.color, f".{line.name}_color", project))
     if line.start is not None:
-        result.start.CopyFrom(_serializeVectorProperty(line.start, f".{line.name}_start", project))
+        result.line.start.CopyFrom(
+            _serializeVectorProperty(line.start, f".{line.name}_start", project)
+        )
     if line.end is not None:
-        result.end.CopyFrom(_serializeVectorProperty(line.end, f".{line.name}_end", project))
-    result.lineWidth.CopyFrom(
+        result.line.end.CopyFrom(_serializeVectorProperty(line.end, f".{line.name}_end", project))
+    result.line.lineWidth.CopyFrom(
         _serializeScalarProperty(line.lineWidth, f".{line.name}_lineWidth", project)
     )
-    result.pointForward = line.pointForward
-    result.pointBackward = line.pointBackward
+    result.line.pointForward = line.pointForward
+    result.line.pointBackward = line.pointBackward
     # done
     return result
 
 
-def _serializeOverlay(overlay: Overlay, project: Project) -> proto.Overlay:
-    result = proto.Overlay()
-    # meta
-    assert overlay.name is not None
-    _writeObjectMeta(result, overlay, project)
+def _serializeOverlay(overlay: Overlay, project: Project) -> proto.Animatible:
+    result = _createAnimatable(overlay, project)
     # properties
-    result.text = _serializeText(overlay.text, overlay.name, project)
-    _serializeTextPosition(result, overlay.position)
-    result.fontSize.CopyFrom(
+    assert overlay.name is not None  # redundant but keeps mypy happy
+    result.overlay.text = _serializeText(overlay.text, overlay.name, project)
+    _serializeTextPosition(result.overlay, overlay.position)
+    result.overlay.fontSize.CopyFrom(
         _serializeScalarProperty(overlay.fontSize, f".{overlay.name}_fontSize", project)
     )
-    result.bold = overlay.bold
-    result.italic = overlay.italic
+    result.overlay.bold = overlay.bold
+    result.overlay.italic = overlay.italic
 
     # done
     return result

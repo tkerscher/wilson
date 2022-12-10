@@ -3,9 +3,7 @@
 isort:skip_file
 """
 import builtins
-import collections.abc
 import google.protobuf.descriptor
-import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
@@ -73,27 +71,13 @@ class Overlay(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    GROUPS_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
     TEXT_FIELD_NUMBER: builtins.int
     POSITION_FIELD_NUMBER: builtins.int
     FONTSIZE_FIELD_NUMBER: builtins.int
     BOLD_FIELD_NUMBER: builtins.int
     ITALIC_FIELD_NUMBER: builtins.int
-    name: builtins.str
-    """Name as shown in explorer"""
-    @property
-    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Name of groups this belongs to"""
-    description: builtins.str
-    """Additional text shown when selected"""
     text: builtins.str
-    """Text color
-    ColorProperty color = 4;
-
-    Text to be drawn on the scene
-    """
+    """Text to be drawn on the scene"""
     position: global___TextPosition.ValueType
     """Position of the text"""
     @property
@@ -104,9 +88,6 @@ class Overlay(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        groups: collections.abc.Iterable[builtins.str] | None = ...,
-        description: builtins.str = ...,
         text: builtins.str = ...,
         position: global___TextPosition.ValueType = ...,
         fontSize: properties_pb2.ScalarProperty | None = ...,
@@ -114,6 +95,6 @@ class Overlay(google.protobuf.message.Message):
         italic: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["fontSize", b"fontSize"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["bold", b"bold", "description", b"description", "fontSize", b"fontSize", "groups", b"groups", "italic", b"italic", "name", b"name", "position", b"position", "text", b"text"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["bold", b"bold", "fontSize", b"fontSize", "italic", b"italic", "position", b"position", "text", b"text"]) -> None: ...
 
 global___Overlay = Overlay

@@ -1,7 +1,7 @@
-from typing import overload, Dict, Literal, Optional, Tuple
+from typing import Callable, overload, Dict, Literal, Optional, Tuple
 import numpy as np
 
-from wilson.objects import Line, Sphere, Tube, Overlay
+from wilson.objects import Animatable, Line, Sphere, Tube, UnknownAnimatible, Overlay
 from wilson.data import (
     ColorMap,
     ColorProperty,
@@ -50,11 +50,7 @@ def parseProjectFromBytes(data: bytes) -> Project:
     result.paths = list(_paths.values())
 
     # parse animatables
-    result.animatables = []
-    result.addAnimatables(_parseSphere(s, _graphs, _paths) for s in project.spheres)
-    result.addAnimatables(_parseTube(t, _graphs, _paths) for t in project.tubes)
-    result.addAnimatables(_parseLine(l, _graphs, _paths) for l in project.lines)
-    result.addAnimatables(_parseOverlay(o, _graphs, _paths) for o in project.overlays)
+    result.animatables = [_parseAnimatible(a, _graphs, _paths) for a in project.animatibles]
 
     # hidden groups
     result.hiddenGroups = project.hiddenGroups  # type: ignore[assignment]
@@ -247,12 +243,10 @@ def _parseColorProperty(
 
 
 def _parseSphere(
-    sphere: proto.Sphere, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
 ) -> Sphere:
-    # meta
-    name = sphere.name
-    groups = sphere.groups
-    description = sphere.description
+    assert animatible.HasField("sphere")
+    sphere = animatible.sphere
     # properties
     position = _parseVectorProperty(sphere.position, pathDict, True)
     radius = _parseScalarProperty(sphere.radius, graphDict, False)
@@ -260,16 +254,14 @@ def _parseSphere(
     color = _parseColorProperty(sphere.color, graphDict, False)
     assert color is not None
     # done
-    return Sphere(
-        name, groups=groups, description=description, color=color, position=position, radius=radius
-    )
+    return Sphere("", color=color, position=position, radius=radius)
 
 
-def _parseTube(tube: proto.Tube, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]) -> Tube:
-    # meta
-    name = tube.name
-    groups = tube.groups
-    description = tube.description
+def _parseTube(
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+) -> Tube:
+    assert animatible.HasField("tube")
+    tube = animatible.tube
     # properties
     path: PathLike = graphDict[tube.pathId] if tube.pathId in graphDict else np.empty((0, 4))  # type: ignore[assignment]
     isGrowing = tube.isGrowing
@@ -278,25 +270,17 @@ def _parseTube(tube: proto.Tube, graphDict: Dict[int, Graph], pathDict: Dict[int
     color = _parseColorProperty(tube.color, graphDict, False)
     assert color is not None
     # done
-    return Tube(
-        path,
-        name,
-        groups=groups,
-        description=description,
-        isGrowing=isGrowing,
-        radius=radius,
-        color=color,
-    )
+    return Tube(path, "", isGrowing=isGrowing, radius=radius, color=color)
 
 
-def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]) -> Line:
-    # meta
-    name = line.name
-    groups = line.groups
-    description = line.description
+def _parseLine(
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+) -> Line:
+    assert animatible.HasField("line")
+    line = animatible.line
+    # properties
     color = _parseColorProperty(line.color, graphDict, False)
     assert color is not None
-    # properties
     start = _parseVectorProperty(line.start, pathDict, True)
     end = _parseVectorProperty(line.end, pathDict, True)
     lineWidth = _parseScalarProperty(line.lineWidth, graphDict, False)
@@ -305,9 +289,7 @@ def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int
     pointBackward = line.pointBackward
     # Done
     return Line(
-        name,
-        groups=groups,
-        description=description,
+        "",
         color=color,
         start=start,
         end=end,
@@ -318,12 +300,10 @@ def _parseLine(line: proto.Line, graphDict: Dict[int, Graph], pathDict: Dict[int
 
 
 def _parseOverlay(
-    overlay: proto.Overlay, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
 ) -> Overlay:
-    # meta
-    name = overlay.name
-    groups = overlay.groups
-    description = overlay.description
+    assert animatible.HasField("overlay")
+    overlay = animatible.overlay
     # properties
     text = overlay.text  # TODO: fetch referenced graphs and paths
     position = _parseTextPosition(overlay.position)
@@ -333,11 +313,38 @@ def _parseOverlay(
     # done
     return Overlay(
         text,
-        name,
-        groups=groups,
-        description=description,
+        "",
         position=position,
         fontSize=fontSize,
         bold=bold,
         italic=italic,
     )
+
+
+_animatibleParsers: Dict[
+    str, Callable[[proto.Animatible, Dict[int, Graph], Dict[int, Path]], Animatable]
+] = {
+    "sphere": _parseSphere,
+    "line": _parseLine,
+    "tube": _parseTube,
+    "overlay": _parseOverlay,
+}
+
+
+def _parseAnimatible(
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+) -> Animatable:
+    # meta
+    name = animatible.name
+    groups = animatible.groups
+    description = animatible.description
+    # instance
+    instanceType = animatible.WhichOneof("instance")
+    if instanceType in _animatibleParsers:
+        result = _animatibleParsers[instanceType](animatible, graphDict, pathDict)
+        result.name = name
+        result.groups = list(groups)  # make mypy happy...
+        result.description = description
+        return result
+    else:
+        return UnknownAnimatible(name, groups=groups, description=description)

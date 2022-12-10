@@ -69,6 +69,35 @@ class Animatable(ABC):
         self._description = None
 
 
+class UnknownAnimatible(Animatable):
+    """Class representing an unknown Animatible
+
+    Will be emitted in the parsing process if an unknown animatible is
+    encountered. This might happen if you try to load a file using a newer
+    format version. You can still inspect the common meta information.
+
+    Attributes
+    ----------
+    name: {str, None}, default=None
+        Name of this object
+
+    groups: Iterable[str], default=[]
+        Name of groups the animatable belongs to.
+
+    description: {TextLike, None}, default=None
+        Additional description shown while this object is highlighted
+    """
+
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        *,
+        groups: Iterable[str] = [],
+        description: Optional[TextLike] = None,
+    ):
+        super().__init__(name, groups=groups, description=description)
+
+
 class Sphere(Animatable):
     """Simple sphere in 3D space
 

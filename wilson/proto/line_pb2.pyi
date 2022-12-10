@@ -3,9 +3,7 @@
 isort:skip_file
 """
 import builtins
-import collections.abc
 import google.protobuf.descriptor
-import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
 from wilson.proto import properties_pb2
@@ -23,25 +21,12 @@ class Line(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    GROUPS_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    COLOR_FIELD_NUMBER: builtins.int
     START_FIELD_NUMBER: builtins.int
     END_FIELD_NUMBER: builtins.int
     LINEWIDTH_FIELD_NUMBER: builtins.int
+    COLOR_FIELD_NUMBER: builtins.int
     POINTFORWARD_FIELD_NUMBER: builtins.int
     POINTBACKWARD_FIELD_NUMBER: builtins.int
-    name: builtins.str
-    """Name as shown in explorer"""
-    @property
-    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Name of groups this belongs to"""
-    description: builtins.str
-    """Additional text shown when selected"""
-    @property
-    def color(self) -> properties_pb2.ColorProperty:
-        """Color"""
     @property
     def start(self) -> properties_pb2.VectorProperty:
         """start position"""
@@ -51,6 +36,9 @@ class Line(google.protobuf.message.Message):
     @property
     def lineWidth(self) -> properties_pb2.ScalarProperty:
         """Line diameter"""
+    @property
+    def color(self) -> properties_pb2.ColorProperty:
+        """Line color"""
     pointForward: builtins.bool
     """true, if there should be a cone pointing toward the start point"""
     pointBackward: builtins.bool
@@ -58,17 +46,14 @@ class Line(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        groups: collections.abc.Iterable[builtins.str] | None = ...,
-        description: builtins.str = ...,
-        color: properties_pb2.ColorProperty | None = ...,
         start: properties_pb2.VectorProperty | None = ...,
         end: properties_pb2.VectorProperty | None = ...,
         lineWidth: properties_pb2.ScalarProperty | None = ...,
+        color: properties_pb2.ColorProperty | None = ...,
         pointForward: builtins.bool = ...,
         pointBackward: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["color", b"color", "end", b"end", "lineWidth", b"lineWidth", "start", b"start"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "end", b"end", "groups", b"groups", "lineWidth", b"lineWidth", "name", b"name", "pointBackward", b"pointBackward", "pointForward", b"pointForward", "start", b"start"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "end", b"end", "lineWidth", b"lineWidth", "pointBackward", b"pointBackward", "pointForward", b"pointForward", "start", b"start"]) -> None: ...
 
 global___Line = Line

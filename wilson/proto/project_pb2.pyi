@@ -9,15 +9,12 @@ import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
 from wilson.proto import (
+    animatible_pb2,
     camera_pb2,
     colormap_pb2,
     graph_pb2,
-    line_pb2,
     meta_pb2,
-    overlay_pb2,
-    path_pb2,
-    sphere_pb2,
-    tube_pb2
+    path_pb2
 )
 
 if sys.version_info >= (3, 8):
@@ -39,10 +36,7 @@ class Project(google.protobuf.message.Message):
     COLORMAP_FIELD_NUMBER: builtins.int
     CAMERA_FIELD_NUMBER: builtins.int
     HIDDENGROUPS_FIELD_NUMBER: builtins.int
-    SPHERES_FIELD_NUMBER: builtins.int
-    LINES_FIELD_NUMBER: builtins.int
-    TUBES_FIELD_NUMBER: builtins.int
-    OVERLAYS_FIELD_NUMBER: builtins.int
+    ANIMATIBLES_FIELD_NUMBER: builtins.int
     @property
     def meta(self) -> meta_pb2.ProjectMeta:
         """Meta information"""
@@ -71,17 +65,8 @@ class Project(google.protobuf.message.Message):
         list of groups hidden by default
         """
     @property
-    def spheres(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[sphere_pb2.Sphere]:
-        """list of animated spheres"""
-    @property
-    def lines(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[line_pb2.Line]:
-        """list of animated lines"""
-    @property
-    def tubes(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[tube_pb2.Tube]:
-        """list of animated tubes"""
-    @property
-    def overlays(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[overlay_pb2.Overlay]:
-        """list of animated overlay text"""
+    def animatibles(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[animatible_pb2.Animatible]:
+        """list of animatibles"""
     def __init__(
         self,
         *,
@@ -91,12 +76,9 @@ class Project(google.protobuf.message.Message):
         colormap: colormap_pb2.ColorMap | None = ...,
         camera: camera_pb2.Camera | None = ...,
         hiddenGroups: collections.abc.Iterable[builtins.str] | None = ...,
-        spheres: collections.abc.Iterable[sphere_pb2.Sphere] | None = ...,
-        lines: collections.abc.Iterable[line_pb2.Line] | None = ...,
-        tubes: collections.abc.Iterable[tube_pb2.Tube] | None = ...,
-        overlays: collections.abc.Iterable[overlay_pb2.Overlay] | None = ...,
+        animatibles: collections.abc.Iterable[animatible_pb2.Animatible] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["camera", b"camera", "colormap", b"colormap", "meta", b"meta"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["camera", b"camera", "colormap", b"colormap", "graphs", b"graphs", "hiddenGroups", b"hiddenGroups", "lines", b"lines", "meta", b"meta", "overlays", b"overlays", "paths", b"paths", "spheres", b"spheres", "tubes", b"tubes"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["animatibles", b"animatibles", "camera", b"camera", "colormap", b"colormap", "graphs", b"graphs", "hiddenGroups", b"hiddenGroups", "meta", b"meta", "paths", b"paths"]) -> None: ...
 
 global___Project = Project

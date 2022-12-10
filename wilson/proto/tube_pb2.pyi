@@ -3,9 +3,7 @@
 isort:skip_file
 """
 import builtins
-import collections.abc
 import google.protobuf.descriptor
-import google.protobuf.internal.containers
 import google.protobuf.message
 import sys
 from wilson.proto import properties_pb2
@@ -23,23 +21,10 @@ class Tube(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    GROUPS_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    COLOR_FIELD_NUMBER: builtins.int
     PATHID_FIELD_NUMBER: builtins.int
     ISGROWING_FIELD_NUMBER: builtins.int
     RADIUS_FIELD_NUMBER: builtins.int
-    name: builtins.str
-    """Name as shown in explorer"""
-    @property
-    def groups(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """Name of groups this belongs to"""
-    description: builtins.str
-    """Additional text shown when selected"""
-    @property
-    def color(self) -> properties_pb2.ColorProperty:
-        """Color of the tube at a certain point identified by time"""
+    COLOR_FIELD_NUMBER: builtins.int
     pathId: builtins.int
     """Index of path to follow"""
     isGrowing: builtins.bool
@@ -49,18 +34,18 @@ class Tube(google.protobuf.message.Message):
     @property
     def radius(self) -> properties_pb2.ScalarProperty:
         """Radius of the tube at a certain point identified by time"""
+    @property
+    def color(self) -> properties_pb2.ColorProperty:
+        """Color of the tube at a certain point identified by time"""
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        groups: collections.abc.Iterable[builtins.str] | None = ...,
-        description: builtins.str = ...,
-        color: properties_pb2.ColorProperty | None = ...,
         pathId: builtins.int = ...,
         isGrowing: builtins.bool = ...,
         radius: properties_pb2.ScalarProperty | None = ...,
+        color: properties_pb2.ColorProperty | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["color", b"color", "radius", b"radius"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "description", b"description", "groups", b"groups", "isGrowing", b"isGrowing", "name", b"name", "pathId", b"pathId", "radius", b"radius"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["color", b"color", "isGrowing", b"isGrowing", "pathId", b"pathId", "radius", b"radius"]) -> None: ...
 
 global___Tube = Tube
