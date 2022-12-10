@@ -18,23 +18,13 @@ enum TextPosition {
 
 //Overlay text drawn on the scene surface
 message Overlay {
-    //Name as shown in explorer
-    string name = 1;
-    //Name of groups this belongs to
-    repeated string groups = 2;
-    //Additional text shown when selected
-    string description = 3;
-
-    //Text color
-    //ColorProperty color = 4;
-
     //Text to be drawn on the scene
-    string text = 10;
+    string text = 1;
 
     //Position of the text
-    TextPosition position = 11;
+    TextPosition position = 2;
     //Font style
-    ScalarProperty fontSize = 12;
-    bool bold = 13;
-    bool italic = 14;
+    ScalarProperty fontSize = 3;
+    bool bold = 4;
+    bool italic = 5;
 }

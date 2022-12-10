@@ -5,17 +5,10 @@ import "properties.proto";
 
 //Animatible sphere in 3D space
 message Sphere {
-    //Name as shown in explorer
-    string name = 1;
-    //Name of groups this belongs to
-    repeated string groups = 2;
-    //Additional text shown when selected
-    string description = 3;
-    //Color
-    ColorProperty color = 4;
-
     //center of sphere
-    VectorProperty position = 10;
+    VectorProperty position = 1;
     //Radius
-    ScalarProperty radius = 11;
+    ScalarProperty radius = 2;
+    //Color
+    ColorProperty color = 3;
 }

@@ -5,25 +5,17 @@ import "properties.proto";
 
 //Animated line in 3D space
 message Line {
-    //Name as shown in explorer
-    string name = 1;
-    //Name of groups this belongs to
-    repeated string groups = 2;
-    //Additional text shown when selected
-    string description = 3;
-
-    //Color
-    ColorProperty color = 4;
-
     //start position
-    VectorProperty start = 10;
+    VectorProperty start = 1;
     //end position
-    VectorProperty end = 11;
+    VectorProperty end = 2;
     //Line diameter
-    ScalarProperty lineWidth = 12;
+    ScalarProperty lineWidth = 3;
+    //Line color
+    ColorProperty color = 4;
     
     //true, if there should be a cone pointing toward the start point
-    bool pointForward = 13;
+    bool pointForward = 5;
     //true, if there should be a cone pointing toward the end point
-    bool pointBackward = 14;
+    bool pointBackward = 6;
 }

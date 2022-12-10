@@ -1,0 +1,27 @@
+syntax = "proto3";
+package wilson;
+
+import "line.proto";
+import "overlay.proto";
+import "sphere.proto";
+import "tube.proto";
+
+//Animatible object in the scene
+message Animatible {
+    //Common meta information
+
+    //Name as shown in explorer
+    string name = 1;
+    //Name of groups this belongs to
+    repeated string groups = 2;
+    //Additional text shown when selected
+    string description = 3;
+
+    //specialization
+    oneof instance {
+        Sphere sphere = 16;
+        Line line = 17;
+        Tube tube = 18;
+        Overlay overlay = 19;
+    }
+}

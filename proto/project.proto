@@ -8,10 +8,7 @@ import "graph.proto";
 import "path.proto";
 import "colormap.proto";
 
-import "line.proto";
-import "sphere.proto";
-import "tube.proto";
-import "overlay.proto";
+import "animatible.proto";
 
 //Root container for all animation relevant data
 message Project {
@@ -37,12 +34,6 @@ message Project {
     //list of groups hidden by default
     repeated string hiddenGroups = 15;
 
-    //list of animated spheres
-    repeated Sphere spheres = 16;
-    //list of animated lines
-    repeated Line lines = 17;
-    //list of animated tubes
-    repeated Tube tubes = 18;
-    //list of animated overlay text
-    repeated Overlay overlays = 19;
+    //list of animatibles
+    repeated Animatible animatibles = 16;
 }

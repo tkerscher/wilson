@@ -5,21 +5,15 @@ import "properties.proto";
 
 //Tube in 3D space
 message Tube {
-    //Name as shown in explorer
-    string name = 1;
-    //Name of groups this belongs to
-    repeated string groups = 2;
-    //Additional text shown when selected
-    string description = 3;
-    //Color of the tube at a certain point identified by time
-    ColorProperty color = 4;
-
     //Index of path to follow
-    uint32 pathId = 10;
+    uint32 pathId = 1;
     //True if the tube is growing with time,
     //or false, if the tube is always drawn complete
-    bool isGrowing = 11;
+    bool isGrowing = 2;
 
     //Radius of the tube at a certain point identified by time
-    ScalarProperty radius = 12;
+    ScalarProperty radius = 3;
+
+    //Color of the tube at a certain point identified by time
+    ColorProperty color = 4;
 }
