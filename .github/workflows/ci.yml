@@ -36,6 +36,9 @@ jobs:
         run: |
           mkdir dist/docs
           cp -a docs/build/html/. dist/docs/
+      - name: Create .nojekyll
+        run: |
+          touch dist/.nojekyll
       - name: Copy Example Events
         run: |
           cp examples/tutorial.wlsn dist/tutorial
