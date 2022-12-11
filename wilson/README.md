@@ -17,7 +17,7 @@ y = r * np.sin(t)
 z = np.zeros_like(t)
 
 path = np.column_stack((t, x, y, z))
-orbit = wilson.Path(path, name='Moon Orbit', interpolation='cubic')
+orbit = wilson.Path(path, name='Moon Orbit')
 
 earth = wilson.Sphere('Earth', description="That's our planet!", radius=1.0, color='blue')
 moon = wilson.Sphere('Moon', description='Our oldest pal!', radius=0.27, color='grey')
@@ -28,7 +28,6 @@ project = wilson.Project('Earth Moon',
     description='The Moon orbiting around the Earth.',
     animationSpeed=2*np.pi / 5.0,
     animatables=[earth, moon])
-project.clearColor = 'light yellow'
 
 wilson.saveProject(project, '../examples/earth_moon.wlsn')
 ```
