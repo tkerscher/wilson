@@ -80,7 +80,7 @@ export class OverlayBuilder {
         case TextPosition.UPPER_LEFT:
             panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
             panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-            panel.paddingLeft = "80"; //clear toolbox
+            //panel.paddingLeft = "80"; //clear toolbox
             break;
         case TextPosition.LEFT:
             panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
