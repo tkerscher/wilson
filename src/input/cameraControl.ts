@@ -9,6 +9,7 @@ const dAlpha = 0.05;
 const dBeta = 0.05;
 //zoom settings
 const dZoom = 0.1;
+const dZoomPinch = 0.2;
 
 export class CameraControl {
     #target: HTMLElement;
@@ -21,7 +22,14 @@ export class CameraControl {
     #onPointerMove: (e: PointerEvent) => void;
     #onWheel: (e: WheelEvent) => void;
 
+    //#onTouchStart: (e: TouchEvent) => void;
+    //#onTouchEnd: (e: TouchEvent) => void;
+    #onTouchMove: (e: TouchEvent) => void;
+    //#onTouchCancel: (e: TouchEvent) => void;
+
     #dragging = false;
+    #panning = false;
+    #prevDis = -1;
 
     constructor(s: SceneController, target: HTMLElement) {
         this.#target = target;
@@ -87,10 +95,12 @@ export class CameraControl {
         };
         this.#onPointerUp = () => {
             control.#dragging = false;
+            control.#panning = false;
+            control.#prevDis = -1;
         };
         this.#onPointerMove = e => {
             if (control.#dragging) {
-                if (e.shiftKey) {
+                if (e.shiftKey || control.#panning) {
                     s.panCamera(e.movementX, e.movementY);
                 }
                 else {
@@ -104,12 +114,38 @@ export class CameraControl {
             s.zoomCamera(dZoom * e.deltaY);
         };
 
+        //touch events
+        this.#onTouchMove = e => {
+            control.#dragging = true;
+            if (e.touches.length == 2) {
+                //calculate pinch touch distance to be able to detect pinch gestures
+                const disX = e.touches[0].clientX - e.touches[1].clientX;
+                const disY = e.touches[1].clientY - e.touches[1].clientY;
+                const dis = Math.sqrt(disX*disX + disY*disY);
+                const prev = control.#prevDis;
+
+                //Check for pinch gesture
+                if (prev > 0 && Math.abs(dis - prev) > 2) {
+                    //Zoom action -> stop pointer move
+                    e.preventDefault();
+                    s.zoomCamera((prev - dis) * dZoomPinch);
+                }
+                else {
+                    control.#panning = true;
+                }
+
+                //update
+                control.#prevDis = dis;
+            }
+        };
+
         //register handler
         document.addEventListener("keydown", this.#handlerRepeat);
         document.addEventListener("keydown", this.#handlerOnce);
         target.addEventListener("pointerdown", this.#onPointerDown);
         target.addEventListener("pointerup", this.#onPointerUp);
         target.addEventListener("pointermove", this.#onPointerMove);
+        target.addEventListener("touchmove", this.#onTouchMove);
         target.addEventListener("wheel", this.#onWheel);
     }
 
@@ -119,6 +155,7 @@ export class CameraControl {
         this.#target.removeEventListener("pointerdown", this.#onPointerDown);
         this.#target.removeEventListener("pointerup", this.#onPointerUp);
         this.#target.removeEventListener("pointermove", this.#onPointerMove);
+        this.#target.removeEventListener("touchmove", this.#onTouchMove);
         this.#target.removeEventListener("wheel", this.#onWheel);
 
         this.#handlerOnce = () => undefined;
@@ -126,6 +163,7 @@ export class CameraControl {
         this.#onPointerDown = () => undefined;
         this.#onPointerUp = () => undefined;
         this.#onPointerMove = () => undefined;
+        this.#onTouchMove = () => undefined;
         this.#onWheel = () => undefined;
     }
 }

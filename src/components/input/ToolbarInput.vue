@@ -101,9 +101,9 @@ onBeforeUnmount(() => document.removeEventListener("keydown", handleHotKey));
 
 <style scoped>
 .root {
-    width: 50px;
+    height: 50px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     background-color: var(--toolbox-background);
     border-radius: 10px;
