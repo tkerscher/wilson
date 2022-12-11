@@ -82,7 +82,7 @@ function updateData() {
     author.value = getDefault(project.meta?.author, "No Author");
     title.value = getDefault(project.meta?.name, "No Title");
     description.value = getDefault(project.meta?.description, "No description");
-    date.value = new Date(project.meta?.date?.seconds ?? 0).toString();
+    date.value = new Date((project.meta?.date?.seconds ?? 0) * 1000).toString();
     const nanos = project.meta?.date?.nanos ?? 0;
     timestamp.value = (nanos + 1e10).toLocaleString("en-US").slice(3);
     eventStart.value = (project.meta?.startTime ?? 0).toLocaleString("en-US");

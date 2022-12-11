@@ -82,7 +82,7 @@
                   />
                 </td>
                 <td>{{ entry.meta.name }}</td>
-                <td>{{ new Date(entry.meta?.date?.seconds ?? 0).toLocaleString() }}</td>
+                <td>{{ new Date((entry.meta?.date?.seconds ?? 0) * 1000).toLocaleString() }}</td>
                 <td>{{ entry.meta.author }}</td>
                 <td>{{ ((entry.meta?.endTime ?? 0) - (entry.meta?.startTime ?? 0)).toLocaleString('en-US') }}</td>
                 <td>
