@@ -19,7 +19,7 @@
     "@babylonjs/materials": "^5.33.2",
     "jszip": "^3.10.1",
     "mitt": "^3.0.0",
-    "pinia": "^2.0.25",
+    "pinia": "^2.0.28",
     "plotly.js-basic-dist": "^2.16.3",
     "protobufjs": "^7.1.2",
     "sprintf-js": "^1.1.2",
