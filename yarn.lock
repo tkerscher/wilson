@@ -12,20 +12,20 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.37.0.tgz#b4888b6cfb829629deacd97d151fee5e8486e7bb"
   integrity sha512-fgURAkt7isU4x29CmcGNONBRp2FZu2tGBcdXmEzbcNjKPO7kP5f/23ZaLHiXSKubi0MLCiLlfGRjRkQvWR7e3g==
 
-"@babylonjs/gui@^5.33.2":
-  version "5.33.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.33.2.tgz#1d9cbc71d28a593c90997b58b39dd563e432e5c8"
-  integrity sha512-B90bdxtbcqcaiCyeMH+d91WhnpYqgGaC9nxJ6qVXFi4gzwz1RWbn/GAz/WvwxVaNIhGrlrltK51a13B8h+zVeQ==
+"@babylonjs/gui@^5.37.0":
+  version "5.37.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.37.0.tgz#a08bbc2a18a8c058eda581cc85dc1596102b80c2"
+  integrity sha512-0Fxz/G+CAi3yFsnCuwa0ElhfC9cyekhosdKeDcmjsbk/iiOZwuqoIRjkfKyoOzn8o2ENJcqn0QAeAJpWd/NbVA==
 
-"@babylonjs/loaders@^5.33.2":
-  version "5.33.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.33.2.tgz#b8b38f79f3e7729aa897053d1ecdc3796b5e1d92"
-  integrity sha512-7VpdhdAF11AyyfCjsWd/UjEAqTholKMDYMTq8EIF7378IcIcfPKrwp03TUXjD/aAn3aPdkaM6Bpr+Jdmzznw3Q==
+"@babylonjs/loaders@^5.37.0":
+  version "5.37.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.37.0.tgz#687b5dbf60b9610bf0db84a37d5ffb065320d35e"
+  integrity sha512-byqbfEbpo3deMGv/fCJVF0rGhjWQEp4UWxC/W4En8Kz4EwUp+idm6KU/aym/JXaLUXlJ5bCumoC7J3QCTUeuUg==
 
-"@babylonjs/materials@^5.33.2":
-  version "5.33.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.33.2.tgz#f75f3634352fe5b1c87fa4912d15497799e0bd40"
-  integrity sha512-jQvA3i8LF+3zP+qnGxeHJYvQvTC0BCCA74Zi2dHSg2+aWGYbFprvCQ27CM6BnR/r2GWGf9i1kfNDbpyQFZmG9g==
+"@babylonjs/materials@^5.37.0":
+  version "5.37.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.37.0.tgz#8383c7cb9a92a3f35f170e6feb17372b00d928ac"
+  integrity sha512-w66W1FUUsolEd+YDTOHuswEqG0TU+w0sNFaC33N3InVs+A5iiWdx5VSomC+r3xV9HHQb9/sdJvxa9PLHkLhv5Q==
 
 "@esbuild/android-arm64@0.16.6":
   version "0.16.6"
