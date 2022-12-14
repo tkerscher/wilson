@@ -76,6 +76,7 @@ class Graph:
         return (
             isinstance(other, Graph)
             and other.name == self.name
+            and np.shape(other.array) == np.shape(self.array)
             and bool(np.equal(other.array, self.array).all())
         )
 
@@ -143,6 +144,7 @@ class Path:
         return (
             isinstance(other, Path)
             and other.name == self.name
+            and np.shape(other.array) == np.shape(self.array)
             and bool(np.equal(other.array, self.array).all())
         )
 
