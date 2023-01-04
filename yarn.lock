@@ -22,10 +22,10 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.37.0.tgz#687b5dbf60b9610bf0db84a37d5ffb065320d35e"
   integrity sha512-byqbfEbpo3deMGv/fCJVF0rGhjWQEp4UWxC/W4En8Kz4EwUp+idm6KU/aym/JXaLUXlJ5bCumoC7J3QCTUeuUg==
 
-"@babylonjs/materials@^5.37.0":
-  version "5.37.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.37.0.tgz#8383c7cb9a92a3f35f170e6feb17372b00d928ac"
-  integrity sha512-w66W1FUUsolEd+YDTOHuswEqG0TU+w0sNFaC33N3InVs+A5iiWdx5VSomC+r3xV9HHQb9/sdJvxa9PLHkLhv5Q==
+"@babylonjs/materials@^5.40.1":
+  version "5.40.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.40.1.tgz#22e33e0ff287f044a00848402939094b57354488"
+  integrity sha512-7em8tuvmah91vA6+4qrPSStcFXk+dzJyzSYTMygtvwd+vbfT28BQuNRULQJW9Dvco8rKYPyaK9XRFWh+7EAyQg==
 
 "@esbuild/android-arm64@0.16.6":
   version "0.16.6"
