@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.37.0.tgz#b4888b6cfb829629deacd97d151fee5e8486e7bb"
   integrity sha512-fgURAkt7isU4x29CmcGNONBRp2FZu2tGBcdXmEzbcNjKPO7kP5f/23ZaLHiXSKubi0MLCiLlfGRjRkQvWR7e3g==
 
-"@babylonjs/gui@^5.37.0":
-  version "5.37.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.37.0.tgz#a08bbc2a18a8c058eda581cc85dc1596102b80c2"
-  integrity sha512-0Fxz/G+CAi3yFsnCuwa0ElhfC9cyekhosdKeDcmjsbk/iiOZwuqoIRjkfKyoOzn8o2ENJcqn0QAeAJpWd/NbVA==
+"@babylonjs/gui@^5.40.1":
+  version "5.40.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.40.1.tgz#32c870a84de126c5fb8206f94871dbe7ed97fbcd"
+  integrity sha512-FqsOta+A82rWKaf0fYCm9Cg6/bylfDRIJ8zP8+w02eR6L1Y3jDyLcSznGtIo7mMrk7X2Gh1Zo2xXaS3QRJ3qaA==
 
 "@babylonjs/loaders@^5.37.0":
   version "5.37.0"
