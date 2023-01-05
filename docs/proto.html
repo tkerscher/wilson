@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Data Model &mdash; Wilson 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -12,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -98,18 +96,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="data-model">
+  <section id="data-model">
 <span id="datamodel"></span><h1>Data Model<a class="headerlink" href="#data-model" title="Permalink to this heading"></a></h1>
 <p>The data model is defined using Google’s <a class="reference external" href="https://developers.google.com/protocol-buffers">Protocol Buffers</a>.</p>
-<div class="section" id="compile">
+<section id="compile">
 <h2>Compile<a class="headerlink" href="#compile" title="Permalink to this heading"></a></h2>
 <p>To compile the <code class="docutils literal notranslate"><span class="pre">.proto</span></code> files into the typescript files needed you can simply run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn protoc <span class="c1">#unix</span>
-yarn protoc_win <span class="c1">#windows</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn<span class="w"> </span>protoc<span class="w"> </span><span class="c1">#unix</span>
+yarn<span class="w"> </span>protoc_win<span class="w"> </span><span class="c1">#windows</span>
 </pre></div>
 </div>
 <p>To compile them instead into python files run (requires <code class="docutils literal notranslate"><span class="pre">mypy-protobuf</span></code>)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn protopy
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn<span class="w"> </span>protopy
 </pre></div>
 </div>
 <p>You need to have <code class="docutils literal notranslate"><span class="pre">protoc</span></code> installed and accessible through the path variable.
@@ -117,17 +115,13 @@ Since the data model should not change very much, we will include the compiled
 files in the repository to speed things up and make installation easier.</p>
 <p>If you want to compile the data model into a different language you only need to
 compile the root file <code class="docutils literal notranslate"><span class="pre">project.proto</span></code> as it imports all other files.</p>
-</div>
-<div class="section" id="data-types">
+</section>
+<section id="data-types">
 <h2>Data Types<a class="headerlink" href="#data-types" title="Permalink to this heading"></a></h2>
-<div class="section" id="fundamental-types">
+<section id="fundamental-types">
 <h3>Fundamental Types<a class="headerlink" href="#fundamental-types" title="Permalink to this heading"></a></h3>
 <p>There are three fundamental data types:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
 <th class="head"><p>Description</p></th>
@@ -145,18 +139,13 @@ compile the root file <code class="docutils literal notranslate"><span class="pr
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="table-types">
+</section>
+<section id="table-types">
 <h3>Table types<a class="headerlink" href="#table-types" title="Permalink to this heading"></a></h3>
 <p>Table types contain actual measured or simulated data, either as a graph or
 path. Both store the data as a table of interpolation point by assigning
 discrete points in time a value of its corresponding scalar type.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
 <th class="head"><p>Scalar</p></th>
@@ -179,10 +168,6 @@ reference it by other objects, as well as a human readable <code class="docutils
 <p>Additionally, the interpolation used to infer values between data points can be
 one of the following:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Interpolation</p></th>
 <th class="head"><p>Description</p></th>
@@ -203,24 +188,19 @@ one of the following:</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="color-map">
+</section>
+<section id="color-map">
 <h3>Color Map<a class="headerlink" href="#color-map" title="Permalink to this heading"></a></h3>
 <p>There is also a global <code class="docutils literal notranslate"><span class="pre">ColorMap</span></code> which is used to translate scalars used in
 <code class="docutils literal notranslate"><span class="pre">ColorProperties</span></code> into actual Colors. Similar to the table types it has a list
 of color stops mapping <code class="docutils literal notranslate"><span class="pre">double</span></code> to <code class="docutils literal notranslate"><span class="pre">Color</span></code>.</p>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h3>Properties<a class="headerlink" href="#properties" title="Permalink to this heading"></a></h3>
 <p>Properties are a special data type, which denotes that a value can either be
 const scalar or are calculated based on a table referenced by its <code class="docutils literal notranslate"><span class="pre">id</span></code>.</p>
 <p>There are three types of properties:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Scalar</p></th>
@@ -246,8 +226,8 @@ const scalar or are calculated based on a table referenced by its <code class="d
 table’s it’s referencing. The conversion between the <code class="docutils literal notranslate"><span class="pre">double</span></code> given or
 calculated from the referenced <code class="docutils literal notranslate"><span class="pre">Graph</span></code> and the expected <code class="docutils literal notranslate"><span class="pre">Color</span></code> is done using
 the color map stored in the project root object.</p>
-</div>
-<div class="section" id="text">
+</section>
+<section id="text">
 <h3>Text<a class="headerlink" href="#text" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">Text</span></code> type is a string that may contain template expressions. A template
 expression can reference data in the project, namely <code class="docutils literal notranslate"><span class="pre">Graph</span></code> and <code class="docutils literal notranslate"><span class="pre">Path</span></code>, by
@@ -263,21 +243,15 @@ property:</p>
 <p><code class="docutils literal notranslate"><span class="pre">Current</span> <span class="pre">height:</span> <span class="pre">%(paths[0].z).2f</span> <span class="pre">m</span> <span class="pre">after</span> <span class="pre">%(graphs[4]).3f</span> <span class="pre">ms</span></code></p>
 <p>Of course, a plain string with no references is also a valid Text:</p>
 <p><code class="docutils literal notranslate"><span class="pre">Test</span> <span class="pre">#042</span></code></p>
-</div>
-</div>
-<div class="section" id="objects">
+</section>
+</section>
+<section id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this heading"></a></h2>
 <p>The data as defined before can be used to animate objects which will be drawn in
 a 3D scene.</p>
 <p>Each object is stored in a <code class="docutils literal notranslate"><span class="pre">Animatible</span></code> message, which points to actual
 instances of an object as well as the following common meta information.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>ID</p></th>
@@ -312,15 +286,10 @@ are implicitly defined by this and do not need to be explicitly defined elsewher
 case, the viewer software should assign them to a default group but is not required to.</p>
 <p>The actual object is stored in the oneof field <code class="docutils literal notranslate"><span class="pre">instance</span></code>. If this field is empty, assume that it’s
 actually an instance of unknown type. Currently there are five types of objects:</p>
-<div class="section" id="sphere">
+<section id="sphere">
 <h3>Sphere<a class="headerlink" href="#sphere" title="Permalink to this heading"></a></h3>
 <p>A simple Sphere.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -342,16 +311,11 @@ actually an instance of unknown type. Currently there are five types of objects:
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="line">
+</section>
+<section id="line">
 <h3>Line<a class="headerlink" href="#line" title="Permalink to this heading"></a></h3>
 <p>A line connection two points.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -387,16 +351,11 @@ actually an instance of unknown type. Currently there are five types of objects:
 </table>
 <p>If both <code class="docutils literal notranslate"><span class="pre">pointForward</span></code> and <code class="docutils literal notranslate"><span class="pre">pointBackward</span></code> are set, the line will point in
 both direction.</p>
-</div>
-<div class="section" id="tube">
+</section>
+<section id="tube">
 <h3>Tube<a class="headerlink" href="#tube" title="Permalink to this heading"></a></h3>
 <p>A Tube following a path with variable coloring and diameter.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -426,17 +385,12 @@ both direction.</p>
 determined using the by <code class="docutils literal notranslate"><span class="pre">pathId</span></code> referenced <code class="docutils literal notranslate"><span class="pre">Path</span></code>. The corresponding time is used to evaluate the
 other properties. I.e. at a time t, the position of the current tube segment is determined by the
 referenced <code class="docutils literal notranslate"><span class="pre">Path</span></code>, while the other properties are evaluated using the same time t.</p>
-</div>
-<div class="section" id="overlay">
+</section>
+<section id="overlay">
 <h3>Overlay<a class="headerlink" href="#overlay" title="Permalink to this heading"></a></h3>
 <p>Overlay show text drawn on top of the scene. If multiple overlays share the same
 position they’ll be stacked.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -468,11 +422,6 @@ position they’ll be stacked.</p>
 </table>
 <p>The <code class="docutils literal notranslate"><span class="pre">TextPosition</span></code> type is a simple enumeration of all possible positions:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"></th>
@@ -494,9 +443,9 @@ position they’ll be stacked.</p>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="project-description">
+</section>
+</section>
+<section id="project-description">
 <h2>Project Description<a class="headerlink" href="#project-description" title="Permalink to this heading"></a></h2>
 <p>The root message for serialization is <code class="docutils literal notranslate"><span class="pre">Project</span></code> and is foremost a container for the tables and
 objects. Thus it contains the following types:</p>
@@ -506,16 +455,11 @@ objects. Thus it contains the following types:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">ColorMap</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Animatible[]</span></code></p></li>
 </ul>
-<div class="section" id="meta-information">
+<section id="meta-information">
 <h3>Meta information<a class="headerlink" href="#meta-information" title="Permalink to this heading"></a></h3>
 <p>The project also contains a message <code class="docutils literal notranslate"><span class="pre">ProjectMeta</span></code> at tag 0 which holds additional
 information for the end user about the animated event:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -553,17 +497,12 @@ information for the end user about the animated event:</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="scene-settings">
+</section>
+<section id="scene-settings">
 <h3>Scene Settings<a class="headerlink" href="#scene-settings" title="Permalink to this heading"></a></h3>
 <p>Finally, there are some properties in <code class="docutils literal notranslate"><span class="pre">Project</span></code> providing additional information
 on how to render the scene:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -583,11 +522,6 @@ on how to render the scene:</p>
 </table>
 <p>The <code class="docutils literal notranslate"><span class="pre">Camera</span></code> is a rather simple structure, which can also be animated:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Property</p></th>
 <th class="head"><p>Type</p></th>
@@ -605,9 +539,9 @@ on how to render the scene:</p>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

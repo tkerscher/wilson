@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Guide &mdash; Wilson 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -12,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -85,11 +83,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="developer-guide">
+  <section id="developer-guide">
 <h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Permalink to this heading"></a></h1>
 <p>Here are some things listed to give you an entry point for contributing to
 Wilson.</p>
-<div class="section" id="file-format">
+<section id="file-format">
 <h2>File Format<a class="headerlink" href="#file-format" title="Permalink to this heading"></a></h2>
 <p>For changing the file format you should at least be familiar with
 [Protocol Buffer](<a class="reference external" href="https://developers.google.com/protocol-buffers">https://developers.google.com/protocol-buffers</a>). Since changes
@@ -101,19 +99,19 @@ long as you do not change existing or preexisting entries, i.e. changing the
 format of a particular entry specified by its id.
 Furthermore, both the Python package and Web App need to be able to tolerate
 missing or default values. It must also be safe to ignore future entries.</p>
-</div>
-<div class="section" id="python-package">
+</section>
+<section id="python-package">
 <h2>Python Package<a class="headerlink" href="#python-package" title="Permalink to this heading"></a></h2>
 <p>The python package is just a simple utility library providing some quality of
 life features like numpy support. Thus, it should just reflect the file format.</p>
 <p>Read the API to get an idea of the code design.</p>
-</div>
-<div class="section" id="web-app">
+</section>
+<section id="web-app">
 <h2>Web App<a class="headerlink" href="#web-app" title="Permalink to this heading"></a></h2>
 <p>The Web App has two (three) big components: The 3D rendering logic and the UI.
 The third is the data model and gets (mostly) auto generated from the proto
 files.</p>
-<div class="section" id="d-rendering">
+<section id="d-rendering">
 <h3>3D Rendering<a class="headerlink" href="#d-rendering" title="Permalink to this heading"></a></h3>
 <p>The 3D rendering logic is contained in the <code class="docutils literal notranslate"><span class="pre">src/scene</span></code> directory. The actual
 implementation is coded against the <code class="docutils literal notranslate"><span class="pre">Controller</span></code> interface to allow loosely
@@ -128,16 +126,16 @@ organized accordingly.</p>
 <p>There is also some code the animation depends on inside <code class="docutils literal notranslate"><span class="pre">src/interpolation</span></code>.
 Since this works without the concept of a 3D rendering engine, the code got
 separated.</p>
-</div>
-<div class="section" id="user-interface">
+</section>
+<section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this heading"></a></h3>
 <p>The User Interface uses the <a class="reference external" href="https://vuejs.org/">Vue JS</a> framework, which
 introduces its own file format for creating HTML components, ending in <code class="docutils literal notranslate"><span class="pre">.vue</span></code>.
 It’s rather intuitive, so a good look in to some of these files should give you
 already a pretty good idea of it.</p>
-</div>
-</div>
-<div class="section" id="style-guide">
+</section>
+</section>
+<section id="style-guide">
 <h2>Style Guide<a class="headerlink" href="#style-guide" title="Permalink to this heading"></a></h2>
 <p>We are using linters to keep the styling consistent. They can be run via a yarn
 script:</p>
@@ -145,8 +143,8 @@ script:</p>
 <span class="go">yarn black # python</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
