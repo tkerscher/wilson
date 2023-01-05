@@ -13,14 +13,14 @@
     "black": "black wilson"
   },
   "dependencies": {
-    "@babylonjs/core": "^5.37.0",
-    "@babylonjs/gui": "^5.37.0",
-    "@babylonjs/loaders": "^5.37.0",
-    "@babylonjs/materials": "^5.37.0",
+    "@babylonjs/core": "^5.41.0",
+    "@babylonjs/gui": "^5.41.0",
+    "@babylonjs/loaders": "^5.41.0",
+    "@babylonjs/materials": "^5.41.0",
     "jszip": "^3.10.1",
     "mitt": "^3.0.0",
     "pinia": "^2.0.28",
-    "plotly.js-basic-dist": "^2.16.3",
+    "plotly.js-basic-dist": "^2.17.0",
     "protobufjs": "^7.1.2",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.45"
@@ -30,14 +30,14 @@
     "@types/pako": "^2.0.0",
     "@types/plotly.js-basic-dist": "^1.54.1",
     "@types/sprintf-js": "^1.1.2",
-    "@typescript-eslint/eslint-plugin": "^5.46.1",
-    "@typescript-eslint/parser": "^5.46.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "@vitejs/plugin-vue": "^4.0.0",
-    "eslint": "^8.29.0",
+    "eslint": "^8.31.0",
     "eslint-plugin-vue": "^9.8.0",
     "ts-proto": "^1.133.0",
     "typescript": "^4.9.4",
-    "vite": "^4.0.1",
-    "vue-tsc": "^1.0.13"
+    "vite": "^4.0.4",
+    "vue-tsc": "^1.0.22"
   }
 }
