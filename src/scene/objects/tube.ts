@@ -1,13 +1,15 @@
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { Engine } from "@babylonjs/core/Engines/engine";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Scene } from "@babylonjs/core/scene";
-import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
 import { Tube } from "../../model/tube";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { GraphInterpolator } from "../../interpolation/graphInterpolation";
 import { Metadata, SceneBuildTool } from "./tools";
+import { Interpolation } from "../../model/interpolation";
+import { createTextureMappedColorMaterial } from "../materials/textureMappedColorMaterial";
 
 const TEXTURE_SIZE = 2048;
 
@@ -79,7 +81,7 @@ export class TubeController {
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != "graphId") {
-            this.#mesh.material = tool.parseColor(tube.color, meta.name + "_color");
+            tool.applyMaterial(this.#mesh, tube.color);
         }
         else {
             //graph as color source -> check if id is valid
@@ -92,27 +94,27 @@ export class TubeController {
             else {
                 const graphInt = new GraphInterpolator(id, tool.project);
                 const startTime = this.#startTime;
-                const data = new Uint8Array(function*() {
+                const data = new Float32Array(function*() {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
                         const t = i / TEXTURE_SIZE * period + startTime;
-                        const v = graphInt.interpolate(t);
-                        const [color, alpha] = tool.mapColor(v);
-
-                        yield color.r * 255;
-                        yield color.g * 255;
-                        yield color.b * 255;
-                        yield alpha * 255;
+                        yield graphInt.interpolate(t);
                     }
                 }());
 
-                //bake texture
-                const texture = RawTexture.CreateRGBATexture(
+                //create texture
+                const texture = RawTexture.CreateRTexture(
                     data, 1, TEXTURE_SIZE,
-                    tool.scene);
+                    tool.scene,
+                    false, false,
+                    interpolationToSampling(graph.interpolation),
+                    Engine.TEXTURETYPE_FLOAT
+                );
+                texture.name = this.#name + "_texture";
 
-                //assign texture
-                const mat = new StandardMaterial(meta.name + "_mat", tool.scene);
-                mat.diffuseTexture = texture;
+                //create material
+                const mat = createTextureMappedColorMaterial(
+                    tool.scene, tool.colorMapController, texture);
+                mat.freeze();
                 this.#mesh.material = mat;
             }
         }
@@ -194,5 +196,17 @@ export class TubeController {
 
     get isEnabled(): boolean {
         return this.#mesh?.isEnabled() ?? false;
+    }
+}
+
+function interpolationToSampling(interpolation: Interpolation): number {
+    switch (interpolation) {
+    case Interpolation.AHEAD:
+    case Interpolation.HOLD:
+    case Interpolation.STEP:
+        return RawTexture.NEAREST_SAMPLINGMODE;
+    case Interpolation.LINEAR:
+    case Interpolation.UNRECOGNIZED:
+        return RawTexture.BILINEAR_SAMPLINGMODE;
     }
 }

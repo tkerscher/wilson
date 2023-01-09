@@ -6,6 +6,9 @@ import { IAnimationKey } from "@babylonjs/core/Animations/animationKey";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Node } from "@babylonjs/core/node";
 import { Scene } from "@babylonjs/core/scene";
+import { Material } from "@babylonjs/core/Materials/material";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { NodeMaterial } from "@babylonjs/core/Materials/Node/nodeMaterial";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
@@ -15,8 +18,12 @@ import { Project } from "../../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../../model/properties";
 import { getInterpolation } from "../../interpolation/functions";
 import { setProperty } from "../../util/property";
-import { toHex } from "../../util/colorToHex";
+import { toHex } from "../../util/color";
 import { TextEngine } from "../../interpolation/textEngine";
+import { interpolateColormap } from "../../util/color";
+import { createSolidMappedColorMaterial } from "../materials/solidMappedColorMaterial";
+import { ColorMapController } from "../materials/colormapController";
+import { Color } from "../../model/color";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
 
@@ -45,7 +52,11 @@ export class SceneBuildTool {
     #nextId = 0;
     objectMap: Map<number, Node|Control>;
 
-    #materialMap: Map<string, StandardMaterial>;
+    colorMapController: ColorMapController;
+    #solidMappedColorMaterial: NodeMaterial;
+    #updateScalar: (value: number) => void;
+
+    #materialMap: Map<string, Material>;
     defaultMaterial: StandardMaterial;
 
     constructor(project: Project, engine: Engine) {
@@ -55,7 +66,12 @@ export class SceneBuildTool {
 
         this.objectMap = new Map<number,Node|Control>();
 
-        this.#materialMap = new Map<string, StandardMaterial>();
+        this.colorMapController = new ColorMapController(this.scene, project.colormap);
+        const _solidMat = createSolidMappedColorMaterial(this.scene, this.colorMapController);
+        this.#solidMappedColorMaterial = _solidMat.material;
+        this.#updateScalar = _solidMat.updateScalar;
+
+        this.#materialMap = new Map<string, Material>();
         this.defaultMaterial = new StandardMaterial("default");
         this.defaultMaterial.diffuseColor = Color3.Black();
         this.defaultMaterial.freeze();
@@ -166,143 +182,82 @@ export class SceneBuildTool {
     }
 
     /**
-     * Parses the given color property, creates the corresponding material and
-     * animates it if needed.
-     * @param color Color property to parse
-     * @param name Name to give the material
-     * @returns A standard material with the proper color (animation)
+     * Creates the material corresponding to the given color property and
+     * assigns it to the given target. Creates animation if needed.
+     * @param target Target to apply the material
+     * @param color Color property to apply
      */
-    parseColor(color: ColorProperty|undefined, name: string): StandardMaterial {
+    applyMaterial(target: Mesh, color: ColorProperty|undefined): void {
         if (!color || !color.source) {
-            return this.defaultMaterial;
+            target.material = this.defaultMaterial;
+            return;
         }
+        const update = this.#updateScalar;
 
-        switch (color.source.$case) {
+        switch(color.source.$case) {
         case "constValue":
         {
-            const c = color.source.constValue;
-            return this.getStaticMaterial(c.r, c.g, c.b, c.a);
+            const clr = color.source.constValue;
+            target.material = this.#getStaticMaterial(clr);
+            return;
         }
         case "scalarValue":
         {
-            const [clr, alpha] = this.mapColor(color.source.scalarValue);
-            return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
+            const scalar = color.source.scalarValue;
+            //TODO: Figure out why this is not working
+            // target.onBeforeRenderObservable.add(() => update(scalar));
+            // target.material = this.#solidMappedColorMaterial;
+            const foo = createSolidMappedColorMaterial(this.scene, this.colorMapController);
+            target.material = foo.material;
+            foo.updateScalar(scalar);
+            foo.material.freeze();
+            return;
         }
         case "graphId":
         {
-            const mat = new StandardMaterial(name);
             const id = color.source.graphId;
             const graph = this.project.graphs.find(g => g.id == id);
             if (!graph || graph.points.length == 0) {
                 //Referenced graph not found -> return default
-                return this.defaultMaterial;
+                target.material = this.defaultMaterial;
+                return;
             }
             else if (graph.points.length == 1) {
                 const scalar = graph.points[0].value;
-                const [clr, alpha] = this.mapColor(scalar);
-                return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
+                target.onBeforeRenderObservable.add(() => update(scalar));
+                target.material = this.#solidMappedColorMaterial;
+                return;
             }
             else {
-                const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
-                    Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
-                const alphaAnimation = new Animation(graph.name, "alpha", 1.0,
+                const scalarAnimation = new Animation(graph.name, "value", 1.0,
                     Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-
-                const clrFrames = Array<IAnimationKey>();
-                const alphaFrames = Array<IAnimationKey>();
-                let prevKey = graph.points[0].time;
-                let prevVal = graph.points[0].value;
-                for (let i = 1; i < graph.points.length; ++i) {
-                    //In between frames, the new start is a duplicate of the previous end
-                    //-> remove last frame before adding new
-                    clrFrames.pop();
-                    alphaFrames.pop();
-
-                    const toKey = graph.points[i].time;
-                    const toVal = graph.points[i].value;
-                    const [clr, alpha] = this.colorFrames(prevKey, prevVal, toKey, toVal);
-                    clrFrames.push(...clr);
-                    alphaFrames.push(...alpha);
-
-                    prevKey = toKey;
-                    prevVal = toVal;
-                }
-
-                colorAnimation.setKeys(clrFrames);
-                alphaAnimation.setKeys(alphaFrames);
+                scalarAnimation.setKeys(graph.points.map(p =>
+                    ({ frame: p.time, value: p.value } as IAnimationKey)));
 
                 const interpolation = getInterpolation(graph.interpolation);
-                colorAnimation.setEasingFunction(interpolation);
-                alphaAnimation.setEasingFunction(interpolation);
+                scalarAnimation.setEasingFunction(interpolation);
 
-                this.animationGroup.addTargetedAnimation(colorAnimation, mat);
-                this.animationGroup.addTargetedAnimation(alphaAnimation, mat);
-                return mat;
-            }
-        }
-        }
-    }
+                //wire up animation
+                const animationTarget = { value: 0.0 };
+                this.animationGroup.addTargetedAnimation(scalarAnimation, animationTarget);
+                target.onBeforeRenderObservable.add(() => update(animationTarget.value));
+                target.material = this.#solidMappedColorMaterial;
 
-    /**
-     * Looks up a color in the color map specified by the project
-     * @param scalar Value to look up
-     * @returns The corresponding color according to the project's color map
-     */
-    mapColor(scalar: number): [Color3,number] {
-        if (!this.project.colormap || this.project.colormap.stops.length == 0) {
-            return [Color3.Black(), 1.0];
-        }
-        const stops = this.project.colormap.stops;
-
-        //get first stop after scalar
-        const stopIdx = stops.findIndex(s => s.value > scalar);
-        if (stopIdx == -1) {
-            //Clamp top
-            const clr = stops[stops.length - 1].color;
-            if (!clr) {
-                return [Color3.Black(), 1.0];
-            }
-            else {
-                return [new Color3(clr.r, clr.g, clr.b), clr.a];
+                return;
             }
         }
-        if (stopIdx == 0) {
-            //clamp bottom
-            const clr = stops[0].color;
-            if (!clr) {
-                return [Color3.Black(), 1.0];
-            }
-            else {
-                return [new Color3(clr.r, clr.g, clr.b), clr.a];
-            }
         }
-
-        //linear interpolate between stops
-        const before = stops[stopIdx - 1];
-        const after = stops[stopIdx];
-        if (!before.color || !after.color) {
-            return [Color3.Black(), 1.0];
-        }
-        const lambda = (scalar - before.value) / (after.value - before.value);
-        const red = before.color.r + (after.color.r - before.color.r) * lambda;
-        const green = before.color.g + (after.color.g - before.color.g) * lambda;
-        const blue = before.color.b + (after.color.b - before.color.b) * lambda;
-        const alpha = before.color.a + (after.color.a - before.color.a) * lambda;
-        return [new Color3(red, green, blue), alpha];
     }
 
     /**
      * Returns a material with the specified color. Reuses already created ones
      * to improve render performance
-     * @param r Red channel
-     * @param g Blue channel
-     * @param b Green channel
-     * @param a Alpha channel
+     * @param color Color of the material
      * @returns Material with the given color
      */
-    getStaticMaterial(r: number, g: number, b: number, a: number): StandardMaterial {
+    #getStaticMaterial(color: Color): Material {
         //color already in use?
-        const key = toHex(r, g, b, a);
+        const key = toHex(color);
         const mat = this.#materialMap.get(key);
         if (mat) {
             return mat;
@@ -310,89 +265,13 @@ export class SceneBuildTool {
         else {
             //create new material
             const mat = new StandardMaterial(key, this.scene);
-            mat.diffuseColor = new Color3(r, g, b);
-            mat.alpha = a;
+            mat.diffuseColor = new Color3(color.r, color.g, color.b);
+            mat.alpha = color.a;
             mat.freeze(); //improves performance for static materials
             //store it
             this.#materialMap.set(key, mat);
             //done
             return mat;
         }
-    }
-
-    /**
-     * Checks, wether the given color property has any animation encoded.
-     * @param color The color property
-     * @returns True, if the color property is static and has no animations
-     */
-    isStaticMaterial(color: ColorProperty|undefined): boolean {
-        if (!color || !color.source)
-            return true;
-
-        switch (color.source.$case) {
-        case "constValue":
-        case "scalarValue":
-            return true;
-        case "graphId":
-        {
-            const id = color.source.graphId;
-            const graph = this.project.graphs.find(g => g.id == id);
-            return !graph || graph.points.length <= 0;
-        }}
-    }
-
-    /**
-     * Produces key frames to get not only start end end values, but also all gradient stops in between
-     * @param fromKey frame to start with
-     * @param fromVal scalar to start with. Gets translated via color map look up
-     * @param toKey frame to end with
-     * @param toVal scalar to end with. Gets translated via color map look up
-     * @returns Two arrays of animation frames for rgb color and alpha to be used in animations
-     */
-    colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
-        const clrFrames = Array<IAnimationKey>();
-        const alphaFrames = Array<IAnimationKey>();
-        if (!this.project.colormap || this.project.colormap.stops.length == 0) {
-            return [clrFrames, alphaFrames];
-        }
-        const stops = this.project.colormap.stops;
-        const keyRange = toKey - fromKey;
-        const valRange = toVal - fromVal;
-
-        //get first stop after scalar
-        let fromIdx = stops.findIndex(s => s.value > fromVal);
-        if (fromIdx == -1) {
-            fromIdx = stops.length - 1;
-        }
-        let toIdx = stops.findIndex(s => s.value > toVal);
-        if (toIdx == -1) {
-            //Point one behind last
-            toIdx = stops.length;
-        }
-
-        //add first key
-        const fromColor = this.mapColor(fromVal);
-        clrFrames.push({ frame: fromKey, value: fromColor[0] });
-        alphaFrames.push({ frame: fromKey, value: fromColor[1] });
-
-        //add color stops inbetween
-        const step = fromIdx <= toIdx ? 1 : -1;
-        for (let i = fromIdx; i != toIdx; i += step) {
-            const stop = stops[i];
-            if (!stop.color) {
-                continue;
-            }
-            const lambda = (stop.value - fromVal) / valRange;
-            const key = fromKey + lambda * keyRange;
-            clrFrames.push({ frame: key, value: new Color3(stop.color.r, stop.color.g, stop.color.b) });
-            alphaFrames.push({ frame: key, value: stop.color.a });
-        }
-
-        //add last key
-        const toColor = this.mapColor(toVal);
-        clrFrames.push({ frame: toKey, value: toColor[0] });
-        alphaFrames.push({ frame: toKey, value: toColor[1] });
-
-        return [clrFrames, alphaFrames];
     }
 }

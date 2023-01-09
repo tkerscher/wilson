@@ -73,8 +73,7 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
     }
     tool.applyMetadata(mesh, meta);
 
-    const mat = tool.parseColor(line.color, "material");
-    mesh.material = mat;
+    tool.applyMaterial(mesh, line.color);
 
     tool.parseScalar(line.lineWidth, mesh, "scaling.z");
     tool.parseScalar(line.lineWidth, mesh, "scaling.x");

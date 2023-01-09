@@ -4,7 +4,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import { ColorProperty } from "../../model/properties";
 import { Sphere } from "../../model/sphere";
-import { toHex } from "../../util/colorToHex";
+import { getStaticColor, isStaticColor, toHex } from "../../util/color";
 import { Metadata, SceneBuildTool } from "./tools";
 
 export class SphereBuilder {
@@ -25,7 +25,7 @@ export class SphereBuilder {
     build(sphere: Sphere, meta: Metadata) {
         //Either instance static template or create new sphere
         let obj: Mesh|InstancedMesh;
-        if (this.#tool.isStaticMaterial(sphere.color)) {
+        if (isStaticColor(this.#tool.project, sphere.color)) {
             //instance template
             const template = this.#getTemplate(sphere.color);
             obj = template.createInstance(meta.name);
@@ -34,7 +34,7 @@ export class SphereBuilder {
             //not static -> create new sphere ...
             obj = MeshBuilder.CreateSphere(meta.name, {}, this.#tool.scene);
             // ... with its own material
-            obj.material = this.#tool.parseColor(sphere.color, meta.name + "_mat");
+            this.#tool.applyMaterial(obj, sphere.color);
         }
 
         //set meta
@@ -53,15 +53,9 @@ export class SphereBuilder {
     }
 
     #getTemplate(color: ColorProperty|undefined): Mesh {
-        //! You must externally ensure that color is indeed static
-        //  Only then we can safely assume, that the next call will
-        //  NOT create a new material, but return a static one
-
-        //ask builder for color (material)
-        const mat = this.#tool.parseColor(color, "");
-        const clr = mat.diffuseColor;
         //create key from color
-        const key = toHex(clr.r, clr.g, clr.b, mat.alpha);
+        const clr = getStaticColor(this.#tool.project, color);
+        const key = toHex(clr);
 
         //check if that color already has a sphere template
         const template = this.#template.get(key);
@@ -73,7 +67,7 @@ export class SphereBuilder {
             //new color -> create new template
             const mesh = MeshBuilder.CreateSphere("sphereTemplate_#" + key, {}, this.#tool.scene);
             mesh.isVisible = false;
-            mesh.material = this.#tool.parseColor(color, "");
+            this.#tool.applyMaterial(mesh, color);
             //register template
             this.#template.set(key, mesh);
             //return template
