@@ -3,7 +3,7 @@ import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
 import { Scene } from "@babylonjs/core/scene";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { ColorMap } from "../../model/colormap";
-import { interpolateColormap } from "../../util/color";
+import { renderColormap } from "../../util/color";
 
 const TEXTURE_SIZE = 1024;
 
@@ -28,13 +28,13 @@ export class ColorMapController {
         else {
             this.#minScalar = colormap.stops[0].value;
             this.#maxScalar = colormap.stops[colormap.stops.length - 1].value;
-            //make sure they are not equal
-            if (this.#minScalar == this.#maxScalar) {
-                this.#maxScalar += 1e-7; //float epsilon
-            }
+            this.#sanitizeRange();
         }
 
-        this.#texture = createTexture(scene, colormap);
+        //create texture
+        const data = renderColormap(colormap, TEXTURE_SIZE);
+        this.#texture = RawTexture.CreateRGBATexture(
+            data, data.byteLength / 4, 1, scene, false, false);
         this.#texture.coordinatesMode = Texture.EQUIRECTANGULAR_MODE;
     }
 
@@ -49,7 +49,8 @@ export class ColorMapController {
     get minScalar(): number { return this.#minScalar; }
     set minScalar(value: number) {
         this.#minScalar = value;
-        this.#onMinScalarChanged.notifyObservers(value);
+        this.#sanitizeRange();
+        this.#onMinScalarChanged.notifyObservers(this.#minScalar);
     }
     /**
      * Gets or sets the maximum value of the colormap range.
@@ -57,7 +58,8 @@ export class ColorMapController {
     get maxScalar(): number { return this.#maxScalar; }
     set maxScalar(value: number) {
         this.#maxScalar = value;
-        this.#onMaxScalarChanged.notifyObservers(value);
+        this.#sanitizeRange();
+        this.#onMaxScalarChanged.notifyObservers(this.#maxScalar);
     }
     /**
      * Gers the Observable notifying on changes of the minScalar.
@@ -67,43 +69,14 @@ export class ColorMapController {
      * Gets the Observable notifying on changes of the maxScalar.
      */
     get onMaxScalarChanged() { return this.#onMaxScalarChanged; }
-}
 
-function createTexture(scene: Scene, colormap?: ColorMap): RawTexture {
-    if (!colormap || colormap.stops.length == 0) {
-        //create default colormap if none is provided (solid black)
-        const data = new Uint8Array([0, 0, 0, 255]);
-        return RawTexture.CreateRGBATexture(data, 1, 1, scene);
-    }
-    else if (colormap.stops.length == 1) {
-        //create single color texture
-        const color = colormap.stops[0].color;
-        const data = new Uint8Array([
-            (color?.r ?? 0) * 255,
-            (color?.g ?? 0) * 255,
-            (color?.b ?? 0) * 255,
-            (color?.a ?? 0) * 255
-        ]);
-        return RawTexture.CreateRGBATexture(data, 1, 1, scene);
-    }
-    else {
-        //build color map texture
-        const start = colormap.stops[0].value;
-        const end = colormap.stops[colormap.stops.length - 1].value;
-        const period = end - start;
-        const data = new Uint8Array(function*() {
-            //Interpolate to guarantee uniform steps in texture
-            for (let i = 0; i < TEXTURE_SIZE; ++i) {
-                const t = i / TEXTURE_SIZE * period + start;
-                const c = interpolateColormap(colormap, t);
-
-                yield c.r * 255;
-                yield c.g * 255;
-                yield c.b * 255;
-                yield c.a * 255;
-            }
-        }());
-        return RawTexture.CreateRGBATexture(data,
-            TEXTURE_SIZE, 1, scene, false, false);
+    /**
+     * Ensures that min and max are not the same to prevent division by zero
+     * errors.
+     */
+    #sanitizeRange() {
+        if (this.#minScalar == this.#maxScalar) {
+            this.#maxScalar += 1e-7; //float epsilon
+        }
     }
 }
