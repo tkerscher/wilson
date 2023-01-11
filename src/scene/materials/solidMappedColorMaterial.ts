@@ -95,7 +95,7 @@ export function createSolidMappedColorMaterial(
     const maxScalar = new InputBlock("maxScalar");
     maxScalar.visibleInInspector = true;
     maxScalar.value = controller.maxScalar;
-    controller.onMinScalarChanged.add((value: number) => maxScalar.value = value);
+    controller.onMaxScalarChanged.add((value: number) => maxScalar.value = value);
 
     //Normalizing Scalar
     const mapOffset = new SubtractBlock("mapOffset");

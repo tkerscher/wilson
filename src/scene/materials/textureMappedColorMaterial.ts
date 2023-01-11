@@ -87,7 +87,7 @@ export function createTextureMappedColorMaterial(
     const maxScalar = new InputBlock("maxScalar");
     maxScalar.visibleInInspector = true;
     maxScalar.value = controller.maxScalar;
-    controller.onMinScalarChanged.add((value: number) => maxScalar.value = value);
+    controller.onMaxScalarChanged.add((value: number) => maxScalar.value = value);
 
     //Texture
     const scalarTexture = new TextureBlock("scalarTexture");
