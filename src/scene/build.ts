@@ -26,6 +26,7 @@ import { OverlayBuilder } from "./objects/overlay";
 import { SphereBuilder } from "./objects/sphere";
 import { SceneBuildTool } from "./objects/tools";
 import { TubeController } from "./objects/tube";
+import { ColorMapController } from "./materials/colormapController";
 
 export interface SceneContainer {
     animation: AnimationGroup
@@ -43,6 +44,8 @@ export interface SceneContainer {
     overlayTexture: AdvancedDynamicTexture
     textEngine: TextEngine
     description: Description
+
+    colorMapController: ColorMapController
 
     onAnimationTick: Observable<{currentFrame: number}>
 }
@@ -142,6 +145,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         overlayTexture: buildTool.overlayTexture,
         textEngine: buildTool.textEngine,
         description: description,
+        colorMapController: buildTool.colorMapController,
         onAnimationTick: onAnimationTickObservable
     };
 
