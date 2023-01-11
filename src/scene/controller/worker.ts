@@ -272,4 +272,17 @@ export class WorkerController implements SceneController {
             distance: distance
         });
     }
+
+    setColorMapMinScalar(value: number): void {
+        this.#sendCommand({
+            type: "setColorMapMinScalar",
+            value: value
+        });
+    }
+    setColorMapMaxScalar(value: number): void {
+        this.#sendCommand({
+            type: "setColorMapMaxScalar",
+            value: value
+        });
+    }
 }

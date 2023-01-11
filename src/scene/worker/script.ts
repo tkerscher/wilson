@@ -87,6 +87,12 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
     case "setSpeedRatio":
         controller.speedRatio = ev.data.value;
         break;
+    case "setColorMapMinScalar":
+        controller.setColorMapMinScalar(ev.data.value);
+        break;
+    case "setColorMapMaxScalar":
+        controller.setColorMapMaxScalar(ev.data.value);
+        break;
     }
 }
 

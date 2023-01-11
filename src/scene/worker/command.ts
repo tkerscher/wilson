@@ -113,6 +113,15 @@ export interface SetCameraZoomCommand extends _WorkerCommand {
     distance: number
 }
 
+export interface SetColorMapMinScalar extends _WorkerCommand {
+    type: "setColorMapMinScalar",
+    value: number
+}
+export interface SetColormapMaxScalar extends _WorkerCommand {
+    type: "setColorMapMaxScalar",
+    value: number
+}
+
 export type WorkerCommand =
     LoadCommand |
     LoadStageCommand |
@@ -132,6 +141,8 @@ export type WorkerCommand =
     SetCameraRotationCommand |
     SetCameraTargetCommand |
     SetCameraZoomCommand |
+    SetColorMapMinScalar |
+    SetColormapMaxScalar |
     SetGridEnabledCommand |
     SetGridEnabledCommand |
     SetObjectsEnabledCommand |
