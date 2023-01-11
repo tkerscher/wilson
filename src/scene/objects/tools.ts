@@ -1,6 +1,6 @@
 import { Animation } from "@babylonjs/core/Animations/animation";
 import { AnimationGroup } from "@babylonjs/core/Animations/animationGroup";
-import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
+import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { IAnimationKey } from "@babylonjs/core/Animations/animationKey";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -9,7 +9,6 @@ import { Scene } from "@babylonjs/core/scene";
 import { Material } from "@babylonjs/core/Materials/material";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { NodeMaterial } from "@babylonjs/core/Materials/Node/nodeMaterial";
-import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { Control } from "@babylonjs/gui/2D/controls/control";
@@ -20,10 +19,10 @@ import { getInterpolation } from "../../interpolation/functions";
 import { setProperty } from "../../util/property";
 import { toHex } from "../../util/color";
 import { TextEngine } from "../../interpolation/textEngine";
-import { interpolateColormap } from "../../util/color";
 import { createSolidMappedColorMaterial } from "../materials/solidMappedColorMaterial";
 import { ColorMapController } from "../materials/colormapController";
 import { Color } from "../../model/color";
+import { createSolidColorMaterial } from "../materials/solidColorMaterial";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
 
@@ -57,7 +56,7 @@ export class SceneBuildTool {
     #updateScalar: (value: number) => void;
 
     #materialMap: Map<string, Material>;
-    defaultMaterial: StandardMaterial;
+    defaultMaterial: NodeMaterial;
 
     constructor(project: Project, engine: Engine) {
         this.project = project;
@@ -72,9 +71,8 @@ export class SceneBuildTool {
         this.#updateScalar = _solidMat.updateScalar;
 
         this.#materialMap = new Map<string, Material>();
-        this.defaultMaterial = new StandardMaterial("default");
-        this.defaultMaterial.diffuseColor = Color3.Black();
-        this.defaultMaterial.freeze();
+        this.defaultMaterial = createSolidColorMaterial(
+            this.scene, new Color4(0.0, 0.0, 0.0, 1.0)); //black
 
         this.overlayTexture = AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, this.scene);
         this.textEngine = new TextEngine(this.project);
@@ -264,10 +262,8 @@ export class SceneBuildTool {
         }
         else {
             //create new material
-            const mat = new StandardMaterial(key, this.scene);
-            mat.diffuseColor = new Color3(color.r, color.g, color.b);
-            mat.alpha = color.a;
-            mat.freeze(); //improves performance for static materials
+            const mat = createSolidColorMaterial(this.scene,
+                new Color4(color.r, color.g, color.b, color.a));
             //store it
             this.#materialMap.set(key, mat);
             //done
