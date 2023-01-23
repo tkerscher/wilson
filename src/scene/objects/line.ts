@@ -6,6 +6,8 @@ import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Line } from "../../model/line";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { Metadata, SceneBuildTool } from "./tools";
+import { getInterpolation } from "../../interpolation/functions";
+import { Interpolation } from "../../model/interpolation";
 
 const EY = new Vector3(0.0,1.0,0.0);
 
@@ -82,18 +84,7 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
 
     //Short cut: Check if we need the lengthy calculation
     //We dont if there is nothing to animate
-    if (line.start?.source?.$case != "pathId" && line.end?.source?.$case != "pathId") {
-        const start = line.start?.source?.constValue ?? { x: 0, y: 0, z: 0 };
-        const end = line.end?.source?.constValue ?? { x: 0, y: 0, z: 0 };
-        const dir = new Vector3(end.x - start.x , end.y - start.y, end.z - start.z);
-
-        mesh.scaling.y = dir.length();
-        dir.normalize();
-
-        const rot = alignVector(dir);
-        mesh.rotationQuaternion = rot;
-    }
-    else {
+    if (line.start?.source?.$case == "pathId" || line.end?.source?.$case == "pathId") {
         //length and orientation depend on the vector pointing from end to start
         //so let's create that one first. We create two interpolators for both
         //start and end. Then we collect the time stops (at which they might
@@ -101,15 +92,23 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
         //distances by interpolating both
 
         let times = new Array<number>();
+        let startInterpolation = Interpolation.UNRECOGNIZED;
+        let endInterpolation = Interpolation.UNRECOGNIZED;
         if (line.start?.source?.$case == "pathId") {
             const id = line.start.source.pathId;
             const path = tool.project.paths.find(p => p.id == id);
             path?.points.forEach(p => times.push(p.time));
+            if (path && path.interpolation in Interpolation) {
+                startInterpolation = path.interpolation;
+            }
         }
         if (line.end?.source?.$case == "pathId") {
             const id = line.end.source.pathId;
             const path = tool.project.paths.find(p => p.id == id);
             path?.points.forEach(p => times.push(p.time));
+            if (path && path.interpolation in Interpolation) {
+                endInterpolation = path.interpolation;
+            }
         }
 
         //Edge case: There was no path, nor a static one (handled before)
@@ -156,8 +155,36 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
         lengthAnimation.setKeys(lengthKeys);
         rotAnimation.setKeys(rotKeys);
 
+        //select interpolation
+        let interpolation = Interpolation.LINEAR; //Default
+        if (startInterpolation != Interpolation.UNRECOGNIZED) {
+            if (endInterpolation == Interpolation.UNRECOGNIZED || startInt == endInt) {
+                interpolation = startInterpolation;
+            }
+            else {
+                //TODO: proper handling of mismatched interpolation
+                //      for now fall back to linear (old behavior)
+            }
+        }
+        else if (endInterpolation != Interpolation.UNRECOGNIZED) {
+            interpolation = endInterpolation;
+        }
+        lengthAnimation.setEasingFunction(getInterpolation(interpolation));
+        rotAnimation.setEasingFunction(getInterpolation(interpolation));
+
         //link animation and were done
         tool.animationGroup.addTargetedAnimation(lengthAnimation, mesh);
         tool.animationGroup.addTargetedAnimation(rotAnimation, mesh);
+    }
+    else {
+        const start = line.start?.source?.constValue ?? { x: 0, y: 0, z: 0 };
+        const end = line.end?.source?.constValue ?? { x: 0, y: 0, z: 0 };
+        const dir = new Vector3(end.x - start.x , end.y - start.y, end.z - start.z);
+
+        mesh.scaling.y = dir.length();
+        dir.normalize();
+
+        const rot = alignVector(dir);
+        mesh.rotationQuaternion = rot;
     }
 }
