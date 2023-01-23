@@ -31,8 +31,8 @@ export class SphereBuilder {
             obj = template.createInstance(meta.name);
         }
         else {
-            //not static -> create new sphere ...
-            obj = MeshBuilder.CreateSphere(meta.name, {}, this.#tool.scene);
+            //not static -> create new sphere with radius 1...
+            obj = MeshBuilder.CreateSphere(meta.name, { diameter: 2.0 }, this.#tool.scene);
             // ... with its own material
             obj.material = this.#tool.parseColor(sphere.color, meta.name + "_mat");
         }
@@ -71,7 +71,7 @@ export class SphereBuilder {
         }
         else {
             //new color -> create new template
-            const mesh = MeshBuilder.CreateSphere("sphereTemplate_#" + key, {}, this.#tool.scene);
+            const mesh = MeshBuilder.CreateSphere("sphereTemplate_#" + key, { diameter: 2.0 }, this.#tool.scene);
             mesh.isVisible = false;
             mesh.material = this.#tool.parseColor(color, "");
             //register template
