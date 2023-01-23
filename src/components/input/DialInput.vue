@@ -34,23 +34,20 @@ const normalSpeed = 1.0;
 const fineSpeed = 0.01;
 
 const props = defineProps<{
-    modelValue: number,
-    minValue: number,
-    maxValue: number,
-    prefix: string,
-}>();
+      modelValue: number,
+      minValue?: number,
+      maxValue?: number,
+      prefix?: string,
+  }>();
 const emits = defineEmits<{
-    (e: "update:modelValue", value: number): void
-}>();
+      (e: "update:modelValue", value: number): void
+  }>();
 
 const isEditing = ref(false);
 const valid = ref(true);
 const editDiv = ref<HTMLDivElement|null>(null);
 
 function startEdit() {
-    if (!editDiv.value)
-        return;
-
     isEditing.value = true;
     valid.value = true;
     nextTick(() => {
@@ -95,10 +92,10 @@ function onWheel(e: WheelEvent) {
 
     const delta = (e.altKey ? fineSpeed : normalSpeed) * (e.deltaY < 0 ? 1 : -1);
     var newValue = props.modelValue + delta;
-    if (newValue < props.minValue) {
+    if (props.minValue && newValue < props.minValue) {
         newValue = props.minValue;
     }
-    else if (newValue > props.maxValue) {
+    else if (props.maxValue && newValue > props.maxValue) {
         newValue = props.maxValue;
     }
     emits("update:modelValue", newValue);
@@ -115,42 +112,42 @@ function endDrag() {
 function dragging(e: MouseEvent) {
     const delta = e.movementX * (e.altKey ? fineSpeed : normalSpeed);
     var newValue = props.modelValue + delta;
-    if (newValue < props.minValue) {
+    if (props.minValue && newValue < props.minValue) {
         newValue = props.minValue;
     }
-    else if (newValue > props.maxValue) {
+    else if (props.maxValue && newValue > props.maxValue) {
         newValue = props.maxValue;
     }
     emits("update:modelValue", newValue);
 }
 </script>
 
-<style scoped>
-.dial-input {
-    user-select: none;
-}
-.dial-input:hover {
-    cursor: ew-resize;
-}
-.dial-input:focus {
-    border-bottom: 2px solid var(--highlight1);
-    margin-bottom: -2px;
-}
+  <style scoped>
+  .dial-input {
+      user-select: none;
+  }
+  .dial-input:hover {
+      cursor: ew-resize;
+  }
+  .dial-input:focus {
+      border-bottom: 2px solid var(--highlight1);
+      margin-bottom: -2px;
+  }
 
-.input-edit {
-    background-color: white;
-    height: 18px;
-    border-radius: 50px;
-    margin-bottom: -2px;
-    overflow: hidden;
-}
-.input-edit:focus {
-    outline: 0px solid transparent;
-}
-.input-valid {
-    border-bottom: 2px solid var(--highlight1);
-}
-.input-invalid {
-    border-bottom: 2px solid var(--error);
-}
-</style>
+  .input-edit {
+      background-color: var(--primary1);
+      height: 18px;
+      border-radius: 50px;
+      margin-bottom: -2px;
+      overflow: hidden;
+  }
+  .input-edit:focus {
+      outline: 0px solid transparent;
+  }
+  .input-valid {
+      border-bottom: 2px solid var(--highlight1);
+  }
+  .input-invalid {
+      border-bottom: 2px solid var(--error);
+  }
+  </style>
