@@ -41,7 +41,7 @@ jobs:
           touch dist/.nojekyll
       - name: Copy Example Events
         run: |
-          cp examples/tutorial.wlsn dist/tutorial
+          find examples/ -type f -name '*.wlsn' | while read f; do cp "$f" dist/$(basename "$f" .wlsn); done
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
