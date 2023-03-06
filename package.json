@@ -15,7 +15,7 @@
   "dependencies": {
     "@babylonjs/core": "^5.43.0",
     "@babylonjs/gui": "^5.43.0",
-    "@babylonjs/loaders": "^5.43.0",
+    "@babylonjs/loaders": "^5.49.0",
     "@babylonjs/materials": "^5.43.0",
     "jszip": "^3.10.1",
     "mitt": "^3.0.0",
