@@ -17,10 +17,10 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.43.0.tgz#c03111d1ebc1db409d88df066122196881fe212d"
   integrity sha512-PodtPsC6eR8IbKyF9xobidjE36zLsyViZefZVcB2mzuZgjgBlbTw9Uw9RqeCFuWXjUpq9XUPdYKvORZfd6FdlA==
 
-"@babylonjs/loaders@^5.43.0":
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.43.0.tgz#f0d1b1ce74c88fecb87fea0e188fa06f26149123"
-  integrity sha512-dobwmP3NdxCGNhZzWRetUvHvTZaz44Y6hpXkT1gdSLCC8ivIgapaL+S9gePxDFGGjjbtO5Oypo5cwQK0FV4SOA==
+"@babylonjs/loaders@^5.53.0":
+  version "5.53.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.53.0.tgz#b40ae5c656bb7a8e929bec090609f8d62f56122f"
+  integrity sha512-4jEiFND5bs2TENTSTe2280B/kRP1Mop4ZAEOF0iU9ji7HC9W4TdBBKfAOVqpASdpBArD0AIz3qLmkG7FWLmmwg==
 
 "@babylonjs/materials@^5.43.0":
   version "5.43.0"
