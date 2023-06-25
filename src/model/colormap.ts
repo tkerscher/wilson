@@ -31,19 +31,24 @@ export const ColorMap = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ColorMap {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseColorMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.stops.push(ColorMap_Stop.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -60,6 +65,10 @@ export const ColorMap = {
       obj.stops = [];
     }
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ColorMap>, I>>(base?: I): ColorMap {
+    return ColorMap.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ColorMap>, I>>(object: I): ColorMap {
@@ -85,22 +94,31 @@ export const ColorMap_Stop = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ColorMap_Stop {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseColorMap_Stop();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.value = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.color = Color.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -117,6 +135,10 @@ export const ColorMap_Stop = {
     message.value !== undefined && (obj.value = message.value);
     message.color !== undefined && (obj.color = message.color ? Color.toJSON(message.color) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ColorMap_Stop>, I>>(base?: I): ColorMap_Stop {
+    return ColorMap_Stop.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ColorMap_Stop>, I>>(object: I): ColorMap_Stop {

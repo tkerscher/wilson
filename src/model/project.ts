@@ -72,37 +72,66 @@ export const Project = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Project {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProject();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.meta = ProjectMeta.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.graphs.push(Graph.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.paths.push(Path.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.colormap = ColorMap.decode(reader, reader.uint32());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.camera = Camera.decode(reader, reader.uint32());
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.hiddenGroups.push(reader.string());
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
+
           message.animatibles.push(Animatible.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -145,6 +174,10 @@ export const Project = {
       obj.animatibles = [];
     }
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Project>, I>>(base?: I): Project {
+    return Project.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Project>, I>>(object: I): Project {

@@ -37,28 +37,45 @@ export const Color = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Color {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseColor();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 13) {
+            break;
+          }
+
           message.r = reader.float();
-          break;
+          continue;
         case 2:
+          if (tag !== 21) {
+            break;
+          }
+
           message.g = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag !== 29) {
+            break;
+          }
+
           message.b = reader.float();
-          break;
+          continue;
         case 4:
+          if (tag !== 37) {
+            break;
+          }
+
           message.a = reader.float();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -79,6 +96,10 @@ export const Color = {
     message.b !== undefined && (obj.b = message.b);
     message.a !== undefined && (obj.a = message.a);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Color>, I>>(base?: I): Color {
+    return Color.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Color>, I>>(object: I): Color {

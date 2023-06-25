@@ -46,28 +46,45 @@ export const Graph = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Graph {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGraph();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.id = reader.uint32();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.points.push(Graph_Point.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.interpolation = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -92,6 +109,10 @@ export const Graph = {
     }
     message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Graph>, I>>(base?: I): Graph {
+    return Graph.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Graph>, I>>(object: I): Graph {
@@ -120,22 +141,31 @@ export const Graph_Point = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Graph_Point {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGraph_Point();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.time = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag !== 17) {
+            break;
+          }
+
           message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -152,6 +182,10 @@ export const Graph_Point = {
     message.time !== undefined && (obj.time = message.time);
     message.value !== undefined && (obj.value = message.value);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Graph_Point>, I>>(base?: I): Graph_Point {
+    return Graph_Point.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Graph_Point>, I>>(object: I): Graph_Point {

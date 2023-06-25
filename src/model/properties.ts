@@ -29,32 +29,43 @@ function createBaseScalarProperty(): ScalarProperty {
 
 export const ScalarProperty = {
   encode(message: ScalarProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.source?.$case === "constValue") {
-      writer.uint32(9).double(message.source.constValue);
-    }
-    if (message.source?.$case === "graphId") {
-      writer.uint32(16).uint32(message.source.graphId);
+    switch (message.source?.$case) {
+      case "constValue":
+        writer.uint32(9).double(message.source.constValue);
+        break;
+      case "graphId":
+        writer.uint32(16).uint32(message.source.graphId);
+        break;
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ScalarProperty {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseScalarProperty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.source = { $case: "constValue", constValue: reader.double() };
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.source = { $case: "graphId", graphId: reader.uint32() };
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -74,6 +85,10 @@ export const ScalarProperty = {
     message.source?.$case === "constValue" && (obj.constValue = message.source?.constValue);
     message.source?.$case === "graphId" && (obj.graphId = Math.round(message.source?.graphId));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ScalarProperty>, I>>(base?: I): ScalarProperty {
+    return ScalarProperty.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ScalarProperty>, I>>(object: I): ScalarProperty {
@@ -98,32 +113,43 @@ function createBaseVectorProperty(): VectorProperty {
 
 export const VectorProperty = {
   encode(message: VectorProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.source?.$case === "constValue") {
-      Vector.encode(message.source.constValue, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.source?.$case === "pathId") {
-      writer.uint32(16).uint32(message.source.pathId);
+    switch (message.source?.$case) {
+      case "constValue":
+        Vector.encode(message.source.constValue, writer.uint32(10).fork()).ldelim();
+        break;
+      case "pathId":
+        writer.uint32(16).uint32(message.source.pathId);
+        break;
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VectorProperty {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVectorProperty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.source = { $case: "constValue", constValue: Vector.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.source = { $case: "pathId", pathId: reader.uint32() };
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -144,6 +170,10 @@ export const VectorProperty = {
       (obj.constValue = message.source?.constValue ? Vector.toJSON(message.source?.constValue) : undefined);
     message.source?.$case === "pathId" && (obj.pathId = Math.round(message.source?.pathId));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VectorProperty>, I>>(base?: I): VectorProperty {
+    return VectorProperty.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<VectorProperty>, I>>(object: I): VectorProperty {
@@ -168,38 +198,53 @@ function createBaseColorProperty(): ColorProperty {
 
 export const ColorProperty = {
   encode(message: ColorProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.source?.$case === "constValue") {
-      Color.encode(message.source.constValue, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.source?.$case === "graphId") {
-      writer.uint32(16).uint32(message.source.graphId);
-    }
-    if (message.source?.$case === "scalarValue") {
-      writer.uint32(25).double(message.source.scalarValue);
+    switch (message.source?.$case) {
+      case "constValue":
+        Color.encode(message.source.constValue, writer.uint32(10).fork()).ldelim();
+        break;
+      case "graphId":
+        writer.uint32(16).uint32(message.source.graphId);
+        break;
+      case "scalarValue":
+        writer.uint32(25).double(message.source.scalarValue);
+        break;
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ColorProperty {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseColorProperty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.source = { $case: "constValue", constValue: Color.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.source = { $case: "graphId", graphId: reader.uint32() };
-          break;
+          continue;
         case 3:
+          if (tag !== 25) {
+            break;
+          }
+
           message.source = { $case: "scalarValue", scalarValue: reader.double() };
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -223,6 +268,10 @@ export const ColorProperty = {
     message.source?.$case === "graphId" && (obj.graphId = Math.round(message.source?.graphId));
     message.source?.$case === "scalarValue" && (obj.scalarValue = message.source?.scalarValue);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ColorProperty>, I>>(base?: I): ColorProperty {
+    return ColorProperty.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ColorProperty>, I>>(object: I): ColorProperty {

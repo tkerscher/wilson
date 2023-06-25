@@ -37,25 +37,38 @@ export const Sphere = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Sphere {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSphere();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.position = VectorProperty.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.radius = ScalarProperty.decode(reader, reader.uint32());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.color = ColorProperty.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -75,6 +88,10 @@ export const Sphere = {
     message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
     message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Sphere>, I>>(base?: I): Sphere {
+    return Sphere.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Sphere>, I>>(object: I): Sphere {

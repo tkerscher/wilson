@@ -36,53 +36,84 @@ export const Animatible = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.instance?.$case === "sphere") {
-      Sphere.encode(message.instance.sphere, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.instance?.$case === "line") {
-      Line.encode(message.instance.line, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.instance?.$case === "tube") {
-      Tube.encode(message.instance.tube, writer.uint32(146).fork()).ldelim();
-    }
-    if (message.instance?.$case === "overlay") {
-      Overlay.encode(message.instance.overlay, writer.uint32(154).fork()).ldelim();
+    switch (message.instance?.$case) {
+      case "sphere":
+        Sphere.encode(message.instance.sphere, writer.uint32(130).fork()).ldelim();
+        break;
+      case "line":
+        Line.encode(message.instance.line, writer.uint32(138).fork()).ldelim();
+        break;
+      case "tube":
+        Tube.encode(message.instance.tube, writer.uint32(146).fork()).ldelim();
+        break;
+      case "overlay":
+        Overlay.encode(message.instance.overlay, writer.uint32(154).fork()).ldelim();
+        break;
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Animatible {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAnimatible();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.groups.push(reader.string());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
+
           message.instance = { $case: "sphere", sphere: Sphere.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 17:
+          if (tag !== 138) {
+            break;
+          }
+
           message.instance = { $case: "line", line: Line.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 18:
+          if (tag !== 146) {
+            break;
+          }
+
           message.instance = { $case: "tube", tube: Tube.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 19:
+          if (tag !== 154) {
+            break;
+          }
+
           message.instance = { $case: "overlay", overlay: Overlay.decode(reader, reader.uint32()) };
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -122,6 +153,10 @@ export const Animatible = {
     message.instance?.$case === "overlay" &&
       (obj.overlay = message.instance?.overlay ? Overlay.toJSON(message.instance?.overlay) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Animatible>, I>>(base?: I): Animatible {
+    return Animatible.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Animatible>, I>>(object: I): Animatible {

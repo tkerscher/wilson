@@ -47,28 +47,45 @@ export const Path = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Path {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePath();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.id = reader.uint32();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.points.push(Path_Point.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.interpolation = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -93,6 +110,10 @@ export const Path = {
     }
     message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Path>, I>>(base?: I): Path {
+    return Path.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Path>, I>>(object: I): Path {
@@ -121,22 +142,31 @@ export const Path_Point = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Path_Point {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePath_Point();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.time = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.position = Vector.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -153,6 +183,10 @@ export const Path_Point = {
     message.time !== undefined && (obj.time = message.time);
     message.position !== undefined && (obj.position = message.position ? Vector.toJSON(message.position) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Path_Point>, I>>(base?: I): Path_Point {
+    return Path_Point.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Path_Point>, I>>(object: I): Path_Point {

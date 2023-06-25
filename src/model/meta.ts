@@ -55,37 +55,66 @@ export const ProjectMeta = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProjectMeta {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProjectMeta();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.author = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.date = Timestamp.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 33) {
+            break;
+          }
+
           message.startTime = reader.double();
-          break;
+          continue;
         case 5:
+          if (tag !== 41) {
+            break;
+          }
+
           message.endTime = reader.double();
-          break;
+          continue;
         case 6:
+          if (tag !== 49) {
+            break;
+          }
+
           message.speedRatio = reader.double();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -112,6 +141,10 @@ export const ProjectMeta = {
     message.speedRatio !== undefined && (obj.speedRatio = message.speedRatio);
     message.description !== undefined && (obj.description = message.description);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ProjectMeta>, I>>(base?: I): ProjectMeta {
+    return ProjectMeta.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ProjectMeta>, I>>(object: I): ProjectMeta {
@@ -146,8 +179,8 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
   return new Date(millis);
 }
 
