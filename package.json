@@ -13,10 +13,10 @@
     "black": "black wilson"
   },
   "dependencies": {
-    "@babylonjs/core": "^5.43.0",
-    "@babylonjs/gui": "^5.43.0",
-    "@babylonjs/loaders": "^5.43.0",
-    "@babylonjs/materials": "^5.43.0",
+    "@babylonjs/core": "^6.9.0",
+    "@babylonjs/gui": "^6.9.0",
+    "@babylonjs/loaders": "^6.9.0",
+    "@babylonjs/materials": "^6.9.0",
     "jszip": "^3.10.1",
     "mitt": "^3.0.0",
     "pinia": "^2.1.4",

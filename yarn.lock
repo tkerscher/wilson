@@ -7,25 +7,25 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.22.5.tgz#721fd042f3ce1896238cf1b341c77eb7dee7dbea"
   integrity sha512-DFZMC9LJUG9PLOclRC32G63UXwzqS2koQC8dkx+PLdmt1xSePYpbT/NbsrJy8Q/muXz7o/h/d4A7Fuyixm559Q==
 
-"@babylonjs/core@^5.43.0":
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.43.0.tgz#5019c4825cd7e1adddd9905b7d56ecde86b2f032"
-  integrity sha512-aM7aZveRKjcGd+SW1VmatE04L+NOHQjqYdmz4XqnUyP23J7Q36D9rwp1Eai63HXE3A0yfTaeOwxwNmYBYXLfyQ==
+"@babylonjs/core@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.9.0.tgz#b610aa40c2b70d6bbbba49543b06c62eeaefb793"
+  integrity sha512-hd+sejnpeEFAHAqSFiGjk6l7MFwr//QMsAnCCHtBM+Ct91rrqRufXM1tUjHdIjk3aH7DTAxJ28CjBJFhBjiBGw==
 
-"@babylonjs/gui@^5.43.0":
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-5.43.0.tgz#c03111d1ebc1db409d88df066122196881fe212d"
-  integrity sha512-PodtPsC6eR8IbKyF9xobidjE36zLsyViZefZVcB2mzuZgjgBlbTw9Uw9RqeCFuWXjUpq9XUPdYKvORZfd6FdlA==
+"@babylonjs/gui@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-6.9.0.tgz#4136fc10f9fee2f568d99a2e931968851b813c7d"
+  integrity sha512-RcVorxsj6n2EbwkBJYPBqF88Rybd3OHbx55runbMSehb9rKhc6d2QIiXTi7yI2oBNyuQBsDxx+ky58Rur2UXww==
 
-"@babylonjs/loaders@^5.43.0":
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.43.0.tgz#f0d1b1ce74c88fecb87fea0e188fa06f26149123"
-  integrity sha512-dobwmP3NdxCGNhZzWRetUvHvTZaz44Y6hpXkT1gdSLCC8ivIgapaL+S9gePxDFGGjjbtO5Oypo5cwQK0FV4SOA==
+"@babylonjs/loaders@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.9.0.tgz#22d5bcd036af00a8abf7d2ead216b01e889a5000"
+  integrity sha512-m8EeAhdY3LZiTUUbRDyilSK5puTXKeyH0PQt1QUJZmADK4vUQTlJrzolimat9TX5m+kuS6uPF26SEnl7HvfXJA==
 
-"@babylonjs/materials@^5.43.0":
-  version "5.43.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-5.43.0.tgz#fe75898505a5d773de6b344d49511b04834323fb"
-  integrity sha512-ZlzQwAuIPGdfXeEaPC+GssekIv11RloqgPx0ZW9k+D0OKayKD++3dV+cNfKBkjJ4HwkKdfaTrhPDfVnd0GoW6A==
+"@babylonjs/materials@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-6.9.0.tgz#02f240cbd9c24cddccd5e78054fb9c98b658f4e3"
+  integrity sha512-hJ6UaIQS4WHvVEnfJ9DKvELMAHdGHFvSFW07uZMlH3V2My0ZVECqPHArYwinC2KqtNDCSYEz0hCYM34B0henIg==
 
 "@esbuild/android-arm64@0.17.19":
   version "0.17.19"
