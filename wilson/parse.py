@@ -1,7 +1,7 @@
 from typing import Callable, overload, Dict, Literal, Optional, Tuple
 import numpy as np
 
-from wilson.objects import Animatable, Line, Sphere, Tube, UnknownAnimatible, Overlay
+from wilson.objects import Animatable, Line, Prism, Sphere, Tube, UnknownAnimatible, Overlay
 from wilson.data import (
     ColorMap,
     ColorProperty,
@@ -146,20 +146,20 @@ def _parseTextPosition(position: proto.TextPosition.ValueType) -> str:
 
 @overload
 def _parseScalarProperty(
-    p: proto.ScalarProperty, graphDict: Dict[int, Graph], optional: Literal[True]
+    p: proto.ScalarProperty, graphDict: Dict[int, Graph], default: float
 ) -> ScalarProperty:
     ...
 
 
 @overload
 def _parseScalarProperty(
-    p: proto.ScalarProperty, graphDict: Dict[int, Graph], optional: Literal[False]
+    p: proto.ScalarProperty, graphDict: Dict[int, Graph], default: None = None
 ) -> Optional[ScalarProperty]:
     ...
 
 
 def _parseScalarProperty(
-    p: proto.ScalarProperty, graphDict: Dict[int, Graph], optional: bool
+    p: proto.ScalarProperty, graphDict: Dict[int, Graph], default: Optional[float] = None
 ) -> Optional[ScalarProperty]:
     if p.HasField("graphId"):
         # fetch referenced graph
@@ -170,30 +170,29 @@ def _parseScalarProperty(
             return np.empty((0, 2))
     elif p.HasField("constValue"):
         return p.constValue
-    elif optional:
-        # not set and optional -> return None
-        return None
     else:
         # not set but not optional -> return default
-        return 0.0
+        return default
 
 
 @overload
 def _parseVectorProperty(
-    p: proto.VectorProperty, pathDict: Dict[int, Path], optional: Literal[True]
+    p: proto.VectorProperty, pathDict: Dict[int, Path], default: Tuple[float, float, float]
 ) -> VectorProperty:
     ...
 
 
 @overload
 def _parseVectorProperty(
-    p: proto.VectorProperty, pathDict: Dict[int, Path], optional: Literal[False]
+    p: proto.VectorProperty, pathDict: Dict[int, Path], default: Optional[Tuple[float, float, float]] = None
 ) -> Optional[VectorProperty]:
     ...
 
 
 def _parseVectorProperty(
-    p: proto.VectorProperty, pathDict: Dict[int, Path], optional: bool
+    p: proto.VectorProperty,
+    pathDict: Dict[int, Path],
+    default: Optional[Tuple[float, float, float]] = None,
 ) -> Optional[VectorProperty]:
     if p.HasField("pathId"):
         # fetch referenced path
@@ -205,19 +204,15 @@ def _parseVectorProperty(
     elif p.HasField("constValue"):
         # construct vector
         return (p.constValue.x, p.constValue.y, p.constValue.z)
-    elif optional:
-        # not set and optional -> Return None
-        return None
     else:
         # not set and not optional -> Return default
-        return (0.0, 0.0, 0.0)
+        return default
 
 
 def _parseColorProperty(
     p: proto.ColorProperty,
     graphDict: Dict[int, Graph],
-    optional: bool,
-    default: Tuple[float, float, float] = (1.0, 1.0, 1.0),
+    default: Optional[Tuple[float, float, float]] = (1.0, 1.0, 1.0),
 ) -> Optional[ColorProperty]:
     if p.HasField("graphId"):
         # fetch graph
@@ -231,9 +226,6 @@ def _parseColorProperty(
         return (p.constValue.r, p.constValue.g, p.constValue.b)
     elif p.HasField("scalarValue"):
         return p.scalarValue
-    elif optional:
-        # not set and optional -> Return None
-        return None
     else:
         # return default
         return default
@@ -248,10 +240,10 @@ def _parseSphere(
     assert animatible.HasField("sphere")
     sphere = animatible.sphere
     # properties
-    position = _parseVectorProperty(sphere.position, pathDict, True)
-    radius = _parseScalarProperty(sphere.radius, graphDict, False)
+    position = _parseVectorProperty(sphere.position, pathDict)
+    radius = _parseScalarProperty(sphere.radius, graphDict, 1.0)
     assert radius is not None
-    color = _parseColorProperty(sphere.color, graphDict, False)
+    color = _parseColorProperty(sphere.color, graphDict)
     assert color is not None
     # done
     return Sphere("", color=color, position=position, radius=radius)
@@ -265,9 +257,9 @@ def _parseTube(
     # properties
     path: PathLike = graphDict[tube.pathId] if tube.pathId in graphDict else np.empty((0, 4))  # type: ignore[assignment]
     isGrowing = tube.isGrowing
-    radius = _parseScalarProperty(tube.radius, graphDict, False)
+    radius = _parseScalarProperty(tube.radius, graphDict, 1.0)
     assert radius is not None
-    color = _parseColorProperty(tube.color, graphDict, False)
+    color = _parseColorProperty(tube.color, graphDict)
     assert color is not None
     # done
     return Tube(path, "", isGrowing=isGrowing, radius=radius, color=color)
@@ -279,11 +271,11 @@ def _parseLine(
     assert animatible.HasField("line")
     line = animatible.line
     # properties
-    color = _parseColorProperty(line.color, graphDict, False)
+    color = _parseColorProperty(line.color, graphDict)
     assert color is not None
-    start = _parseVectorProperty(line.start, pathDict, True)
-    end = _parseVectorProperty(line.end, pathDict, True)
-    lineWidth = _parseScalarProperty(line.lineWidth, graphDict, False)
+    start = _parseVectorProperty(line.start, pathDict)
+    end = _parseVectorProperty(line.end, pathDict)
+    lineWidth = _parseScalarProperty(line.lineWidth, graphDict, 1.0)
     assert lineWidth is not None
     pointForward = line.pointForward
     pointBackward = line.pointBackward
@@ -296,6 +288,33 @@ def _parseLine(
         lineWidth=lineWidth,
         pointForward=pointForward,
         pointBackward=pointBackward,
+    )
+
+
+def _parsePrism(
+    animatible: proto.Animatible, graphDict: Dict[int, Graph], pathDict: Dict[int, Path]
+) -> Prism:
+    assert animatible.HasField("prism")
+    prism = animatible.prism
+    # properties
+    color = _parseColorProperty(prism.color, graphDict)
+    assert color is not None
+    position = _parseVectorProperty(prism.position, pathDict)
+    normal = _parseVectorProperty(prism.normal, pathDict)
+    rotation = _parseScalarProperty(prism.rotation, graphDict, 0.0)
+    radius = _parseScalarProperty(prism.rotation, graphDict, 1.0)
+    height = _parseScalarProperty(prism.height, graphDict, 1.0)
+    nVertices = prism.nVertices
+    # Done
+    return Prism(
+        "",
+        color=color,
+        position=position,
+        normal=normal,
+        rotation=rotation,
+        radius=radius,
+        height=height,
+        nVertices=nVertices,
     )
 
 
@@ -326,6 +345,7 @@ _animatibleParsers: Dict[
 ] = {
     "sphere": _parseSphere,
     "line": _parseLine,
+    "prism": _parsePrism,
     "tube": _parseTube,
     "overlay": _parseOverlay,
 }

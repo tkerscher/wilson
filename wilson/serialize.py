@@ -14,7 +14,7 @@ from wilson.data import (
     TextLike,
     VectorProperty,
 )
-from wilson.objects import Animatable, Line, Sphere, Tube, Overlay
+from wilson.objects import Animatable, Line, Prism, Sphere, Tube, Overlay
 from wilson.project import Camera, Project
 import wilson.proto as proto
 
@@ -50,6 +50,7 @@ def serializeProject(project: Project) -> bytes:
     # We'll fill missing names with '[type] [i]' ,e.g. Sphere 1
     nextSphereId = 1
     nextLineId = 1
+    nextPrismId = 1
     nextTubeId = 1
     nextTextId = 1
 
@@ -66,6 +67,11 @@ def serializeProject(project: Project) -> bytes:
                 a.name = "Line " + str(nextLineId)
                 nextLineId += 1
             out.animatibles.append(_serializeLine(a, project))
+        elif isinstance(a, Prism):
+            if a.name is None:
+                a.name = "Prism " + str(nextPrismId)
+                nextPrismId += 1
+            out.animatibles.append(_serializePrism(a, project))
         elif isinstance(a, Tube):
             if a.name is None:
                 a.name = "Tube " + str(nextTubeId)
@@ -515,6 +521,34 @@ def _serializeLine(line: Line, project: Project) -> proto.Animatible:
     )
     result.line.pointForward = line.pointForward
     result.line.pointBackward = line.pointBackward
+    # done
+    return result
+
+
+def _serializePrism(prism: Prism, project: Project) -> proto.Animatible:
+    result = _createAnimatable(prism, project)
+    # properties
+    result.prism.color.CopyFrom(
+        _serializeColorProperty(prism.color, f".{prism.name}_color", project)
+    )
+    if prism.position is not None:
+        result.prism.position.CopyFrom(
+            _serializeVectorProperty(prism.position, f".{prism.name}_position", project)
+        )
+    if prism.normal is not None:
+        result.prism.normal.CopyFrom(
+            _serializeVectorProperty(prism.normal, f".{prism.name}_normal", project)
+        )
+    result.prism.rotation.CopyFrom(
+        _serializeScalarProperty(prism.rotation, f".{prism.name}_rotation", project)
+    )
+    result.prism.radius.CopyFrom(
+        _serializeScalarProperty(prism.radius, f".{prism.name}_radius", project)
+    )
+    result.prism.height.CopyFrom(
+        _serializeScalarProperty(prism.height, f".{prism.name}_height", project)
+    )
+    result.prism.nVertices = prism.nVertices
     # done
     return result
 

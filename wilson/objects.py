@@ -508,3 +508,142 @@ class Overlay(Animatable):
     @italic.setter
     def italic(self, value: bool) -> None:
         self._italic = value
+
+
+class Prism(Animatable):
+    """Animatable extruded regular polygon.
+
+    Attributes
+    ----------
+    name: {str, None}. default=None
+        Name of this object
+
+    groups: Iterable[str], default=[]
+        Name of groups the animatible belongs to.
+
+    description: {TextLike, None}, default=None
+        Additional description shown while this object is highlighted
+
+    position: {VectorProperty, None}, default=None
+        Position of the prism defined by its center. Defaults to the origin if
+        not given, i.e. None.
+
+    normal: {VectorProperty, None}, default=None
+        Normal of the prism pointing from the bottom polygon's center to the
+        top polygon's center. Length is ignored.
+        If None, defaults to pointing upwards, i.e. in the z direction.
+
+    rotation: ScalarProperty, default=0.0
+        Rotation angle around the normal in radians.
+
+    radius: ScalarProperty, default=1.0
+        Radius of circle the polygons vertices lie on.
+
+    height: ScalarProperty, default=1.0
+        Distance between the bottom and top polygon.
+
+    nVertices: int, default=24
+        Number of vertices the polygon consists of.
+
+    color: ColorProperty, default='black'
+        Color of the surface
+    """
+
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        *,
+        groups: Iterable[str] = [],
+        description: Optional[TextLike] = None,
+        position: Optional[VectorProperty] = None,
+        normal: Optional[VectorProperty] = None,
+        rotation: ScalarProperty = 1.0,
+        radius: ScalarProperty = 1.0,
+        height: ScalarProperty = 1.0,
+        nVertices: int = 24,
+        color: ColorProperty = "black",
+    ):
+        super().__init__(name=name, groups=groups, description=description)
+        self.position = position
+        self.normal = normal
+        self.rotation = rotation
+        self.radius = radius
+        self.height = height
+        self.nVertices = nVertices
+        self.color = color
+
+    @property
+    def position(self) -> Optional[VectorProperty]:
+        """Position of the prism defined by its center."""
+        return self._position
+
+    @position.setter
+    def position(self, value: Optional[VectorProperty]) -> None:
+        self._position = value
+
+    @position.deleter
+    def position(self) -> None:
+        self._position = None
+
+    @property
+    def normal(self) -> Optional[VectorProperty]:
+        """Normal of the prism pointing from the bottom polygon's center to the
+        top polygon's center. Length is ignored."""
+        return self._normal
+
+    @normal.setter
+    def normal(self, value: Optional[VectorProperty]) -> None:
+        self._normal = value
+
+    @normal.deleter
+    def normal(self) -> None:
+        self._normal = None
+
+    @property
+    def rotation(self) -> ScalarProperty:
+        """Rotation angle around the normal in radians."""
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, value: ScalarProperty) -> None:
+        self._rotation = value
+
+    @property
+    def radius(self) -> ScalarProperty:
+        """Radius of circle the polygons vertices lie on."""
+        return self._radius
+
+    @radius.setter
+    def radius(self, value: ScalarProperty) -> None:
+        self._radius = value
+
+    @property
+    def height(self) -> ScalarProperty:
+        """Distance between the bottom and top polygon."""
+        return self._height
+
+    @height.setter
+    def height(self, value: ScalarProperty) -> None:
+        self._height = value
+
+    @property
+    def nVertices(self) -> int:
+        """Number of vertices the polygon consists of. Must be at least three"""
+        return self._nVertices
+
+    @nVertices.setter
+    def nVertices(self, value: int) -> None:
+        self._nVertices = value
+
+    @property
+    def color(self) -> ColorProperty:
+        """Color of the sphere"""
+        return self._color
+
+    @color.setter
+    def color(self, value: ColorProperty) -> None:
+        self._color = value
+
+    @color.deleter
+    def color(self) -> None:
+        self._color = "black"

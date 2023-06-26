@@ -11,6 +11,7 @@ import sys
 from wilson.proto import (
     line_pb2,
     overlay_pb2,
+    prism_pb2,
     sphere_pb2,
     tube_pb2
 )
@@ -37,6 +38,7 @@ class Animatible(google.protobuf.message.Message):
     LINE_FIELD_NUMBER: builtins.int
     TUBE_FIELD_NUMBER: builtins.int
     OVERLAY_FIELD_NUMBER: builtins.int
+    PRISM_FIELD_NUMBER: builtins.int
     name: builtins.str
     """Name as shown in explorer"""
     @property
@@ -52,6 +54,8 @@ class Animatible(google.protobuf.message.Message):
     def tube(self) -> tube_pb2.Tube: ...
     @property
     def overlay(self) -> overlay_pb2.Overlay: ...
+    @property
+    def prism(self) -> prism_pb2.Prism: ...
     def __init__(
         self,
         *,
@@ -62,9 +66,10 @@ class Animatible(google.protobuf.message.Message):
         line: line_pb2.Line | None = ...,
         tube: tube_pb2.Tube | None = ...,
         overlay: overlay_pb2.Overlay | None = ...,
+        prism: prism_pb2.Prism | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["instance", b"instance", "line", b"line", "overlay", b"overlay", "sphere", b"sphere", "tube", b"tube"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["description", b"description", "groups", b"groups", "instance", b"instance", "line", b"line", "name", b"name", "overlay", b"overlay", "sphere", b"sphere", "tube", b"tube"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing_extensions.Literal["instance", b"instance"]) -> typing_extensions.Literal["sphere", "line", "tube", "overlay"] | None: ...
+    def HasField(self, field_name: typing_extensions.Literal["instance", b"instance", "line", b"line", "overlay", b"overlay", "prism", b"prism", "sphere", b"sphere", "tube", b"tube"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["description", b"description", "groups", b"groups", "instance", b"instance", "line", b"line", "name", b"name", "overlay", b"overlay", "prism", b"prism", "sphere", b"sphere", "tube", b"tube"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["instance", b"instance"]) -> typing_extensions.Literal["sphere", "line", "tube", "overlay", "prism"] | None: ...
 
 global___Animatible = Animatible
