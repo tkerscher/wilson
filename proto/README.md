@@ -159,6 +159,20 @@ A line connection two points.
 If both `pointForward` and `pointBackward` are set, the line will point in
 both direction.
 
+### Prism
+
+A prism defined as an extruded regular polygon.
+
+| Property | Type | Description |
+|----------|------|-------------|
+| position | `VectorProperty` | Position at center. |
+| normal   | `VectorProperty` | Vector pointing from bottom to top polygon's center. |
+| rotation | `ScalarProperty` | Rotation angle in radians around normal. |
+| radius   | `ScalarProperty` | Radius of circle the polygons vertices lie on. |
+| height   | `ScalarProperty` | Distance between bottom and top polygon. |
+| nVertices| `uint32`         | Number of vertices in polygon. |
+| color    | `ColorProperty`  | Color of the prism. |
+
 ### Tube
 
 A Tube following a path with variable coloring and diameter.

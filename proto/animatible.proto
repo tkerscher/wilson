@@ -3,6 +3,7 @@ package wilson;
 
 import "line.proto";
 import "overlay.proto";
+import "prism.proto";
 import "sphere.proto";
 import "tube.proto";
 
@@ -23,5 +24,6 @@ message Animatible {
         Line line = 17;
         Tube tube = 18;
         Overlay overlay = 19;
+        Prism prism = 20;
     }
 }

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package wilson;
+
+import "properties.proto";
+
+//Animatible prism in 3D space
+//A prism is an extruded regular polygon
+message Prism {
+    //Position at center
+    VectorProperty position = 1;
+    //vector from bottom center to top center; length is ignored
+    VectorProperty normal = 2;
+    //rotation angle in radians around normal
+    ScalarProperty rotation = 3;
+
+    //Radius of circle the polygons vertices lie on
+    ScalarProperty radius = 4;
+    //Distance between bottom and top polygon
+    ScalarProperty height = 5;
+
+    //number of vertices in polygon
+    uint32 nVertices = 6;
+
+    //Color
+    ColorProperty color = 7;
+}
