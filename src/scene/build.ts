@@ -23,6 +23,7 @@ import { PathVisualizer } from "./components/pathVisualizer";
 import { buildCamera } from "./objects/camera";
 import { buildLine } from "./objects/line";
 import { OverlayBuilder } from "./objects/overlay";
+import { PrismBuilder } from "./objects/prism";
 import { SphereBuilder } from "./objects/sphere";
 import { SceneBuildTool } from "./objects/tools";
 import { TubeController } from "./objects/tube";
@@ -65,8 +66,9 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
     //  The order in which the objects are created must be the same as in Project!
     //  Otherwise the ids will not match
 
-    const sphereBuilder = new SphereBuilder(buildTool);
     const overlayBuilder = new OverlayBuilder(buildTool);
+    const prismBuilder = new PrismBuilder(buildTool);
+    const sphereBuilder = new SphereBuilder(buildTool);
     const tubes: TubeController[] = [];
 
     project.animatibles.forEach(animatible => {
@@ -78,11 +80,14 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
 
         //check instance type
         switch(animatible.instance.$case) {
-        case "sphere":
-            sphereBuilder.build(animatible.instance.sphere, animatible);
-            break;
         case "line":
             buildLine(buildTool, animatible.instance.line, animatible);
+            break;
+        case "prism":
+            prismBuilder.build(animatible.instance.prism, animatible);
+            break;
+        case "sphere":
+            sphereBuilder.build(animatible.instance.sphere, animatible);
             break;
         case "tube":
             tubes.push(new TubeController(buildTool, animatible.instance.tube, animatible));

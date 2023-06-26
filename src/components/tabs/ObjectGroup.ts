@@ -1,7 +1,7 @@
 import { Animatible } from "../../model/animatible";
 import { Project } from "../../model/project";
 
-export type SceneObjectType = "Sphere" | "Line" | "Tube" | "Overlay" | "Unknown"
+export type SceneObjectType = "Line" | "Prism" | "Sphere" | "Tube" | "Overlay" | "Unknown"
 
 export interface SceneObject {
     name: string //! NOTE: Copy of the name -> Not synced with project store
@@ -88,10 +88,12 @@ export function extractGroups(project: Project): {
         }
 
         switch (animatible.instance.$case) {
-        case "sphere":
-            return "Sphere";
         case "line":
             return "Line";
+        case "prism":
+            return "Prism";
+        case "sphere":
+            return "Sphere";
         case "tube":
             return "Tube";
         case "overlay":

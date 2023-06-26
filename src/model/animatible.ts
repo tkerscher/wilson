@@ -2,6 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Line } from "./line";
 import { Overlay } from "./overlay";
+import { Prism } from "./prism";
 import { Sphere } from "./sphere";
 import { Tube } from "./tube";
 
@@ -18,7 +19,7 @@ export interface Animatible {
   instance?: { $case: "sphere"; sphere: Sphere } | { $case: "line"; line: Line } | { $case: "tube"; tube: Tube } | {
     $case: "overlay";
     overlay: Overlay;
-  };
+  } | { $case: "prism"; prism: Prism };
 }
 
 function createBaseAnimatible(): Animatible {
@@ -48,6 +49,9 @@ export const Animatible = {
         break;
       case "overlay":
         Overlay.encode(message.instance.overlay, writer.uint32(154).fork()).ldelim();
+        break;
+      case "prism":
+        Prism.encode(message.instance.prism, writer.uint32(162).fork()).ldelim();
         break;
     }
     return writer;
@@ -109,6 +113,13 @@ export const Animatible = {
 
           message.instance = { $case: "overlay", overlay: Overlay.decode(reader, reader.uint32()) };
           continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.instance = { $case: "prism", prism: Prism.decode(reader, reader.uint32()) };
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -131,6 +142,8 @@ export const Animatible = {
         ? { $case: "tube", tube: Tube.fromJSON(object.tube) }
         : isSet(object.overlay)
         ? { $case: "overlay", overlay: Overlay.fromJSON(object.overlay) }
+        : isSet(object.prism)
+        ? { $case: "prism", prism: Prism.fromJSON(object.prism) }
         : undefined,
     };
   },
@@ -152,6 +165,8 @@ export const Animatible = {
       (obj.tube = message.instance?.tube ? Tube.toJSON(message.instance?.tube) : undefined);
     message.instance?.$case === "overlay" &&
       (obj.overlay = message.instance?.overlay ? Overlay.toJSON(message.instance?.overlay) : undefined);
+    message.instance?.$case === "prism" &&
+      (obj.prism = message.instance?.prism ? Prism.toJSON(message.instance?.prism) : undefined);
     return obj;
   },
 
@@ -181,6 +196,9 @@ export const Animatible = {
       object.instance?.overlay !== null
     ) {
       message.instance = { $case: "overlay", overlay: Overlay.fromPartial(object.instance.overlay) };
+    }
+    if (object.instance?.$case === "prism" && object.instance?.prism !== undefined && object.instance?.prism !== null) {
+      message.instance = { $case: "prism", prism: Prism.fromPartial(object.instance.prism) };
     }
     return message;
   },
