@@ -12,6 +12,11 @@ import { Interpolation } from "../../model/interpolation";
 const EY = new Vector3(0.0,1.0,0.0);
 
 //Outlines for the arrows
+const lineShape = [
+    new Vector3(0.0,0.0,0.0),
+    new Vector3(0.5,0.0,0.0),
+    new Vector3(0.5,1.0,0.0),
+    new Vector3(0.0,1.0,0.0)];
 const backwardArrowShape = [
     new Vector3(0.0,0.0,0.0),
     new Vector3(0.5,0.0,0.0),
@@ -62,7 +67,7 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
     let mesh;
     if (!line.pointForward && !line.pointBackward) {
         //create simple unit tube
-        mesh = MeshBuilder.CreateCylinder(meta.name, { height: 1.0 });
+        mesh = MeshBuilder.CreateLathe(meta.name, { shape: lineShape, tessellation: 24 });
     }
     else if(line.pointForward && !line.pointBackward) {
         mesh = MeshBuilder.CreateLathe(meta.name, { shape: forwardArrowShape, tessellation: 24 });
