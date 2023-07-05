@@ -1,13 +1,10 @@
-import { Animation } from "@babylonjs/core/Animations/animation";
-import { IAnimationKey } from "@babylonjs/core/Animations/animationKey";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 import { Line } from "../../model/line";
-import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { Metadata, SceneBuildTool } from "./tools";
-import { getInterpolation } from "../../interpolation/functions";
-import { Interpolation } from "../../model/interpolation";
+import { setProperty } from "../../util/property";
 
 const EY = new Vector3(0.0,1.0,0.0);
 
@@ -63,6 +60,45 @@ function alignVector(dir: Vector3): Quaternion {
     return Quaternion.RotationAxis(axis, theta);
 }
 
+class LineProxy {
+    target: Mesh;
+
+    #start = Vector3.Zero();
+    #end = Vector3.Zero();
+    #dir = Vector3.Zero();
+
+    constructor(target: Mesh) {
+        this.target = target;
+    }
+
+    get start(): Vector3 {
+        return this.#start;
+    }
+    set start(value: Vector3) {
+        this.#start = value;
+        this.#update();
+    }
+
+    get end(): Vector3 {
+        return this.#end;
+    }
+    set end(value: Vector3) {
+        this.#end = value;
+        this.#update();
+    }
+
+    #update(): void {
+        this.#end.subtractToRef(this.start, this.#dir);
+
+        const d = this.#dir.length();
+        setProperty(this.target, "scaling.y", d);
+
+        this.#dir.normalize();
+        const rot = alignVector(this.#dir);
+        setProperty(this.target, "rotationQuaternion", rot);
+    }
+}
+
 export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
     let mesh;
     if (!line.pointForward && !line.pointBackward) {
@@ -83,113 +119,11 @@ export function buildLine(tool: SceneBuildTool, line: Line, meta: Metadata) {
     const mat = tool.parseColor(line.color, "material");
     mesh.material = mat;
 
+    const proxy = new LineProxy(mesh);
+    tool.parseVector(line.start, proxy, "start");
+    tool.parseVector(line.end, proxy, "end");
+
     tool.parseScalar(line.lineWidth, mesh, "scaling.z");
     tool.parseScalar(line.lineWidth, mesh, "scaling.x");
     tool.parseVector(line.start, mesh, "position");
-
-    //Short cut: Check if we need the lengthy calculation
-    //We dont if there is nothing to animate
-    if (line.start?.source?.$case == "pathId" || line.end?.source?.$case == "pathId") {
-        //length and orientation depend on the vector pointing from end to start
-        //so let's create that one first. We create two interpolators for both
-        //start and end. Then we collect the time stops (at which they might
-        //sharply change direction), remove (close) duplicates and create
-        //distances by interpolating both
-
-        let times = new Array<number>();
-        let startInterpolation = Interpolation.UNRECOGNIZED;
-        let endInterpolation = Interpolation.UNRECOGNIZED;
-        if (line.start?.source?.$case == "pathId") {
-            const id = line.start.source.pathId;
-            const path = tool.project.paths.find(p => p.id == id);
-            path?.points.forEach(p => times.push(p.time));
-            if (path && path.interpolation in Interpolation) {
-                startInterpolation = path.interpolation;
-            }
-        }
-        if (line.end?.source?.$case == "pathId") {
-            const id = line.end.source.pathId;
-            const path = tool.project.paths.find(p => p.id == id);
-            path?.points.forEach(p => times.push(p.time));
-            if (path && path.interpolation in Interpolation) {
-                endInterpolation = path.interpolation;
-            }
-        }
-
-        //Edge case: There was no path, nor a static one (handled before)
-        //Technically, we have a line from 0 to 0
-        // -> set height scale to 0 and call it a day (after all its a edge case)
-        if (times.length == 0) {
-            mesh.scaling.y = 0.0;
-            return; //no point in going on
-        }
-
-        //sort array (looks weird thanks to javascript...)
-        times.sort((a, b) => a - b);
-
-        //remove close duplicates
-        times = times.filter((t, idx) => !(idx > 0 && Math.abs(times[idx - 1] - t) < 1e-7));
-
-        //Create interpolators
-        const startInt = new PathInterpolator(line.start, tool.project);
-        const endInt = new PathInterpolator(line.end, tool.project);
-
-        //alloc animations
-        const lengthAnimation = new Animation(meta.name + "_length", "scaling.y",
-            1.0, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-        const rotAnimation = new Animation(meta.name + "_rot", "rotationQuaternion",
-            1.0, Animation.ANIMATIONTYPE_QUATERNION, Animation.ANIMATIONLOOPMODE_CYCLE);
-
-        //We can finally create the animation
-        const lengthKeys = new Array<IAnimationKey>();
-        const rotKeys = new Array<IAnimationKey>();
-        times.forEach(t => {
-            //interpolate
-            const start = startInt.interpolate(t);
-            const end = endInt.interpolate(t);
-            const dir = end.subtract(start);
-
-            //get length and normalize
-            lengthKeys.push({ frame: t, value: dir.length() });
-            dir.normalize();
-
-            //create rotation quaternion
-            const quat = alignVector(dir);
-            rotKeys.push({ frame: t, value: quat });
-        });
-        lengthAnimation.setKeys(lengthKeys);
-        rotAnimation.setKeys(rotKeys);
-
-        //select interpolation
-        let interpolation = Interpolation.LINEAR; //Default
-        if (startInterpolation != Interpolation.UNRECOGNIZED) {
-            if (endInterpolation == Interpolation.UNRECOGNIZED || startInt == endInt) {
-                interpolation = startInterpolation;
-            }
-            else {
-                //TODO: proper handling of mismatched interpolation
-                //      for now fall back to linear (old behavior)
-            }
-        }
-        else if (endInterpolation != Interpolation.UNRECOGNIZED) {
-            interpolation = endInterpolation;
-        }
-        lengthAnimation.setEasingFunction(getInterpolation(interpolation));
-        rotAnimation.setEasingFunction(getInterpolation(interpolation));
-
-        //link animation and were done
-        tool.animationGroup.addTargetedAnimation(lengthAnimation, mesh);
-        tool.animationGroup.addTargetedAnimation(rotAnimation, mesh);
-    }
-    else {
-        const start = line.start?.source?.constValue ?? { x: 0, y: 0, z: 0 };
-        const end = line.end?.source?.constValue ?? { x: 0, y: 0, z: 0 };
-        const dir = new Vector3(end.x - start.x , end.y - start.y, end.z - start.z);
-
-        mesh.scaling.y = dir.length();
-        dir.normalize();
-
-        const rot = alignVector(dir);
-        mesh.rotationQuaternion = rot;
-    }
 }
