@@ -388,9 +388,9 @@ def _serializeColorProperty(
     if isinstance(color, str):
         # lookup color
         result.constValue.CopyFrom(_serializeColor(getColorByName(color)))
-    elif isinstance(color, float):
+    elif isinstance(color, float) or isinstance(color, int):
         # scalar into cmap
-        result.scalarValue = color
+        result.scalarValue = float(color)
     elif isinstance(color, tuple):
         result.constValue.CopyFrom(_serializeColor(color))
     elif isinstance(color, Graph):
