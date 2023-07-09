@@ -21,7 +21,7 @@
     "mitt": "^3.0.1",
     "pinia": "^2.1.4",
     "plotly.js-basic-dist": "^2.24.3",
-    "protobufjs": "^7.2.3",
+    "protobufjs": "^7.2.4",
     "sprintf-js": "^1.1.2",
     "vue": "^3.3.4"
   },
