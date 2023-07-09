@@ -1,22 +1,29 @@
+import { Color4 } from "@babylonjs/core";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
 import { Scene } from "@babylonjs/core/scene";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
-import { Tube } from "../../model/tube";
-import { PathInterpolator } from "../../interpolation/pathInterpolation";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+
+import { numToColor } from "../../input/gpuPicking";
+import { Animatible } from "../../model/animatible";
 import { GraphInterpolator } from "../../interpolation/graphInterpolation";
-import { Metadata, SceneBuildTool } from "./tools";
+import { PathInterpolator } from "../../interpolation/pathInterpolation";
+import { ObjectHandle, SceneBuildTool } from "./tools";
 
 const TEXTURE_SIZE = 2048;
+
+//Specialize Animatible type for case of tubes
+export type TubeAnimatible = Animatible & { instance: { $case: "tube" }}
 
 //Tube growing animation needs to modify the mesh and is thus a bit more
 //complicated. The modifying must happen before each render. It's logic
 //is encapsulated in the following class
 
-export class TubeController {
+export class TubeController implements ObjectHandle {
     #name: string;
+    #description: string;
     #growing: boolean;
     #mesh: Mesh | undefined;
     #startTime: number;
@@ -32,11 +39,30 @@ export class TubeController {
     #radii: Array<number>;
     #N: number;
 
-    constructor(tool: SceneBuildTool, tube: Tube, meta: Metadata) {
-        //copy meta
-        this.#name = meta.name;
-        this.#growing = tube.isGrowing;
+    get name(): string {
+        return this.#name;
+    }
+    get description(): string {
+        return this.#description;
+    }
+    get position(): Vector3 {
+        return this.#mesh?.position ?? Vector3.ZeroReadOnly;
+    }
+    get visible(): boolean {
+        return this.#mesh?.isEnabled() ?? false;
+    }
+    set visible(value: boolean) {
+        if (this.#mesh)
+            this.#mesh.setEnabled(value);
+    }
+
+    constructor(tool: SceneBuildTool, animatible: TubeAnimatible, id: number) {
         this.#scene = tool.scene;
+        //copy meta
+        this.#name = animatible.name;
+        this.#description = animatible.description;
+        const tube = animatible.instance.tube;
+        this.#growing = tube.isGrowing;
 
         //create interpolators
         this.#pathInt = new PathInterpolator(tube.pathId, tool.project);
@@ -75,11 +101,14 @@ export class TubeController {
 
         //create mesh
         this.#mesh = this.#createMesh(tool.project.meta?.startTime ?? 0.0);
-        tool.applyMetadata(this.#mesh, meta);
 
         //Static color?
         if (!tube.color || !tube.color.source || tube.color.source.$case != "graphId") {
-            this.#mesh.material = tool.parseColor(tube.color, meta.name + "_color");
+            const tmp = { c: new Color4() };
+            tool.parseColor(tube.color, tmp, "c"); //TODO: this is ugly
+            const mat = new StandardMaterial(animatible.name + "_mat", this.#scene);
+            mat.diffuseColor.copyFromFloats(tmp.c.r, tmp.c.g, tmp.c.b);
+            this.#mesh.material = mat;
         }
         else {
             //graph as color source -> check if id is valid
@@ -96,12 +125,12 @@ export class TubeController {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
                         const t = i / TEXTURE_SIZE * period + startTime;
                         const v = graphInt.interpolate(t);
-                        const [color, alpha] = tool.mapColor(v);
+                        const color = tool.mapColor(v);
 
                         yield color.r * 255;
                         yield color.g * 255;
                         yield color.b * 255;
-                        yield alpha * 255;
+                        yield color.a * 255;
                     }
                 }());
 
@@ -111,11 +140,24 @@ export class TubeController {
                     tool.scene);
 
                 //assign texture
-                const mat = new StandardMaterial(meta.name + "_mat", tool.scene);
+                const mat = new StandardMaterial(animatible.name + "_mat", tool.scene);
                 mat.diffuseTexture = texture;
                 this.#mesh.material = mat;
             }
         }
+
+        //enable picking
+
+        //we need a special material here, since we don't use instancing
+        const pickMat = new StandardMaterial(animatible.name + "_pickMat", this.#scene);
+        pickMat.disableLighting = true;
+        const c = numToColor(id);
+        pickMat.emissiveColor.copyFromFloats(c[0], c[1], c[2]);
+        //wire up picking
+        tool.picking.addPickable({
+            mesh: this.#mesh,
+            material: pickMat
+        });
     }
 
     update(t: number) {
@@ -190,9 +232,5 @@ export class TubeController {
             updatable: true,
             instance: this.#mesh
         }, this.#scene);
-    }
-
-    get isEnabled(): boolean {
-        return this.#mesh?.isEnabled() ?? false;
     }
 }

@@ -2,9 +2,14 @@ import { Control } from "@babylonjs/gui/2D/controls/control";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
-import { Overlay, TextPosition, textPositionToJSON } from "../../model/overlay";
-import { Metadata, SceneBuildTool } from "./tools";
+import { Animatible } from "../../model/animatible";
+import { TextPosition, textPositionToJSON } from "../../model/overlay";
+import { ObjectHandle, SceneBuildTool } from "./tools";
+
+// Specialize Animatible for case of overlays
+export type OverlayAnimatible = Animatible & { instance: { $case: "overlay" }}
 
 export class OverlayBuilder {
     #tool: SceneBuildTool;
@@ -25,15 +30,13 @@ export class OverlayBuilder {
         this.#tool.overlayTexture.addControl(this.rootContainer);
     }
 
-    build(overlay: Overlay, meta: Metadata) {
+    build(animatible: OverlayAnimatible): ObjectHandle {
         //create new text block
-        const block = new TextBlock(meta.name);
+        const block = new TextBlock(animatible.name);
         block.resizeToFit = true;
 
-        //meta
-        this.#tool.applyMetadata(block, meta);
-
         //set params
+        const overlay = animatible.instance.overlay;
         this.#tool.textEngine.addText(block, overlay.text);
         this.#tool.parseScalar(overlay.fontSize, block, "fontSize");
         this.#setAlignment(overlay.position, block);
@@ -44,6 +47,15 @@ export class OverlayBuilder {
 
         //position
         this.#getPanel(overlay.position).addControl(block);
+
+        //done
+        return {
+            name: animatible.name,
+            description: animatible.name,
+            position: Vector3.Zero(),
+            get visible() { return block.isVisible; },
+            set visible(value: boolean) { block.isVisible = value; }
+        };
     }
 
     #getPanel(position: TextPosition): StackPanel {

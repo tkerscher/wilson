@@ -2,14 +2,11 @@ import { Animation } from "@babylonjs/core/Animations/animation";
 import { AnimationGroup } from "@babylonjs/core/Animations/animationGroup";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { IAnimationKey } from "@babylonjs/core/Animations/animationKey";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { Node } from "@babylonjs/core/node";
 import { Scene } from "@babylonjs/core/scene";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
-import { Control } from "@babylonjs/gui/2D/controls/control";
 
 import { Project } from "../../model/project";
 import { ColorProperty, ScalarProperty, VectorProperty } from "../../model/properties";
@@ -17,17 +14,21 @@ import { getInterpolation } from "../../interpolation/functions";
 import { setProperty } from "../../util/property";
 import { toHex } from "../../util/colorToHex";
 import { TextEngine } from "../../interpolation/textEngine";
+import { GpuPickingService } from "../../input/gpuPicking";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
+const DefaultColor = new Color4(0.0, 0.0, 0.0, 1.0);
 
-export interface Metadata {
+/**
+ * Common interface for all objects created during building.
+ * Used for manipulating them.
+ */
+export interface ObjectHandle {
     name: string
     description: string
-}
 
-export function isMetadata(obj: any): obj is Metadata {
-    //TODO: should I check types?
-    return "name" in obj && "description" in obj;
+    position: Vector3;
+    visible: boolean;
 }
 
 /**
@@ -39,11 +40,10 @@ export class SceneBuildTool {
     scene: Scene;
 
     overlayTexture: AdvancedDynamicTexture;
+    picking: GpuPickingService;
     textEngine: TextEngine;
 
     project: Project;
-    #nextId = 0;
-    objectMap: Map<number, Node|Control>;
 
     #materialMap: Map<string, StandardMaterial>;
     defaultMaterial: StandardMaterial;
@@ -53,37 +53,16 @@ export class SceneBuildTool {
         this.scene = new Scene(engine);
         this.animationGroup = new AnimationGroup("animationGroup", this.scene);
 
-        this.objectMap = new Map<number,Node|Control>();
-
         this.#materialMap = new Map<string, StandardMaterial>();
         this.defaultMaterial = new StandardMaterial("default");
         this.defaultMaterial.diffuseColor = Color3.Black();
         this.defaultMaterial.freeze();
 
         this.overlayTexture = AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, this.scene);
+        this.picking = new GpuPickingService(engine, this.scene, 4);
         this.textEngine = new TextEngine(this.project);
 
         this.scene.clearColor = BackgroundColor;
-    }
-
-    /**
-     * Sets common metadata on the given object
-     * @param obj The object to apply the metadata
-     * @param meta The metadata to apply
-     */
-    applyMetadata(obj: Node|Control, meta: Metadata) {
-        obj.uniqueId = this.#nextId++;
-        obj.metadata = meta;
-
-        this.objectMap.set(obj.uniqueId, obj);
-    }
-
-    /**
-     * Changes the state as if an object has been processed, e.g. skip the
-     * current id.
-     */
-    skipObject(): void {
-        this.#nextId++;
     }
 
     /**
@@ -92,22 +71,26 @@ export class SceneBuildTool {
      * @param scalar Scalar property to parse
      * @param target Target on which to apply property
      * @param property Which property to set
+     * @returns True, if the property is animated, false otherwise.
      */
-    parseScalar(scalar: ScalarProperty|undefined, target: any, property: string): void {
+    parseScalar(scalar: ScalarProperty|undefined, target: any, property: string): boolean {
         if (!scalar || !scalar.source) {
-            return setProperty(target, property, 0.0);
+            setProperty(target, property, 0.0);
+            return false;
         }
 
         switch (scalar.source.$case) {
         case "constValue":
-            return setProperty(target, property, scalar.source.constValue);
+            setProperty(target, property, scalar.source.constValue);
+            return false;
         case "graphId":
         {
             const id = scalar.source.graphId;
             const graph = this.project.graphs.find(g => g.id == id);
             if (!graph || graph.points.length == 0) {
                 //Referenced graph not found -> return default
-                return setProperty(target, property, 0.0);
+                setProperty(target, property, 0.0);
+                return false;
             }
             else {
                 //create animation based on graph
@@ -118,7 +101,7 @@ export class SceneBuildTool {
                 animation.setKeys(keyFrames);
                 animation.setEasingFunction(getInterpolation(graph.interpolation));
                 this.animationGroup.addTargetedAnimation(animation, target);
-                return;
+                return true;
             }
         }
         }
@@ -130,17 +113,20 @@ export class SceneBuildTool {
      * @param vector Vector property to parse
      * @param target Target on which to apply property
      * @param property Which property to set
+     * @returns True if the property is animated, false otherwise
      */
-    parseVector(vector: VectorProperty|undefined, target: any, property: string): void {
+    parseVector(vector: VectorProperty|undefined, target: any, property: string): boolean {
         if (!vector || !vector.source) {
-            return setProperty(target, property, new Vector3());
+            setProperty(target, property, new Vector3());
+            return false;
         }
 
         switch (vector.source.$case) {
         case "constValue":
         {
             const p = vector.source.constValue;
-            return setProperty(target, property, new Vector3(p.x, p.y, p.z));
+            setProperty(target, property, new Vector3(p.x, p.y, p.z));
+            return false;
         }
         case "pathId":
         {
@@ -148,7 +134,8 @@ export class SceneBuildTool {
             const path = this.project.paths.find(p => p.id == id);
             if (!path || path.points.length == 0) {
                 //Referenced path not found -> return default
-                return setProperty(target, property, new Vector3());
+                setProperty(target, property, new Vector3());
+                return false;
             }
             else {
                 //create animation based on the referenced path
@@ -159,85 +146,56 @@ export class SceneBuildTool {
                 animation.setKeys(keyFrames);
                 animation.setEasingFunction(getInterpolation(path.interpolation));
                 this.animationGroup.addTargetedAnimation(animation, target);
-                return;
+                return true;
             }
         }
         }
     }
 
     /**
-     * Parses the given color property, creates the corresponding material and
-     * animates it if needed.
+     * Process a given color property and either creates a corresponding
+     * animation if needed or sets the static value encoded into it.
      * @param color Color property to parse
-     * @param name Name to give the material
-     * @returns A standard material with the proper color (animation)
+     * @param target Target on which to apply property
+     * @param property Which property to set
+     * @returns True if the property is animated, false otherwise
      */
-    parseColor(color: ColorProperty|undefined, name: string): StandardMaterial {
+    parseColor(color: ColorProperty|undefined, target: any, property: string): boolean {
         if (!color || !color.source) {
-            return this.defaultMaterial;
+            setProperty(target, property, DefaultColor);
+            return false;
         }
 
-        switch (color.source.$case) {
+        switch(color.source.$case) {
         case "constValue":
         {
             const c = color.source.constValue;
-            return this.getStaticMaterial(c.r, c.g, c.b, c.a);
+            setProperty(target, property, new Color4(c.r, c.g, c.b, c.a));
+            return false;
         }
         case "scalarValue":
         {
-            const [clr, alpha] = this.mapColor(color.source.scalarValue);
-            return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
+            setProperty(target, property, this.mapColor(color.source.scalarValue));
+            return false;
         }
         case "graphId":
         {
-            const mat = new StandardMaterial(name);
             const id = color.source.graphId;
             const graph = this.project.graphs.find(g => g.id == id);
             if (!graph || graph.points.length == 0) {
-                //Referenced graph not found -> return default
-                return this.defaultMaterial;
-            }
-            else if (graph.points.length == 1) {
-                const scalar = graph.points[0].value;
-                const [clr, alpha] = this.mapColor(scalar);
-                return this.getStaticMaterial(clr.r, clr.g, clr.b, alpha);
+                setProperty(target, property, DefaultColor);
+                return false;
             }
             else {
-                const colorAnimation = new Animation(graph.name, "diffuseColor", 1.0,
-                    Animation.ANIMATIONTYPE_COLOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
-                const alphaAnimation = new Animation(graph.name, "alpha", 1.0,
-                    Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-
-                const clrFrames = Array<IAnimationKey>();
-                const alphaFrames = Array<IAnimationKey>();
-                let prevKey = graph.points[0].time;
-                let prevVal = graph.points[0].value;
-                for (let i = 1; i < graph.points.length; ++i) {
-                    //In between frames, the new start is a duplicate of the previous end
-                    //-> remove last frame before adding new
-                    clrFrames.pop();
-                    alphaFrames.pop();
-
-                    const toKey = graph.points[i].time;
-                    const toVal = graph.points[i].value;
-                    const [clr, alpha] = this.colorFrames(prevKey, prevVal, toKey, toVal);
-                    clrFrames.push(...clr);
-                    alphaFrames.push(...alpha);
-
-                    prevKey = toKey;
-                    prevVal = toVal;
-                }
-
-                colorAnimation.setKeys(clrFrames);
-                alphaAnimation.setKeys(alphaFrames);
-
-                const interpolation = getInterpolation(graph.interpolation);
-                colorAnimation.setEasingFunction(interpolation);
-                alphaAnimation.setEasingFunction(interpolation);
-
-                this.animationGroup.addTargetedAnimation(colorAnimation, mat);
-                this.animationGroup.addTargetedAnimation(alphaAnimation, mat);
-                return mat;
+                const animation = new Animation(graph.name, property, 1.0,
+                    Animation.ANIMATIONTYPE_COLOR4, Animation.ANIMATIONLOOPMODE_CYCLE);
+                const keyFrames = graph.points.map(p => ({
+                    frame: p.time, value: this.mapColor(p.value)
+                }));
+                animation.setKeys(keyFrames);
+                animation.setEasingFunction(getInterpolation(graph.interpolation));
+                this.animationGroup.addTargetedAnimation(animation, target);
+                return true;
             }
         }
         }
@@ -248,9 +206,10 @@ export class SceneBuildTool {
      * @param scalar Value to look up
      * @returns The corresponding color according to the project's color map
      */
-    mapColor(scalar: number): [Color3,number] {
+    // mapColor(scalar: number): [Color3,number] {
+    mapColor(scalar: number): Color4 {
         if (!this.project.colormap || this.project.colormap.stops.length == 0) {
-            return [Color3.Black(), 1.0];
+            return DefaultColor;
         }
         const stops = this.project.colormap.stops;
 
@@ -260,20 +219,20 @@ export class SceneBuildTool {
             //Clamp top
             const clr = stops[stops.length - 1].color;
             if (!clr) {
-                return [Color3.Black(), 1.0];
+                return DefaultColor;
             }
             else {
-                return [new Color3(clr.r, clr.g, clr.b), clr.a];
+                return new Color4(clr.r, clr.g, clr.b, clr.a);
             }
         }
         if (stopIdx == 0) {
             //clamp bottom
             const clr = stops[0].color;
             if (!clr) {
-                return [Color3.Black(), 1.0];
+                DefaultColor;
             }
             else {
-                return [new Color3(clr.r, clr.g, clr.b), clr.a];
+                return new Color4(clr.r, clr.g, clr.b, clr.a);
             }
         }
 
@@ -281,14 +240,14 @@ export class SceneBuildTool {
         const before = stops[stopIdx - 1];
         const after = stops[stopIdx];
         if (!before.color || !after.color) {
-            return [Color3.Black(), 1.0];
+            return DefaultColor;
         }
         const lambda = (scalar - before.value) / (after.value - before.value);
         const red = before.color.r + (after.color.r - before.color.r) * lambda;
         const green = before.color.g + (after.color.g - before.color.g) * lambda;
         const blue = before.color.b + (after.color.b - before.color.b) * lambda;
         const alpha = before.color.a + (after.color.a - before.color.a) * lambda;
-        return [new Color3(red, green, blue), alpha];
+        return new Color4(red, green, blue, alpha);
     }
 
     /**
@@ -339,60 +298,5 @@ export class SceneBuildTool {
             const graph = this.project.graphs.find(g => g.id == id);
             return !graph || graph.points.length <= 0;
         }}
-    }
-
-    /**
-     * Produces key frames to get not only start end end values, but also all gradient stops in between
-     * @param fromKey frame to start with
-     * @param fromVal scalar to start with. Gets translated via color map look up
-     * @param toKey frame to end with
-     * @param toVal scalar to end with. Gets translated via color map look up
-     * @returns Two arrays of animation frames for rgb color and alpha to be used in animations
-     */
-    colorFrames(fromKey: number, fromVal: number, toKey: number, toVal: number): [Array<IAnimationKey>, Array<IAnimationKey>] {
-        const clrFrames = Array<IAnimationKey>();
-        const alphaFrames = Array<IAnimationKey>();
-        if (!this.project.colormap || this.project.colormap.stops.length == 0) {
-            return [clrFrames, alphaFrames];
-        }
-        const stops = this.project.colormap.stops;
-        const keyRange = toKey - fromKey;
-        const valRange = toVal - fromVal;
-
-        //get first stop after scalar
-        let fromIdx = stops.findIndex(s => s.value > fromVal);
-        if (fromIdx == -1) {
-            fromIdx = stops.length - 1;
-        }
-        let toIdx = stops.findIndex(s => s.value > toVal);
-        if (toIdx == -1) {
-            //Point one behind last
-            toIdx = stops.length;
-        }
-
-        //add first key
-        const fromColor = this.mapColor(fromVal);
-        clrFrames.push({ frame: fromKey, value: fromColor[0] });
-        alphaFrames.push({ frame: fromKey, value: fromColor[1] });
-
-        //add color stops inbetween
-        const step = fromIdx <= toIdx ? 1 : -1;
-        for (let i = fromIdx; i != toIdx; i += step) {
-            const stop = stops[i];
-            if (!stop.color) {
-                continue;
-            }
-            const lambda = (stop.value - fromVal) / valRange;
-            const key = fromKey + lambda * keyRange;
-            clrFrames.push({ frame: key, value: new Color3(stop.color.r, stop.color.g, stop.color.b) });
-            alphaFrames.push({ frame: key, value: stop.color.a });
-        }
-
-        //add last key
-        const toColor = this.mapColor(toVal);
-        clrFrames.push({ frame: toKey, value: toColor[0] });
-        alphaFrames.push({ frame: toKey, value: toColor[1] });
-
-        return [clrFrames, alphaFrames];
     }
 }

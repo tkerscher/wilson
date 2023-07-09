@@ -74,10 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { openPlot } from "../../plot/openPlot";
 import { SceneCommander } from "../../scene/bus/commandBus";
-import { SceneEventBus } from "../../scene/bus/eventBus";
 import { SceneGroup, SceneObject } from "./ObjectGroup";
 
 import { useProject } from "../../stores/project";
@@ -168,31 +167,31 @@ function selectPrevious(e: KeyboardEvent) {
     }
 }
 
-const itemsDiv = ref<HTMLDivElement|null>(null);
-function handleSelection(id: number|null) {
-    selectedId.value = id;
+// const itemsDiv = ref<HTMLDivElement|null>(null);
+// function handleSelection(id: number|null) {
+//     selectedId.value = id;
 
-    if (id == null)
-        return;
+//     if (id == null)
+//         return;
 
-    //Check if the selected object is in this group
-    if (!props.group.objects.find(o => o.id == id))
-        return;
+//     //Check if the selected object is in this group
+//     if (!props.group.objects.find(o => o.id == id))
+//         return;
 
-    //Expand
-    expand();
+//     //Expand
+//     expand();
 
-    //Get corresponding div (wait for rendering)
-    nextTick(() => {
-        const item = itemsDiv.value?.querySelector("[name=item"+id+"]");
-        if (item) {
-            const div = item as HTMLDivElement;
-            div.focus();
-        }
-    });
-}
-onMounted(() => SceneEventBus.on("ObjectPicked", handleSelection));
-onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
+//     //Get corresponding div (wait for rendering)
+//     nextTick(() => {
+//         const item = itemsDiv.value?.querySelector("[name=item"+id+"]");
+//         if (item) {
+//             const div = item as HTMLDivElement;
+//             div.focus();
+//         }
+//     });
+// }
+// onMounted(() => SceneEventBus.on("ObjectPicked", handleSelection));
+// onBeforeUnmount(() => SceneEventBus.off("ObjectPicked", handleSelection));
 </script>
 
 <style scoped>

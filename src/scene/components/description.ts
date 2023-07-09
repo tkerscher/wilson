@@ -6,10 +6,11 @@ import { Ellipse } from "@babylonjs/gui/2D/controls/ellipse";
 import { Grid } from "@babylonjs/gui/2D/controls/grid";
 import { Line } from "@babylonjs/gui/2D/controls/line";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
+import { Scene } from "@babylonjs/core/scene";
 import { StackPanel } from "@babylonjs/gui/2D/controls/stackPanel";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
-import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { TextEngine } from "../../interpolation/textEngine";
+import { ObjectHandle } from "../objects/tools";
 
 //Some styling constants
 const AnchorDiameter = "15px";
@@ -29,6 +30,7 @@ const TitleWeight = "800";
  */
 export class Description {
     #engine: TextEngine;
+    #scene: Scene;
 
     #anchor: Ellipse;
     #line: Line;
@@ -37,8 +39,11 @@ export class Description {
     #title: TextBlock;
     #text: TextBlock;
 
-    constructor(texture: AdvancedDynamicTexture, textEngine: TextEngine) {
+    #handle?: ObjectHandle = undefined;
+
+    constructor(texture: AdvancedDynamicTexture, scene: Scene, textEngine: TextEngine) {
         this.#engine = textEngine;
+        this.#scene = scene;
 
         /************************ Create GUI elements *************************/
 
@@ -136,6 +141,14 @@ export class Description {
         stack.addControl(text);
         this.#text = text;
 
+        //continually update position to follow animated objects
+        scene.onBeforeCameraRenderObservable.add(() => {
+            if (this.#handle) {
+                anchor.moveToVector3(this.#handle.position, this.#scene);
+                line.moveToVector3(this.#handle.position, this.#scene);
+            }
+        });
+
         /************************ Message Box Dragging ************************/
 
         //variables needed for dragging
@@ -162,21 +175,21 @@ export class Description {
     }
 
     /**
-     * Opens or changes the description box to show the given information about
-     * the target object.
-     * @param target Object to point to
-     * @param title Title of the description box
-     * @param content Description text
+     * Shows a message box containing the meta information of object specified
+     * via its handle
+     * @param handle Handle to the object
      */
-    showDescription(target: TransformNode, title: string, content: string) {
+    showDescription(handle: ObjectHandle) {
+        this.#handle = handle;
+
         //remove last one
         this.#engine.removeText(this.#text);
-
-        this.#title.text = title;
-        this.#engine.addText(this.#text, content);
+        //add new one
+        this.#title.text = handle.name;
+        this.#engine.addText(this.#text, handle.description);
 
         //hide description if there is none
-        if (content.length == 0) {
+        if (handle.description.length == 0) {
             this.#text.isVisible = false;
             this.#separator.isVisible = false;
         }
@@ -185,18 +198,21 @@ export class Description {
             this.#separator.isVisible = true;
         }
 
-        this.#anchor.linkWithMesh(target);
-        this.#line.linkWithMesh(target);
-
+        //show rest
         this.#anchor.isVisible = true;
         this.#line.isVisible = true;
         this.#messageBox.isVisible = true;
+
+        this.#line.moveToVector3(handle.position, this.#scene);
+        this.#anchor.moveToVector3(handle.position, this.#scene);
     }
 
     /**
      * Closes the description box
      */
     clear() {
+        this.#handle = undefined;
+
         this.#anchor.isVisible = false;
         this.#line.isVisible = false;
         this.#messageBox.isVisible = false;

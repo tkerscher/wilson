@@ -4,13 +4,11 @@ import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Axis } from "@babylonjs/core/Maths/math.axis";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { Node } from "@babylonjs/core/node";
 import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents";
 import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 import { buildScene, SceneContainer } from "../build";
-import { isMetadata } from "../objects/tools";
 import { takeScreenshot } from "../../util/screenshot";
 import { Project } from "../../model/project";
 import { Theme } from "../theme";
@@ -60,6 +58,8 @@ export class LocalController implements SceneController {
         //changing cursors brake on offscreen canvas
         //since we dont do that anyway, disable it
         this.#container.scene.doNotHandleCursors = true;
+        //wire up picking
+        this.#container.picking.callback = (id) => this.select(id);
 
         //save default camera position
         this.#defaultCameraPosition = this.#container.camera.position.clone();
@@ -163,23 +163,18 @@ export class LocalController implements SceneController {
 
     select(id: number|null) {
         if (id != null) {
-            const mesh = this.#container?.scene.getMeshByUniqueId(id);
-            if (mesh && mesh.metadata && isMetadata(mesh.metadata)) {
-                this.#container?.description.showDescription(
-                    mesh, mesh.metadata.name, mesh.metadata.description);
-            }
+            const handle = this.#container?.handles[id];
+            if (handle)
+                this.#container?.description.showDescription(handle);
         }
         this.#notifyObjectPicked(id);
     }
     target(id: number): void {
-        if (!this.#container)
-            return;
-
-        const mesh = this.#container.scene.getMeshByUniqueId(id);
-        if (mesh) {
+        const handle = this.#container?.handles[id];
+        if (this.#container && handle) {
             const cam = this.#container.camera;
-            const d = mesh.position.subtract(cam.target);
-            cam.setTarget(mesh.position);
+            const d = handle.position.subtract(cam.target);
+            cam.setTarget(handle.position);
             cam.setPosition(cam.position.add(d));
         }
     }
@@ -187,32 +182,15 @@ export class LocalController implements SceneController {
         if (!this.#container?.scene)
             return;
 
-        //alias for more readability
-        const map = this.#container.objectMap;
-
         //set whole project?
         if (!objectIds) {
-            for (const obj of map.values()) {
-                if (obj instanceof Node) {
-                    obj.setEnabled(enabled);
-                }
-                else {
-                    obj.isVisible = enabled;
-                }
-            }
+            this.#container.handles.forEach(h => h.visible = enabled);
         }
         else {
             objectIds.forEach(id => {
-                const obj = map.get(id);
-                if (!obj)
-                    return;
-
-                if (obj instanceof Node) {
-                    obj.setEnabled(enabled);
-                }
-                else {
-                    obj.isVisible = enabled;
-                }
+                const handle = this.#container?.handles[id];
+                if (handle)
+                    handle.visible = enabled;
             });
         }
     }
@@ -263,11 +241,7 @@ export class LocalController implements SceneController {
         if (!this.#container)
             return;
         //mesh selection
-        const pick = this.#container.scene.pick(x, y);
-        if (!!pick && pick.hit && !!pick.pickedMesh) {
-            const id = pick.pickedMesh.uniqueId;
-            this.select(id);
-        }
+        this.#container.picking.issuePick(x, y);
         //gui interaction
         this.#container.overlayTexture.pick(x, y,
             new PointerInfoPre(PointerEventTypes.POINTERUP, {

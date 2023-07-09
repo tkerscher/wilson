@@ -11,9 +11,9 @@ import { Observable } from "@babylonjs/core/Misc/observable";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
-import { Control } from "@babylonjs/gui/2D/controls/control";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
 
+import { GpuPickingService } from "../input/gpuPicking";
 import { TextEngine } from "../interpolation/textEngine";
 import { Project } from "../model/project";
 import { Description } from "./components/description";
@@ -21,12 +21,12 @@ import { buildGrid } from "./components/grid";
 import { createOrientationViewScene } from "./components/orientationView";
 import { PathVisualizer } from "./components/pathVisualizer";
 import { buildCamera } from "./objects/camera";
-import { buildLine } from "./objects/line";
-import { OverlayBuilder } from "./objects/overlay";
-import { PrismBuilder } from "./objects/prism";
-import { SphereBuilder } from "./objects/sphere";
-import { SceneBuildTool } from "./objects/tools";
-import { TubeController } from "./objects/tube";
+import { LineAnimatible, LineBuilder } from "./objects/line";
+import { ObjectHandle, SceneBuildTool } from "./objects/tools";
+import { OverlayAnimatible, OverlayBuilder } from "./objects/overlay";
+import { PrismAnimatible, PrismBuilder } from "./objects/prism";
+import { SphereAnimatible, SphereBuilder } from "./objects/sphere";
+import { TubeAnimatible, TubeController } from "./objects/tube";
 
 export interface SceneContainer {
     animation: AnimationGroup
@@ -34,7 +34,7 @@ export interface SceneContainer {
 
     scene: Scene
     camera: ArcRotateCamera
-    objectMap: Map<number, Node|Control>
+    handles: Array<ObjectHandle>
 
     indicatorLayer: Scene
     grid: Node
@@ -42,6 +42,7 @@ export interface SceneContainer {
 
     overlayRoot: Rectangle
     overlayTexture: AdvancedDynamicTexture
+    picking: GpuPickingService
     textEngine: TextEngine
     description: Description
 
@@ -66,37 +67,48 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
     //  The order in which the objects are created must be the same as in Project!
     //  Otherwise the ids will not match
 
+    const lineBuilder = new LineBuilder(buildTool);
     const overlayBuilder = new OverlayBuilder(buildTool);
     const prismBuilder = new PrismBuilder(buildTool);
     const sphereBuilder = new SphereBuilder(buildTool);
     const tubes: TubeController[] = [];
 
-    project.animatibles.forEach(animatible => {
+    const handles = new Array<ObjectHandle>(project.animatibles.length);
+
+    //iterate over all animatibles
+    for (const [index, animatible] of project.animatibles.entries()) {
         // Unknown type of animatible -> ignore
-        if (!animatible.instance) {
-            buildTool.skipObject();
-            return;
-        }
+        if (!animatible.instance)
+            continue;
 
         //check instance type
         switch(animatible.instance.$case) {
-        case "line":
-            buildLine(buildTool, animatible.instance.line, animatible);
-            break;
         case "prism":
-            prismBuilder.build(animatible.instance.prism, animatible);
+            handles[index] = prismBuilder.build(animatible as PrismAnimatible, index);
             break;
         case "sphere":
-            sphereBuilder.build(animatible.instance.sphere, animatible);
+            handles[index] = sphereBuilder.build(animatible as SphereAnimatible, index);
+            break;
+        case "line":
+            handles[index] = lineBuilder.build(animatible as LineAnimatible, index);
             break;
         case "tube":
-            tubes.push(new TubeController(buildTool, animatible.instance.tube, animatible));
-            break;
-        case "overlay":
-            overlayBuilder.build(animatible.instance.overlay, animatible);
+        {
+            const tube = new TubeController(buildTool, animatible as TubeAnimatible, index);
+            tubes.push(tube);
+            handles[index] = tube;
             break;
         }
-    });
+        case "overlay":
+            handles[index] = overlayBuilder.build(animatible as OverlayAnimatible);
+            break;
+        }
+    }
+
+    //finish builders
+    lineBuilder.finish();
+    sphereBuilder.finish();
+    prismBuilder.finish();
 
     //set animation speed
     let ratio = project.meta?.speedRatio ?? 1.0;
@@ -123,7 +135,8 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         project.meta?.startTime, project.meta?.endTime);
 
     //create components
-    const description = new Description(buildTool.overlayTexture, buildTool.textEngine);
+    const description = new Description(
+        buildTool.overlayTexture, buildTool.scene, buildTool.textEngine);
     const grid = buildGrid(buildTool.scene);
     const indicator = createOrientationViewScene(engine, camera);
 
@@ -139,12 +152,13 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         isStatic: isStatic,
         scene: buildTool.scene,
         camera: camera,
-        objectMap: buildTool.objectMap,
+        handles: handles,
         indicatorLayer: indicator,
         grid: grid,
         pathVisualizer: new PathVisualizer(buildTool.scene, project),
         overlayRoot: overlayBuilder.rootContainer,
         overlayTexture: buildTool.overlayTexture,
+        picking: buildTool.picking,
         textEngine: buildTool.textEngine,
         description: description,
         onAnimationTick: onAnimationTickObservable
@@ -163,7 +177,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         if (dirty) {
             //update tubes
             tubes.forEach(tube => {
-                if (tube.isEnabled)
+                if (tube.visible)
                     tube.update(currentFrame);
             });
             //notify observers
