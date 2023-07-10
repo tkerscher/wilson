@@ -184,7 +184,9 @@ def _parseVectorProperty(
 
 @overload
 def _parseVectorProperty(
-    p: proto.VectorProperty, pathDict: Dict[int, Path], default: Optional[Tuple[float, float, float]] = None
+    p: proto.VectorProperty,
+    pathDict: Dict[int, Path],
+    default: Optional[Tuple[float, float, float]] = None,
 ) -> Optional[VectorProperty]:
     ...
 

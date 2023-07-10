@@ -1,6 +1,7 @@
 import numpy as np
 import cmasher as cmr  # type: ignore[import]
 import re
+from types import SimpleNamespace
 from typing import Any, Tuple
 
 from wilson.color import getColorByName
@@ -29,6 +30,9 @@ def serializeProject(project: Project) -> bytes:
     """
     out = proto.Project()
 
+    # create serialization state
+    state = SimpleNamespace(cmapMin=float("inf"), cmapMax=float("-inf"))
+
     # fill meta
     out.meta.name = project.name
     if project.author is not None:
@@ -41,11 +45,6 @@ def serializeProject(project: Project) -> bytes:
     # camera
     if project.camera is not None:
         out.camera.CopyFrom(_serializeCamera(project.camera, project))
-    if project.colormap is not None:
-        out.colormap.CopyFrom(_serializeColormap(project.colormap))
-    else:
-        # If no color map specified use default: viridis
-        out.colormap.CopyFrom(_serializeColormap("viridis"))
 
     # We'll fill missing names with '[type] [i]' ,e.g. Sphere 1
     nextSphereId = 1
@@ -61,22 +60,22 @@ def serializeProject(project: Project) -> bytes:
             if a.name is None:
                 a.name = "Sphere " + str(nextSphereId)
                 nextSphereId += 1
-            out.animatibles.append(_serializeSphere(a, project))
+            out.animatibles.append(_serializeSphere(a, project, state))
         elif isinstance(a, Line):
             if a.name is None:
                 a.name = "Line " + str(nextLineId)
                 nextLineId += 1
-            out.animatibles.append(_serializeLine(a, project))
+            out.animatibles.append(_serializeLine(a, project, state))
         elif isinstance(a, Prism):
             if a.name is None:
                 a.name = "Prism " + str(nextPrismId)
                 nextPrismId += 1
-            out.animatibles.append(_serializePrism(a, project))
+            out.animatibles.append(_serializePrism(a, project, state))
         elif isinstance(a, Tube):
             if a.name is None:
                 a.name = "Tube " + str(nextTubeId)
                 nextTubeId += 1
-            out.animatibles.append(_serializeTube(a, project))
+            out.animatibles.append(_serializeTube(a, project, state))
         elif isinstance(a, Overlay):
             if a.name is None:
                 a.name = "Label " + str(nextTextId)
@@ -91,6 +90,16 @@ def serializeProject(project: Project) -> bytes:
     # Do this after serializing animatables as they might add implicit data
     out.graphs.extend(_serializeGraph(graph, i) for i, graph in enumerate(project.graphs))
     out.paths.extend(_serializePath(path, i) for i, path in enumerate(project.paths))
+
+    # serialize colormap after we inferred ranges during animatable serialization
+    cmapRange = project.colormapRange
+    if cmapRange is None:
+        cmapRange = (state.cmapMin, state.cmapMax)
+    if project.colormap is not None:
+        out.colormap.CopyFrom(_serializeColormap(project.colormap, cmapRange))
+    else:
+        # If no color map specified use default: viridis
+        out.colormap.CopyFrom(_serializeColormap("viridis", cmapRange))
 
     # Fill time related stuff
     # We need to do this after we got all paths and graphs as we might have to
@@ -191,31 +200,41 @@ def _serializeColor(color: Tuple[Any, ...]) -> proto.Color:
     raise ValueError("Invalid color tuple")
 
 
-def _serializeColormap(colormap: ColorMap) -> proto.ColorMap:
+def _serializeColormap(colormap: ColorMap, range: Tuple[float, float]) -> proto.ColorMap:
     result = proto.ColorMap()
+    min_out = range[0]
+    d = range[1] - range[0]
     if isinstance(colormap, str):
         # look up color map
         colors = cmr.take_cmap_colors(colormap, None)
         n = len(colors)
+        stop = None
         for i, c in enumerate(colors):
             stop = result.stops.add()
-            stop.value = i / n
+            stop.value = i * d / n + min_out  # rescale cmap
             stop.color.r, stop.color.g, stop.color.b = c
             stop.color.a = 1.0
+        # Force range on last stop
+        stop.value = range[1]
     else:
         cmaps = np.array(colormap, dtype=np.float64)
         # check dimensions
         if len(cmaps.shape) != 2 or not (cmaps.shape[1] == 4 or cmaps.shape[1] == 5):
             raise ValueError("Invalid color map!")
         cmaps = cmaps[cmaps[:, 0].argsort()]
+        min_in = cmaps.min()
+        d_in = cmaps.max() - cmaps.min()
+        stop = None
         for c in cmaps:
             stop = result.stops.add()
-            stop.value = c[0]
+            stop.value = (c[0] - min_in) * d / d_in + min_out  # rescale cmap
             stop.color.r, stop.color.g, stop.color.b = c[1:4]
             if cmaps.shape[1] == 4:
                 stop.color.a = 1.0
             else:
                 stop.color.a = c[4]
+        # Force range on last stop
+        stop.value = range[1]
     return result
 
 
@@ -382,7 +401,7 @@ def _serializeVectorProperty(
 
 
 def _serializeColorProperty(
-    color: ColorProperty, name: str, project: Project
+    color: ColorProperty, name: str, project: Project, state: SimpleNamespace
 ) -> proto.ColorProperty:
     result = proto.ColorProperty()
     if isinstance(color, str):
@@ -390,6 +409,11 @@ def _serializeColorProperty(
         result.constValue.CopyFrom(_serializeColor(getColorByName(color)))
     elif isinstance(color, float) or isinstance(color, int):
         # scalar into cmap
+        value = float(color)
+        # update cmap range
+        state.cmapMin = min(state.cmapMin, value)
+        state.cmapMax = max(state.cmapMax, value)
+        # save value
         result.scalarValue = float(color)
     elif isinstance(color, tuple):
         result.constValue.CopyFrom(_serializeColor(color))
@@ -403,11 +427,18 @@ def _serializeColorProperty(
             id = len(project.graphs)
             project.graphs.append(color)
             result.graphId = id
+            # update color map
+            state.cmapMin = min(state.cmapMin, np.min(color.array))
+            state.cmapMax = max(state.cmapMax, np.max(color.array))
     else:
         # color is graph like, but not a graph -> create a new graph
         id = len(project.graphs)
-        project.graphs.append(Graph(color, name))
+        graph = Graph(color, name)
+        project.graphs.append(graph)
         result.graphId = id
+        # update color map
+        state.cmapMin = min(state.cmapMin, np.min(graph.array))
+        state.cmapMax = max(state.cmapMax, np.max(graph.array))
     return result
 
 
@@ -461,11 +492,11 @@ def _createAnimatable(meta: Animatable, project: Project) -> proto.Animatible:
     return result
 
 
-def _serializeSphere(sphere: Sphere, project: Project) -> proto.Animatible:
+def _serializeSphere(sphere: Sphere, project: Project, state: SimpleNamespace) -> proto.Animatible:
     result = _createAnimatable(sphere, project)
     # properties
     result.sphere.color.CopyFrom(
-        _serializeColorProperty(sphere.color, f".{sphere.name}_color", project)
+        _serializeColorProperty(sphere.color, f".{sphere.name}_color", project, state)
     )
     if sphere.position is not None:
         result.sphere.position.CopyFrom(
@@ -478,10 +509,12 @@ def _serializeSphere(sphere: Sphere, project: Project) -> proto.Animatible:
     return result
 
 
-def _serializeTube(tube: Tube, project: Project) -> proto.Animatible:
+def _serializeTube(tube: Tube, project: Project, state: SimpleNamespace) -> proto.Animatible:
     result = _createAnimatable(tube, project)
     # properties
-    result.tube.color.CopyFrom(_serializeColorProperty(tube.color, f".{tube.name}_color", project))
+    result.tube.color.CopyFrom(
+        _serializeColorProperty(tube.color, f".{tube.name}_color", project, state)
+    )
     result.tube.radius.CopyFrom(
         _serializeScalarProperty(tube.radius, f".{tube.name}_radius", project)
     )
@@ -506,10 +539,12 @@ def _serializeTube(tube: Tube, project: Project) -> proto.Animatible:
     return result
 
 
-def _serializeLine(line: Line, project: Project) -> proto.Animatible:
+def _serializeLine(line: Line, project: Project, state: SimpleNamespace) -> proto.Animatible:
     result = _createAnimatable(line, project)
     # properties
-    result.line.color.CopyFrom(_serializeColorProperty(line.color, f".{line.name}_color", project))
+    result.line.color.CopyFrom(
+        _serializeColorProperty(line.color, f".{line.name}_color", project, state)
+    )
     if line.start is not None:
         result.line.start.CopyFrom(
             _serializeVectorProperty(line.start, f".{line.name}_start", project)
@@ -525,11 +560,11 @@ def _serializeLine(line: Line, project: Project) -> proto.Animatible:
     return result
 
 
-def _serializePrism(prism: Prism, project: Project) -> proto.Animatible:
+def _serializePrism(prism: Prism, project: Project, state: SimpleNamespace) -> proto.Animatible:
     result = _createAnimatable(prism, project)
     # properties
     result.prism.color.CopyFrom(
-        _serializeColorProperty(prism.color, f".{prism.name}_color", project)
+        _serializeColorProperty(prism.color, f".{prism.name}_color", project, state)
     )
     if prism.position is not None:
         result.prism.position.CopyFrom(

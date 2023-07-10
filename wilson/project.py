@@ -93,6 +93,10 @@ class Project:
 
     colormap: Optional[Camera], default=`None`
         Color map used to translate scalars into colors. If None, viridis is used.
+
+    colormapRange: Optional[Tuple[float,float]], default=`None`
+        Range of the colormap to use as a tuple (min,max). If None, this is
+        inferred during serialization from the data.
     """
 
     def __init__(
@@ -111,6 +115,7 @@ class Project:
         hiddenGroups: Iterable[str] = [],
         camera: Optional[Camera] = None,
         colormap: Optional[ColorMap] = None,
+        colormapRange: Optional[Tuple[float, float]] = None,
     ):
         self.name = name
         self.author = author
@@ -125,6 +130,7 @@ class Project:
         self.hiddenGroups = hiddenGroups  # type: ignore[assignment]
         self.camera = camera
         self.colormap = colormap
+        self.colormapRange = colormapRange
 
     @property
     def name(self) -> str:
@@ -319,3 +325,22 @@ class Project:
     @colormap.deleter
     def colormap(self) -> None:
         self._colormap = None
+
+    @property
+    def colormapRange(self) -> Optional[Tuple[float, float]]:
+        """
+        Range of the colormap to use as a tuple (min,max). If None, this is
+        inferred during serialization from the data.
+        """
+        return self._cmapRange
+
+    @colormapRange.setter
+    def colormapRange(self, value: Optional[Tuple[float, float]]) -> None:
+        # check range
+        if value is not None and value[0] >= value[1]:
+            raise ValueError("min must be larger than max")
+        self._cmapRange = value
+
+    @colormapRange.deleter
+    def colormapRange(self) -> None:
+        self._cmapRange = None
