@@ -279,6 +279,10 @@ input[type="search"]::-webkit-search-results-decoration {
     mask-image: url(./assets/icons/sun.svg);
     -webkit-mask-image: url(./assets/icons/sun.svg);
 }
+.swatchbook-icon {
+    mask-image: url(./assets/icons/swatchbook.svg);
+    -webkit-mask-image: url(./assets/icons/swatchbook.svg);
+}
 .trash-icon {
     mask-image: url(./assets/icons/trash.svg);
     -webkit-mask-image: url(./assets/icons/trash.svg);

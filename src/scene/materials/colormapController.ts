@@ -4,7 +4,6 @@ import { Scene } from "@babylonjs/core/scene";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
 import { ColorMap } from "../../model/colormap";
-import { interpolateColormap } from "../../interpolation/colormap";
 import { renderColormap } from "../../util/color";
 
 const TEXTURE_SIZE = 1024;

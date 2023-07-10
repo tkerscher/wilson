@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import ColorMapControl from "./tabs/ColorMapControl.vue";
 import InfoTab from "./tabs/InfoTab.vue";
 import ObjectExplorer from "./tabs/ObjectExplorer.vue";
 import SettingsTab from "./tabs/SettingsTab.vue";
@@ -49,12 +50,13 @@ import { onBeforeMount, ref } from "vue";
 const searchQuery = ref("");
 
 const tabIcons = [
-    { icon: "cube-icon",   title: "Objects",  id: 0, tab: ObjectExplorer },
-    { icon: "curve-icon",  title: "Paths",    id: 1, tab: PathExplorer },
-    { icon: "wrench-icon", title: "Settings", id: 2, tab: SettingsTab },
-    { icon: "info-icon",   title: "Info",     id: 3, tab: InfoTab }
+    { icon: "cube-icon",       title: "Objects",  id: 0, tab: ObjectExplorer },
+    { icon: "curve-icon",      title: "Paths",    id: 1, tab: PathExplorer },
+    { icon: "swatchbook-icon", title: "Colormap", id: 2, tab: ColorMapControl},
+    { icon: "wrench-icon",     title: "Settings", id: 3, tab: SettingsTab },
+    { icon: "info-icon",       title: "Info",     id: 4, tab: InfoTab }
 ];
-const activeTab = ref(0);
+const activeTab = ref(4);
 function onSelectTab(index: number) {
     activeTab.value = index;
     localStorage.setItem("activeTab", String(index));
@@ -144,7 +146,7 @@ onBeforeMount(() => {
     background-color: var(--primary3);
 }
 .active-header {
-    width: 100px;
+    width: 110px;
     background-color: var(--primary3) !important;
 }
 </style>
