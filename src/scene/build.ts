@@ -27,6 +27,7 @@ import { OverlayAnimatible, OverlayBuilder } from "./objects/overlay";
 import { PrismAnimatible, PrismBuilder } from "./objects/prism";
 import { SphereAnimatible, SphereBuilder } from "./objects/sphere";
 import { TubeAnimatible, TubeController } from "./objects/tube";
+import { ColorMapController } from "./materials/colormapController";
 
 export interface SceneContainer {
     animation: AnimationGroup
@@ -35,6 +36,8 @@ export interface SceneContainer {
     scene: Scene
     camera: ArcRotateCamera
     handles: Array<ObjectHandle>
+
+    colorMapController: ColorMapController
 
     indicatorLayer: Scene
     grid: Node
@@ -153,6 +156,7 @@ export function buildScene(project: Project, engine: Engine): SceneContainer {
         scene: buildTool.scene,
         camera: camera,
         handles: handles,
+        colorMapController: buildTool.cmapController,
         indicatorLayer: indicator,
         grid: grid,
         pathVisualizer: new PathVisualizer(buildTool.scene, project),

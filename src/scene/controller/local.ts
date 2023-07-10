@@ -421,6 +421,22 @@ export class LocalController implements SceneController {
             Color3.FromHexString(theme.clearColor), 1.0);
     }
 
+    /********************************* Colormap *******************************/
+
+    setColorMapMinScalar(value: number): void {
+        if (!this.#container)
+            return;
+
+        this.#container.colorMapController.minScalar = value;
+    }
+
+    setColorMapMaxScalar(value: number): void {
+        if (!this.#container)
+            return;
+
+        this.#container.colorMapController.maxScalar = value;
+    }
+
     /********************************* Other **********************************/
 
     dispose(): void {

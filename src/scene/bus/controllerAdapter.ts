@@ -15,6 +15,8 @@ export class ControllerAdapter {
     #setStage: (url: string) => void;
     #removeStage: () => void;
     #setTheme: (theme: Theme) => void;
+    #setColorMapMin: (value: number) => void;
+    #setColorMapMax: (value: number) => void;
 
     constructor(controller: SceneController) {
         //create handlers
@@ -30,6 +32,8 @@ export class ControllerAdapter {
         this.#setStage = (url: string) => controller.loadStage(url);
         this.#removeStage = () => controller.removeStage();
         this.#setTheme = (theme: Theme) => controller.setTheme(theme);
+        this.#setColorMapMin = (value: number) => controller.setColorMapMinScalar(value);
+        this.#setColorMapMax = (value: number) => controller.setColorMapMaxScalar(value);
 
         //register handlers
         SceneCommandBus.on("ResetCamera", this.#resetCamera);
@@ -42,6 +46,8 @@ export class ControllerAdapter {
         SceneCommandBus.on("SetStage", this.#setStage);
         SceneCommandBus.on("RemoveStage", this.#removeStage);
         SceneCommandBus.on("SetTheme", this.#setTheme);
+        SceneCommandBus.on("SetColorMapMinScalar", this.#setColorMapMin);
+        SceneCommandBus.on("SetColorMapMaxScalar", this.#setColorMapMax);
 
         //register events
         controller.registerOnObjectPicked((id: number|null) =>
@@ -60,5 +66,7 @@ export class ControllerAdapter {
         SceneCommandBus.off("SetStage", this.#setStage);
         SceneCommandBus.off("RemoveStage", this.#removeStage);
         SceneCommandBus.off("SetTheme", this.#setTheme);
+        SceneCommandBus.off("SetColorMapMinScalar", this.#setColorMapMin);
+        SceneCommandBus.off("SetColorMapMaxScalar", this.#setColorMapMax);
     }
 }

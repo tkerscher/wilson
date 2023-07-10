@@ -189,6 +189,21 @@ export interface SceneController {
      */
     setTheme(theme: Theme): void
 
+    /********************************* Colormap *******************************/
+
+    /**
+     * Sets the minimum value used by the color map to translate scalars to
+     * colors.
+     * @param value New minimum of color map
+     */
+    setColorMapMinScalar(value: number): void
+    /**
+     * Sets the maximum value used by the color map to translate scalars to
+     * colors.
+     * @param value New maximum of color map
+     */
+    setColorMapMaxScalar(value: number): void
+
     /********************************* Other **********************************/
 
     /**

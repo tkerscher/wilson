@@ -48,6 +48,15 @@ export type CommandMessages = {
      * Sets the current theme for the scene
      */
     SetTheme: Theme
+
+    /**
+     * Sets the minimum / lower end of the color map.
+     */
+    SetColorMapMinScalar: number
+    /**
+     * Sets the maximum / upper end of the color map.
+     */
+    SetColorMapMaxScalar: number
 }
 export const SceneCommandBus = mitt<CommandMessages>();
 
@@ -124,5 +133,18 @@ export class SceneCommander {
      */
     static SetTheme(theme: Theme) {
         SceneCommandBus.emit("SetTheme", theme);
+    }
+
+    /**
+     * Sets the minimum / lower end of the color map.
+     */
+    static SetColormapMinScalar(value: number) {
+        SceneCommandBus.emit("SetColorMapMinScalar", value);
+    }
+    /**
+     * Sets the maximum / upper end of the color map.
+     */
+    static SetColormapMaxScalar(value : number) {
+        SceneCommandBus.emit("SetColorMapMaxScalar", value);
     }
 }
