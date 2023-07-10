@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "wilson"
 description = "Tool to create animation files for Wilson"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     { name = "Tobias Kerscher", email = "88444139+tkerscher@users.noreply.github.com" }
 ]
