@@ -29,10 +29,7 @@ export class ColorMapController {
         else {
             this.#minScalar = colormap.stops[0].value;
             this.#maxScalar = colormap.stops[colormap.stops.length - 1].value;
-            //make sure they are not equal
-            if (this.#minScalar == this.#maxScalar) {
-                this.#maxScalar += 1e-7; //float epsilon
-            }
+            this.#sanitizeRange();
         }
 
         this.#texture = createTexture(scene, colormap);
@@ -50,6 +47,7 @@ export class ColorMapController {
     get minScalar(): number { return this.#minScalar; }
     set minScalar(value: number) {
         this.#minScalar = value;
+        this.#sanitizeRange();
         this.#onMinScalarChanged.notifyObservers(value);
     }
     /**
@@ -58,6 +56,7 @@ export class ColorMapController {
     get maxScalar(): number { return this.#maxScalar; }
     set maxScalar(value: number) {
         this.#maxScalar = value;
+        this.#sanitizeRange();
         this.#onMaxScalarChanged.notifyObservers(value);
     }
     /**
@@ -68,6 +67,16 @@ export class ColorMapController {
      * Gets the Observable notifying on changes of the maxScalar.
      */
     get onMaxScalarChanged() { return this.#onMaxScalarChanged; }
+
+    /**
+     * Ensures that min and max are not the same to prevent division by zero
+     * errors.
+     */
+    #sanitizeRange() {
+        if (this.#minScalar == this.#maxScalar) {
+            this.#maxScalar += 1e-7; //float epsilon
+        }
+    }
 }
 
 function createTexture(scene: Scene, colormap?: ColorMap): RawTexture {
