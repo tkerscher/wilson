@@ -17,6 +17,7 @@ import { toHex } from "../../util/colorToHex";
 import { TextEngine } from "../../interpolation/textEngine";
 import { GpuPickingService } from "../../input/gpuPicking";
 import { createSolidColorInstanceMaterial } from "../materials/solidColorInstanceMaterial";
+import { ColorMapController } from "../materials/colormapController";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
 const DefaultColor = new Color4(0.0, 0.0, 0.0, 1.0);
@@ -50,6 +51,7 @@ export class SceneBuildTool {
     #materialMap: Map<string, StandardMaterial>;
     defaultMaterial: StandardMaterial;
 
+    cmapController: ColorMapController;
     solidColorInstanceMaterial: ShaderMaterial;
 
     constructor(project: Project, engine: Engine) {
@@ -68,7 +70,8 @@ export class SceneBuildTool {
 
         this.scene.clearColor = BackgroundColor;
 
-        this.solidColorInstanceMaterial = createSolidColorInstanceMaterial(this.scene);
+        this.cmapController = new ColorMapController(this.scene, project.colormap);
+        this.solidColorInstanceMaterial = createSolidColorInstanceMaterial(this.scene, this.cmapController);
     }
 
     /**
@@ -164,9 +167,10 @@ export class SceneBuildTool {
      * @param color Color property to parse
      * @param target Target on which to apply property
      * @param property Which property to set
+     * @param resolveCmap True if the color should be hardcoded, false if it should be calculated dynamically in the shader
      * @returns True if the property is animated, false otherwise
      */
-    parseColor(color: ColorProperty|undefined, target: any, property: string): boolean {
+    parseColor(color: ColorProperty|undefined, target: any, property: string, resolveCmap = false): boolean {
         if (!color || !color.source) {
             setProperty(target, property, DefaultColor);
             return false;
@@ -181,7 +185,10 @@ export class SceneBuildTool {
         }
         case "scalarValue":
         {
-            setProperty(target, property, this.mapColor(color.source.scalarValue));
+            if (resolveCmap)
+                setProperty(target, property, this.mapColor(color.source.scalarValue));
+            else
+                setProperty(target, property, new Color4(color.source.scalarValue, 0.0, 0.0, -1.0));
             return false;
         }
         case "graphId":
@@ -192,11 +199,22 @@ export class SceneBuildTool {
                 setProperty(target, property, DefaultColor);
                 return false;
             }
-            else {
+            else if (resolveCmap) {
                 const animation = new Animation(graph.name, property, 1.0,
                     Animation.ANIMATIONTYPE_COLOR4, Animation.ANIMATIONLOOPMODE_CYCLE);
                 const keyFrames = graph.points.map(p => ({
                     frame: p.time, value: this.mapColor(p.value)
+                }));
+                animation.setKeys(keyFrames);
+                animation.setEasingFunction(getInterpolation(graph.interpolation));
+                this.animationGroup.addTargetedAnimation(animation, target);
+                return true;
+            }
+            else {
+                const animation = new Animation(graph.name, property, 1.0,
+                    Animation.ANIMATIONTYPE_COLOR4, Animation.ANIMATIONLOOPMODE_CYCLE);
+                const keyFrames = graph.points.map(p => ({
+                    frame: p.time, value: new Color4(p.value, 0.0, 0.0, -1.0)
                 }));
                 animation.setKeys(keyFrames);
                 animation.setEasingFunction(getInterpolation(graph.interpolation));
