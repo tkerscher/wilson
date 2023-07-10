@@ -27,10 +27,10 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.11.1.tgz#d47e5a64648858c9b64671a001b25e7aa5bca2d8"
   integrity sha512-p8Nbfp/WPFZzPCvUoePmta5CUNAteSsJi1A40Wjd+q4zp28xDJYRIjxR2FioEWBxxmCxeOQmt9mB8XAuKWDiLA==
 
-"@babylonjs/materials@^6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-6.11.1.tgz#aca88c8aff0046a10b954066876ba888f80104c0"
-  integrity sha512-RCAzp76k2mGKmHa7yv2y6W2U015Zqc+UNL5Nx0bcom72Flx/zN4HHNczOt/C4VG0wU2LF90O0p+ClgEabx/sbg==
+"@babylonjs/materials@^6.11.2":
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-6.11.2.tgz#ece839ccf589c047034ac0b3f25cc25d13e649fe"
+  integrity sha512-wQ4JaDDY5YyfCPDzK8pUDZcmHdoVNs9r8q4HRX0rnuujW5PciU/7QaTW9UGuGwFetYzDXBXVe6eZNdpiBez1lA==
 
 "@esbuild/android-arm64@0.18.11":
   version "0.18.11"
