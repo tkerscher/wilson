@@ -1,9 +1,11 @@
 import { Color4 } from "@babylonjs/core";
+import { Engine } from "@babylonjs/core/Engines/engine";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { RawTexture } from "@babylonjs/core/Materials/Textures/rawTexture";
 import { Scene } from "@babylonjs/core/scene";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
+import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 import { numToColor } from "../../input/gpuPicking";
@@ -11,6 +13,7 @@ import { Animatible } from "../../model/animatible";
 import { GraphInterpolator } from "../../interpolation/graphInterpolation";
 import { PathInterpolator } from "../../interpolation/pathInterpolation";
 import { ObjectHandle, SceneBuildTool } from "./tools";
+import { createTextureLookupMaterial } from "../materials/textureLookupMaterial";
 
 const TEXTURE_SIZE = 2048;
 
@@ -107,6 +110,7 @@ export class TubeController implements ObjectHandle {
             const tmp = { c: new Color4() };
             tool.parseColor(tube.color, tmp, "c"); //TODO: this is ugly
             const mat = new StandardMaterial(animatible.name + "_mat", this.#scene);
+            mat.specularPower = 0.0;
             mat.diffuseColor.copyFromFloats(tmp.c.r, tmp.c.g, tmp.c.b);
             this.#mesh.material = mat;
         }
@@ -121,28 +125,27 @@ export class TubeController implements ObjectHandle {
             else {
                 const graphInt = new GraphInterpolator(id, tool.project);
                 const startTime = this.#startTime;
-                const data = new Uint8Array(function*() {
+                const data = new Float32Array(function*() {
                     for (let i = 0; i < TEXTURE_SIZE; ++i) {
                         const t = i / TEXTURE_SIZE * period + startTime;
-                        const v = graphInt.interpolate(t);
-                        const color = tool.mapColor(v);
-
-                        yield color.r * 255;
-                        yield color.g * 255;
-                        yield color.b * 255;
-                        yield color.a * 255;
+                        yield graphInt.interpolate(t);
                     }
                 }());
 
                 //bake texture
-                const texture = RawTexture.CreateRGBATexture(
+                const texture = RawTexture.CreateRTexture(
                     data, 1, TEXTURE_SIZE,
-                    tool.scene);
+                    tool.scene,
+                    false, false,
+                    Texture.BILINEAR_SAMPLINGMODE,
+                    Engine.TEXTURETYPE_FLOAT);
 
-                //assign texture
-                const mat = new StandardMaterial(animatible.name + "_mat", tool.scene);
-                mat.diffuseTexture = texture;
-                this.#mesh.material = mat;
+                //create and assign material
+                this.#mesh.material = createTextureLookupMaterial(
+                    animatible.name + "_mat",
+                    tool.scene,
+                    tool.cmapController,
+                    texture);
             }
         }
 
