@@ -197,6 +197,7 @@ export class PrismBuilder {
                 "prism_template_" + nVertices,
                 { tessellation: nVertices, height: 1.0, diameter: 2.0 },
                 this.#tool.scene);
+            template.material = this.#tool.solidColorInstanceMaterial;
             template.thinInstanceSetBuffer("color", colorBuffer, 4);
             template.thinInstanceSetBuffer("matrix", matrixBuffer, 16);
 

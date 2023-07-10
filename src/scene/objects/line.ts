@@ -200,6 +200,7 @@ export class LineBuilder {
 
         const template = MeshBuilder.CreateLathe(
             name, { shape: shape, tessellation: 24 }, this.#tool.scene);
+        template.material = this.#tool.solidColorInstanceMaterial;
         template.thinInstanceSetBuffer("color", colorBuffer, 4);
         template.thinInstanceSetBuffer("matrix", matrixBuffer, 16);
 

@@ -139,7 +139,7 @@ export class SphereBuilder {
 
         const template = MeshBuilder.CreateSphere("sphere_template",
             { diameter: 2.0 }, this.#tool.scene);
-
+        template.material = this.#tool.solidColorInstanceMaterial;
         template.thinInstanceSetBuffer("color", colorBuffer, 4);
         template.thinInstanceSetBuffer("matrix", matrixBuffer, 16);
 

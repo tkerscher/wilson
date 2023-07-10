@@ -4,6 +4,7 @@ import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Scene } from "@babylonjs/core/scene";
+import { ShaderMaterial } from "@babylonjs/core/Materials/shaderMaterial";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
@@ -15,6 +16,7 @@ import { setProperty } from "../../util/property";
 import { toHex } from "../../util/colorToHex";
 import { TextEngine } from "../../interpolation/textEngine";
 import { GpuPickingService } from "../../input/gpuPicking";
+import { createSolidColorInstanceMaterial } from "../materials/solidColorInstanceMaterial";
 
 const BackgroundColor = new Color4(0.239, 0.239, 0.239, 1.0);
 const DefaultColor = new Color4(0.0, 0.0, 0.0, 1.0);
@@ -48,6 +50,8 @@ export class SceneBuildTool {
     #materialMap: Map<string, StandardMaterial>;
     defaultMaterial: StandardMaterial;
 
+    solidColorInstanceMaterial: ShaderMaterial;
+
     constructor(project: Project, engine: Engine) {
         this.project = project;
         this.scene = new Scene(engine);
@@ -63,6 +67,8 @@ export class SceneBuildTool {
         this.textEngine = new TextEngine(this.project);
 
         this.scene.clearColor = BackgroundColor;
+
+        this.solidColorInstanceMaterial = createSolidColorInstanceMaterial(this.scene);
     }
 
     /**
