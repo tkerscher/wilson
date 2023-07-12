@@ -28,6 +28,9 @@ dev = [
 [tool.setuptools]
 packages = ["wilson", "wilson.proto"]
 
+[tool.setuptools.package-data]
+wilson = ["app.zip"]
+
 [tool.black]
 line-length = 100
 target-version = ["py38"]
