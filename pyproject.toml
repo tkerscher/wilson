@@ -18,6 +18,10 @@ dependencies = [
     "protobuf>=3.20.1"
 ]
 
+
+[project.scripts]
+wilson = "wilson.server:cli_main"
+
 [project.optional-dependencies]
 dev = [
     "black>=21.0",

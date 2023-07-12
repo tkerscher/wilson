@@ -136,5 +136,9 @@ def run():
     server.server_close()
     print("Server has shut down")
 
-if __name__ == '__main__':
+def cli_main():
+    """Function called by the `wilson` command."""
     run()
+
+if __name__ == '__main__':
+    cli_main()
