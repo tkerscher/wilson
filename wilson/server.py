@@ -1,5 +1,5 @@
 import importlib.resources
-from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from os.path import splitext
 from typing import Optional
 from zipfile import ZipFile
@@ -127,7 +127,7 @@ def run():
     Runs a local server hosting the web viewer app.
     Note that this function does NOT return.
     """
-    server = HTTPServer(("localhost", 8080), WilsonRequestHandler)
+    server = ThreadingHTTPServer(("localhost", 8080), WilsonRequestHandler)
     print(f"Started server at location: http://localhost:{server.server_port}/")
     try:
         server.serve_forever()
