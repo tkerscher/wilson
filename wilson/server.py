@@ -1,8 +1,17 @@
 import importlib.resources
+import os.path
+import urllib.parse
+import webbrowser
+from functools import partial
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from os.path import splitext
 from typing import Optional
 from zipfile import ZipFile
+
+def _extractPath(requestPath: str):
+    query_start = requestPath.find("?")
+    if query_start == -1:
+        query_start = None
+    return requestPath[1:query_start]
 
 class Response():
     """Helper class for creating http responses"""
@@ -85,16 +94,14 @@ class AppHandler():
             self._app_file.close()
     
     def __call__(self, handler: BaseHTTPRequestHandler) -> Optional[Response]:
-        query_start = handler.path.find("?")
-        if query_start == -1:
-            query_start = None
-        resource = handler.path[1:query_start]
+        resource = _extractPath(handler.path)
         # special: index.html mapped to root
         if resource == "":
             resource = "index.html"
         # see if resource is inside the zip archive
         if resource in self._archive.namelist():
-            contentType = AppHandler.CONTENT_TYPE.get(splitext(resource)[1], "text/plain")
+            ext = os.path.splitext(resource)[1]
+            contentType = AppHandler.CONTENT_TYPE.get(ext, "text/plain")
             content = None
             with self._archive.open(resource) as f:
                 content = f.read()
@@ -102,12 +109,34 @@ class AppHandler():
         else:
             return None
 
+class FileHandler():
+    """Class for serving a single file."""
+
+    def __init__(self, path: str):
+        self._path = path
+        self._file = os.path.basename(path)
+    
+    def __call__(self, handler: BaseHTTPRequestHandler) -> Optional[Response]:
+        resource = _extractPath(handler.path)
+        if resource == self._file:
+            content = None
+            with open(self._path, mode="rb") as f:
+                content = f.read()
+            return Response(200, content, "application/octet-stream")
+        else:
+            return None
+
 class WilsonRequestHandler(BaseHTTPRequestHandler):
     """Class handling the http request for the server"""
 
-    def __init__(self, *args, **kwargs):
-        self._app = AppHandler()
-        self._bad = BadResponse()
+    def __init__(self, *args, path=None, **kwargs):
+        self._stages = []
+        self._stages.append(AppHandler())
+        if path is not None:
+            if os.path.isfile(path):
+                self._stages.append(FileHandler(path))
+        self._stages.append(BadResponse())
+        
         super().__init__(*args)
 
     def do_HEAD(self):
@@ -116,19 +145,29 @@ class WilsonRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.createResponse().send(self)
     
-    def do_PUT(self):
-        return
-    
     def createResponse(self) -> Response:
-        return self._app(self) or self._bad
+        for stage in self._stages:
+            response = stage(self)
+            if response is not None:
+                return response
 
-def run():
+
+def run(port: int, path: Optional[str] = None):
     """
     Runs a local server hosting the web viewer app.
     Note that this function does NOT return.
     """
-    server = ThreadingHTTPServer(("localhost", 8080), WilsonRequestHandler)
-    print(f"Started server at location: http://localhost:{server.server_port}/")
+    handler = partial(WilsonRequestHandler, path=path)
+    server = ThreadingHTTPServer(("localhost", port), handler)
+    port = server.server_port
+    print(f"Started server at location: http://localhost:{port}/")
+    if path is not None and os.path.isfile(path):
+        filename = os.path.basename(path)
+        filename = urllib.parse.quote(filename)
+        url = f"http://localhost:{port}/?cat={filename}"
+        print(f"Event available under {url}")
+        webbrowser.open_new_tab(url)
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -138,7 +177,24 @@ def run():
 
 def cli_main():
     """Function called by the `wilson` command."""
-    run()
+    import argparse
+    
+    def PathType(path):
+        if os.path.exists(path) and (os.path.isfile(path) or os.path.isdir(path)):
+            return path
+        else:
+            raise argparse.ArgumentTypeError("The given path is neither a file nor directory!")
+
+    parser = argparse.ArgumentParser(prog="wilson",
+        description="Serves the Wilson viewer web app under localhost")
+    parser.add_argument("--port", "-p", action="store",
+                        default=0, type=int, nargs="?",
+                        help="Specify explicit port")
+    parser.add_argument("path", nargs="?", type=PathType, default=None,
+                        help="Directory or file to serve alongside the viewer.")
+    args = parser.parse_args()
+
+    run(args.port, args.path)
 
 if __name__ == '__main__':
     cli_main()
