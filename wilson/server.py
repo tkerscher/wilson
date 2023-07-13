@@ -109,6 +109,25 @@ class AppHandler():
         else:
             return None
 
+class DirectoryHandler():
+    """Class for serving files from a directory."""
+
+    def __init__(self, path: str):
+        self._path = path
+    
+    def __call__(self, handler: BaseHTTPRequestHandler) -> Optional[Response]:
+        resource = _extractPath(handler.path)
+        # refresh file list with every request
+        # only serve local files not nested ones
+        files = [f for f in os.listdir(self._path) if os.path.isfile(os.path.join(self._path, f))]
+        if resource in files:
+            path = os.path.join(self._path, resource)
+            content = None
+            with open(path, mode="rb") as f:
+                content = f.read()
+            return Response(200, content)
+        else:
+            return None
 class FileHandler():
     """Class for serving a single file."""
 
@@ -135,7 +154,8 @@ class WilsonRequestHandler(BaseHTTPRequestHandler):
         if path is not None:
             if os.path.isfile(path):
                 self._stages.append(FileHandler(path))
-        self._stages.append(BadResponse())
+            elif os.path.isdir(path):
+                self._stages.append(DirectoryHandler(path))
         
         super().__init__(*args)
 
@@ -150,6 +170,8 @@ class WilsonRequestHandler(BaseHTTPRequestHandler):
             response = stage(self)
             if response is not None:
                 return response
+        # not found
+        return BadResponse()
 
 
 def run(port: int, path: Optional[str] = None):
