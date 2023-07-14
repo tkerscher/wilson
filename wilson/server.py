@@ -1,11 +1,15 @@
 import importlib.resources
 import os.path
+import tempfile
+import threading
 import urllib.parse
 import webbrowser
 from functools import partial
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from typing import Optional
+from typing import Any, Iterable, Optional
 from zipfile import ZipFile
+from wilson.catalogue import Catalogue, saveProject
+from wilson.project import Project
 
 def _extractPath(requestPath: str):
     query_start = requestPath.find("?")
@@ -148,7 +152,8 @@ class FileHandler():
 class WilsonRequestHandler(BaseHTTPRequestHandler):
     """Class handling the http request for the server"""
 
-    def __init__(self, *args, path=None, **kwargs):
+    def __init__(self, *args, path=None, quiet=False, **kwargs):
+        self._quiet = quiet
         self._stages = []
         self._stages.append(AppHandler())
         if path is not None:
@@ -172,7 +177,110 @@ class WilsonRequestHandler(BaseHTTPRequestHandler):
                 return response
         # not found
         return BadResponse()
+    
+    def log_message(self, format: str, *args: Any) -> None:
+        if not self._quiet:
+            super().log_message(format, *args)
 
+class WilsonServer():
+    """Class for serving the web viewer app while dynamically managing event files.
+    
+    The server is running in its own thread, thus not blocking the calling
+    script and allowing to add new projects and catalogues after the server
+    already started. The corresponding files are either stored at given location
+    or a temporary directory created if none is given. The latter will be
+    cleared once the server instance gets deleted.
+
+    Parameters
+    ----------
+    dir: Optional[str], default=None
+        The location to store new projects and catalogues. If None, a temporary
+        one will be created, that gets cleared once the server is deleted.
+    port: int, default=0
+        Specifies the port under which the server will be accessible. If zero,
+        the OS will provide a random free one.
+    quiet: bool, default=True
+        If True, suppresses prints to stdout.
+    
+    Attributes:
+    -----------
+    dir: str
+        Location to store new projects and catalogues
+    isAlive: bool
+        True, if the server is still running.
+    port: int
+        Port under which the server is accessible.
+    url:
+        URL under which the server is accessible.    
+    """
+
+    def __init__(self, dir:Optional[str]=None, *, port=0, quiet=True):
+        if dir is None:
+            self._tmp = tempfile.TemporaryDirectory()
+            self._dir = self._tmp.name
+        else:
+            self._dir = dir
+
+        #create server
+        handler = partial(WilsonRequestHandler, path=self._dir, quiet=quiet)
+        self._server = ThreadingHTTPServer(("localhost", port), handler)
+        #run server in own thread
+        self._thread = threading.Thread(
+            target=lambda server: server.serve_forever(),
+            args=(self._server,))
+        self._thread.start()
+        #print some information if required
+        if not quiet:
+            print(f"Started server at location: {self.url}/")      
+    
+    def __del__(self):
+        #ensure server is stopped
+        self.shutdown()
+
+    def shutdown(self):
+        """Shuts the server down"""
+        if self._thread.is_alive():
+            self._server.shutdown()
+            self._thread.join() #just to be safe
+    
+    def addProject(self, project: Project, name: str) -> str:
+        """
+        Adds project to the server under the given name.
+        Returns the url under which the project is accessible.
+        """
+        saveProject(project, os.path.join(self.dir, name))
+        return self.url + f"?cat={name}"
+    
+    def addCatalogue(self, projects: Iterable[Project], name: str) -> str:
+        """
+        Bundles a list of projects into a catalogue and adds it to the server
+        under the given name. Returns the url under which the catalogue is
+        accessible.
+        """
+        with Catalogue(os.path.join(self.dir, name), "w") as cat:
+            for p in projects:
+                cat.saveProject(p)
+        return self.url + f"?cat={name}"
+    
+    @property
+    def dir(self) -> str:
+        """The directory, the server is looking for event files."""
+        return self._dir
+    
+    @property
+    def isAlive(self) -> bool:
+        """True, if the server is still running."""
+        return self._thread.is_alive()
+    
+    @property
+    def port(self) -> int:
+        """The port number under which the server is accessible."""
+        return self._server.server_port
+    
+    @property
+    def url(self) -> str:
+        """The url under which the server is accessible."""
+        return f"http://localhost:{self.port}/"
 
 def run(port: int, path: Optional[str] = None):
     """
