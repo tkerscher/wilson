@@ -15,7 +15,8 @@ def _extractPath(requestPath: str):
     query_start = requestPath.find("?")
     if query_start == -1:
         query_start = None
-    return requestPath[1:query_start]
+    path = requestPath[1:query_start]
+    return urllib.parse.unquote(path)
 
 class Response():
     """Helper class for creating http responses"""
@@ -263,7 +264,7 @@ class WilsonServer():
         if name is None:
             name = project.name
         saveProject(project, os.path.join(self.dir, name))
-        return self.url + f"?cat={name}"
+        return self.url + f"?cat={urllib.parse.quote(name)}"
     
     def addCatalogue(self, projects: Iterable[Project], name: str) -> str:
         """
@@ -285,9 +286,9 @@ class WilsonServer():
         with Catalogue(os.path.join(self.dir, name), "w") as cat:
             for p in projects:
                 cat.saveProject(p)
-        return self.url + f"?cat={name}"
+        return self.url + f"?cat={urllib.parse.quote(name)}"
     
-    def displayProject(self, project: Project, name: Optional[str] = None, *, width:int=1280, height:int=720):
+    def displayProject(self, project: Project, name: Optional[str] = None, *, width:int=985, height:int=600):
         """
         Adds the given project to the server under the given name and returns an
         IFrame to be displayed inside notebooks showing the given project.
@@ -314,7 +315,7 @@ class WilsonServer():
         url = self.addProject(project, name)
         return IFrame(url, f"{width}px", f"{height}px")
 
-    def displayCatalogue(self, projects: Iterable[Project], name: str, *, width:int=1280, height:int=720):
+    def displayCatalogue(self, projects: Iterable[Project], name: str, *, width:int=985, height:int=600):
         """
         Bundles a list of projects into a catalogue and adds it to the server
         under the given name. Returns an IFrame to be displayed inside notebooks
