@@ -52,7 +52,7 @@ const searchQuery = ref("");
 const tabIcons = [
     { icon: "cube-icon",       title: "Objects",  id: 0, tab: ObjectExplorer },
     { icon: "curve-icon",      title: "Paths",    id: 1, tab: PathExplorer },
-    { icon: "swatchbook-icon", title: "Colormap", id: 2, tab: ColorMapControl},
+    { icon: "swatchbook-icon", title: "Colormap", id: 2, tab: ColorMapControl },
     { icon: "wrench-icon",     title: "Settings", id: 3, tab: SettingsTab },
     { icon: "info-icon",       title: "Info",     id: 4, tab: InfoTab }
 ];
