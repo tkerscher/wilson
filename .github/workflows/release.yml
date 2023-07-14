@@ -1,0 +1,52 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+permissions:
+  contents: write
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Run Install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+      - name: Linting
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+      - name: Build Web App
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      - name: Build Python package
+        run: |
+          cd dist
+          zip -r ../wilson/app.zip *
+          cd -
+          python -m build
+          python -m twine check dist/wilson*
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with: |
+          wilson/app.zip
+          dist/wilson*.whl
+          dist/wilson*.tar.gz
+          LICENSE
