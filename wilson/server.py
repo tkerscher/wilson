@@ -243,11 +243,25 @@ class WilsonServer():
             self._server.shutdown()
             self._thread.join() #just to be safe
     
-    def addProject(self, project: Project, name: str) -> str:
+    def addProject(self, project: Project, name: Optional[str] = None) -> str:
         """
         Adds project to the server under the given name.
         Returns the url under which the project is accessible.
+
+        Parameters
+        ----------
+        project: wilson.Project
+            Project to be added
+        name: Optional[str], default=None
+            Name under which to save the project. Uses the project name if none
+            given.
+        
+        Returns
+        -------
+        URL under which the project can be viewed using the web app.
         """
+        if name is None:
+            name = project.name
         saveProject(project, os.path.join(self.dir, name))
         return self.url + f"?cat={name}"
     
@@ -256,11 +270,76 @@ class WilsonServer():
         Bundles a list of projects into a catalogue and adds it to the server
         under the given name. Returns the url under which the catalogue is
         accessible.
+
+        Parameters
+        ----------
+        projects: Iterable[wilson.Project]
+            Projects to be bundled and added
+        name: str
+            Name under which to save the catalogue
+
+        Returns
+        -------
+        URL under which the catalogue can be viewed using the web app.
         """
         with Catalogue(os.path.join(self.dir, name), "w") as cat:
             for p in projects:
                 cat.saveProject(p)
         return self.url + f"?cat={name}"
+    
+    def displayProject(self, project: Project, name: Optional[str] = None, *, width:int=1280, height:int=720):
+        """
+        Adds the given project to the server under the given name and returns an
+        IFrame to be displayed inside notebooks showing the given project.
+
+        Parameters
+        ----------
+        project: wilson.Project
+            Project to be added
+        name: Optional[str], default=None
+            Name under which to save the project. Uses the project name if none
+            given.
+        width: int, default=800
+            Width of returned IFrame in pixels
+        height: int, default=600
+            Height of returned IFrame in pixels
+        
+        Returns
+        -------
+        IFrame of given size pointing to the corresponding server address.
+        Note that it can only be displayed inside notebooks.
+        """
+        from IPython.display import IFrame
+
+        url = self.addProject(project, name)
+        return IFrame(url, f"{width}px", f"{height}px")
+
+    def displayCatalogue(self, projects: Iterable[Project], name: str, *, width:int=1280, height:int=720):
+        """
+        Bundles a list of projects into a catalogue and adds it to the server
+        under the given name. Returns an IFrame to be displayed inside notebooks
+        showing the given catalogue.
+        
+        Parameters
+        ----------
+        projects: Iterable[wilson.Project]
+            Projects to be bundled and added
+        name: str
+            Name under which to save the catalogue
+        width: int, default=800
+            Width of returned IFrame in pixels
+        height: int, default=600
+            Height of returned IFrame in pixels
+        
+        Returns
+        -------
+        IFrame of given size pointing to the corresponding server address.
+        Note that it can only be displayed inside notebooks.
+        """
+        from IPython.display import IFrame
+
+        url = self.addCatalogue(projects, name)
+        return IFrame(url, f"{width}px", f"{height}px")
     
     @property
     def dir(self) -> str:
