@@ -25,6 +25,8 @@ dependencies = [
     "protobuf>=3.20.1"
 ]
 
+[project.urls]
+Home = "https://github.com/tkerscher/wilson"
 
 [project.scripts]
 wilson = "wilson.server:cli_main"
