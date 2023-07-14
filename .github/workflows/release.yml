@@ -45,8 +45,9 @@ jobs:
           python -m twine check dist/wilson*
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        with: |
-          wilson/app.zip
-          dist/wilson*.whl
-          dist/wilson*.tar.gz
-          LICENSE
+        with:
+          files: |
+            wilson/app.zip
+            dist/wilson*.whl
+            dist/wilson*.tar.gz
+            LICENSE
