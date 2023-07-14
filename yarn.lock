@@ -12,25 +12,25 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.22.5.tgz#721fd042f3ce1896238cf1b341c77eb7dee7dbea"
   integrity sha512-DFZMC9LJUG9PLOclRC32G63UXwzqS2koQC8dkx+PLdmt1xSePYpbT/NbsrJy8Q/muXz7o/h/d4A7Fuyixm559Q==
 
-"@babylonjs/core@^6.11.2":
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.11.2.tgz#020b417c421dd0de49b667bb569bb4a8db76e4f1"
-  integrity sha512-lzPrUR2eT51AjDzTZPAEIc+4nnranR74UiaoTx4nEdIcIsH6qsoBmVgngvBBpwgtWw+8oBTo9zwWGa+I4daiNw==
+"@babylonjs/core@^6.12.1":
+  version "6.12.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.12.1.tgz#f6d197a3c5968c6bf9e9661d0defe5d4d4329ce4"
+  integrity sha512-8Rtrz8rki7UKqhYrGrYLtPs8txJmkMONJgbGL7JfqyYwaMBjAGGSHoAJmlseINir1lEDX9HNalT7SklUq6FAkg==
 
-"@babylonjs/gui@^6.11.2":
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-6.11.2.tgz#06ca2a5f8c8ccbeef7368604d26804426d8bbee2"
-  integrity sha512-A+5qfONZ6SLz/Q5d9PzjAVxI4ZJBDTssVKmppY94bZ2n3KLui27Ln9m4KJxy75FOyVJALQaGO8wuIthMvkI+3g==
+"@babylonjs/gui@^6.12.1":
+  version "6.12.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/gui/-/gui-6.12.1.tgz#28a5bed4cea14491a8ee256ce1da9bd4a576e924"
+  integrity sha512-BA2cmNIcSRQ/1DriS0HczP1G5OUgZdLBSLRw9f10W6frhbf+EAdh7Qmrz87sfSjC4pQX9Yer6TQT//lVD+eFgQ==
 
-"@babylonjs/loaders@^6.11.2":
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.11.2.tgz#3118ce903f5c9306082f75ef5a2bf47f8851a007"
-  integrity sha512-aOHFoutz2UQ8V8eS+14hNYTGL1fZIT5fL42bt3Yl7S9m8byxrll3CZ2ZcfFRvexG0jFL63FCCIS4mFTzWpxC7Q==
+"@babylonjs/loaders@^6.12.1":
+  version "6.12.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.12.1.tgz#f167012e1be026b31abe328fc2f197983b43c1e3"
+  integrity sha512-srGP0VIgO60raXKTFjCUZmgVuV726MMMb/KsHFxN8G0JEfEwhI6M3dzavd52uv8BdveQZdWlmrG/j1Doj0Qguw==
 
-"@babylonjs/materials@^6.11.2":
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-6.11.2.tgz#ece839ccf589c047034ac0b3f25cc25d13e649fe"
-  integrity sha512-wQ4JaDDY5YyfCPDzK8pUDZcmHdoVNs9r8q4HRX0rnuujW5PciU/7QaTW9UGuGwFetYzDXBXVe6eZNdpiBez1lA==
+"@babylonjs/materials@^6.12.1":
+  version "6.12.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/materials/-/materials-6.12.1.tgz#6506a3cac7bc7c2d39128541bdf622bd4288e0da"
+  integrity sha512-7Ei6ZqXlOPjH3pQHVSJcruCygUiVrWIsXCUVzwJUjAss1coAoGZyurzyc7c2dGJj+HQVmE59oJxhk1f9d6Ft3w==
 
 "@esbuild/android-arm64@0.18.11":
   version "0.18.11"
