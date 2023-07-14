@@ -1,10 +1,12 @@
 {
   "name": "wilson",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "bundlepy": "cd dist && zip -r ../wilson/app.zip * && cd -",
+    "buildpy": "yarn build && yarn bundlepy && python3 -m build && python3 -m twine check",
     "lint": "eslint . --ext .ts,.vue",
     "preview": "vite preview",
     "protoc": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_opt=oneof=unions --ts_proto_opt=useDate=false --ts_proto_out=./src/model --proto_path=./proto ./proto/project.proto",

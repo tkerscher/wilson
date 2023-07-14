@@ -5,13 +5,20 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "wilson"
 description = "Tool to create animation files for Wilson"
-version = "0.3.0"
+version = "0.4.0"
 authors = [
     { name = "Tobias Kerscher", email = "88444139+tkerscher@users.noreply.github.com" }
 ]
 readme = "wilson/README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+]
+keywords = ["3D", "visualization"]
 dependencies = [
     "cmasher",
     "numpy>=1.2.0",
