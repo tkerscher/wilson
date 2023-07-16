@@ -215,7 +215,8 @@ def _serializeColormap(colormap: ColorMap, range: Tuple[float, float]) -> proto.
             stop.color.r, stop.color.g, stop.color.b = c
             stop.color.a = 1.0
         # Force range on last stop
-        stop.value = range[1]
+        if stop is not None:
+            stop.value = range[1]
     else:
         cmaps = np.array(colormap, dtype=np.float64)
         # check dimensions
@@ -234,7 +235,8 @@ def _serializeColormap(colormap: ColorMap, range: Tuple[float, float]) -> proto.
             else:
                 stop.color.a = c[4]
         # Force range on last stop
-        stop.value = range[1]
+        if stop is not None:
+            stop.value = range[1]
     return result
 
 
