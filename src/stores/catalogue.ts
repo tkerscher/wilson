@@ -113,7 +113,7 @@ export const useCatalogue = defineStore("catalogue", () => {
 
     function saveCatalogue() {
         const blob = new Blob([new Uint8Array(data)]);
-        createDownload(blob, "catalogue.cat");
+        createDownload(blob, "catalogue.wlsn");
     }
 
     return {

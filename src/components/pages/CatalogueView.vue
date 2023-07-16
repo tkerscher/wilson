@@ -3,6 +3,7 @@
     <input
       ref="dialog"
       type="file"
+      accept=".wlsn"
       @change="onFileSelected"
     >
     <div
