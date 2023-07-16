@@ -74,7 +74,9 @@ export function createTextureLookupMaterial(
     const material = new ShaderMaterial(name, scene, "textureCmap", {
         attributes: ["position", "normal", "uv"],
         uniforms: ["world", "worldViewProjection", "cameraDirection", "cmapMin", "cmapInvLength"],
-        samplers: ["cmap", "colorTexture"]
+        samplers: ["cmap", "colorTexture"],
+        needAlphaBlending: true,
+        needAlphaTesting: true
     });
 
     //set texture

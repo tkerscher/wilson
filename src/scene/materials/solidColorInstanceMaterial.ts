@@ -72,7 +72,9 @@ export function createSolidColorInstanceMaterial(scene: Scene, cmap: ColorMapCon
         {
             attributes: ["position", "normal", "world0", "world1", "world2", "world3", "instanceColor"],
             uniforms: ["world", "viewProjection", "cameraDirection", "cmapMin", "cmapInvLength"],
-            samplers: ["cmap"]
+            samplers: ["cmap"],
+            needAlphaBlending: true,
+            needAlphaTesting: true
         }
     );
 
