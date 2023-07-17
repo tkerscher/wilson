@@ -47,6 +47,10 @@ export interface SetPathEnabledCommand extends _WorkerCommand {
     enabled: boolean,
     color: string
 }
+export interface setAlphaBlendingEnabledCommand extends _WorkerCommand {
+    type: "setAlphaBlendingEnabled",
+    enabled: boolean
+}
 export interface SetGridEnabledCommand extends _WorkerCommand {
     type: "setGridEnabled",
     enabled: boolean
@@ -147,6 +151,7 @@ export type WorkerCommand =
     SetGridEnabledCommand |
     SetObjectsEnabledCommand |
     SetPathEnabledCommand |
+    setAlphaBlendingEnabledCommand |
     SetSpeedRatioCommand |
     SetThemeCommand |
     ZoomCameraCommand

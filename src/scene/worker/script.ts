@@ -57,6 +57,9 @@ function messageHandler(ev: MessageEvent<WorkerCommand>) {
     case "setPathEnabled":
         controller.setPathEnabled(ev.data.id, ev.data.enabled, ev.data.color);
         break;
+    case "setAlphaBlendingEnabled":
+        controller.setAlphaBlendingEnabled(ev.data.enabled);
+        break;
     case "pointerDown":
         controller.simulatePointerDown(ev.data.x, ev.data.y);
         break;

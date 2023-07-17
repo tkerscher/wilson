@@ -188,6 +188,12 @@ export interface SceneController {
      * @param theme Theme to apply
      */
     setTheme(theme: Theme): void
+    /**
+     * Enabled or disables alpha blending. Might improve render speed if
+     * disabled.
+     * @param enabled True, if alpha blending should be enabled
+     */
+    setAlphaBlendingEnabled(enabled: boolean): void
 
     /********************************* Colormap *******************************/
 

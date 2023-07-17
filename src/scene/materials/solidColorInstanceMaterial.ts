@@ -77,6 +77,7 @@ export function createSolidColorInstanceMaterial(scene: Scene, cmap: ColorMapCon
             needAlphaTesting: true
         }
     );
+    material.needDepthPrePass = true;
 
     //hook up cmap
     material.setTexture("cmap", cmap.texture);

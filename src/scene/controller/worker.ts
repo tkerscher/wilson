@@ -173,6 +173,12 @@ export class WorkerController implements SceneController {
             color: color
         });
     }
+    setAlphaBlendingEnabled(enabled: boolean): void {
+        this.#sendCommand({
+            type: "setAlphaBlendingEnabled",
+            enabled: enabled
+        });
+    }
     registerOnObjectPicked(callback: (objectId: number|null) => void): void {
         this.#onObjectPickedCallbacks.push(callback);
     }

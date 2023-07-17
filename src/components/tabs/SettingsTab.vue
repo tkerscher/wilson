@@ -27,15 +27,17 @@
 </template>
 
 <script setup lang="ts">
+import Alpha from "../settings/AlphaSettings.vue";
 import Recorder from "../settings/RecorderSettings.vue";
 import Resolution from "../settings/ResolutionSettings.vue";
 import Stage from "../settings/StageSettings.vue";
 import { ref } from "vue";
 
 const groups = [
-    { name: "Resolution", id: 0, content: Resolution, expanded: ref(false) },
-    { name: "Recording",  id: 1, content: Recorder, expanded: ref(false) },
-    { name: "Stage",      id: 2, content: Stage, expanded: ref(false) }
+    { name: "Resolution",     id: 0, content: Resolution, expanded: ref(false) },
+    { name: "Alpha Blending", id: 1, content: Alpha, expanded: ref(false) },
+    { name: "Recording",      id: 2, content: Recorder, expanded: ref(false) },
+    { name: "Stage",          id: 3, content: Stage, expanded: ref(false) }
 ];
 </script>
 

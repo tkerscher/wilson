@@ -36,6 +36,11 @@ export type CommandMessages = {
     SetPathEnabled: { id: number, enabled: boolean, color: string }
 
     /**
+     * Enabled or disabled the alpha blending to improve performance.
+     */
+    SetAlphaBlendingEnabled: boolean
+
+    /**
      * Loads the stage from the given url.
      */
     SetStage: string
@@ -110,6 +115,15 @@ export class SceneCommander {
             enabled: enabled,
             color: color
         });
+    }
+
+    /**
+     * Enabled or disables alpha blending. Might improve render speed if
+     * disabled.
+     * @param enabled True, if alpha blending should be enabled
+     */
+    static SetAlphaBlendingEnabled(enabled: boolean) {
+        SceneCommandBus.emit("SetAlphaBlendingEnabled", enabled);
     }
 
     /**

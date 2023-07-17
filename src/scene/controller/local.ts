@@ -4,8 +4,10 @@ import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Axis } from "@babylonjs/core/Maths/math.axis";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Engine } from "@babylonjs/core/Engines/engine";
+import { GridMaterial } from "@babylonjs/materials/grid/gridMaterial";
 import { PointerEventTypes, PointerInfoPre } from "@babylonjs/core/Events/pointerEvents";
 import { PointerInput } from "@babylonjs/core/DeviceInput/InputDevices/deviceEnums";
+import { ShaderMaterial } from "@babylonjs/core/Materials/shaderMaterial";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 import { buildScene, SceneContainer } from "../build";
@@ -204,6 +206,22 @@ export class LocalController implements SceneController {
 
     registerOnObjectPicked(callback: (objectId: number|null) => void): void {
         this.#onObjectPickedCallbacks.push(callback);
+    }
+
+    setAlphaBlendingEnabled(enabled: boolean): void {
+        if (!this.#container)
+            return;
+
+        // iterate over the scenes material and update
+        for (const mat of this.#container.scene.materials) {
+            //we always need transparency for the grid material -> skip
+            if (mat instanceof GridMaterial)
+                continue;
+
+            mat.alphaMode = enabled ? Engine.ALPHA_COMBINE : Engine.ALPHA_DISABLE;
+            if (mat instanceof ShaderMaterial)
+                mat.needDepthPrePass = enabled;
+        }
     }
 
     /****************************** User Input ********************************/

@@ -12,6 +12,7 @@ export class ControllerAdapter {
     #targetObject: (id: number) => void;
     #setObjectsEnabled: (e: {objectIds: number[]|null, enabled: boolean}) => void;
     #setPathEnabled: (e: {id: number, enabled: boolean, color: string}) => void;
+    #setAlphaEnabled: (e: boolean) => void;
     #setStage: (url: string) => void;
     #removeStage: () => void;
     #setTheme: (theme: Theme) => void;
@@ -29,6 +30,7 @@ export class ControllerAdapter {
             controller.setObjectsEnabled(e.objectIds, e.enabled);
         this.#setPathEnabled = (e: {id: number, enabled: boolean, color: string}) =>
             controller.setPathEnabled(e.id, e.enabled, e.color);
+        this.#setAlphaEnabled = (e: boolean) => controller.setAlphaBlendingEnabled(e);
         this.#setStage = (url: string) => controller.loadStage(url);
         this.#removeStage = () => controller.removeStage();
         this.#setTheme = (theme: Theme) => controller.setTheme(theme);
@@ -43,6 +45,7 @@ export class ControllerAdapter {
         SceneCommandBus.on("TargetObject", this.#targetObject);
         SceneCommandBus.on("SetObjectsEnabled", this.#setObjectsEnabled);
         SceneCommandBus.on("SetPathEnabled", this.#setPathEnabled);
+        SceneCommandBus.on("SetAlphaBlendingEnabled", this.#setAlphaEnabled);
         SceneCommandBus.on("SetStage", this.#setStage);
         SceneCommandBus.on("RemoveStage", this.#removeStage);
         SceneCommandBus.on("SetTheme", this.#setTheme);
@@ -63,6 +66,7 @@ export class ControllerAdapter {
         SceneCommandBus.off("TargetObject", this.#targetObject);
         SceneCommandBus.off("SetObjectsEnabled", this.#setObjectsEnabled);
         SceneCommandBus.off("SetPathEnabled", this.#setPathEnabled);
+        SceneCommandBus.off("SetAlphaBlendingEnabled", this.#setAlphaEnabled);
         SceneCommandBus.off("SetStage", this.#setStage);
         SceneCommandBus.off("RemoveStage", this.#removeStage);
         SceneCommandBus.off("SetTheme", this.#setTheme);

@@ -78,6 +78,7 @@ export function createTextureLookupMaterial(
         needAlphaBlending: true,
         needAlphaTesting: true
     });
+    material.needDepthPrePass = true;
 
     //set texture
     material.setTexture("colorTexture", texture);
