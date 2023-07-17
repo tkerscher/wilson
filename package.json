@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@babylonjs/core": "^6.12.1",
-    "@babylonjs/gui": "^6.12.1",
+    "@babylonjs/gui": "^6.12.3",
     "@babylonjs/loaders": "^6.12.1",
     "@babylonjs/materials": "^6.12.1",
     "jszip": "^3.10.1",
