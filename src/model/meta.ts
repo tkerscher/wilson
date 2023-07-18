@@ -133,13 +133,27 @@ export const ProjectMeta = {
 
   toJSON(message: ProjectMeta): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.author !== undefined && (obj.author = message.author);
-    message.date !== undefined && (obj.date = fromTimestamp(message.date).toISOString());
-    message.startTime !== undefined && (obj.startTime = message.startTime);
-    message.endTime !== undefined && (obj.endTime = message.endTime);
-    message.speedRatio !== undefined && (obj.speedRatio = message.speedRatio);
-    message.description !== undefined && (obj.description = message.description);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.author !== "") {
+      obj.author = message.author;
+    }
+    if (message.date !== undefined) {
+      obj.date = fromTimestamp(message.date).toISOString();
+    }
+    if (message.startTime !== 0) {
+      obj.startTime = message.startTime;
+    }
+    if (message.endTime !== 0) {
+      obj.endTime = message.endTime;
+    }
+    if (message.speedRatio !== 0) {
+      obj.speedRatio = message.speedRatio;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
     return obj;
   },
 

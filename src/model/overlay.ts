@@ -188,12 +188,21 @@ export const Overlay = {
 
   toJSON(message: Overlay): unknown {
     const obj: any = {};
-    message.text !== undefined && (obj.text = message.text);
-    message.position !== undefined && (obj.position = textPositionToJSON(message.position));
-    message.fontSize !== undefined &&
-      (obj.fontSize = message.fontSize ? ScalarProperty.toJSON(message.fontSize) : undefined);
-    message.bold !== undefined && (obj.bold = message.bold);
-    message.italic !== undefined && (obj.italic = message.italic);
+    if (message.text !== "") {
+      obj.text = message.text;
+    }
+    if (message.position !== 0) {
+      obj.position = textPositionToJSON(message.position);
+    }
+    if (message.fontSize !== undefined) {
+      obj.fontSize = ScalarProperty.toJSON(message.fontSize);
+    }
+    if (message.bold === true) {
+      obj.bold = message.bold;
+    }
+    if (message.italic === true) {
+      obj.italic = message.italic;
+    }
     return obj;
   },
 

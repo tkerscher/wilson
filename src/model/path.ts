@@ -101,14 +101,18 @@ export const Path = {
 
   toJSON(message: Path): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    if (message.points) {
-      obj.points = message.points.map((e) => e ? Path_Point.toJSON(e) : undefined);
-    } else {
-      obj.points = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.points?.length) {
+      obj.points = message.points.map((e) => Path_Point.toJSON(e));
+    }
+    if (message.interpolation !== 0) {
+      obj.interpolation = interpolationToJSON(message.interpolation);
+    }
     return obj;
   },
 
@@ -180,8 +184,12 @@ export const Path_Point = {
 
   toJSON(message: Path_Point): unknown {
     const obj: any = {};
-    message.time !== undefined && (obj.time = message.time);
-    message.position !== undefined && (obj.position = message.position ? Vector.toJSON(message.position) : undefined);
+    if (message.time !== 0) {
+      obj.time = message.time;
+    }
+    if (message.position !== undefined) {
+      obj.position = Vector.toJSON(message.position);
+    }
     return obj;
   },
 

@@ -83,10 +83,15 @@ export const Sphere = {
 
   toJSON(message: Sphere): unknown {
     const obj: any = {};
-    message.position !== undefined &&
-      (obj.position = message.position ? VectorProperty.toJSON(message.position) : undefined);
-    message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
+    if (message.position !== undefined) {
+      obj.position = VectorProperty.toJSON(message.position);
+    }
+    if (message.radius !== undefined) {
+      obj.radius = ScalarProperty.toJSON(message.radius);
+    }
+    if (message.color !== undefined) {
+      obj.color = ColorProperty.toJSON(message.color);
+    }
     return obj;
   },
 

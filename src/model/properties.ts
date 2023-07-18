@@ -7,12 +7,12 @@ export const protobufPackage = "wilson";
 
 /** Animatible scalar property */
 export interface ScalarProperty {
-  source?: { $case: "constValue"; constValue: number } | { $case: "graphId"; graphId: number };
+  source?: { $case: "constValue"; constValue: number } | { $case: "graphId"; graphId: number } | undefined;
 }
 
 /** Animatible vector property */
 export interface VectorProperty {
-  source?: { $case: "constValue"; constValue: Vector } | { $case: "pathId"; pathId: number };
+  source?: { $case: "constValue"; constValue: Vector } | { $case: "pathId"; pathId: number } | undefined;
 }
 
 /** Animatible color property */
@@ -20,7 +20,7 @@ export interface ColorProperty {
   source?: { $case: "constValue"; constValue: Color } | { $case: "graphId"; graphId: number } | {
     $case: "scalarValue";
     scalarValue: number;
-  };
+  } | undefined;
 }
 
 function createBaseScalarProperty(): ScalarProperty {
@@ -82,8 +82,12 @@ export const ScalarProperty = {
 
   toJSON(message: ScalarProperty): unknown {
     const obj: any = {};
-    message.source?.$case === "constValue" && (obj.constValue = message.source?.constValue);
-    message.source?.$case === "graphId" && (obj.graphId = Math.round(message.source?.graphId));
+    if (message.source?.$case === "constValue") {
+      obj.constValue = message.source.constValue;
+    }
+    if (message.source?.$case === "graphId") {
+      obj.graphId = Math.round(message.source.graphId);
+    }
     return obj;
   },
 
@@ -166,9 +170,12 @@ export const VectorProperty = {
 
   toJSON(message: VectorProperty): unknown {
     const obj: any = {};
-    message.source?.$case === "constValue" &&
-      (obj.constValue = message.source?.constValue ? Vector.toJSON(message.source?.constValue) : undefined);
-    message.source?.$case === "pathId" && (obj.pathId = Math.round(message.source?.pathId));
+    if (message.source?.$case === "constValue") {
+      obj.constValue = Vector.toJSON(message.source.constValue);
+    }
+    if (message.source?.$case === "pathId") {
+      obj.pathId = Math.round(message.source.pathId);
+    }
     return obj;
   },
 
@@ -263,10 +270,15 @@ export const ColorProperty = {
 
   toJSON(message: ColorProperty): unknown {
     const obj: any = {};
-    message.source?.$case === "constValue" &&
-      (obj.constValue = message.source?.constValue ? Color.toJSON(message.source?.constValue) : undefined);
-    message.source?.$case === "graphId" && (obj.graphId = Math.round(message.source?.graphId));
-    message.source?.$case === "scalarValue" && (obj.scalarValue = message.source?.scalarValue);
+    if (message.source?.$case === "constValue") {
+      obj.constValue = Color.toJSON(message.source.constValue);
+    }
+    if (message.source?.$case === "graphId") {
+      obj.graphId = Math.round(message.source.graphId);
+    }
+    if (message.source?.$case === "scalarValue") {
+      obj.scalarValue = message.source.scalarValue;
+    }
     return obj;
   },
 

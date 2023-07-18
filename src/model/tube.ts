@@ -97,10 +97,18 @@ export const Tube = {
 
   toJSON(message: Tube): unknown {
     const obj: any = {};
-    message.pathId !== undefined && (obj.pathId = Math.round(message.pathId));
-    message.isGrowing !== undefined && (obj.isGrowing = message.isGrowing);
-    message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
+    if (message.pathId !== 0) {
+      obj.pathId = Math.round(message.pathId);
+    }
+    if (message.isGrowing === true) {
+      obj.isGrowing = message.isGrowing;
+    }
+    if (message.radius !== undefined) {
+      obj.radius = ScalarProperty.toJSON(message.radius);
+    }
+    if (message.color !== undefined) {
+      obj.color = ColorProperty.toJSON(message.color);
+    }
     return obj;
   },
 

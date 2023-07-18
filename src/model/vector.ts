@@ -78,9 +78,15 @@ export const Vector = {
 
   toJSON(message: Vector): unknown {
     const obj: any = {};
-    message.x !== undefined && (obj.x = message.x);
-    message.y !== undefined && (obj.y = message.y);
-    message.z !== undefined && (obj.z = message.z);
+    if (message.x !== 0) {
+      obj.x = message.x;
+    }
+    if (message.y !== 0) {
+      obj.y = message.y;
+    }
+    if (message.z !== 0) {
+      obj.z = message.z;
+    }
     return obj;
   },
 

@@ -91,10 +91,18 @@ export const Color = {
 
   toJSON(message: Color): unknown {
     const obj: any = {};
-    message.r !== undefined && (obj.r = message.r);
-    message.g !== undefined && (obj.g = message.g);
-    message.b !== undefined && (obj.b = message.b);
-    message.a !== undefined && (obj.a = message.a);
+    if (message.r !== 0) {
+      obj.r = message.r;
+    }
+    if (message.g !== 0) {
+      obj.g = message.g;
+    }
+    if (message.b !== 0) {
+      obj.b = message.b;
+    }
+    if (message.a !== 0) {
+      obj.a = message.a;
+    }
     return obj;
   },
 

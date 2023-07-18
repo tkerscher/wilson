@@ -16,10 +16,13 @@ export interface Animatible {
   groups: string[];
   /** Additional text shown when selected */
   description: string;
-  instance?: { $case: "sphere"; sphere: Sphere } | { $case: "line"; line: Line } | { $case: "tube"; tube: Tube } | {
-    $case: "overlay";
-    overlay: Overlay;
-  } | { $case: "prism"; prism: Prism };
+  instance?:
+    | { $case: "sphere"; sphere: Sphere }
+    | { $case: "line"; line: Line }
+    | { $case: "tube"; tube: Tube }
+    | { $case: "overlay"; overlay: Overlay }
+    | { $case: "prism"; prism: Prism }
+    | undefined;
 }
 
 function createBaseAnimatible(): Animatible {
@@ -150,23 +153,30 @@ export const Animatible = {
 
   toJSON(message: Animatible): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
-    } else {
-      obj.groups = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.description !== undefined && (obj.description = message.description);
-    message.instance?.$case === "sphere" &&
-      (obj.sphere = message.instance?.sphere ? Sphere.toJSON(message.instance?.sphere) : undefined);
-    message.instance?.$case === "line" &&
-      (obj.line = message.instance?.line ? Line.toJSON(message.instance?.line) : undefined);
-    message.instance?.$case === "tube" &&
-      (obj.tube = message.instance?.tube ? Tube.toJSON(message.instance?.tube) : undefined);
-    message.instance?.$case === "overlay" &&
-      (obj.overlay = message.instance?.overlay ? Overlay.toJSON(message.instance?.overlay) : undefined);
-    message.instance?.$case === "prism" &&
-      (obj.prism = message.instance?.prism ? Prism.toJSON(message.instance?.prism) : undefined);
+    if (message.groups?.length) {
+      obj.groups = message.groups;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.instance?.$case === "sphere") {
+      obj.sphere = Sphere.toJSON(message.instance.sphere);
+    }
+    if (message.instance?.$case === "line") {
+      obj.line = Line.toJSON(message.instance.line);
+    }
+    if (message.instance?.$case === "tube") {
+      obj.tube = Tube.toJSON(message.instance.tube);
+    }
+    if (message.instance?.$case === "overlay") {
+      obj.overlay = Overlay.toJSON(message.instance.overlay);
+    }
+    if (message.instance?.$case === "prism") {
+      obj.prism = Prism.toJSON(message.instance.prism);
+    }
     return obj;
   },
 

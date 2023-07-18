@@ -100,14 +100,18 @@ export const Graph = {
 
   toJSON(message: Graph): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    if (message.points) {
-      obj.points = message.points.map((e) => e ? Graph_Point.toJSON(e) : undefined);
-    } else {
-      obj.points = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.interpolation !== undefined && (obj.interpolation = interpolationToJSON(message.interpolation));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.points?.length) {
+      obj.points = message.points.map((e) => Graph_Point.toJSON(e));
+    }
+    if (message.interpolation !== 0) {
+      obj.interpolation = interpolationToJSON(message.interpolation);
+    }
     return obj;
   },
 
@@ -179,8 +183,12 @@ export const Graph_Point = {
 
   toJSON(message: Graph_Point): unknown {
     const obj: any = {};
-    message.time !== undefined && (obj.time = message.time);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.time !== 0) {
+      obj.time = message.time;
+    }
+    if (message.value !== 0) {
+      obj.value = message.value;
+    }
     return obj;
   },
 

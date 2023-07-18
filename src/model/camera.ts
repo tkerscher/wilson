@@ -68,8 +68,12 @@ export const Camera = {
 
   toJSON(message: Camera): unknown {
     const obj: any = {};
-    message.position !== undefined && (obj.position = message.position ? Vector.toJSON(message.position) : undefined);
-    message.target !== undefined && (obj.target = message.target ? Vector.toJSON(message.target) : undefined);
+    if (message.position !== undefined) {
+      obj.position = Vector.toJSON(message.position);
+    }
+    if (message.target !== undefined) {
+      obj.target = Vector.toJSON(message.target);
+    }
     return obj;
   },
 

@@ -9,7 +9,7 @@ export const protobufPackage = "wilson";
  * A prism is an extruded regular polygon
  */
 export interface Prism {
-  /** Position at bottom polygon's center */
+  /** Position at center */
   position:
     | VectorProperty
     | undefined;
@@ -152,15 +152,27 @@ export const Prism = {
 
   toJSON(message: Prism): unknown {
     const obj: any = {};
-    message.position !== undefined &&
-      (obj.position = message.position ? VectorProperty.toJSON(message.position) : undefined);
-    message.normal !== undefined && (obj.normal = message.normal ? VectorProperty.toJSON(message.normal) : undefined);
-    message.rotation !== undefined &&
-      (obj.rotation = message.rotation ? ScalarProperty.toJSON(message.rotation) : undefined);
-    message.radius !== undefined && (obj.radius = message.radius ? ScalarProperty.toJSON(message.radius) : undefined);
-    message.height !== undefined && (obj.height = message.height ? ScalarProperty.toJSON(message.height) : undefined);
-    message.nVertices !== undefined && (obj.nVertices = Math.round(message.nVertices));
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
+    if (message.position !== undefined) {
+      obj.position = VectorProperty.toJSON(message.position);
+    }
+    if (message.normal !== undefined) {
+      obj.normal = VectorProperty.toJSON(message.normal);
+    }
+    if (message.rotation !== undefined) {
+      obj.rotation = ScalarProperty.toJSON(message.rotation);
+    }
+    if (message.radius !== undefined) {
+      obj.radius = ScalarProperty.toJSON(message.radius);
+    }
+    if (message.height !== undefined) {
+      obj.height = ScalarProperty.toJSON(message.height);
+    }
+    if (message.nVertices !== 0) {
+      obj.nVertices = Math.round(message.nVertices);
+    }
+    if (message.color !== undefined) {
+      obj.color = ColorProperty.toJSON(message.color);
+    }
     return obj;
   },
 

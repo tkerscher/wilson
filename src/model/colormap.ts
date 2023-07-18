@@ -59,10 +59,8 @@ export const ColorMap = {
 
   toJSON(message: ColorMap): unknown {
     const obj: any = {};
-    if (message.stops) {
-      obj.stops = message.stops.map((e) => e ? ColorMap_Stop.toJSON(e) : undefined);
-    } else {
-      obj.stops = [];
+    if (message.stops?.length) {
+      obj.stops = message.stops.map((e) => ColorMap_Stop.toJSON(e));
     }
     return obj;
   },
@@ -132,8 +130,12 @@ export const ColorMap_Stop = {
 
   toJSON(message: ColorMap_Stop): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    message.color !== undefined && (obj.color = message.color ? Color.toJSON(message.color) : undefined);
+    if (message.value !== 0) {
+      obj.value = message.value;
+    }
+    if (message.color !== undefined) {
+      obj.color = Color.toJSON(message.color);
+    }
     return obj;
   },
 

@@ -150,28 +150,26 @@ export const Project = {
 
   toJSON(message: Project): unknown {
     const obj: any = {};
-    message.meta !== undefined && (obj.meta = message.meta ? ProjectMeta.toJSON(message.meta) : undefined);
-    if (message.graphs) {
-      obj.graphs = message.graphs.map((e) => e ? Graph.toJSON(e) : undefined);
-    } else {
-      obj.graphs = [];
+    if (message.meta !== undefined) {
+      obj.meta = ProjectMeta.toJSON(message.meta);
     }
-    if (message.paths) {
-      obj.paths = message.paths.map((e) => e ? Path.toJSON(e) : undefined);
-    } else {
-      obj.paths = [];
+    if (message.graphs?.length) {
+      obj.graphs = message.graphs.map((e) => Graph.toJSON(e));
     }
-    message.colormap !== undefined && (obj.colormap = message.colormap ? ColorMap.toJSON(message.colormap) : undefined);
-    message.camera !== undefined && (obj.camera = message.camera ? Camera.toJSON(message.camera) : undefined);
-    if (message.hiddenGroups) {
-      obj.hiddenGroups = message.hiddenGroups.map((e) => e);
-    } else {
-      obj.hiddenGroups = [];
+    if (message.paths?.length) {
+      obj.paths = message.paths.map((e) => Path.toJSON(e));
     }
-    if (message.animatibles) {
-      obj.animatibles = message.animatibles.map((e) => e ? Animatible.toJSON(e) : undefined);
-    } else {
-      obj.animatibles = [];
+    if (message.colormap !== undefined) {
+      obj.colormap = ColorMap.toJSON(message.colormap);
+    }
+    if (message.camera !== undefined) {
+      obj.camera = Camera.toJSON(message.camera);
+    }
+    if (message.hiddenGroups?.length) {
+      obj.hiddenGroups = message.hiddenGroups;
+    }
+    if (message.animatibles?.length) {
+      obj.animatibles = message.animatibles.map((e) => Animatible.toJSON(e));
     }
     return obj;
   },

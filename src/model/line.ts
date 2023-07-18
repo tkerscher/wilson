@@ -133,13 +133,24 @@ export const Line = {
 
   toJSON(message: Line): unknown {
     const obj: any = {};
-    message.start !== undefined && (obj.start = message.start ? VectorProperty.toJSON(message.start) : undefined);
-    message.end !== undefined && (obj.end = message.end ? VectorProperty.toJSON(message.end) : undefined);
-    message.lineWidth !== undefined &&
-      (obj.lineWidth = message.lineWidth ? ScalarProperty.toJSON(message.lineWidth) : undefined);
-    message.color !== undefined && (obj.color = message.color ? ColorProperty.toJSON(message.color) : undefined);
-    message.pointForward !== undefined && (obj.pointForward = message.pointForward);
-    message.pointBackward !== undefined && (obj.pointBackward = message.pointBackward);
+    if (message.start !== undefined) {
+      obj.start = VectorProperty.toJSON(message.start);
+    }
+    if (message.end !== undefined) {
+      obj.end = VectorProperty.toJSON(message.end);
+    }
+    if (message.lineWidth !== undefined) {
+      obj.lineWidth = ScalarProperty.toJSON(message.lineWidth);
+    }
+    if (message.color !== undefined) {
+      obj.color = ColorProperty.toJSON(message.color);
+    }
+    if (message.pointForward === true) {
+      obj.pointForward = message.pointForward;
+    }
+    if (message.pointBackward === true) {
+      obj.pointBackward = message.pointBackward;
+    }
     return obj;
   },
 
