@@ -16,12 +16,12 @@ export class ScenePointerProxy {
         //create functions
         this.#onPointerDown = e => {
             //filter left clicks with no modifier buttons
-            if (e.button == 0 && e.buttons == 1 && !e.altKey && !e.ctrlKey && !e.shiftKey)
+            if (e.button == 0 && !e.altKey && !e.ctrlKey && !e.shiftKey)
                 scene.simulatePointerDown(e.offsetX, e.offsetY);
         };
         this.#onPointerUp = e => {
-            //filter no modifier buttons
-            if (!e.altKey && !e.ctrlKey && !e.shiftKey)
+            //filter left clicks with no modifier buttons
+            if (e.button == 0 && !e.altKey && !e.ctrlKey && !e.shiftKey)
                 scene.simulatePointerUp(e.offsetX, e.offsetY);
         };
         this.#onPointerMove = e => {
