@@ -69,8 +69,7 @@ async function updateCanvas() {
         return;
     ctx.transferFromImageBitmap(bitmap);
 }
-project.$subscribe(updateCanvas);
-onMounted(() => {
+function parseProject() {
     const cmap = project.colormap;
     if (!cmap || cmap.stops.length <= 1) {
         //min max cant be equal, otherwise the shader crashes
@@ -82,7 +81,9 @@ onMounted(() => {
         maxValue.value = cmap.stops[cmap.stops.length - 1].value;
     }
     updateCanvas();
-});
+}
+project.$subscribe(parseProject);
+onMounted(parseProject);
 </script>
 
 <style scoped>
