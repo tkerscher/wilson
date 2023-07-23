@@ -15,10 +15,10 @@
     "black": "black wilson"
   },
   "dependencies": {
-    "@babylonjs/core": "^6.12.3",
-    "@babylonjs/gui": "^6.12.3",
-    "@babylonjs/loaders": "^6.12.3",
-    "@babylonjs/materials": "^6.12.3",
+    "@babylonjs/core": "^6.13.0",
+    "@babylonjs/gui": "^6.13.0",
+    "@babylonjs/loaders": "^6.13.0",
+    "@babylonjs/materials": "^6.13.0",
     "jszip": "^3.10.1",
     "mitt": "^3.0.1",
     "pinia": "^2.1.4",
@@ -39,7 +39,7 @@
     "eslint-plugin-vue": "^9.15.1",
     "ts-proto": "^1.155.1",
     "typescript": "^5.1.6",
-    "vite": "^4.4.4",
-    "vue-tsc": "^1.8.5"
+    "vite": "^4.4.6",
+    "vue-tsc": "^1.8.6"
   }
 }
