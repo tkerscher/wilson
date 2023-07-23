@@ -7,42 +7,63 @@ Wilson is a 3D visualization tool aimed for (astro) particle physics. It
 provides a python package for creating event files / catalogues and a static web
 based app for viewing them in your browser written using TypeScript.
 
-[Live Demo](https://tkerscher.github.io/wilson?cat=tutorial)
-
-[Documentation](https://tkerscher.github.io/wilson/docs/)
-
-GitHub has a quota, so please don't use the demo productively. Otherwise I might
-have to remove it.
-
 ## Installation
 
-### Python Package
+### Install Python Package
 
-From the root directory of the repository run:
+The Python package is hosted on [PyPI](https://pypi.org/) and can simply be
+installed using `pip`:
 
 ```bash
-pip install .
+pip install wilson3d
 ```
 
-### Deploy Web App
+Note that it is `wilson3d` not `wilson`.
+
+### Install Web App
 
 For deployment, it's enough to just copy the build files onto your server. Since
 it's a static app, a simple file serving is enough.
 
-If you want to locally run the app, you must run a local http server. Python
-already provides one:
+You can also run the app locally if you have installed the Python package using
+a command line:
 
 ```bash
-python -m http.server -d {path to wilson}
+wilson
+```
+
+You can also pass a file or directory to serve. If you pass a file a new tab in
+your browser should open showing the file:
+
+```bash
+wilson event.wlsn
 ```
 
 ## Building
 
-### Python
+### Build Python Package
 
-For Python see [Installation: Python](#python-package)
+For building the python package a npm script is provided.
+On Linux using yarn you can simply run
 
-### Web App
+```bash
+yarn buildpy
+```
+
+This handles several steps:
+
+1. Builds the web app, as it is used within the Python package
+2. Bundles the web app into `app.zip` stored in the package root source directory
+3. Runs `python3 -m build`
+4. Checks the build via `python3 -m twine check dist/wilson*`
+
+After building finished, you can install it via
+
+```bash
+pip install dist/wilson*.whl
+```
+
+### Build Web App
 
 1. Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install/).
 It will handle all further steps for you through its CLI.
@@ -50,7 +71,7 @@ It will handle all further steps for you through its CLI.
 3. Issue the build command via `yarn build`
 4. The build files are now in the `dist` subdirectory.
 
-### Documentation
+### Build Documentation
 
 The documentation is generated via [Sphinx](https://www.sphinx-doc.org/en/master/).
 To install the necessary dependencies you can simply run:
