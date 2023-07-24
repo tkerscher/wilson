@@ -1183,6 +1183,11 @@ long@^5.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-5.2.0.tgz#2696dadf4b4da2ce3f6f6b89186085d94d52fd61"
   integrity sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==
 
+long@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
+  integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
+
 lru-cache@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
@@ -1558,23 +1563,23 @@ ts-poet@^6.5.0:
   dependencies:
     dprint-node "^1.0.7"
 
-ts-proto-descriptors@1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/ts-proto-descriptors/-/ts-proto-descriptors-1.14.0.tgz#bf95cfd815049763524185cec49b2557ca40faa7"
-  integrity sha512-xqLA6cBTfof+mZ/sIw/pZviyhnWWcWqRBjyjaMW5O4fIogpawT4aa0wI8rKh0rYIrQzoHxLugmFu4+rdiWaGEQ==
+ts-proto-descriptors@1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/ts-proto-descriptors/-/ts-proto-descriptors-1.15.0.tgz#e859e3a2887da2d954c552524719b80bdb6ee355"
+  integrity sha512-TYyJ7+H+7Jsqawdv+mfsEpZPTIj9siDHS6EMCzG/z3b/PZiphsX+mWtqFfFVe5/N0Th6V3elK9lQqjnrgTOfrg==
   dependencies:
-    long "^5.0.0"
+    long "^5.2.3"
     protobufjs "^7.2.4"
 
-ts-proto@^1.155.1:
-  version "1.155.1"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.155.1.tgz#ff1f13f2bc0856667d3d9dcf884efc0b79ab5fe2"
-  integrity sha512-7dGkBFJu8NVl1OJbRjcKKs05hUNcLhFXTJqI5GphkmLCKoid0SBVKhW0q1j0c0LgCZB/zoFv4L5ibgFzIB6kPQ==
+ts-proto@^1.156.1:
+  version "1.156.1"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.156.1.tgz#2d917a63c410832b7411a6236e930cc9c354a641"
+  integrity sha512-zgEGjaUySjWs7e4vdg5xNk/nxMinQnIMG+0KcvEBmE1vy03Yvc7tmeoJdB7qt/p/+0taEUwEdbjegR5t1B+nEA==
   dependencies:
     case-anything "^2.1.13"
     protobufjs "^7.2.4"
     ts-poet "^6.5.0"
-    ts-proto-descriptors "1.14.0"
+    ts-proto-descriptors "1.15.0"
 
 tslib@^1.8.1:
   version "1.14.1"
