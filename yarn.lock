@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.22.5.tgz#721fd042f3ce1896238cf1b341c77eb7dee7dbea"
   integrity sha512-DFZMC9LJUG9PLOclRC32G63UXwzqS2koQC8dkx+PLdmt1xSePYpbT/NbsrJy8Q/muXz7o/h/d4A7Fuyixm559Q==
 
-"@babylonjs/core@^6.13.0":
-  version "6.13.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.13.0.tgz#24c4ab83c82a2585e8389c13dc596188e3ae5ebe"
-  integrity sha512-1HNiG+LuAN8etdyQC5CJZC7V7BnyK6KjDB959Zow1rhobX+fUwMjSVk/gU8h4RpzOwYcnoc3SFDL1d2ExJYqMw==
+"@babylonjs/core@^6.17.0":
+  version "6.17.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.17.0.tgz#d8c5235a0e0b59fbb861dcb7df1c27bb6288a3fd"
+  integrity sha512-Zz+jahgnv8kfPVmslOPvt3Y5Zuvb6dFWGMF6FQ55fTXT7JDQkNqkGYNSOgU4fg3c7rlj7zsXrvM7XFbK3ljelg==
 
 "@babylonjs/gui@^6.13.0":
   version "6.13.0"
